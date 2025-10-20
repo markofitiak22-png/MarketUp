@@ -31,6 +31,17 @@ export default function AuthPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  // Load remembered data on component mount
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const isRemembered = localStorage.getItem('rememberMe') === 'true';
+    
+    if (rememberedEmail && isRemembered) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   // Real-time validation
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -87,7 +98,7 @@ export default function AuthPage() {
     const passwordError = validatePassword(password);
     
     if (emailError || passwordError) {
-      setErrors({ email: emailError, password: passwordError });
+      setErrors({ email: emailError || undefined, password: passwordError || undefined });
       setLoading(false);
       return;
     }
@@ -113,6 +124,15 @@ export default function AuthPage() {
       if (result?.error) {
         setErrors({ general: result.error });
       } else {
+        // Store remember me preference in localStorage
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+          localStorage.setItem('rememberedEmail', email);
+        } else {
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('rememberedEmail');
+        }
+        
         // Success animation before redirect
         setTimeout(() => {
           router.push("/");
@@ -147,14 +167,8 @@ export default function AuthPage() {
 
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-accent to-accent-2 rounded-xl mb-4 shadow-lg">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                  <path d="M2 17l10 5 10-5"/>
-                  <path d="M2 12l10 5 10-5"/>
-                </svg>
-              </div>
-              <h1 className="text-2xl font-bold text-gradient mb-2">Welcome to MarketUp</h1>
+             
+
               <p className="text-foreground-muted">
                 {mode === "signin" ? "Sign in to your account" : "Create your account"}
               </p>
@@ -270,14 +284,27 @@ export default function AuthPage() {
                   {/* Simple Remember Me & Forgot Password */}
                   {mode === "signin" && (
                     <div className="flex items-center justify-between">
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          checked={rememberMe}
-                          onChange={(e) => setRememberMe(e.target.checked)}
-                          className="w-4 h-4 rounded border-border text-accent focus:ring-accent focus:ring-2" 
-                        />
-                        <span className="text-sm text-foreground-muted">Remember me</span>
+                      <label className="flex items-center space-x-3 cursor-pointer group">
+                        <div className="relative">
+                          <input 
+                            type="checkbox" 
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            className="w-4 h-4 rounded border-border text-accent focus:ring-accent focus:ring-2 opacity-0 absolute" 
+                          />
+                          <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 ${
+                            rememberMe 
+                              ? 'bg-accent border-accent' 
+                              : 'border-border group-hover:border-accent/50'
+                          }`}>
+                            {rememberMe && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-sm text-foreground-muted group-hover:text-foreground transition-colors">Remember me</span>
                       </label>
                       <a 
                         href="/password/reset" 

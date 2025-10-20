@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import RememberMeSettings from "@/components/RememberMeSettings";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -130,6 +131,9 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* Remember Me Settings */}
+      <RememberMeSettings />
 
       {/* Privacy */}
       <div className="glass-elevated rounded-2xl p-8">

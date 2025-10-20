@@ -141,6 +141,7 @@ model Session {
     sessionToken String   @unique
     userId       String
     expires      DateTime
+    rememberMe   Boolean  @default(false)
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

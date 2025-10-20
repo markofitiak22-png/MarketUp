@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import HeaderGate from "@/components/HeaderGate";
 import FooterGate from "@/components/FooterGate";
+import RememberMeHandler from "@/components/RememberMeHandler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
+          <RememberMeHandler />
           <HeaderGate />
           <main>{children}</main>
           <FooterGate />

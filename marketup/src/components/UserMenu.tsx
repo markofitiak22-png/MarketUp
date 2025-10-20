@@ -84,7 +84,19 @@ export default function UserMenu() {
           <div className="my-2 h-px bg-[var(--border)]" />
           <button
             className="block w-full text-left px-3 py-2 text-sm rounded hover:bg-white/5 text-red-400"
-            onClick={() => signOut({ callbackUrl: "/auth" })}
+            onClick={async () => {
+              // Clear remember me on server
+              try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+              } catch (error) {
+                console.error('Failed to clear remember me:', error);
+              }
+              // Clear localStorage
+              localStorage.removeItem('rememberMe');
+              localStorage.removeItem('rememberedEmail');
+              // Sign out
+              signOut({ callbackUrl: "/auth" });
+            }}
           >
             Sign out
           </button>

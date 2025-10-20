@@ -160,231 +160,165 @@ export default function AuthPage() {
               </p>
             </div>
 
-            {/* Enhanced Main Auth Card */}
-            <div className={`relative overflow-hidden rounded-3xl p-10 animate-slide-up transition-all duration-500 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`} style={{
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.05) 100%)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)'
-            }}>
-              {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5 animate-pulse" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-accent/10 to-transparent" />
-              
-              {/* Floating particles effect */}
-              <div className="absolute top-4 right-4 w-2 h-2 bg-accent/30 rounded-full animate-float" style={{animationDelay: '0s'}} />
-              <div className="absolute top-8 right-8 w-1 h-1 bg-accent-2/40 rounded-full animate-float" style={{animationDelay: '1s'}} />
-              <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-accent/20 rounded-full animate-float" style={{animationDelay: '2s'}} />
-              
+            {/* Simple Auth Form */}
+            <div className={`relative rounded-2xl p-8 transition-all duration-300 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
               <div className="relative z-10">
-                {/* Enhanced Tab Navigation */}
-                <div className="flex mb-10 bg-black/20 rounded-2xl p-1.5 shadow-2xl border border-white/10">
+                {/* Simple Tab Navigation */}
+                <div className="flex mb-8 bg-surface-elevated rounded-xl p-1 border border-border">
                   <button
-                    className={`flex-1 py-4 px-6 text-sm font-bold rounded-xl transition-all duration-300 relative overflow-hidden ${
+                    className={`flex-1 py-3 px-6 text-sm font-bold rounded-lg transition-all duration-200 ${
                       mode === "signin" 
-                        ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg transform scale-105" 
-                        : "text-foreground-muted hover:text-foreground hover:bg-white/5"
+                        ? "bg-accent text-white" 
+                        : "text-foreground-muted hover:text-foreground hover:bg-surface"
                     }`}
                     onClick={() => handleModeChange("signin")}
                   >
-                    <span className="relative z-10">Sign In</span>
-                    {mode === "signin" && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
-                    )}
+                    Sign In
                   </button>
                   <button
-                    className={`flex-1 py-4 px-6 text-sm font-bold rounded-xl transition-all duration-300 relative overflow-hidden ${
+                    className={`flex-1 py-3 px-6 text-sm font-bold rounded-lg transition-all duration-200 ${
                       mode === "signup" 
-                        ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg transform scale-105" 
-                        : "text-foreground-muted hover:text-foreground hover:bg-white/5"
+                        ? "bg-accent text-white" 
+                        : "text-foreground-muted hover:text-foreground hover:bg-surface"
                     }`}
                     onClick={() => handleModeChange("signup")}
                   >
-                    <span className="relative z-10">Sign Up</span>
-                    {mode === "signup" && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
-                    )}
+                    Sign Up
                   </button>
                 </div>
 
-                {/* Enhanced Google Sign In Button */}
+                {/* Simple Google Sign In Button */}
                 <button 
                   onClick={google} 
-                  className="w-full flex items-center justify-center gap-4 py-4 px-6 bg-white/5 border border-white/20 rounded-2xl text-sm font-bold text-foreground hover:bg-white/10 transition-all duration-300 mb-8 group relative overflow-hidden backdrop-blur-sm"
+                  className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-surface-elevated border border-border rounded-xl text-sm font-bold text-foreground hover:bg-surface transition-all duration-200 mb-6"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  <svg width="20" height="20" viewBox="0 0 24 24" className="relative z-10">
+                  <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                   </svg>
-                  <span className="relative z-10">Continue with Google</span>
+                  Continue with Google
                 </button>
 
-                {/* Enhanced Divider */}
-                <div className="flex items-center my-8">
-                  <div className="flex-1 border-t border-white/20"></div>
-                  <span className="px-4 text-sm text-foreground-muted font-medium">or</span>
-                  <div className="flex-1 border-t border-white/20"></div>
+                {/* Simple Divider */}
+                <div className="flex items-center my-6">
+                  <div className="flex-1 border-t border-border"></div>
+                  <span className="px-4 text-sm text-foreground-muted">or</span>
+                  <div className="flex-1 border-t border-border"></div>
                 </div>
 
-                {/* Enhanced Email/Password Form */}
-                <form onSubmit={(e) => { e.preventDefault(); submitEmailPassword(); }} className="space-y-6">
-                  {/* Enhanced Email Field */}
+                {/* Simple Email/Password Form */}
+                <form onSubmit={(e) => { e.preventDefault(); submitEmailPassword(); }} className="space-y-4">
+                  {/* Simple Email Field */}
                   <div>
-                    <label className="block text-sm font-bold text-foreground mb-3">
+                    <label className="block text-sm font-bold text-foreground mb-2">
                       Email Address
                     </label>
-                    <div className="relative group">
-                      <input
-                        ref={emailRef}
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onFocus={() => setEmailFocused(true)}
-                        onBlur={() => setEmailFocused(false)}
-                        placeholder="Enter your email"
-                        className={`w-full px-5 py-4 rounded-2xl border transition-all duration-300 bg-white/5 text-foreground placeholder-foreground-muted focus:outline-none backdrop-blur-sm ${
-                          errors.email 
-                            ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20' 
-                            : emailFocused 
-                              ? 'border-accent focus:border-accent focus:ring-2 focus:ring-accent/20' 
-                              : 'border-white/20 hover:border-white/30'
-                        }`}
-                        required
-                      />
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted">
-                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                          <polyline points="22,6 12,13 2,6"/>
-                        </svg>
-                      </div>
-                    </div>
+                    <input
+                      ref={emailRef}
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onFocus={() => setEmailFocused(true)}
+                      onBlur={() => setEmailFocused(false)}
+                      placeholder="Enter your email"
+                      className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-background text-foreground placeholder-foreground-muted focus:outline-none ${
+                        errors.email 
+                          ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20' 
+                          : 'border-border hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
+                      }`}
+                      required
+                    />
                     {errors.email && (
-                      <p className="text-sm text-error mt-2 flex items-center gap-2">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="10"/>
-                          <line x1="15" y1="9" x2="9" y2="15"/>
-                          <line x1="9" y1="9" x2="15" y2="15"/>
-                        </svg>
+                      <p className="text-sm text-error mt-2">
                         {errors.email}
                       </p>
                     )}
                   </div>
 
-                  {/* Enhanced Password Field */}
+                  {/* Simple Password Field */}
                   <div>
-                    <label className="block text-sm font-bold text-foreground mb-3">
+                    <label className="block text-sm font-bold text-foreground mb-2">
                       Password
                       {mode === "signup" && (
                         <span className="text-xs text-foreground-muted ml-2">(min. 8 characters)</span>
                       )}
                     </label>
-                    <div className="relative group">
-                      <input
-                        ref={passwordRef}
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setPasswordFocused(true)}
-                        onBlur={() => setPasswordFocused(false)}
-                        placeholder="Enter your password"
-                        className={`w-full px-5 py-4 rounded-2xl border transition-all duration-300 bg-white/5 text-foreground placeholder-foreground-muted focus:outline-none backdrop-blur-sm ${
-                          errors.password 
-                            ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20' 
-                            : passwordFocused 
-                              ? 'border-accent focus:border-accent focus:ring-2 focus:ring-accent/20' 
-                              : 'border-white/20 hover:border-white/30'
-                        }`}
-                        required
-                      />
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted">
-                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                          <circle cx="12" cy="16" r="1"/>
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
-                      </div>
-                    </div>
+                    <input
+                      ref={passwordRef}
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onFocus={() => setPasswordFocused(true)}
+                      onBlur={() => setPasswordFocused(false)}
+                      placeholder="Enter your password"
+                      className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-background text-foreground placeholder-foreground-muted focus:outline-none ${
+                        errors.password 
+                          ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20' 
+                          : 'border-border hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
+                      }`}
+                      required
+                    />
                     {errors.password && (
-                      <p className="text-sm text-error mt-2 flex items-center gap-2">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="10"/>
-                          <line x1="15" y1="9" x2="9" y2="15"/>
-                          <line x1="9" y1="9" x2="15" y2="15"/>
-                        </svg>
+                      <p className="text-sm text-error mt-2">
                         {errors.password}
                       </p>
                     )}
                   </div>
 
-                  {/* Enhanced Remember Me & Forgot Password */}
+                  {/* Simple Remember Me & Forgot Password */}
                   {mode === "signin" && (
                     <div className="flex items-center justify-between">
-                      <label className="flex items-center space-x-3 cursor-pointer group">
+                      <label className="flex items-center space-x-2 cursor-pointer">
                         <input 
                           type="checkbox" 
                           checked={rememberMe}
                           onChange={(e) => setRememberMe(e.target.checked)}
-                          className="w-5 h-5 rounded border-white/20 text-accent focus:ring-accent focus:ring-2 group-hover:scale-110 transition-transform" 
+                          className="w-4 h-4 rounded border-border text-accent focus:ring-accent focus:ring-2" 
                         />
-                        <span className="text-sm text-foreground-muted group-hover:text-foreground transition-colors">Remember me</span>
+                        <span className="text-sm text-foreground-muted">Remember me</span>
                       </label>
                       <a 
                         href="/password/reset" 
-                        className="text-sm text-accent hover:text-accent-hover font-bold transition-colors"
+                        className="text-sm text-accent hover:text-accent-hover transition-colors"
                       >
                         Forgot password?
                       </a>
                     </div>
                   )}
 
-                  {/* Enhanced General Error Message */}
+                  {/* Simple General Error Message */}
                   {errors.general && (
-                    <div className="bg-error/10 border border-error/30 rounded-2xl p-4 backdrop-blur-sm">
-                      <div className="flex items-center space-x-3">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-error flex-shrink-0">
-                          <circle cx="12" cy="12" r="10"/>
-                          <line x1="15" y1="9" x2="9" y2="15"/>
-                          <line x1="9" y1="9" x2="15" y2="15"/>
-                        </svg>
-                        <p className="text-sm text-error font-bold">{errors.general}</p>
-                      </div>
+                    <div className="bg-error/10 border border-error/30 rounded-xl p-3">
+                      <p className="text-sm text-error">{errors.general}</p>
                     </div>
                   )}
 
-                  {/* Enhanced Submit Button */}
+                  {/* Simple Submit Button */}
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-4 px-6 text-sm font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group"
-                    style={{
-                      background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
-                      boxShadow: '0 8px 25px rgba(99, 102, 241, 0.3)'
-                    }}
+                    className="w-full py-3 px-6 text-sm font-bold rounded-xl bg-accent text-white hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     {loading ? (
-                      <div className="flex items-center justify-center gap-3 relative z-10">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                         <span>Please wait...</span>
                       </div>
                     ) : (
-                      <span className="relative z-10">
-                        {mode === "signin" ? "Sign In" : "Create Account"}
-                      </span>
+                      mode === "signin" ? "Sign In" : "Create Account"
                     )}
                   </button>
               </form>
 
-                {/* Enhanced Terms and Privacy */}
-                <div className="mt-8 text-center">
-                  <p className="text-xs text-foreground-muted leading-relaxed">
+                {/* Simple Terms and Privacy */}
+                <div className="mt-6 text-center">
+                  <p className="text-xs text-foreground-muted">
                     By continuing, you agree to our{" "}
-                    <a href="/terms" className="text-accent hover:text-accent-hover font-bold transition-colors">Terms of Service</a>{" "}
+                    <a href="/terms" className="text-accent hover:text-accent-hover transition-colors">Terms of Service</a>{" "}
                     and{" "}
-                    <a href="/privacy" className="text-accent hover:text-accent-hover font-bold transition-colors">Privacy Policy</a>
+                    <a href="/privacy" className="text-accent hover:text-accent-hover transition-colors">Privacy Policy</a>
                   </p>
                 </div>
 

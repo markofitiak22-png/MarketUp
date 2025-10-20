@@ -19,11 +19,6 @@ const plans = [
       'Community support',
       'Watermark on videos'
     ],
-    limitations: [
-      'Limited to 3 videos',
-      'Standard quality only',
-      'Basic support'
-    ],
     popular: false,
     cta: 'Get Started Free',
     color: 'border-border'
@@ -45,7 +40,6 @@ const plans = [
       'Advanced editing tools',
       'API access'
     ],
-    limitations: [],
     popular: true,
     cta: 'Start Pro Trial',
     color: 'border-accent',
@@ -71,7 +65,6 @@ const plans = [
       'Custom integrations',
       'SLA guarantee'
     ],
-    limitations: [],
     popular: false,
     cta: 'Contact Sales',
     color: 'border-accent-2',
@@ -138,44 +131,51 @@ export default function PricingPage() {
     return Math.round(monthlyPrice * 12 * 0.2); // 20% discount
   };
 
+  const getYearlyPrice = (monthlyPrice: number) => {
+    return Math.round((monthlyPrice * 12 * 0.8) / 12 * 100) / 100;
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-surface border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              Choose Your Plan
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+              Simple, transparent <span className="text-gradient">pricing</span>
             </h1>
-            <p className="text-xl text-foreground-muted max-w-3xl mx-auto mb-8">
-              Start creating professional AI videos today. Upgrade anytime as your needs grow.
+            <p className="text-xl text-foreground-muted max-w-3xl mx-auto mb-12">
+              Choose the perfect plan for your AI video creation needs. No hidden fees, cancel anytime.
             </p>
             
             {/* Billing Toggle */}
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <span className={`text-sm font-medium ${billingPeriod === 'monthly' ? 'text-foreground' : 'text-foreground-muted'}`}>
-                Monthly
-              </span>
+            <div className="inline-flex items-center bg-surface rounded-full p-1 border border-border">
               <button
-                onClick={() => setBillingPeriod(billingPeriod === 'monthly' ? 'yearly' : 'monthly')}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  billingPeriod === 'yearly' ? 'bg-accent' : 'bg-border'
+                onClick={() => setBillingPeriod('monthly')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  billingPeriod === 'monthly' 
+                    ? 'bg-accent text-white shadow-lg' 
+                    : 'text-foreground-muted hover:text-foreground'
                 }`}
               >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    billingPeriod === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
+                Monthly
               </button>
-              <span className={`text-sm font-medium ${billingPeriod === 'yearly' ? 'text-foreground' : 'text-foreground-muted'}`}>
+              <button
+                onClick={() => setBillingPeriod('yearly')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all relative ${
+                  billingPeriod === 'yearly' 
+                    ? 'bg-accent text-white shadow-lg' 
+                    : 'text-foreground-muted hover:text-foreground'
+                }`}
+              >
                 Yearly
-              </span>
-              {billingPeriod === 'yearly' && (
-                <span className="text-sm bg-success/20 text-success px-2 py-1 rounded-full">
-                  Save 20%
-                </span>
-              )}
+                {billingPeriod === 'yearly' && (
+                  <span className="absolute -top-2 -right-2 bg-success text-white text-xs px-2 py-1 rounded-full">
+                    Save 20%
+                  </span>
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -187,62 +187,70 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`glass-elevated rounded-2xl p-8 relative ${
-                plan.popular ? 'ring-2 ring-accent scale-105' : ''
-              } ${plan.color} border-2`}
+              className={`relative rounded-3xl p-8 transition-all duration-300 hover:scale-105 ${
+                plan.popular 
+                  ? 'bg-gradient-to-br from-accent/10 to-accent-2/10 border-2 border-accent shadow-2xl shadow-accent/20' 
+                  : 'bg-surface border border-border hover:border-accent/50'
+              }`}
             >
               {plan.badge && (
-                <div className={`absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full text-sm font-medium ${
+                <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-full text-sm font-semibold ${
                   plan.badge === 'Most Popular' 
-                    ? 'bg-accent text-white' 
-                    : 'bg-accent-2 text-white'
+                    ? 'bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg' 
+                    : 'bg-gradient-to-r from-accent-2 to-purple-600 text-white shadow-lg'
                 }`}>
                   {plan.badge}
                 </div>
               )}
               
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                <p className="text-foreground-muted mb-4">{plan.description}</p>
+                <h3 className="text-3xl font-bold text-foreground mb-3">{plan.name}</h3>
+                <p className="text-foreground-muted mb-6">{plan.description}</p>
                 
-                <div className="mb-4">
-                  <span className="text-5xl font-bold text-foreground">
-                    ${billingPeriod === 'yearly' && plan.price > 0 
-                      ? Math.round(plan.price * 12 * 0.8) / 12 
-                      : plan.price
-                    }
-                  </span>
-                  <span className="text-foreground-muted">
-                    /{plan.period === 'forever' ? 'forever' : billingPeriod === 'yearly' ? 'year' : 'month'}
-                  </span>
-                </div>
-                
-                {billingPeriod === 'yearly' && plan.price > 0 && (
-                  <div className="text-sm text-success">
-                    Save ${getYearlyDiscount(plan.price)}/year
+                <div className="mb-6">
+                  <div className="flex items-baseline justify-center">
+                    <span className="text-6xl font-bold text-foreground">
+                      ${billingPeriod === 'yearly' && plan.price > 0 
+                        ? getYearlyPrice(plan.price)
+                        : plan.price
+                      }
+                    </span>
+                    <span className="text-xl text-foreground-muted ml-2">
+                      /{plan.period === 'forever' ? 'forever' : billingPeriod === 'yearly' ? 'year' : 'month'}
+                    </span>
                   </div>
-                )}
+                  
+                  {billingPeriod === 'yearly' && plan.price > 0 && (
+                    <div className="mt-2">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success/20 text-success">
+                        Save ${getYearlyDiscount(plan.price)}/year
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-4 mb-8">
                 {plan.features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-foreground">{feature}</span>
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success/20 flex items-center justify-center mt-0.5">
+                      <svg className="w-3 h-3 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-foreground text-sm">{feature}</span>
                   </div>
                 ))}
               </div>
 
               <button
                 onClick={() => handlePlanSelect(plan.id)}
-                className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
+                className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-200 ${
                   plan.popular
-                    ? 'bg-accent text-white hover:bg-accent-hover'
+                    ? 'bg-gradient-to-r from-accent to-accent-2 text-white hover:shadow-lg hover:shadow-accent/25 hover:-translate-y-1'
                     : plan.id === 'free'
-                    ? 'bg-surface-elevated text-foreground hover:bg-surface'
-                    : 'bg-accent-2 text-white hover:bg-accent-2/90'
+                    ? 'bg-surface-elevated text-foreground border border-border hover:bg-surface hover:border-accent/50'
+                    : 'bg-gradient-to-r from-accent-2 to-purple-600 text-white hover:shadow-lg hover:shadow-accent-2/25 hover:-translate-y-1'
                 }`}
               >
                 {plan.cta}
@@ -253,60 +261,89 @@ export default function PricingPage() {
       </div>
 
       {/* Feature Comparison */}
-      <div className="bg-surface border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Compare All Features
+      <div className="bg-gradient-to-br from-surface/50 to-surface-elevated/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Compare all features
             </h2>
-            <p className="text-lg text-foreground-muted">
-              See exactly what's included in each plan
+            <p className="text-xl text-foreground-muted">
+              Everything you need to choose the right plan
             </p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-4 px-6 font-semibold text-foreground">Features</th>
-                  <th className="text-center py-4 px-6 font-semibold text-foreground">Free</th>
-                  <th className="text-center py-4 px-6 font-semibold text-foreground">Pro</th>
-                  <th className="text-center py-4 px-6 font-semibold text-foreground">Enterprise</th>
-                </tr>
-              </thead>
-              <tbody>
-                {features.map((category, categoryIndex) => (
-                  <React.Fragment key={categoryIndex}>
-                    <tr>
-                      <td colSpan={4} className="py-3 px-6 font-semibold text-foreground bg-surface-elevated">
-                        {category.category}
-                      </td>
-                    </tr>
-                    {category.items.map((item, itemIndex) => (
-                      <tr key={itemIndex} className="border-b border-border/50">
-                        <td className="py-4 px-6 text-foreground">{item.name}</td>
-                        <td className="py-4 px-6 text-center text-foreground-muted">{item.free}</td>
-                        <td className="py-4 px-6 text-center text-foreground-muted">{item.pro}</td>
-                        <td className="py-4 px-6 text-center text-foreground-muted">{item.enterprise}</td>
+          <div className="bg-surface rounded-3xl border border-border overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-6 px-8 font-bold text-foreground text-lg">Features</th>
+                    <th className="text-center py-6 px-8 font-bold text-foreground text-lg">Free</th>
+                    <th className="text-center py-6 px-8 font-bold text-foreground text-lg bg-accent/5">Pro</th>
+                    <th className="text-center py-6 px-8 font-bold text-foreground text-lg">Enterprise</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {features.map((category, categoryIndex) => (
+                    <React.Fragment key={categoryIndex}>
+                      <tr>
+                        <td colSpan={4} className="py-4 px-8 font-bold text-foreground bg-surface-elevated text-lg">
+                          {category.category}
+                        </td>
                       </tr>
-                    ))}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
+                      {category.items.map((item, itemIndex) => (
+                        <tr key={itemIndex} className="border-b border-border/30 hover:bg-surface-elevated/30 transition-colors">
+                          <td className="py-5 px-8 text-foreground font-medium">{item.name}</td>
+                          <td className="py-5 px-8 text-center">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              item.free === '✅' ? 'bg-success/20 text-success' : 
+                              item.free === '❌' ? 'bg-error/20 text-error' : 
+                              'bg-surface-elevated text-foreground'
+                            }`}>
+                              {item.free}
+                            </span>
+                          </td>
+                          <td className="py-5 px-8 text-center bg-accent/5">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              item.pro === '✅' ? 'bg-success/20 text-success' : 
+                              item.pro === '❌' ? 'bg-error/20 text-error' : 
+                              'bg-surface-elevated text-foreground'
+                            }`}>
+                              {item.pro}
+                            </span>
+                          </td>
+                          <td className="py-5 px-8 text-center">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              item.enterprise === '✅' ? 'bg-success/20 text-success' : 
+                              item.enterprise === '❌' ? 'bg-error/20 text-error' : 
+                              'bg-surface-elevated text-foreground'
+                            }`}>
+                              {item.enterprise}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            Frequently Asked Questions
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
+            Frequently asked questions
           </h2>
+          <p className="text-xl text-foreground-muted">
+            Everything you need to know about our pricing
+          </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid gap-6">
           {[
             {
               question: "Can I change my plan anytime?",
@@ -329,33 +366,33 @@ export default function PricingPage() {
               answer: "Absolutely! Contact our sales team to discuss custom pricing, features, and integrations for your organization."
             }
           ].map((faq, index) => (
-            <div key={index} className="glass rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-2">{faq.question}</h3>
-              <p className="text-foreground-muted">{faq.answer}</p>
+            <div key={index} className="bg-surface border border-border rounded-2xl p-8 hover:border-accent/50 transition-all duration-300">
+              <h3 className="text-xl font-bold text-foreground mb-4">{faq.question}</h3>
+              <p className="text-foreground-muted text-lg leading-relaxed">{faq.answer}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="bg-surface border-t border-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            Ready to Get Started?
+      <div className="bg-gradient-to-br from-accent/5 to-accent-2/5 border-t border-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <h2 className="text-4xl font-bold text-foreground mb-6">
+            Ready to create amazing AI videos?
           </h2>
-          <p className="text-lg text-foreground-muted mb-8">
-            Join thousands of creators who are already using our platform to create amazing videos.
+          <p className="text-xl text-foreground-muted mb-12 max-w-3xl mx-auto">
+            Join thousands of creators and businesses who are already using our platform to create professional AI avatar videos.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <button
               onClick={() => handlePlanSelect('pro')}
-              className="btn-primary btn-lg px-8 py-4"
+              className="bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg hover:shadow-accent/25 hover:-translate-y-1 transition-all duration-200"
             >
               Start Free Trial
             </button>
             <Link
               href="/contact"
-              className="btn-outline btn-lg px-8 py-4"
+              className="bg-surface border border-border text-foreground px-8 py-4 rounded-xl font-semibold text-lg hover:border-accent/50 hover:bg-surface-elevated transition-all duration-200"
             >
               Contact Sales
             </Link>

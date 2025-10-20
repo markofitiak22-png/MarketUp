@@ -1,0 +1,278 @@
+"use client";
+import { useState, useEffect } from "react";
+import { WizardData } from "@/app/studio/page";
+
+interface GenerationStepProps {
+  data: WizardData;
+  onUpdate: (updates: Partial<WizardData>) => void;
+  onNext: () => void;
+  onPrev: () => void;
+  isGenerating: boolean;
+  setIsGenerating: (generating: boolean) => void;
+}
+
+const generationSteps = [
+  { id: 'preparing', label: 'Preparing assets', duration: 2000 },
+  { id: 'avatar', label: 'Generating avatar animation', duration: 8000 },
+  { id: 'voice', label: 'Synthesizing voice', duration: 6000 },
+  { id: 'background', label: 'Processing background', duration: 4000 },
+  { id: 'compositing', label: 'Compositing video', duration: 10000 },
+  { id: 'finalizing', label: 'Finalizing output', duration: 3000 }
+];
+
+export default function GenerationStep({ 
+  data, 
+  onUpdate, 
+  onNext, 
+  onPrev, 
+  isGenerating, 
+  setIsGenerating 
+}: GenerationStepProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [estimatedTime, setEstimatedTime] = useState(0);
+  const [generationId, setGenerationId] = useState<string | null>(null);
+
+  const startGeneration = async () => {
+    setIsGenerating(true);
+    setCurrentStep(0);
+    setProgress(0);
+    
+    // Calculate total estimated time
+    const totalTime = generationSteps.reduce((sum, step) => sum + step.duration, 0);
+    setEstimatedTime(Math.ceil(totalTime / 1000));
+    
+    // Generate unique ID for this generation
+    const id = `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    setGenerationId(id);
+    
+    // Simulate generation process
+    let currentProgress = 0;
+    let stepIndex = 0;
+    
+    const interval = setInterval(() => {
+      const step = generationSteps[stepIndex];
+      if (!step) {
+        clearInterval(interval);
+        setIsGenerating(false);
+        onNext();
+        return;
+      }
+      
+      currentProgress += 100 / generationSteps.length;
+      setProgress(Math.min(currentProgress, 100));
+      
+      if (currentProgress >= ((stepIndex + 1) * 100) / generationSteps.length) {
+        stepIndex++;
+        setCurrentStep(stepIndex);
+      }
+    }, 200);
+  };
+
+  const cancelGeneration = () => {
+    setIsGenerating(false);
+    setCurrentStep(0);
+    setProgress(0);
+    setGenerationId(null);
+  };
+
+  const getStepIcon = (stepIndex: number, stepId: string) => {
+    if (stepIndex < currentStep) {
+      return (
+        <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      );
+    }
+    
+    if (stepIndex === currentStep && isGenerating) {
+      return (
+        <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+      );
+    }
+    
+    return (
+      <div className="w-5 h-5 border-2 border-border rounded-full" />
+    );
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-foreground mb-4">Generate Your Video</h2>
+        <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+          We'll create your personalized video using AI. This process typically takes 2-3 minutes.
+        </p>
+      </div>
+
+      {/* Video Summary */}
+      <div className="glass-elevated rounded-2xl p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Video Summary</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                <span className="text-lg">
+                  {data.avatar?.gender === 'female' ? '👩' : '👨'}
+                </span>
+              </div>
+              <div>
+                <div className="font-medium text-foreground">{data.avatar?.name}</div>
+                <div className="text-sm text-foreground-muted">Avatar</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                <span className="text-lg">🗣️</span>
+              </div>
+              <div>
+                <div className="font-medium text-foreground">{data.language?.voice.name}</div>
+                <div className="text-sm text-foreground-muted">{data.language?.name}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                <span className="text-lg">🎬</span>
+              </div>
+              <div>
+                <div className="font-medium text-foreground">{data.background?.name}</div>
+                <div className="text-sm text-foreground-muted">Background</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                <span className="text-lg">📝</span>
+              </div>
+              <div>
+                <div className="font-medium text-foreground">{data.settings.duration}s duration</div>
+                <div className="text-sm text-foreground-muted">{data.text.split(' ').length} words</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Generation Process */}
+      {isGenerating ? (
+        <div className="glass-elevated rounded-2xl p-8">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+            </div>
+            <h3 className="text-xl font-semibold text-foreground mb-2">Generating Your Video</h3>
+            <p className="text-foreground-muted">Please don't close this window while we create your video.</p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-foreground">Progress</span>
+              <span className="text-sm text-foreground-muted">{Math.round(progress)}%</span>
+            </div>
+            <div className="w-full bg-border rounded-full h-3">
+              <div 
+                className="bg-gradient-to-r from-accent to-accent-2 h-3 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Generation Steps */}
+          <div className="space-y-4">
+            {generationSteps.map((step, index) => (
+              <div key={step.id} className="flex items-center gap-4">
+                <div className="flex-shrink-0">
+                  {getStepIcon(index, step.id)}
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-foreground">{step.label}</div>
+                  {index === currentStep && isGenerating && (
+                    <div className="text-sm text-foreground-muted">
+                      Processing... {Math.round((index + 1) * 100 / generationSteps.length)}%
+                    </div>
+                  )}
+                </div>
+                {index < currentStep && (
+                  <div className="text-success text-sm font-medium">Complete</div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Estimated Time */}
+          <div className="mt-6 text-center">
+            <div className="text-sm text-foreground-muted">
+              Estimated time remaining: {formatTime(Math.max(0, estimatedTime - Math.floor(progress * estimatedTime / 100)))}
+            </div>
+          </div>
+
+          {/* Cancel Button */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={cancelGeneration}
+              className="btn-outline btn-sm"
+            >
+              Cancel Generation
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="glass-elevated rounded-2xl p-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-foreground mb-2">Ready to Generate</h3>
+          <p className="text-foreground-muted mb-6">
+            Your video will be created with the settings above. Click the button below to start generation.
+          </p>
+          <button
+            onClick={startGeneration}
+            className="btn-primary btn-lg px-8 py-3"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Start Generation
+          </button>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <div className="flex justify-between">
+        <button
+          onClick={onPrev}
+          disabled={isGenerating}
+          className="btn-outline btn-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back
+        </button>
+        
+        {!isGenerating && (
+          <div className="text-sm text-foreground-muted flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Generation typically takes 2-3 minutes
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

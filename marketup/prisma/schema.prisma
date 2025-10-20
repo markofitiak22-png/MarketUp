@@ -1,0 +1,234 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+/// Referral status to track review and reward outcomes without exposing limits to users
+enum ReferralStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+/// Video job processing status
+enum VideoJobStatus {
+    QUEUED
+    PROCESSING
+    COMPLETED
+    FAILED
+}
+
+/// Which provider handles avatar video generation; start with MOCK
+enum VideoProvider {
+    MOCK
+}
+
+model User {
+    id           String   @id @default(cuid())
+    createdAt    DateTime @default(now())
+    email        String?  @unique
+    phone        String?
+    passwordHash String?
+    name         String?
+    locale       String?
+    country      String?
+
+    /// Hashed, anonymized identifiers for anti-abuse checks
+    fingerprintHash String?
+    ipHash          String?
+
+    referralCodes          ReferralCode[]
+    referralEvents         ReferralEvent[] @relation("UserReferralEvents")
+    referredEventsReceived ReferralEvent[] @relation("ReferredUserEvents")
+    videoJobs              VideoJob[]
+
+    accounts Account[]
+    sessions Session[]
+
+    subscriptions   Subscription[]
+    manualPayments  ManualPayment[]
+    contactMessages ContactMessage[]
+
+    @@index([fingerprintHash])
+    @@index([ipHash])
+}
+
+model ManualPayment {
+    id          String   @id @default(cuid())
+    userId      String
+    user        User     @relation(fields: [userId], references: [id])
+    createdAt   DateTime @default(now())
+    status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+    amountCents Int
+    currency    String   @default("USD")
+    note        String?
+    receiptUrl  String?
+
+    @@index([userId])
+}
+
+model ContactMessage {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    name      String?
+    email     String
+    message   String
+    userId    String?
+    user      User?    @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+}
+
+enum PlanTier {
+    BASIC
+    STANDARD
+    PREMIUM
+}
+
+enum SubscriptionStatus {
+    ACTIVE
+    CANCELED
+    EXPIRED
+}
+
+model Subscription {
+    id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    tier               PlanTier
+    status             SubscriptionStatus @default(ACTIVE)
+    currentPeriodStart DateTime
+    currentPeriodEnd   DateTime
+
+    cancelAtPeriodEnd Boolean @default(false)
+
+    @@index([userId])
+}
+
+/// NextAuth adapter models
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @map("refresh_token")
+    access_token      String? @map("access_token")
+    expires_at        Int?    @map("expires_at")
+    token_type        String? @map("token_type")
+    scope             String?
+    id_token          String? @map("id_token")
+    session_state     String? @map("session_state")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+    @@index([userId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model ReferralCode {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    code      String   @unique
+
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id])
+
+    /// Hidden caps enforced server-side (not returned to clients)
+    maxRewardsTotal Int? // total rewards cap per code
+    dailyCap        Int? // daily redemption cap
+
+    events ReferralEvent[]
+
+    @@index([ownerId])
+}
+
+model ReferralEvent {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+
+    /// The referrer who owns the code
+    referrerId String
+    referrer   User   @relation("UserReferralEvents", fields: [referrerId], references: [id])
+
+    /// Optional user record for the referred account if/when it’s created
+    referredUserId String?
+    referredUser   User?   @relation("ReferredUserEvents", fields: [referredUserId], references: [id])
+
+    /// The code used
+    referralCodeId String
+    referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
+
+    /// Anti-abuse signals (hashed, never store raw PII)
+    referredFingerprintHash String?
+    referredIpHash          String?
+    userAgent               String?
+
+    status        ReferralStatus @default(PENDING)
+    rewardGranted Int            @default(0)
+    reviewReason  String?
+
+    @@index([referrerId])
+    @@index([referralCodeId])
+    @@index([referredFingerprintHash])
+    @@index([referredIpHash])
+}
+
+model VideoJob {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId String?
+    user   User?   @relation(fields: [userId], references: [id])
+
+    provider      VideoProvider @default(MOCK)
+    providerJobId String?
+
+    status   VideoJobStatus @default(QUEUED)
+    videoUrl String?
+
+    /// Inputs
+    script              String
+    backgroundImageUrls Json // 2-4 URLs
+    productImageUrls    Json // array of product/device/food URLs
+    contactAddress      String?
+    contactPhone        String?
+    logoImageUrl        String? // company logo overlay (subtle corner)
+
+    /// Optional publishing meta (for regional scheduling)
+    publishRegion      String?
+    publishAtTikTok    DateTime?
+    publishAtInstagram DateTime?
+
+    @@index([userId])
+}

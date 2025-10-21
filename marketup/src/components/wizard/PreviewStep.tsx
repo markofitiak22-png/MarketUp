@@ -56,7 +56,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
       <div className="text-center">
         <h2 className="text-3xl font-bold text-foreground mb-4">Your Video is Ready!</h2>
         <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          Review your generated video and download it when you're satisfied with the result.
+          Review your generated video and download it when you&apos;re satisfied with the result.
         </p>
       </div>
 

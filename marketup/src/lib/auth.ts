@@ -1,11 +1,11 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+// import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
 import { compare } from "bcrypt";
 import { z } from "zod";
-import { randomBytes } from "crypto";
+// import { randomBytes } from "crypto";
 
 export const authOptions: NextAuthOptions = {
   session: { 
@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: false, // Disable debug to reduce logs
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         // Check if remember me is enabled in localStorage (client-side)
         // This is a simplified approach - in production you might want server-side validation
@@ -62,7 +62,7 @@ export const authOptions: NextAuthOptions = {
         return { 
           id: user.id, 
           email: user.email || undefined
-        } as any;
+        } as { id: string; email?: string };
       },
     }),
   ],

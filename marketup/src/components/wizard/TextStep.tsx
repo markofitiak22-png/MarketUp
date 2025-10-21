@@ -13,7 +13,7 @@ const templates = [
   {
     id: 'welcome',
     title: 'Welcome Message',
-    text: 'Welcome to our company! We\'re excited to have you here and look forward to working with you.',
+    text: 'Welcome to our company! We&apos;re excited to have you here and look forward to working with you.',
     category: 'Business'
   },
   {
@@ -25,7 +25,7 @@ const templates = [
   {
     id: 'training',
     title: 'Training Introduction',
-    text: 'Welcome to today\'s training session. We\'ll cover the key concepts and provide hands-on practice to help you succeed.',
+    text: 'Welcome to today&apos;s training session. We&apos;ll cover the key concepts and provide hands-on practice to help you succeed.',
     category: 'Education'
   },
   {
@@ -37,13 +37,13 @@ const templates = [
   {
     id: 'tutorial',
     title: 'Tutorial Introduction',
-    text: 'In this tutorial, we\'ll walk you through the process step by step. Let\'s get started with the basics.',
+    text: 'In this tutorial, we&apos;ll walk you through the process step by step. Let&apos;s get started with the basics.',
     category: 'Education'
   },
   {
     id: 'promotion',
     title: 'Special Offer',
-    text: 'Don\'t miss out on our limited-time offer! Get exclusive access to premium features at a special price.',
+    text: 'Don&apos;t miss out on our limited-time offer! Get exclusive access to premium features at a special price.',
     category: 'Marketing'
   }
 ];
@@ -74,7 +74,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         duration
       }
     });
-  }, [text]);
+  }, [text, data.settings, onUpdate]);
 
   const handleTemplateSelect = (template: typeof templates[0]) => {
     setText(template.text);
@@ -233,7 +233,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
               </div>
               <div>
                 <h4 className="font-semibold text-foreground text-lg mb-2">Pronunciation</h4>
-                <p className="text-foreground-muted">Use phonetic spelling for difficult words: "AI" as "A-I".</p>
+                <p className="text-foreground-muted">Use phonetic spelling for difficult words: &quot;AI&quot; as &quot;A-I&quot;.</p>
               </div>
             </div>
           </div>

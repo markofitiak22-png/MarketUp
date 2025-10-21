@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       await sendPasswordResetEmail(email, code);
     } catch (error) {
       console.error('Email sending failed:', error);
-      // In development, still return success but don't show code
+      // In development, still return success but don&apos;t show code
       if (process.env.NODE_ENV === 'development') {
         console.log('Dev code (not shown to user):', code);
       }

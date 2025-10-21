@@ -142,7 +142,7 @@ export default function TicketSystem() {
             },
             {
               id: "msg_005",
-              content: "I've reviewed your account and can confirm the duplicate charge. I'll process the refund within 3-5 business days. You'll receive an email confirmation once it's processed.",
+              content: "I&apos;ve reviewed your account and can confirm the duplicate charge. I&apos;ll process the refund within 3-5 business days. You&apos;ll receive an email confirmation once it&apos;s processed.",
               sender: "admin",
               senderName: "Mike Wilson",
               timestamp: "2024-01-15T09:30:00Z"
@@ -183,7 +183,7 @@ export default function TicketSystem() {
             },
             {
               id: "msg_007",
-              content: "Thank you for the suggestion! This feature is already in our roadmap for Q2 2024. I'll add your vote to this feature request.",
+              content: "Thank you for the suggestion! This feature is already in our roadmap for Q2 2024. I&apos;ll add your vote to this feature request.",
               sender: "admin",
               senderName: "Emily Davis",
               timestamp: "2024-01-14T16:45:00Z"

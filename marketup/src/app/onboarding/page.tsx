@@ -135,7 +135,7 @@ export default function OnboardingPage() {
                     </h1>
                     
                     <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light mb-12">
-                      We'll help you set up your account in just a few simple steps. <span className="text-accent font-medium">This will only take 2 minutes.</span>
+                      We&apos;ll help you set up your account in just a few simple steps. <span className="text-accent font-medium">This will only take 2 minutes.</span>
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">

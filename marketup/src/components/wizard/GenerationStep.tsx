@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { WizardData } from "@/app/studio/page";
 
 interface GenerationStepProps {
@@ -22,7 +22,6 @@ const generationSteps = [
 
 export default function GenerationStep({ 
   data, 
-  onUpdate, 
   onNext, 
   onPrev, 
   isGenerating, 
@@ -31,7 +30,7 @@ export default function GenerationStep({
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [estimatedTime, setEstimatedTime] = useState(0);
-  const [generationId, setGenerationId] = useState<string | null>(null);
+  // const [generationId, setGenerationId] = useState<string | null>(null);
 
   const startGeneration = async () => {
     setIsGenerating(true);
@@ -108,7 +107,7 @@ export default function GenerationStep({
       <div className="text-center">
         <h2 className="text-3xl font-bold text-foreground mb-4">Generate Your Video</h2>
         <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          We'll create your personalized video using AI. This process typically takes 2-3 minutes.
+          We&apos;ll create your personalized video using AI. This process typically takes 2-3 minutes.
         </p>
       </div>
 
@@ -172,7 +171,7 @@ export default function GenerationStep({
               <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">Generating Your Video</h3>
-            <p className="text-foreground-muted">Please don't close this window while we create your video.</p>
+            <p className="text-foreground-muted">Please don&apos;t close this window while we create your video.</p>
           </div>
 
           {/* Progress Bar */}

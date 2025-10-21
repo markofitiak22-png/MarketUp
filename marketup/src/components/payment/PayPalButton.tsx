@@ -29,7 +29,7 @@ export default function PayPalButton({
           intent: "subscription",
         });
         setIsLoaded(true);
-      } catch (error) {
+      } catch {
         // PayPal script loading error handled silently
         onError("Failed to load PayPal. Please try again.");
       }
@@ -66,7 +66,7 @@ export default function PayPalButton({
     }
   };
 
-  const onApprove = async (data: any) => {
+  const onApprove = async (data: { orderID: string }) => {
     try {
       setIsProcessing(true);
 
@@ -93,7 +93,7 @@ export default function PayPalButton({
       } else {
         throw new Error("Payment capture failed");
       }
-    } catch (error) {
+    } catch {
       // PayPal payment capture error handled silently
       onError("Payment failed. Please try again.");
     } finally {
@@ -101,7 +101,7 @@ export default function PayPalButton({
     }
   };
 
-  const onError = (error: any) => {
+  const onError = () => {
     // PayPal error handled silently
     onError("PayPal payment failed. Please try again.");
   };

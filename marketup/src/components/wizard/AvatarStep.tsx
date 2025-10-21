@@ -55,7 +55,7 @@ const avatars = [
 
 export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) {
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar?.id || '');
-  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+  // const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
 
   const handleAvatarSelect = (avatar: typeof avatars[0]) => {
     setSelectedAvatar(avatar.id);

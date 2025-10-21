@@ -149,7 +149,7 @@ export default function ContactPage() {
                               required 
                               className="w-full p-4 rounded-xl border border-[var(--border)] bg-surface-elevated text-foreground placeholder-foreground-muted focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all duration-200 resize-none"
                             />
-                            <p className="text-sm text-foreground-muted">No bots, no spam. We'll only use your email to reply.</p>
+                            <p className="text-sm text-foreground-muted">No bots, no spam. We&apos;ll only use your email to reply.</p>
                           </div>
                           
                           {error && (

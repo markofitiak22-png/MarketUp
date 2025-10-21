@@ -35,42 +35,72 @@ export default function RememberMeSettings() {
   if (!session) return null;
 
   return (
-    <div className="bg-surface-elevated rounded-xl p-6 border border-border">
-      <h3 className="text-lg font-bold text-foreground mb-4">Remember Me Settings</h3>
+    <div className="glass-elevated rounded-2xl p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+          <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <h3 className="text-xl font-bold text-foreground">Remember Me Settings</h3>
+      </div>
       
-      <div className="space-y-4">
-        <div className="text-sm text-foreground-muted">
-          <p className="mb-2">
+      <div className="space-y-6">
+        <div className="p-4 rounded-xl bg-surface-elevated">
+          <p className="text-sm text-foreground-muted leading-relaxed">
             Remember Me allows you to stay signed in for up to 30 days on trusted devices.
-          </p>
-          <p>
             If you're using a shared or public computer, we recommend not using this feature.
           </p>
         </div>
 
-        <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
-          <div>
-            <h4 className="font-medium text-foreground">Clear Remember Me Sessions</h4>
-            <p className="text-sm text-foreground-muted">
-              This will sign you out of all devices where you've chosen to be remembered.
-            </p>
+        <div className="flex items-center justify-between p-4 rounded-xl bg-surface-elevated border border-border">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+              <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-semibold text-foreground">Clear Remember Me Sessions</h4>
+              <p className="text-sm text-foreground-muted">
+                This will sign you out of all devices where you've chosen to be remembered.
+              </p>
+            </div>
           </div>
           <button
             onClick={clearRememberMe}
             disabled={loading}
-            className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-3 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl hover:bg-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold"
           >
-            {loading ? 'Clearing...' : 'Clear All Sessions'}
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin"></div>
+                <span>Clearing...</span>
+              </div>
+            ) : (
+              'Clear All Sessions'
+            )}
           </button>
         </div>
 
         {message && (
-          <div className={`p-3 rounded-lg ${
+          <div className={`p-4 rounded-xl ${
             message.type === 'success' 
-              ? 'bg-green-100 text-green-800 border border-green-200' 
-              : 'bg-red-100 text-red-800 border border-red-200'
+              ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
+              : 'bg-red-500/10 text-red-400 border border-red-500/20'
           }`}>
-            {message.text}
+            <div className="flex items-center gap-2">
+              {message.type === 'success' ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              )}
+              <span className="font-medium">{message.text}</span>
+            </div>
           </div>
         )}
       </div>

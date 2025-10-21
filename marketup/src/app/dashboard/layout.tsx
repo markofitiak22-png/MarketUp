@@ -1,8 +1,7 @@
-"use client";
-import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import DashboardClient from "./DashboardClient";
 
 const navigation = [
   { 
@@ -62,136 +61,20 @@ const navigation = [
   },
 ];
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const pathname = usePathname();
-  const { data: session } = useSession();
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user?.email) {
+    return <div>Unauthorized</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile sidebar */}
-      <div className={`lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
-        <div className="fixed inset-0 z-50 flex">
-          <div className="fixed inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div className="relative flex w-72 sm:w-80 flex-col bg-surface border-r border-border">
-            <div className="flex h-16 items-center justify-between px-4 sm:px-6 border-b border-border">
-              <h2 className="text-lg font-semibold text-foreground">Dashboard</h2>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="p-2 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <nav className="flex-1 px-3 sm:px-4 py-6 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    pathname === item.href
-                      ? "bg-accent text-white"
-                      : "text-foreground-muted hover:text-foreground hover:bg-surface-elevated"
-                  }`}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  {item.icon}
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div>
-
-      {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-surface border-r border-border">
-          <div className="flex h-16 shrink-0 items-center px-6 border-b border-border">
-            <h2 className="text-lg font-semibold text-foreground">Dashboard</h2>
-          </div>
-          <nav className="flex flex-1 flex-col px-4 py-6">
-            <ul role="list" className="flex flex-1 flex-col gap-y-2">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      pathname === item.href
-                        ? "bg-accent text-white"
-                        : "text-foreground-muted hover:text-foreground hover:bg-surface-elevated"
-                    }`}
-                  >
-                    {item.icon}
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="lg:pl-64">
-        {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-border bg-surface px-3 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-          <button
-            type="button"
-            className="-m-2.5 p-2.5 text-foreground-muted lg:hidden hover:bg-surface-elevated rounded-lg transition-colors"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-          <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="flex flex-1"></div>
-            <div className="flex items-center gap-x-2 sm:gap-x-4 lg:gap-x-6">
-              {/* User menu */}
-              <div className="relative">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-white">
-                      {session?.user?.email?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="hidden sm:block">
-                    <p className="text-sm font-medium text-foreground truncate max-w-32 lg:max-w-none">
-                      {session?.user?.email}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => signOut()}
-                className="flex items-center gap-1 sm:gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors p-2 hover:bg-surface-elevated rounded-lg"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                <span className="hidden sm:inline">Sign out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Page content */}
-        <main className="py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
+    <DashboardClient userEmail={session.user.email}>
+      {children}
+    </DashboardClient>
   );
 }

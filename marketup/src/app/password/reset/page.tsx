@@ -4,30 +4,34 @@ import { useState } from "react";
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState("");
   const [stage, setStage] = useState<"request" | "reset">("request");
-  const [token, setToken] = useState("");
+  const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function requestLink() {
+  async function requestCode() {
     setLoading(true);
     setMsg(null);
     const res = await fetch("/api/password/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
     const data = await res.json();
     if (res.ok) {
-      setMsg("If the email exists, a reset link was sent. Dev token shown below.");
-      if (data.devToken) setToken(data.devToken);
+      setMsg("If the email exists, a reset code was sent to your email address.");
       setStage("reset");
     } else setMsg(data.error || "error");
     setLoading(false);
   }
 
   async function doReset() {
+    if (!code) {
+      setMsg("Please enter the reset code.");
+      return;
+    }
+    
     setLoading(true);
     setMsg(null);
-    const res = await fetch("/api/password/reset", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token, password }) });
+    const res = await fetch("/api/password/reset", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code, password }) });
     const data = await res.json();
-    setMsg(res.ok ? "Password reset. You can sign in now." : data.error || "error");
+    setMsg(res.ok ? "Password reset successfully! You can now sign in with your new password." : data.error || "error");
     setLoading(false);
   }
 
@@ -52,7 +56,7 @@ export default function ResetPasswordPage() {
             </div>
             <h1 className="text-3xl font-bold text-gradient mb-3">Reset Password</h1>
             <p className="text-foreground-muted text-lg">
-              {stage === "request" ? "Enter your email to receive a reset link" : "Enter the token and your new password"}
+              {stage === "request" ? "Enter your email to receive a reset code" : "Enter the code and your new password"}
             </p>
           </div>
 
@@ -98,7 +102,7 @@ export default function ResetPasswordPage() {
                   </div>
 
                   <button
-                    onClick={requestLink}
+                    onClick={requestCode}
                     disabled={loading}
                     className="w-full py-4 px-6 text-sm font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group"
                     style={{
@@ -113,7 +117,7 @@ export default function ResetPasswordPage() {
                         <span>Sending...</span>
                       </div>
                     ) : (
-                      <span className="relative z-10">Send Reset Link</span>
+                      <span className="relative z-10">Send Reset Code</span>
                     )}
                   </button>
                 </div>
@@ -121,16 +125,29 @@ export default function ResetPasswordPage() {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-bold text-foreground mb-3">
-                      Reset Token
+                      Reset Code
                     </label>
-                    <input
-                      type="text"
-                      placeholder="Enter the token from your email"
-                      value={token}
-                      onChange={(e) => setToken(e.target.value)}
-                      className="w-full px-5 py-4 rounded-2xl border transition-all duration-300 bg-white/5 text-foreground placeholder-foreground-muted focus:outline-none backdrop-blur-sm border-white/20 hover:border-white/30 focus:border-accent focus:ring-2 focus:ring-accent/20"
-                      required
-                    />
+                    <div className="relative group">
+                      <input
+                        type="text"
+                        placeholder="Enter 6-digit code from email"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        className="w-full px-5 py-4 rounded-2xl border transition-all duration-300 bg-white/5 text-foreground placeholder-foreground-muted focus:outline-none backdrop-blur-sm border-white/20 hover:border-white/30 focus:border-accent focus:ring-2 focus:ring-accent/20 text-center text-2xl font-mono tracking-widest"
+                        maxLength={6}
+                        required
+                      />
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-60 group-hover:opacity-100 transition-opacity">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <circle cx="12" cy="16" r="1"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <p className="text-xs text-foreground-muted mt-2">
+                      Check your email for the 6-digit code
+                    </p>
                   </div>
 
                   <div>
@@ -193,13 +210,21 @@ export default function ResetPasswordPage() {
               )}
 
               {/* Back to Sign In */}
-              <div className="mt-8 text-center">
+              <div className="mt-8 text-center space-y-2">
                 <a 
                   href="/auth" 
-                  className="text-sm text-accent hover:text-accent-hover font-bold transition-colors"
+                  className="text-sm text-accent hover:text-accent-hover font-bold transition-colors block"
                 >
                   ← Back to Sign In
                 </a>
+                {stage === "reset" && (
+                  <button
+                    onClick={() => setStage("request")}
+                    className="text-sm text-foreground-muted hover:text-foreground transition-colors"
+                  >
+                    Request new reset code
+                  </button>
+                )}
               </div>
             </div>
           </div>

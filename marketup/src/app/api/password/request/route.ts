@@ -17,19 +17,25 @@ export async function POST(request: Request) {
     // Always respond OK to avoid user enumeration
     if (!user) return NextResponse.json({ ok: true });
 
-    const token = crypto.randomBytes(32).toString("hex");
-    const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+    // Generate 6-digit OTP code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 1000 * 60 * 10); // 10 minutes
 
     // Reuse NextAuth VerificationToken table
     await prisma.verificationToken.create({
-      data: { identifier: email, token, expires },
+      data: { identifier: email, token: code, expires },
     });
 
     try {
-      await sendPasswordResetEmail(email, token);
-    } catch {
+      await sendPasswordResetEmail(email, code);
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      // In development, still return success but don't show code
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Dev code (not shown to user):', code);
+      }
       // fall back to dev mode behavior if mail fails
-      return NextResponse.json({ ok: true, devToken: token });
+      return NextResponse.json({ ok: true });
     }
 
     return NextResponse.json({ ok: true });

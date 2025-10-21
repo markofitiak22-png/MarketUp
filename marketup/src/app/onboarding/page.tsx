@@ -1,22 +1,38 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Container from "@/components/ui/Container";
-import Section from "@/components/ui/Section";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
 
-const countries = ["Sweden", "Turkey", "Ukraine", "USA", "UAE"];
-const languages = ["en", "sv", "tr", "uk", "ar"];
+const countries = [
+  { name: "Sweden", flag: "🇸🇪" },
+  { name: "Turkey", flag: "🇹🇷" },
+  { name: "Ukraine", flag: "🇺🇦" },
+  { name: "USA", flag: "🇺🇸" },
+  { name: "UAE", flag: "🇦🇪" }
+];
+
+const languages = [
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "sv", name: "Svenska", flag: "🇸🇪" },
+  { code: "tr", name: "Türkçe", flag: "🇹🇷" },
+  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ar", name: "العربية", flag: "🇦🇪" }
+];
 
 export default function OnboardingPage() {
+  const [currentStep, setCurrentStep] = useState(1);
   const [country, setCountry] = useState("");
   const [locale, setLocale] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const totalSteps = 3;
+  const progress = (currentStep / totalSteps) * 100;
+
   useEffect(() => {
+    // Block scroll on body
+    document.body.style.overflow = 'hidden';
+    
     (async () => {
       const res = await fetch("/api/profile");
       if (res.ok) {
@@ -25,7 +41,24 @@ export default function OnboardingPage() {
         setLocale(data.locale || "");
       }
     })();
+
+    // Cleanup: restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, []);
+
+  const nextStep = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
 
   async function save() {
     setError(null);
@@ -33,7 +66,7 @@ export default function OnboardingPage() {
     try {
       const res = await fetch("/api/profile", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ country, locale }) });
       if (!res.ok) throw new Error("Failed to save");
-      router.push("/");
+      router.push("/studio");
     } catch {
       setError("Could not save preferences. Please try again.");
     } finally {
@@ -41,71 +74,282 @@ export default function OnboardingPage() {
     }
   }
 
+  const canProceed = () => {
+    switch (currentStep) {
+      case 1: return true; // Welcome step
+      case 2: return country !== ""; // Country selection
+      case 3: return locale !== ""; // Language selection
+      default: return false;
+    }
+  };
+
   return (
-    <Container>
-      <Section size="lg">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="mx-auto glass rounded-2xl px-4 py-2 inline-flex items-center gap-2 text-sm mb-4">
-            <span className="text-gradient font-medium">Get started</span>
+    <div className="h-screen bg-background relative overflow-hidden" style={{ height: '100vh', overflow: 'hidden' }}>
+      {/* Animated background elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      
+      <div className="relative z-10">
+        {/* Progress Bar */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-[var(--border)]">
+          <div className="container py-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-sm">
+                  M
+                </div>
+                <span className="text-lg font-bold text-gradient bg-gradient-to-r from-foreground to-foreground-muted bg-clip-text text-transparent">
+                  MarketUp
+                </span>
+              </div>
+              <div className="text-sm text-foreground-muted">
+                Step {currentStep} of {totalSteps}
+              </div>
+            </div>
+            <div className="w-full bg-[var(--border)] rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-accent to-accent-2 h-2 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">Welcome to MarketUp</h1>
-          <p className="text-foreground-muted mt-3">Select your country and language. You can change these later in Settings.</p>
         </div>
-      </Section>
 
-      <Section>
-        <div className="max-w-lg mx-auto">
-          <Card variant="elevated" className="p-6">
-            <form className="grid gap-5" onSubmit={(e) => { e.preventDefault(); if (!loading && country && locale) save(); }}>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium" htmlFor="country">Country</label>
-                <div className="relative">
-                  <select id="country" value={country} onChange={(e) => setCountry(e.target.value)} className="pr-10">
-                    <option value="" disabled>Choose a country…</option>
-                    {countries.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted">
-                    {/* Chevron */}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
+        {/* Main Content */}
+        <div>
+          <section className="section-lg text-center">
+            <div className="container">
+              <div className="max-w-4xl mx-auto">
+                {/* Step 1: Welcome */}
+                {currentStep === 1 && (
+                  <div className="animate-fade-in">
+                    <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
+                      <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
+                      <span className="text-gradient font-semibold text-base">Welcome to MarketUp</span>
+                      <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
+                    </div>
+                    
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9] mb-8">
+                      Let's get you <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">started</span>
+                    </h1>
+                    
+                    <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light mb-12">
+                      We'll help you set up your account in just a few simple steps. <span className="text-accent font-medium">This will only take 2 minutes.</span>
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                      <div className="glass-elevated rounded-2xl p-6 text-center">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
+                          1
+                        </div>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Personalize</h3>
+                        <p className="text-sm text-foreground-muted">Choose your country and language preferences</p>
+                      </div>
+                      <div className="glass-elevated rounded-2xl p-6 text-center">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
+                          2
+                        </div>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Configure</h3>
+                        <p className="text-sm text-foreground-muted">Set up your video generation preferences</p>
+                      </div>
+                      <div className="glass-elevated rounded-2xl p-6 text-center">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
+                          3
+                        </div>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Create</h3>
+                        <p className="text-sm text-foreground-muted">Start creating amazing AI videos</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 2: Country Selection */}
+                {currentStep === 2 && (
+                  <div className="animate-fade-in">
+                    <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
+                      <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
+                      <span className="text-gradient font-semibold text-base">Step 1 of 3</span>
+                      <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
+                    </div>
+                    
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
+                      Where are you <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">located?</span>
+                    </h1>
+                    
+                    <p className="text-lg md:text-xl text-foreground-muted max-w-2xl mx-auto leading-relaxed font-light mb-12">
+                      This helps us provide relevant content and features for your region.
+                    </p>
+
+                    <div className="max-w-3xl mx-auto">
+                      <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-3xl" />
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {countries.map((countryItem) => (
+                            <button
+                              key={countryItem.name}
+                              type="button"
+                              onClick={() => setCountry(countryItem.name)}
+                              className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 ${
+                                country === countryItem.name
+                                  ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20 scale-105'
+                                  : 'border-[var(--border)] hover:border-accent/50 hover:bg-accent/5 hover:scale-102'
+                              }`}
+                            >
+                              <div className="flex flex-col items-center gap-3">
+                                <span className="text-4xl">{countryItem.flag}</span>
+                                <span className="font-medium text-foreground text-center">{countryItem.name}</span>
+                              </div>
+                              {country === countryItem.name && (
+                                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
+                                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                 </div>
               </div>
+                )}
 
-              <div className="grid gap-2">
-                <label className="text-sm font-medium" htmlFor="language">Language</label>
-                <div className="relative">
-                  <select id="language" value={locale} onChange={(e) => setLocale(e.target.value)} className="pr-10">
-                    <option value="" disabled>Choose a language…</option>
-                    {languages.map((l) => (
-                      <option key={l} value={l}>{l}</option>
-                    ))}
-                  </select>
-                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                {/* Step 3: Language Selection */}
+                {currentStep === 3 && (
+                  <div className="animate-fade-in">
+                    <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
+                      <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
+                      <span className="text-gradient font-semibold text-base">Step 2 of 3</span>
+                      <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
+                    </div>
+                    
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
+                      What's your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">language?</span>
+                    </h1>
+                    
+                    <p className="text-lg md:text-xl text-foreground-muted max-w-2xl mx-auto leading-relaxed font-light mb-12">
+                      Choose your preferred language for the interface and content.
+                    </p>
+
+                    <div className="max-w-3xl mx-auto">
+                      <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/10 to-transparent rounded-bl-3xl" />
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {languages.map((languageItem) => (
+                            <button
+                              key={languageItem.code}
+                              type="button"
+                              onClick={() => setLocale(languageItem.code)}
+                              className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 ${
+                                locale === languageItem.code
+                                  ? 'border-accent-2 bg-accent-2/10 shadow-lg shadow-accent-2/20 scale-105'
+                                  : 'border-[var(--border)] hover:border-accent-2/50 hover:bg-accent-2/5 hover:scale-102'
+                              }`}
+                            >
+                              <div className="flex flex-col items-center gap-3">
+                                <span className="text-4xl">{languageItem.flag}</span>
+                                <div className="text-center">
+                                  <div className="font-medium text-foreground">{languageItem.name}</div>
+                                  <div className="text-sm text-foreground-muted">{languageItem.code.toUpperCase()}</div>
+                                </div>
+                              </div>
+                              {locale === languageItem.code && (
+                                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center">
+                                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Navigation Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-16">
+                  {currentStep > 1 && (
+                    <button
+                      onClick={prevStep}
+                      className="group btn-outline btn-lg px-8 py-4 text-lg font-semibold hover:bg-accent/5 transition-all duration-300 flex items-center gap-3"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Back
+                    </button>
+                  )}
+
+                  {currentStep < totalSteps ? (
+                    <button
+                      onClick={nextStep}
+                      disabled={!canProceed()}
+                      className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className="relative z-10 flex items-center gap-3">
+                        Continue
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </button>
+                  ) : (
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <a 
+                        href="/studio" 
+                        className="group btn-outline btn-lg px-8 py-4 text-lg font-semibold hover:bg-accent/5 transition-all duration-300 flex items-center gap-3"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Skip for now
+                      </a>
+                      <button 
+                        onClick={save}
+                        disabled={loading || !country || !locale}
+                        className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className="relative z-10 flex items-center gap-3">
+                          {loading ? (
+                            <>
+                              <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Setting up...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              Complete Setup
+                            </>
+                          )}
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </button>
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {error ? <p className="text-sm text-[var(--error)]">{error}</p> : null}
-
-              <div className="flex items-center justify-between pt-2">
-                <a href="/" className="btn-ghost">Skip for now</a>
-                <Button type="submit" variant="primary" className="btn-lg" disabled={loading || !country || !locale}>
-                  {loading ? "Saving…" : "Continue"}
-                </Button>
+                {/* Error Message */}
+                {error && (
+                  <div className="mt-8 max-w-md mx-auto p-4 rounded-xl bg-error/10 border border-error/20 text-error text-sm text-center">
+                    {error}
+                  </div>
+                )}
               </div>
-            </form>
-          </Card>
+              </div>
+          </section>
         </div>
-      </Section>
-    </Container>
+      </div>
+    </div>
   );
 }
-
-

@@ -348,12 +348,105 @@ select:focus {
 	}
 }
 
+@keyframes professionalFloat {
+
+	0%,
+	100% {
+		transform: translateY(0px) rotate(0deg);
+	}
+
+	25% {
+		transform: translateY(-8px) rotate(0.5deg);
+	}
+
+	50% {
+		transform: translateY(-4px) rotate(0deg);
+	}
+
+	75% {
+		transform: translateY(-12px) rotate(-0.5deg);
+	}
+}
+
+@keyframes professionalGlow {
+
+	0%,
+	100% {
+		box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+	}
+
+	50% {
+		box-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+	}
+}
+
+@keyframes professionalShimmer {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+}
+
+@keyframes professionalScale {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+
+	50% {
+		transform: scale(1.05);
+		opacity: 0.9;
+	}
+
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
 .animate-float {
 	animation: float 3s ease-in-out infinite;
 }
 
 .animate-glow {
 	animation: glow 2s ease-in-out infinite;
+}
+
+.animate-professional-float {
+	animation: professionalFloat 4s ease-in-out infinite;
+}
+
+.animate-professional-glow {
+	animation: professionalGlow 3s ease-in-out infinite;
+}
+
+.animate-professional-shimmer {
+	position: relative;
+	overflow: hidden;
+}
+
+.animate-professional-shimmer::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+	animation: professionalShimmer 3s infinite;
+}
+
+.animate-professional-scale {
+	animation: professionalScale 2s ease-in-out infinite;
 }
 
 .animate-shimmer {
@@ -508,6 +601,41 @@ select:focus {
 	border-radius: 50%;
 	background: var(--success);
 	animation: pulse 2s infinite;
+}
+
+.professional-card {
+	background: linear-gradient(135deg, var(--surface-elevated) 0%, var(--surface) 100%);
+	border: 1px solid var(--border-strong);
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.3),
+		0 0 0 1px rgba(255, 255, 255, 0.05),
+		inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+}
+
+.professional-card:hover {
+	box-shadow:
+		0 12px 48px rgba(0, 0, 0, 0.4),
+		0 0 0 1px rgba(99, 102, 241, 0.2),
+		inset 0 1px 0 rgba(255, 255, 255, 0.15);
+	transform: translateY(-2px);
+}
+
+.professional-gradient {
+	background: linear-gradient(135deg,
+			rgba(99, 102, 241, 0.1) 0%,
+			rgba(79, 70, 229, 0.05) 50%,
+			rgba(139, 92, 246, 0.1) 100%);
+}
+
+.professional-text-shadow {
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.professional-border-gradient {
+	border: 1px solid;
+	border-image: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent)) 1;
 }
 
 @keyframes pulse {

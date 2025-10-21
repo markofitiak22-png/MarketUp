@@ -8,14 +8,17 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   session: { 
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days default
+    updateAge: 24 * 60 * 60, // 24 hours - how often to update session
   },
   jwt: {
     maxAge: 30 * 24 * 60 * 60, // 30 days default
   },
+  pages: { signIn: "/auth" },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: false, // Disable debug to reduce logs
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
@@ -63,6 +66,4 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  pages: { signIn: "/auth" },
-  secret: process.env.NEXTAUTH_SECRET,
 };

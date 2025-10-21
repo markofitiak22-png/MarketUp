@@ -76,88 +76,103 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Choose Your Avatar</h2>
-        <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          Select a virtual presenter who will deliver your message. Each avatar has a unique personality and speaking style.
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
+          Choose your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">avatar</span>
+        </h1>
+        <p className="text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
+          Select a virtual presenter who will deliver your message. <span className="text-accent font-medium">Each avatar has a unique personality and speaking style.</span>
         </p>
       </div>
 
       {/* Avatar Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {avatars.map((avatar) => (
-          <div
-            key={avatar.id}
-            className={`glass rounded-2xl p-6 cursor-pointer transition-all duration-200 hover:scale-105 ${
-              selectedAvatar === avatar.id
-                ? 'ring-2 ring-accent bg-accent/10'
-                : 'hover:bg-surface-elevated'
-            }`}
-            onClick={() => handleAvatarSelect(avatar)}
-          >
-            <div className="relative">
-              <div className="aspect-square rounded-xl overflow-hidden mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20">
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-2xl font-bold">
-                    {avatar.name.charAt(0)}
+      <div className="max-w-5xl mx-auto">
+        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {avatars.map((avatar) => (
+              <div
+                key={avatar.id}
+                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                  selectedAvatar === avatar.id
+                    ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20 scale-105'
+                    : 'border-[var(--border)] hover:border-accent/50 hover:bg-accent/5 hover:scale-102'
+                }`}
+                onClick={() => handleAvatarSelect(avatar)}
+              >
+                <div className="relative">
+                  <div className="aspect-square rounded-xl overflow-hidden mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20">
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-2xl font-bold">
+                        {avatar.name.charAt(0)}
+                      </div>
+                    </div>
                   </div>
+                  
+                  {selectedAvatar === avatar.id && (
+                    <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{avatar.name}</h3>
+                  <p className="text-sm text-foreground-muted">{avatar.description}</p>
                 </div>
               </div>
-              
-              {selectedAvatar === avatar.id && (
-                <div className="absolute top-2 right-2 w-6 h-6 bg-accent rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-            </div>
-            
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-foreground mb-2">{avatar.name}</h3>
-              <p className="text-sm text-foreground-muted">{avatar.description}</p>
-            </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
 
       {/* Preview Section */}
       {selectedAvatar && (
-        <div className="glass-elevated rounded-2xl p-8">
-          <h3 className="text-xl font-bold text-foreground mb-4 text-center">Preview</h3>
-          <div className="flex items-center justify-center">
-            <div className="relative">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-3xl font-bold">
-                  {data.avatar?.name.charAt(0)}
+        <div className="max-w-2xl mx-auto">
+          <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+            
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Preview</h3>
+            <div className="flex items-center justify-center">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-3xl font-bold">
+                    {data.avatar?.name.charAt(0)}
+                  </div>
+                </div>
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </div>
             </div>
+            <p className="text-center text-foreground-muted mt-4 text-lg">
+              <span className="font-semibold text-accent">{data.avatar?.name}</span> will present your video
+            </p>
           </div>
-          <p className="text-center text-foreground-muted mt-4">
-            {data.avatar?.name} will present your video
-          </p>
         </div>
       )}
 
       {/* Navigation */}
-      <div className="flex justify-end">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <button
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className="btn-primary btn-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Continue
-          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <span className="relative z-10 flex items-center gap-3">
+            Continue
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </button>
       </div>
     </div>

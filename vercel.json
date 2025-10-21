@@ -1,0 +1,6 @@
+{
+	"buildCommand": "cd marketup && npm run build",
+	"outputDirectory": "marketup/.next",
+	"installCommand": "cd marketup && npm install",
+	"framework": "nextjs"
+}

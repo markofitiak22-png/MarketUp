@@ -180,92 +180,65 @@ export default function VideoCreationWizard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="p-2 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg transition-colors"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-              </button>
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold text-foreground">Create Video</h1>
-                <p className="text-xs sm:text-sm text-foreground-muted">Step {currentStep + 1} of {steps.length}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm text-foreground-muted hidden sm:inline">Progress:</span>
-                <div className="w-20 sm:w-32 bg-border rounded-full h-2">
-                  <div 
-                    className="bg-accent h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-                  />
+    <div className="min-h-screen bg-background relative">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      
+      <div className="relative z-10">
+        {/* Progress Bar */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-[var(--border)]">
+          <div className="container">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="p-2 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                </button>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-sm">
+                  M
                 </div>
-                <span className="text-xs sm:text-sm text-foreground-muted">
-                  {Math.round(((currentStep + 1) / steps.length) * 100)}%
+                <span className="text-lg font-bold text-gradient bg-gradient-to-r from-foreground to-foreground-muted bg-clip-text text-transparent">
+                  MarketUp Studio
                 </span>
               </div>
+              <div className="text-sm text-foreground-muted">
+                Step {currentStep + 1} of {steps.length}
+              </div>
+            </div>
+            <div className="w-full bg-[var(--border)] rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-accent to-accent-2 h-2 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              />
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Progress Steps */}
-      <div className="bg-surface border-b border-border">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-          <div className="flex items-center justify-between py-3 sm:py-4 overflow-x-auto">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center flex-shrink-0">
-                <button
-                  onClick={() => goToStep(index)}
-                  disabled={index > currentStep}
-                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                    index === currentStep
-                      ? 'bg-accent text-white'
-                      : index < currentStep
-                      ? 'bg-accent/20 text-accent hover:bg-accent/30'
-                      : 'text-foreground-muted cursor-not-allowed'
-                  }`}
-                >
-                  <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs ${
-                    index === currentStep
-                      ? 'bg-white/20'
-                      : index < currentStep
-                      ? 'bg-accent'
-                      : 'bg-border'
-                  }`}>
-                    {index < currentStep ? (
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      index + 1
-                    )}
-                  </div>
-                  <span className="hidden sm:block">{step.title}</span>
-                </button>
+        {/* Main Content */}
+        <div>
+          <section className=" pt-12 text-center">
+            <div className="container">
+              <div className="max-w-6xl mx-auto">
+                {/* Step Badge */}
+                <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
+                  <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
+                  <span className="text-gradient font-semibold text-base">Step {currentStep + 1} of {steps.length}</span>
+                  <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
+                </div>
                 
-                {index < steps.length - 1 && (
-                  <div className="hidden sm:block w-6 lg:w-8 h-px bg-border mx-1 lg:mx-2" />
-                )}
+                {/* Step Content */}
+                <div className="animate-fade-in">
+                  {renderCurrentStep()}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="max-w-4xl mx-auto">
-          {renderCurrentStep()}
+            </div>
+          </section>
         </div>
       </div>
     </div>

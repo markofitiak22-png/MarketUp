@@ -116,126 +116,147 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
   const currentLanguage = languages.find(l => l.code === selectedLanguage);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Language & Voice</h2>
-        <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          Choose the language and voice for your video. You can preview each voice before selecting.
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
+          Language & <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">Voice</span>
+        </h1>
+        <p className="text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
+          Choose the language and voice for your video. <span className="text-accent font-medium">You can preview each voice before selecting.</span>
         </p>
       </div>
 
       {/* Language Selection */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-foreground">Select Language</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {languages.map((language) => (
-            <button
-              key={language.code}
-              onClick={() => handleLanguageSelect(language)}
-              className={`glass rounded-xl p-4 text-center transition-all duration-200 hover:scale-105 ${
-                selectedLanguage === language.code
-                  ? 'ring-2 ring-accent bg-accent/10'
-                  : 'hover:bg-surface-elevated'
-              }`}
-            >
-              <div className="text-3xl mb-2">{language.flag}</div>
-              <div className="text-sm font-medium text-foreground">{language.name}</div>
-            </button>
-          ))}
+      <div className="max-w-5xl mx-auto">
+        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+          
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Select Language</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {languages.map((language) => (
+              <button
+                key={language.code}
+                onClick={() => handleLanguageSelect(language)}
+                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 text-center ${
+                  selectedLanguage === language.code
+                    ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20 scale-105'
+                    : 'border-[var(--border)] hover:border-accent/50 hover:bg-accent/5 hover:scale-102'
+                }`}
+              >
+                <div className="text-4xl mb-3">{language.flag}</div>
+                <div className="text-sm font-semibold text-foreground">{language.name}</div>
+                {selectedLanguage === language.code && (
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Voice Selection */}
       {currentLanguage && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-foreground">Choose Voice</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {currentLanguage.voices.map((voice) => (
-              <div
-                key={voice.id}
-                className={`glass rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-105 ${
-                  selectedVoice === voice.id
-                    ? 'ring-2 ring-accent bg-accent/10'
-                    : 'hover:bg-surface-elevated'
-                }`}
-                onClick={() => handleVoiceSelect(voice)}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
-                      <span className="text-lg">
-                        {voice.gender === 'female' ? '👩' : '👨'}
-                      </span>
+        <div className="max-w-5xl mx-auto">
+          <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+            
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Choose Voice</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {currentLanguage.voices.map((voice) => (
+                <div
+                  key={voice.id}
+                  className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                    selectedVoice === voice.id
+                      ? 'border-accent-2 bg-accent-2/10 shadow-lg shadow-accent-2/20 scale-105'
+                      : 'border-[var(--border)] hover:border-accent-2/50 hover:bg-accent-2/5 hover:scale-102'
+                  }`}
+                  onClick={() => handleVoiceSelect(voice)}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent-2/20 to-purple-500/20 flex items-center justify-center">
+                        <span className="text-2xl">
+                          {voice.gender === 'female' ? '👩' : '👨'}
+                        </span>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-foreground text-lg">{voice.name}</div>
+                        <div className="text-sm text-foreground-muted">{voice.accent}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-semibold text-foreground">{voice.name}</div>
-                      <div className="text-sm text-foreground-muted">{voice.accent}</div>
-                    </div>
+                    
+                    {selectedVoice === voice.id && (
+                      <div className="w-6 h-6 bg-gradient-to-br from-accent-2 to-purple-500 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                   
-                  {selectedVoice === voice.id && (
-                    <div className="w-5 h-5 bg-accent rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playVoicePreview(voice.id);
+                    }}
+                    disabled={playingVoice === voice.id}
+                    className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-surface-elevated hover:bg-surface transition-colors disabled:opacity-50"
+                  >
+                    {playingVoice === voice.id ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-accent-2 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-sm font-medium">Playing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-sm font-medium">Preview</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-                
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    playVoicePreview(voice.id);
-                  }}
-                  disabled={playingVoice === voice.id}
-                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-surface-elevated hover:bg-surface transition-colors disabled:opacity-50"
-                >
-                  {playingVoice === voice.id ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                      <span className="text-sm">Playing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-sm">Preview</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {/* Preview Section */}
       {data.language && (
-        <div className="glass-elevated rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4 text-center">Selected Voice</h3>
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
-              <span className="text-2xl">
-                {data.language.voice.gender === 'female' ? '👩' : '👨'}
-              </span>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-semibold text-foreground">{data.language.voice.name}</div>
-              <div className="text-sm text-foreground-muted">{data.language.name}</div>
+        <div className="max-w-2xl mx-auto">
+          <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+            
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Selected Voice</h3>
+            <div className="flex items-center justify-center gap-6">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                <span className="text-3xl">
+                  {data.language.voice.gender === 'female' ? '👩' : '👨'}
+                </span>
+              </div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-foreground">{data.language.voice.name}</div>
+                <div className="text-lg text-foreground-muted">{data.language.name}</div>
+              </div>
             </div>
           </div>
         </div>
       )}
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <button
           onClick={onPrev}
-          className="btn-outline btn-lg px-8 py-3"
+          className="group btn-outline btn-lg px-8 py-4 text-lg font-semibold hover:bg-accent/5 transition-all duration-300 flex items-center gap-3"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back
@@ -244,12 +265,15 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
         <button
           onClick={handleNext}
           disabled={!selectedLanguage || !selectedVoice}
-          className="btn-primary btn-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Continue
-          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <span className="relative z-10 flex items-center gap-3">
+            Continue
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </button>
       </div>
     </div>

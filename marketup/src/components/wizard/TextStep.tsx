@@ -74,7 +74,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         duration
       }
     });
-  }, [text, data.settings, onUpdate]);
+  }, [text]);
 
   const handleTemplateSelect = (template: typeof templates[0]) => {
     setText(template.text);
@@ -105,115 +105,136 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Write Your Script</h2>
-        <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          Write the text that your avatar will speak. You can start with a template or write your own content.
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
+          Write your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">script</span>
+        </h1>
+        <p className="text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
+          Write the text that your avatar will speak. <span className="text-accent font-medium">You can start with a template or write your own content.</span>
         </p>
       </div>
 
       {/* Templates */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-foreground">Quick Templates</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          {templates.map((template) => (
-            <div
-              key={template.id}
-              className={`glass rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-105 ${
-                selectedTemplate === template.id
-                  ? 'ring-2 ring-accent bg-accent/10'
-                  : 'hover:bg-surface-elevated'
-              }`}
-              onClick={() => handleTemplateSelect(template)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-foreground">{template.title}</h4>
-                <span className="text-xs px-2 py-1 bg-accent/20 text-accent rounded-full">
-                  {template.category}
-                </span>
+      <div className="max-w-5xl mx-auto">
+        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+          
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Quick Templates</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {templates.map((template) => (
+              <div
+                key={template.id}
+                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                  selectedTemplate === template.id
+                    ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20 scale-105'
+                    : 'border-[var(--border)] hover:border-accent/50 hover:bg-accent/5 hover:scale-102'
+                }`}
+                onClick={() => handleTemplateSelect(template)}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-foreground text-lg">{template.title}</h4>
+                  <span className="text-xs px-3 py-1 bg-accent/20 text-accent rounded-full font-medium">
+                    {template.category}
+                  </span>
+                </div>
+                <p className="text-sm text-foreground-muted line-clamp-3 leading-relaxed">
+                  {template.text}
+                </p>
+                {selectedTemplate === template.id && (
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-foreground-muted line-clamp-3">
-                {template.text}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Text Editor */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-foreground">Your Script</h3>
-          <div className="flex items-center gap-4 text-sm text-foreground-muted">
-            <span>{wordCount} words</span>
-            <span>{charCount} characters</span>
-            <span className={getDurationColor()}>
-              ~{estimatedDuration}s ({getDurationLabel()})
-            </span>
+      <div className="max-w-5xl mx-auto">
+        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+          
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-bold text-foreground">Your Script</h3>
+            <div className="flex items-center gap-6 text-sm text-foreground-muted">
+              <span className="font-medium">{wordCount} words</span>
+              <span className="font-medium">{charCount} characters</span>
+              <span className={`font-bold ${getDurationColor()}`}>
+                ~{estimatedDuration}s ({getDurationLabel()})
+              </span>
+            </div>
           </div>
-        </div>
-        
-        <div className="glass rounded-2xl p-6">
-          <textarea
-            value={text}
-            onChange={(e) => handleTextChange(e.target.value)}
-            placeholder="Write your script here... Your avatar will speak this text naturally."
-            className="w-full h-64 resize-none bg-transparent text-foreground placeholder-foreground-muted focus:outline-none text-lg leading-relaxed"
-          />
+          
+          <div className="glass rounded-2xl p-6">
+            <textarea
+              value={text}
+              onChange={(e) => handleTextChange(e.target.value)}
+              placeholder="Write your script here... Your avatar will speak this text naturally."
+              className="w-full h-64 resize-none bg-transparent text-foreground placeholder-foreground-muted focus:outline-none text-lg leading-relaxed"
+            />
+          </div>
         </div>
       </div>
 
       {/* Tips */}
-      <div className="glass-elevated rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Writing Tips</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg className="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-foreground">Natural Speech</h4>
-              <p className="text-sm text-foreground-muted">Write as you would speak naturally, with pauses and emphasis.</p>
-            </div>
-          </div>
+      <div className="max-w-5xl mx-auto">
+        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
           
-          <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg className="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Writing Tips</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground text-lg mb-2">Natural Speech</h4>
+                <p className="text-foreground-muted">Write as you would speak naturally, with pauses and emphasis.</p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-foreground">Optimal Length</h4>
-              <p className="text-sm text-foreground-muted">Keep videos between 30-120 seconds for best engagement.</p>
+            
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-accent-2/20 to-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-accent-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground text-lg mb-2">Optimal Length</h4>
+                <p className="text-foreground-muted">Keep videos between 30-120 seconds for best engagement.</p>
+              </div>
             </div>
-          </div>
-          
-          <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg className="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
+            
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground text-lg mb-2">Clear Structure</h4>
+                <p className="text-foreground-muted">Start with a hook, deliver your message, and end with a call to action.</p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-foreground">Clear Structure</h4>
-              <p className="text-sm text-foreground-muted">Start with a hook, deliver your message, and end with a call to action.</p>
-            </div>
-          </div>
-          
-          <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg className="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-foreground">Pronunciation</h4>
-              <p className="text-sm text-foreground-muted">Use phonetic spelling for difficult words: "AI" as "A-I".</p>
+            
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-accent-2/20 to-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-accent-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground text-lg mb-2">Pronunciation</h4>
+                <p className="text-foreground-muted">Use phonetic spelling for difficult words: "AI" as "A-I".</p>
+              </div>
             </div>
           </div>
         </div>
@@ -221,20 +242,24 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
 
       {/* Preview */}
       {text && (
-        <div className="glass-elevated rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Preview</h3>
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-xl">
-                {data.avatar?.gender === 'female' ? '👩' : '👨'}
-              </span>
-            </div>
-            <div className="flex-1">
-              <div className="text-sm text-foreground-muted mb-2">
-                {data.avatar?.name} • {data.language?.name} • ~{estimatedDuration}s
+        <div className="max-w-2xl mx-auto">
+          <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+            
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Preview</h3>
+            <div className="flex items-start gap-6">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center flex-shrink-0">
+                <span className="text-2xl">
+                  {data.avatar?.gender === 'female' ? '👩' : '👨'}
+                </span>
               </div>
-              <div className="text-foreground leading-relaxed">
-                {text}
+              <div className="flex-1">
+                <div className="text-sm text-foreground-muted mb-3 font-medium">
+                  {data.avatar?.name} • {data.language?.name} • ~{estimatedDuration}s
+                </div>
+                <div className="text-foreground leading-relaxed text-lg">
+                  {text}
+                </div>
               </div>
             </div>
           </div>
@@ -242,12 +267,12 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
       )}
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <button
           onClick={onPrev}
-          className="btn-outline btn-lg px-8 py-3"
+          className="group btn-outline btn-lg px-8 py-4 text-lg font-semibold hover:bg-accent/5 transition-all duration-300 flex items-center gap-3"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back
@@ -256,12 +281,15 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         <button
           onClick={handleNext}
           disabled={!text.trim()}
-          className="btn-primary btn-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Continue
-          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <span className="relative z-10 flex items-center gap-3">
+            Continue
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </button>
       </div>
     </div>

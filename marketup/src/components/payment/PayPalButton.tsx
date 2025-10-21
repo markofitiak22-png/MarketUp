@@ -30,7 +30,7 @@ export default function PayPalButton({
         });
         setIsLoaded(true);
       } catch (error) {
-        console.error("Failed to load PayPal script:", error);
+        // PayPal script loading error handled silently
         onError("Failed to load PayPal. Please try again.");
       }
     };
@@ -60,7 +60,7 @@ export default function PayPalButton({
 
       return orderId;
     } catch (error) {
-      console.error("Error creating PayPal order:", error);
+      // PayPal order creation error handled silently
       onError("Failed to create PayPal order. Please try again.");
       throw error;
     }
@@ -94,7 +94,7 @@ export default function PayPalButton({
         throw new Error("Payment capture failed");
       }
     } catch (error) {
-      console.error("Error capturing PayPal payment:", error);
+      // PayPal payment capture error handled silently
       onError("Payment failed. Please try again.");
     } finally {
       setIsProcessing(false);
@@ -102,7 +102,7 @@ export default function PayPalButton({
   };
 
   const onError = (error: any) => {
-    console.error("PayPal error:", error);
+    // PayPal error handled silently
     onError("PayPal payment failed. Please try again.");
   };
 

@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     if (!paypalResponse.ok) {
       const errorData = await paypalResponse.json();
-      console.error("PayPal order capture failed:", errorData);
+      // PayPal order capture failed - handled silently
       return NextResponse.json(
         { error: "Failed to capture PayPal order" },
         { status: 500 }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error("PayPal order capture error:", error);
+    // PayPal order capture error - handled silently
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

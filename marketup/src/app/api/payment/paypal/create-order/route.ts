@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     if (!paypalResponse.ok) {
       const errorData = await paypalResponse.json();
-      console.error("PayPal order creation failed:", errorData);
+      // PayPal order creation failed - handled silently
       return NextResponse.json(
         { error: "Failed to create PayPal order" },
         { status: 500 }
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error("PayPal order creation error:", error);
+    // PayPal order creation error - handled silently
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

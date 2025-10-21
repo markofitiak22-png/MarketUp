@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 
-export const config = { api: { bodyParser: false } } as const;
-
 async function buffer(req: Request) {
   const arrayBuffer = await req.arrayBuffer();
   return Buffer.from(arrayBuffer);

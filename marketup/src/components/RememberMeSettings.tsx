@@ -25,7 +25,7 @@ export default function RememberMeSettings() {
       } else {
         setMessage({ type: 'error', text: 'Failed to clear remember me sessions' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'An error occurred while clearing sessions' });
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ export default function RememberMeSettings() {
         <div className="p-4 rounded-xl bg-surface-elevated">
           <p className="text-sm text-foreground-muted leading-relaxed">
             Remember Me allows you to stay signed in for up to 30 days on trusted devices.
-            If you're using a shared or public computer, we recommend not using this feature.
+            If you&apos;re using a shared or public computer, we recommend not using this feature.
           </p>
         </div>
 
@@ -63,7 +63,7 @@ export default function RememberMeSettings() {
             <div>
               <h4 className="font-semibold text-foreground">Clear Remember Me Sessions</h4>
               <p className="text-sm text-foreground-muted">
-                This will sign you out of all devices where you've chosen to be remembered.
+                This will sign you out of all devices where you&apos;ve chosen to be remembered.
               </p>
             </div>
           </div>

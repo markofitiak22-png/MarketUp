@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import UserMenu from "@/components/UserMenu";
 
 const links = [
@@ -32,18 +34,20 @@ export default function Header() {
     >
       <div className="container flex items-center justify-between" style={{ minHeight: 72 }}>
         {/* Brand */}
-        <a href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight">
+        <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight">
           <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg">
-            <img 
+            <Image 
               src="/favicon-32x32.png" 
               alt="MarketUp Logo" 
+              width={32}
+              height={32}
               className="w-full h-full object-cover"
             />
           </div>
           <span className="text-gradient bg-gradient-to-r from-foreground to-foreground-muted bg-clip-text text-transparent">
             MarketUp
           </span>
-        </a>
+        </Link>
 
         {/* Desktop navigation */}
         <nav className="hidden lg:flex items-center gap-8 text-sm">

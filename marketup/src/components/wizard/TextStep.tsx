@@ -79,7 +79,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         }
       });
     }
-  }, [text, estimatedDuration]);
+  }, [text, estimatedDuration, data.settings, onUpdate]);
 
   const handleTemplateSelect = (template: typeof templates[0]) => {
     setText(template.text);

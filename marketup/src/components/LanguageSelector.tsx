@@ -14,7 +14,7 @@ export default function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState(languages[0]);
   const [isDetecting, setIsDetecting] = useState(true);
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     // Auto-detect browser language

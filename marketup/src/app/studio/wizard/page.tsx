@@ -36,13 +36,13 @@ export default function WizardPage() {
     return true;
   }, [step, avatar, language, voice, backgrounds, script]);
 
-  function addTo(list: string[], setter: (v: string[]) => void, value: string, max: number) {
-    const v = value.trim();
-    if (!v) return;
-    if (list.includes(v)) return;
-    if (list.length >= max) return;
-    setter([...list, v]);
-  }
+  // function addTo(list: string[], setter: (v: string[]) => void, value: string, max: number) {
+  //   const v = value.trim();
+  //   if (!v) return;
+  //   if (list.includes(v)) return;
+  //   if (list.length >= max) return;
+  //   setter([...list, v]);
+  // }
 
   async function submit() {
     setSubmitting(true);
@@ -64,7 +64,7 @@ export default function WizardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "error");
       setJobId(data.id);
-    } catch (e) {
+    } catch {
       setSubmitting(false);
       setStatus("FAILED");
     }

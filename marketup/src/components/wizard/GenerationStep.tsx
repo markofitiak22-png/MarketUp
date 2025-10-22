@@ -30,7 +30,7 @@ export default function GenerationStep({
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [estimatedTime, setEstimatedTime] = useState(0);
-  const [generationId, setGenerationId] = useState<string | null>(null);
+  // const [generationId, setGenerationId] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Cleanup interval on unmount
@@ -52,8 +52,8 @@ export default function GenerationStep({
     setEstimatedTime(Math.ceil(totalTime / 1000));
     
     // Generate unique ID for this generation
-    const id = `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    setGenerationId(id);
+    // const id = `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // setGenerationId(id);
     
     // Simulate generation process with proper step progression
     let currentProgress = 0;
@@ -62,7 +62,7 @@ export default function GenerationStep({
     intervalRef.current = setInterval(() => {
       // Move to next step if current step is complete
       if (stepIndex < generationSteps.length) {
-        const step = generationSteps[stepIndex];
+        // const step = generationSteps[stepIndex];
         const stepProgress = (stepIndex + 1) * (100 / generationSteps.length);
         
         if (currentProgress >= stepProgress) {
@@ -98,10 +98,10 @@ export default function GenerationStep({
     setIsGenerating(false);
     setCurrentStep(0);
     setProgress(0);
-    setGenerationId(null);
+    // setGenerationId(null);
   };
 
-  const getStepIcon = (stepIndex: number, stepId: string) => {
+  const getStepIcon = (stepIndex: number) => {
     if (stepIndex < currentStep) {
       return (
         <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
@@ -219,7 +219,7 @@ export default function GenerationStep({
             {generationSteps.map((step, index) => (
               <div key={step.id} className="flex items-center gap-4">
                 <div className="flex-shrink-0">
-                  {getStepIcon(index, step.id)}
+                  {getStepIcon(index)}
                 </div>
                 <div className="flex-1">
                   <div className="font-medium text-foreground">{step.label}</div>

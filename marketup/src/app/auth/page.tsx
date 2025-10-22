@@ -240,9 +240,9 @@ export default function AuthPage() {
     }
   }
 
-  function continueAsGuest() {
-    router.push("/");
-  }
+  // function continueAsGuest() {
+  //   router.push("/");
+  // }
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">

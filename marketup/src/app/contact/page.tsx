@@ -60,11 +60,11 @@ export default function ContactPage() {
               {/* Main heading */}
               <div className="space-y-8">
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9]">
-                  We'd love to <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">hear from you</span>
+                  We&apos;d love to <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">hear from you</span>
                 </h1>
                 
                 <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                  Questions, partnerships, or press — send us a message and we'll reply shortly. <span className="text-accent font-medium">We usually respond within 24 hours.</span>
+                  Questions, partnerships, or press — send us a message and we&apos;ll reply shortly. <span className="text-accent font-medium">We usually respond within 24 hours.</span>
                 </p>
               </div>
             </div>
@@ -203,7 +203,7 @@ export default function ContactPage() {
                         </div>
                       </div>
                       <p className="text-lg text-foreground-muted mb-8 leading-relaxed">
-                        Send us an email and we'll get back to you within 24 hours. Perfect for detailed questions, feedback, or support requests.
+                        Send us an email and we&apos;ll get back to you within 24 hours. Perfect for detailed questions, feedback, or support requests.
                       </p>
                       <a 
                         href="mailto:support@marketup.app" 

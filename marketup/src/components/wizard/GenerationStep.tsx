@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { WizardData } from "@/app/studio/page";
 
 interface GenerationStepProps {

@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 export default function SubscriptionPage() {
-  const [isUpgrading, setIsUpgrading] = useState(false);
+  // const [isUpgrading, setIsUpgrading] = useState(false);
 
   const currentPlan = {
     name: "Pro Plan",

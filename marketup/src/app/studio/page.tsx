@@ -88,21 +88,21 @@ export default function VideoCreationWizard() {
     }
   };
 
-  const goToStep = (stepIndex: number) => {
-    setCurrentStep(stepIndex);
-  };
+  // const goToStep = (stepIndex: number) => {
+  //   setCurrentStep(stepIndex);
+  // };
 
-  const canProceed = () => {
-    switch (currentStep) {
-      case 0: return wizardData.avatar !== null;
-      case 1: return wizardData.language !== null;
-      case 2: return wizardData.background !== null;
-      case 3: return wizardData.text.trim().length > 0;
-      case 4: return true; // Generation step
-      case 5: return true; // Preview step
-      default: return false;
-    }
-  };
+  // const canProceed = () => {
+  //   switch (currentStep) {
+  //     case 0: return wizardData.avatar !== null;
+  //     case 1: return wizardData.language !== null;
+  //     case 2: return wizardData.background !== null;
+  //     case 3: return wizardData.text.trim().length > 0;
+  //     case 4: return true; // Generation step
+  //     case 5: return true; // Preview step
+  //     default: return false;
+  //   }
+  // };
 
   const renderCurrentStep = () => {
     switch (currentStep) {

@@ -113,10 +113,10 @@ const features = [
 ];
 
 export default function PricingPage() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const router = useRouter();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  // const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const handlePlanSelect = (planId: string) => {
     if (planId === 'enterprise') {

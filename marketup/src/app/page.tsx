@@ -1,6 +1,6 @@
 import DemoVideo from "@/components/DemoVideo";
-import LanguageSelector from "@/components/LanguageSelector";
-import { redirect } from "next/navigation";
+// import LanguageSelector from "@/components/LanguageSelector";
+// import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 

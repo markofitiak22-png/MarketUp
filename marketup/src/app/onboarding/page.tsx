@@ -131,7 +131,7 @@ export default function OnboardingPage() {
                     </div>
                     
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9] mb-8">
-                      Let's get you <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">started</span>
+                      Let&apos;s get you <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">started</span>
                     </h1>
                     
                     <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light mb-12">
@@ -226,7 +226,7 @@ export default function OnboardingPage() {
                     </div>
                     
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
-                      What's your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">language?</span>
+                      What&apos;s your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">language?</span>
                     </h1>
                     
                     <p className="text-lg md:text-xl text-foreground-muted max-w-2xl mx-auto leading-relaxed font-light mb-12">

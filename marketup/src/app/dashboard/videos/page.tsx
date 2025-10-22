@@ -1,69 +1,120 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+interface Video {
+  id: string;
+  title: string;
+  status: string;
+  createdAt: string;
+  duration: string;
+  thumbnail: string;
+  views: number;
+  downloads: number;
+  videoUrl?: string;
+  metadata?: {
+    quality?: string;
+    format?: string;
+    fileSize?: number;
+    resolution?: string;
+  };
+}
 
 export default function VideosPage() {
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const videos = [
-    {
-      id: 1,
-      title: "Coffee Shop Promo",
-      status: "Completed",
-      createdAt: "2024-01-15",
-      duration: "0:30",
-      thumbnail: "☕",
-      views: 1250,
-      downloads: 45
-    },
-    {
-      id: 2,
-      title: "Restaurant Menu Showcase",
-      status: "Processing",
-      createdAt: "2024-01-14",
-      duration: "1:15",
-      thumbnail: "🍽️",
-      views: 0,
-      downloads: 0
-    },
-    {
-      id: 3,
-      title: "Product Launch Video",
-      status: "Completed",
-      createdAt: "2024-01-12",
-      duration: "0:45",
-      thumbnail: "🚀",
-      views: 2100,
-      downloads: 78
-    },
-    {
-      id: 4,
-      title: "Brand Story",
-      status: "Draft",
-      createdAt: "2024-01-10",
-      duration: "2:30",
-      thumbnail: "📖",
-      views: 0,
-      downloads: 0
-    },
-    {
-      id: 5,
-      title: "Holiday Special",
-      status: "Completed",
-      createdAt: "2024-01-08",
-      duration: "1:00",
-      thumbnail: "🎄",
-      views: 3400,
-      downloads: 120
+  // Fetch videos from API
+  const fetchVideos = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        ...(filter !== 'all' && { status: filter }),
+        ...(searchTerm && { search: searchTerm })
+      });
+
+      const response = await fetch(`/api/dashboard/videos?${params}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setVideos(data.videos);
+        setTotalPages(data.pagination.pages);
+      }
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const filteredVideos = videos.filter(video => {
-    const matchesFilter = filter === "all" || video.status.toLowerCase() === filter;
-    const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  useEffect(() => {
+    fetchVideos();
+  }, [page, filter, searchTerm]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openDropdown && !(event.target as Element).closest('.relative')) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openDropdown]);
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm !== '') {
+        fetchVideos();
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setPage(1); // Reset to first page when searching
+  };
+
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    setPage(1); // Reset to first page when filtering
+  };
+
+  const handleVideoAction = async (action: string, videoId: string) => {
+    setOpenDropdown(null);
+    
+    switch (action) {
+      case 'download':
+        // TODO: Implement download functionality
+        alert('Download functionality coming soon!');
+        break;
+      case 'share':
+        // TODO: Implement share functionality
+        alert('Share functionality coming soon!');
+        break;
+      case 'delete':
+        if (confirm('Are you sure you want to delete this video?')) {
+          // TODO: Implement delete functionality
+          alert('Delete functionality coming soon!');
+        }
+        break;
+      case 'duplicate':
+        // TODO: Implement duplicate functionality
+        alert('Duplicate functionality coming soon!');
+        break;
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -102,15 +153,15 @@ export default function VideosPage() {
               type="text"
               placeholder="Search videos..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearch}
               className="w-full px-4 py-3 rounded-xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light"
             />
           </div>
           <div className="flex gap-2">
-            {["all", "completed", "processing", "draft"].map((status) => (
+            {["all", "completed", "processing", "queued"].map((status) => (
               <button
                 key={status}
-                onClick={() => setFilter(status)}
+                onClick={() => handleFilterChange(status)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   filter === status
                     ? "bg-accent text-white"
@@ -124,9 +175,18 @@ export default function VideosPage() {
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="glass-elevated rounded-2xl p-12 text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-foreground-muted">Loading videos...</p>
+        </div>
+      )}
+
       {/* Videos Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredVideos.map((video) => (
+      {!loading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videos.map((video) => (
           <div key={video.id} className="glass-elevated rounded-2xl p-6 hover:bg-surface-elevated transition-colors">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center text-3xl">
@@ -167,22 +227,73 @@ export default function VideosPage() {
             </div>
             
             <div className="flex gap-2 mt-4">
-              <button className="flex-1 btn-outline py-2 text-sm">
-                View
-              </button>
+              {video.status === "Completed" && video.videoUrl ? (
+                <button 
+                  className="flex-1 btn-outline py-2 text-sm"
+                  onClick={() => window.open(video.videoUrl, '_blank')}
+                >
+                  View
+                </button>
+              ) : (
+                <button className="flex-1 btn-outline py-2 text-sm" disabled>
+                  {video.status === "Processing" ? "Processing..." : "View"}
+                </button>
+              )}
               <button className="flex-1 btn-outline py-2 text-sm">
                 Edit
               </button>
-              <button className="btn-outline py-2 px-3 text-sm">
-                ⋯
-              </button>
+              <div className="relative">
+                <button 
+                  className="btn-outline py-2 px-3 text-sm"
+                  onClick={() => setOpenDropdown(openDropdown === video.id ? null : video.id)}
+                >
+                  ⋯
+                </button>
+                
+                {openDropdown === video.id && (
+                  <div className="absolute right-0 top-full mt-1 w-48 bg-surface-elevated border border-border-strong rounded-lg shadow-lg z-10">
+                    <div className="py-1">
+                      {video.status === "Completed" && (
+                        <>
+                          <button
+                            className="w-full px-4 py-2 text-sm text-left hover:bg-surface text-foreground"
+                            onClick={() => handleVideoAction('download', video.id)}
+                          >
+                            📥 Download
+                          </button>
+                          <button
+                            className="w-full px-4 py-2 text-sm text-left hover:bg-surface text-foreground"
+                            onClick={() => handleVideoAction('share', video.id)}
+                          >
+                            🔗 Share
+                          </button>
+                        </>
+                      )}
+                      <button
+                        className="w-full px-4 py-2 text-sm text-left hover:bg-surface text-foreground"
+                        onClick={() => handleVideoAction('duplicate', video.id)}
+                      >
+                        📋 Duplicate
+                      </button>
+                      <hr className="my-1 border-border" />
+                      <button
+                        className="w-full px-4 py-2 text-sm text-left hover:bg-surface text-red-500"
+                        onClick={() => handleVideoAction('delete', video.id)}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Empty State */}
-      {filteredVideos.length === 0 && (
+      {!loading && videos.length === 0 && (
         <div className="glass-elevated rounded-2xl p-12 text-center">
           <div className="text-6xl mb-4">🎥</div>
           <h3 className="text-xl font-semibold text-foreground mb-2">No videos found</h3>
@@ -199,16 +310,24 @@ export default function VideosPage() {
       )}
 
       {/* Pagination */}
-      {filteredVideos.length > 0 && (
+      {!loading && videos.length > 0 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-foreground-muted">
-            Showing {filteredVideos.length} of {videos.length} videos
+            Page {page} of {totalPages}
           </p>
           <div className="flex gap-2">
-            <button className="btn-outline px-3 py-2 text-sm" disabled>
+            <button 
+              className="btn-outline px-3 py-2 text-sm" 
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            >
               Previous
             </button>
-            <button className="btn-outline px-3 py-2 text-sm">
+            <button 
+              className="btn-outline px-3 py-2 text-sm"
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            >
               Next
             </button>
           </div>

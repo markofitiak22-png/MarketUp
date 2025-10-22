@@ -1,9 +1,78 @@
 "use client";
 import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+interface DashboardData {
+  stats: {
+    totalVideos: number;
+    completedVideos: number;
+    processingVideos: number;
+    totalViews: number;
+    totalDownloads: number;
+    videosThisMonth: number;
+    storageUsed: number;
+    storageLimit: number;
+    storagePercentage: number;
+  };
+  subscription: {
+    tier: string;
+    status: string;
+    currentPeriodEnd: string;
+  } | null;
+  recentVideos: Array<{
+    id: string;
+    title: string;
+    status: string;
+    createdAt: string;
+    thumbnail: string;
+    views: number;
+    downloads: number;
+  }>;
+}
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch dashboard data
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/dashboard/overview');
+      const data = await response.json();
+      
+      if (data.success) {
+        setDashboardData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="glass-elevated rounded-2xl p-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-surface rounded mb-4"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="h-24 bg-surface rounded"></div>
+              <div className="h-24 bg-surface rounded"></div>
+              <div className="h-24 bg-surface rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -29,8 +98,8 @@ export default function DashboardPage() {
               </svg>
               <h3 className="text-lg font-semibold text-foreground">Total Videos</h3>
             </div>
-            <p className="text-3xl font-bold text-accent">12</p>
-            <p className="text-sm text-foreground-muted">+3 this month</p>
+            <p className="text-3xl font-bold text-accent">{dashboardData?.stats.totalVideos || 0}</p>
+            <p className="text-sm text-foreground-muted">+{dashboardData?.stats.videosThisMonth || 0} this month</p>
           </div>
           
           <div className="glass rounded-xl p-6">
@@ -40,8 +109,15 @@ export default function DashboardPage() {
               </svg>
               <h3 className="text-lg font-semibold text-foreground">Current Plan</h3>
             </div>
-            <p className="text-xl font-bold text-foreground">Pro Plan</p>
-            <p className="text-sm text-foreground-muted">$29/month</p>
+            <p className="text-xl font-bold text-foreground">
+              {dashboardData?.subscription?.tier || 'Free Plan'}
+            </p>
+            <p className="text-sm text-foreground-muted">
+              {dashboardData?.subscription ? 
+                `$29/month` : 
+                'Upgrade to Pro'
+              }
+            </p>
           </div>
           
           <div className="glass rounded-xl p-6">
@@ -51,9 +127,59 @@ export default function DashboardPage() {
               </svg>
               <h3 className="text-lg font-semibold text-foreground">Storage Used</h3>
             </div>
-            <p className="text-3xl font-bold text-accent">2.4GB</p>
-            <p className="text-sm text-foreground-muted">of 10GB used</p>
+            <p className="text-3xl font-bold text-accent">{dashboardData?.stats.storageUsed || 0}GB</p>
+            <p className="text-sm text-foreground-muted">
+              of {dashboardData?.stats.storageLimit || 10}GB used ({dashboardData?.stats.storagePercentage || 0}%)
+            </p>
           </div>
+        </div>
+      </div>
+
+      {/* Additional Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="glass-elevated rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-foreground">Completed</h3>
+          </div>
+          <p className="text-3xl font-bold text-accent">{dashboardData?.stats.completedVideos || 0}</p>
+          <p className="text-sm text-foreground-muted">Ready to view</p>
+        </div>
+        
+        <div className="glass-elevated rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-foreground">Processing</h3>
+          </div>
+          <p className="text-3xl font-bold text-accent">{dashboardData?.stats.processingVideos || 0}</p>
+          <p className="text-sm text-foreground-muted">In progress</p>
+        </div>
+        
+        <div className="glass-elevated rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-foreground">Total Views</h3>
+          </div>
+          <p className="text-3xl font-bold text-accent">{dashboardData?.stats.totalViews || 0}</p>
+          <p className="text-sm text-foreground-muted">All time</p>
+        </div>
+        
+        <div className="glass-elevated rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-foreground">Downloads</h3>
+          </div>
+          <p className="text-3xl font-bold text-accent">{dashboardData?.stats.totalDownloads || 0}</p>
+          <p className="text-sm text-foreground-muted">All time</p>
         </div>
       </div>
 
@@ -129,62 +255,54 @@ export default function DashboardPage() {
         </div>
         
         <div className="space-y-4">
-          {[
-            {
-              id: 1,
-              title: "Coffee Shop Promo",
-              status: "Completed",
-              createdAt: "2 hours ago",
-              thumbnail: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              )
-            },
-            {
-              id: 2,
-              title: "Restaurant Menu",
-              status: "Processing",
-              createdAt: "1 day ago",
-              thumbnail: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              )
-            },
-            {
-              id: 3,
-              title: "Product Launch",
-              status: "Completed",
-              createdAt: "3 days ago",
-              thumbnail: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              )
-            }
-          ].map((video) => (
-            <div key={video.id} className="glass rounded-xl p-4 hover:bg-surface-elevated transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center text-accent">
-                  {video.thumbnail}
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground">{video.title}</h3>
-                  <p className="text-sm text-foreground-muted">{video.createdAt}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    video.status === 'Completed' 
-                      ? 'bg-success/20 text-success' 
-                      : 'bg-warning/20 text-warning'
-                  }`}>
-                    {video.status}
-                  </span>
+          {dashboardData?.recentVideos && dashboardData.recentVideos.length > 0 ? (
+            dashboardData.recentVideos.map((video) => (
+              <div key={video.id} className="glass rounded-xl p-4 hover:bg-surface-elevated transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center text-accent">
+                    <span className="text-2xl">{video.thumbnail}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground">{video.title}</h3>
+                    <p className="text-sm text-foreground-muted">{video.createdAt}</p>
+                    {video.status === 'Completed' && (
+                      <div className="flex gap-4 mt-1">
+                        <span className="text-xs text-foreground-muted">
+                          👁️ {video.views} views
+                        </span>
+                        <span className="text-xs text-foreground-muted">
+                          📥 {video.downloads} downloads
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      video.status === 'Completed' 
+                        ? 'bg-success/20 text-success' 
+                        : video.status === 'Processing'
+                        ? 'bg-warning/20 text-warning'
+                        : 'bg-foreground-muted/20 text-foreground-muted'
+                    }`}>
+                      {video.status}
+                    </span>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-4">🎥</div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">No videos yet</h3>
+              <p className="text-foreground-muted mb-4">Create your first video to get started</p>
+              <Link
+                href="/studio"
+                className="btn-primary px-6 py-3"
+              >
+                Create Video
+              </Link>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

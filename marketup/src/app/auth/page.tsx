@@ -4,11 +4,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import LanguageSelector from "@/components/LanguageSelector";
 
-const languages = [
-  { code: "en", label: "English" },
-  { code: "uk", label: "Українська" },
-  { code: "ar", label: "العربية" },
-];
+// const languages = [
+//   { code: "en", label: "English" },
+//   { code: "uk", label: "Українська" },
+//   { code: "ar", label: "العربية" },
+// ];
 
 interface FormErrors {
   email?: string;
@@ -25,7 +25,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneCode, setPhoneCode] = useState("");
-  const [lang, setLang] = useState("en");
+  // const [lang, setLang] = useState("en");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAnimating, setIsAnimating] = useState(false);

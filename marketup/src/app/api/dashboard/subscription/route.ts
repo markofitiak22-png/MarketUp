@@ -1,117 +1,164 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session) {
+    if (!session?.user || !(session.user as any).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Mock data - replace with actual database queries
-    const subscription = {
-      currentPlan: {
-        name: "Pro Plan",
+    const userId = (session.user as any).id;
+
+    // Get user's subscription
+    const subscription = await prisma.subscription.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE'
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Get user's video usage this month
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    thisMonth.setHours(0, 0, 0, 0);
+
+    const videosThisMonth = await prisma.videoJob.count({
+      where: {
+        userId,
+        createdAt: {
+          gte: thisMonth
+        }
+      }
+    });
+
+    // Get total videos created
+    const totalVideos = await prisma.videoJob.count({
+      where: { userId }
+    });
+
+    // Get billing history (mock data for now)
+    const billingHistory = [
+      {
+        id: 'inv_001',
+        date: subscription?.currentPeriodStart?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+        description: `${subscription?.tier || 'Free'} Plan - ${subscription?.tier === 'BASIC' ? 'Monthly' : subscription?.tier === 'STANDARD' ? 'Monthly' : subscription?.tier === 'PREMIUM' ? 'Monthly' : 'Free'}`,
+        amount: subscription?.tier === 'BASIC' ? '$9.00' : subscription?.tier === 'STANDARD' ? '$29.00' : subscription?.tier === 'PREMIUM' ? '$99.00' : '$0.00',
+        status: 'Paid'
+      }
+    ];
+
+    // Define available plans
+    const availablePlans = [
+      {
+        name: "Free",
+        tier: "FREE",
+        price: 0,
+        period: "month",
+        features: [
+          "3 videos per month",
+          "Standard quality",
+          "Basic templates",
+          "Community support"
+        ],
+        current: !subscription || subscription.tier === 'FREE',
+        popular: false
+      },
+      {
+        name: "Basic",
+        tier: "BASIC",
+        price: 9,
+        period: "month",
+        features: [
+          "10 videos per month",
+          "HD quality",
+          "Custom branding",
+          "Email support",
+          "Basic analytics"
+        ],
+        current: subscription?.tier === 'BASIC',
+        popular: false
+      },
+      {
+        name: "Pro",
+        tier: "STANDARD",
         price: 29,
         period: "month",
-        status: "active",
-        nextBilling: "2024-02-15",
         features: [
-          "Unlimited video creation",
-          "HD video export",
+          "Unlimited videos",
+          "HD quality",
           "Custom branding",
           "Priority support",
-          "Advanced analytics"
-        ]
+          "Advanced analytics",
+          "API access"
+        ],
+        current: subscription?.tier === 'STANDARD',
+        popular: true
       },
-      usage: {
-        videos: 8,
-        storage: 2.4,
-        bandwidth: 15.2
-      },
-      availablePlans: [
-        {
-          name: "Free",
-          price: 0,
-          period: "month",
-          features: [
-            "3 videos per month",
-            "Standard quality",
-            "Basic templates",
-            "Community support"
-          ],
-          current: false,
-          popular: false
-        },
-        {
-          name: "Pro",
-          price: 29,
-          period: "month",
-          features: [
-            "Unlimited videos",
-            "HD quality",
-            "Custom branding",
-            "Priority support",
-            "Advanced analytics"
-          ],
-          current: true,
-          popular: true
-        },
-        {
-          name: "Enterprise",
-          price: 99,
-          period: "month",
-          features: [
-            "Everything in Pro",
-            "White-label solution",
-            "API access",
-            "Dedicated support",
-            "Custom integrations"
-          ],
-          current: false,
-          popular: false
-        }
-      ]
+      {
+        name: "Enterprise",
+        tier: "PREMIUM",
+        price: 99,
+        period: "month",
+        features: [
+          "Everything in Pro",
+          "White-label solution",
+          "API access",
+          "Dedicated support",
+          "Custom integrations",
+          "On-premise deployment"
+        ],
+        current: subscription?.tier === 'PREMIUM',
+        popular: false
+      }
+    ];
+
+    // Current plan info
+    const currentPlan = subscription ? {
+      name: availablePlans.find(p => p.tier === subscription.tier)?.name || 'Unknown',
+      tier: subscription.tier,
+      price: availablePlans.find(p => p.tier === subscription.tier)?.price || 0,
+      period: "month",
+      features: availablePlans.find(p => p.tier === subscription.tier)?.features || [],
+      nextBilling: subscription.currentPeriodEnd.toISOString().split('T')[0],
+      status: subscription.status.toLowerCase(),
+      cancelAtPeriodEnd: subscription.cancelAtPeriodEnd
+    } : {
+      name: "Free",
+      tier: "FREE",
+      price: 0,
+      period: "month",
+      features: availablePlans[0].features,
+      nextBilling: null,
+      status: "active",
+      cancelAtPeriodEnd: false
     };
 
-    return NextResponse.json(subscription);
+    return NextResponse.json({
+      success: true,
+      data: {
+        currentPlan,
+        availablePlans,
+        usage: {
+          videosThisMonth,
+          totalVideos,
+          limit: currentPlan.tier === 'FREE' ? 3 : 
+                 currentPlan.tier === 'BASIC' ? 10 : 
+                 'unlimited'
+        },
+        billingHistory
+      }
+    });
+
   } catch (error) {
-    console.error("Dashboard subscription error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { planId, action } = await request.json();
-
-    // Handle subscription changes
-    switch (action) {
-      case "upgrade":
-        // TODO: Implement plan upgrade logic
-        return NextResponse.json({ message: "Plan upgrade initiated" });
-      
-      case "downgrade":
-        // TODO: Implement plan downgrade logic
-        return NextResponse.json({ message: "Plan downgrade initiated" });
-      
-      case "cancel":
-        // TODO: Implement cancellation logic
-        return NextResponse.json({ message: "Subscription cancelled" });
-      
-      default:
-        return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-    }
-  } catch (error) {
-    console.error("Dashboard subscription update error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Subscription data error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

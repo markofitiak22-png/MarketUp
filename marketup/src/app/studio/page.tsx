@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -62,7 +62,7 @@ export default function VideoCreationWizard() {
   const [wizardData, setWizardData] = useState<WizardData>({
     avatar: null,
     language: null,
-    background: null,
+    backgrounds: null,
     text: '',
     settings: {
       duration: 0,
@@ -72,21 +72,21 @@ export default function VideoCreationWizard() {
   });
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const updateWizardData = (updates: Partial<WizardData>) => {
+  const updateWizardData = useCallback((updates: Partial<WizardData>) => {
     setWizardData(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
-  };
+  }, [currentStep]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
-  };
+  }, [currentStep]);
 
   // const goToStep = (stepIndex: number) => {
   //   setCurrentStep(stepIndex);

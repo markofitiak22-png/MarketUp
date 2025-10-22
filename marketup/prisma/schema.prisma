@@ -218,6 +218,20 @@ model VideoJob {
     status   VideoJobStatus @default(QUEUED)
     videoUrl String?
 
+    /// Video metadata
+    title        String?
+    description  String?
+    duration     Int? // duration in seconds
+    thumbnailUrl String?
+    fileSize     Int? // file size in bytes
+    resolution   String? // e.g., "1920x1080"
+    format       String? // e.g., "MP4"
+    quality      String? // e.g., "HD", "4K"
+
+    /// Analytics
+    views     Int @default(0)
+    downloads Int @default(0)
+
     /// Inputs
     script              String
     backgroundImageUrls Json // 2-4 URLs

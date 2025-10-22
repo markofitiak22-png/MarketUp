@@ -1,51 +1,92 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface BillingData {
+  currentPeriod: {
+    start: string;
+    end: string;
+    amount: number;
+    status: string;
+    planName: string;
+  };
+  usage: {
+    videos: number;
+    storage: number;
+    bandwidth: number;
+    totalVideos: number;
+    storageLimit: number;
+    videoLimit: string | number;
+  };
+  paymentMethod: {
+    type: string;
+    last4: string;
+    expiry: string;
+    brand: string;
+  } | null;
+  invoices: Array<{
+    id: string;
+    date: string;
+    amount: number;
+    status: string;
+    description: string;
+    downloadUrl: string;
+  }>;
+}
 
 export default function BillingPage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [billingData, setBillingData] = useState<BillingData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const billingData = {
-    currentPeriod: {
-      start: "2024-01-15",
-      end: "2024-02-15",
-      amount: 29.00,
-      status: "active"
-    },
-    usage: {
-      videos: 8,
-      storage: 2.4,
-      bandwidth: 15.2
-    },
-    paymentMethod: {
-      type: "Visa",
-      last4: "4242",
-      expiry: "12/26"
+  // Fetch billing data
+  const fetchBillingData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/dashboard/billing');
+      const data = await response.json();
+      
+      if (data.success) {
+        setBillingData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching billing data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const invoices = [
-    {
-      id: "INV-001",
-      date: "2024-01-15",
-      amount: 29.00,
-      status: "Paid",
-      description: "Pro Plan - Monthly"
-    },
-    {
-      id: "INV-002",
-      date: "2023-12-15",
-      amount: 29.00,
-      status: "Paid",
-      description: "Pro Plan - Monthly"
-    },
-    {
-      id: "INV-003",
-      date: "2023-11-15",
-      amount: 29.00,
-      status: "Paid",
-      description: "Pro Plan - Monthly"
-    }
-  ];
+  useEffect(() => {
+    fetchBillingData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="glass-elevated rounded-2xl p-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-surface rounded mb-4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="h-32 bg-surface rounded"></div>
+              <div className="h-32 bg-surface rounded"></div>
+              <div className="h-32 bg-surface rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!billingData) {
+    return (
+      <div className="space-y-6">
+        <div className="glass-elevated rounded-2xl p-8 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-foreground mb-2">Error loading billing data</h2>
+          <p className="text-foreground-muted">Please try refreshing the page</p>
+        </div>
+      </div>
+    );
+  }
 
   const tabs = [
     { id: "overview", name: "Overview", icon: "📊" },
@@ -100,17 +141,23 @@ export default function BillingPage() {
               
               <div className="glass rounded-xl p-6">
                 <h3 className="font-semibold text-foreground mb-2">Amount</h3>
-                <p className="text-2xl font-bold text-foreground">${billingData.currentPeriod.amount}</p>
-                <p className="text-sm text-foreground-muted">Pro Plan</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {billingData.currentPeriod.amount === 0 ? 'Free' : `$${billingData.currentPeriod.amount}`}
+                </p>
+                <p className="text-sm text-foreground-muted">{billingData.currentPeriod.planName}</p>
               </div>
               
               <div className="glass rounded-xl p-6">
                 <h3 className="font-semibold text-foreground mb-2">Status</h3>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-success rounded-full"></span>
+                  <span className={`w-2 h-2 rounded-full ${
+                    billingData.currentPeriod.status === 'active' ? 'bg-success' : 'bg-warning'
+                  }`}></span>
                   <span className="text-lg font-bold text-foreground capitalize">{billingData.currentPeriod.status}</span>
                 </div>
-                <p className="text-sm text-foreground-muted">Auto-renewal enabled</p>
+                <p className="text-sm text-foreground-muted">
+                  {billingData.currentPeriod.amount === 0 ? 'Free plan' : 'Auto-renewal enabled'}
+                </p>
               </div>
             </div>
           </div>
@@ -126,7 +173,9 @@ export default function BillingPage() {
                   <h3 className="font-semibold text-foreground">Videos Created</h3>
                 </div>
                 <p className="text-3xl font-bold text-accent">{billingData.usage.videos}</p>
-                <p className="text-sm text-foreground-muted">of unlimited</p>
+                <p className="text-sm text-foreground-muted">
+                  of {billingData.usage.videoLimit === 'unlimited' ? 'unlimited' : billingData.usage.videoLimit}
+                </p>
               </div>
               
               <div className="glass rounded-xl p-6">
@@ -135,7 +184,17 @@ export default function BillingPage() {
                   <h3 className="font-semibold text-foreground">Storage Used</h3>
                 </div>
                 <p className="text-3xl font-bold text-accent">{billingData.usage.storage}GB</p>
-                <p className="text-sm text-foreground-muted">of 10GB</p>
+                <p className="text-sm text-foreground-muted">of {billingData.usage.storageLimit}GB</p>
+                <div className="mt-2">
+                  <div className="w-full bg-border rounded-full h-2">
+                    <div 
+                      className="bg-accent h-2 rounded-full transition-all duration-300"
+                      style={{ 
+                        width: `${Math.min(100, (billingData.usage.storage / billingData.usage.storageLimit) * 100)}%` 
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
               
               <div className="glass rounded-xl p-6">
@@ -156,7 +215,8 @@ export default function BillingPage() {
           <h2 className="text-xl font-bold text-foreground mb-6">Invoice History</h2>
           
           <div className="space-y-4">
-            {invoices.map((invoice) => (
+            {billingData.invoices.length > 0 ? (
+              billingData.invoices.map((invoice) => (
               <div key={invoice.id} className="flex items-center justify-between p-4 glass rounded-xl">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
@@ -172,12 +232,22 @@ export default function BillingPage() {
                   <span className="px-2 py-1 rounded-full text-xs font-medium bg-success/20 text-success">
                     {invoice.status}
                   </span>
-                  <button className="text-accent hover:text-accent-hover text-sm font-medium">
+                  <button 
+                    className="text-accent hover:text-accent-hover text-sm font-medium"
+                    onClick={() => window.open(invoice.downloadUrl, '_blank')}
+                  >
                     Download
                   </button>
                 </div>
               </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">🧾</div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">No invoices yet</h3>
+                <p className="text-foreground-muted">Your invoice history will appear here</p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -192,27 +262,44 @@ export default function BillingPage() {
           </div>
           
           <div className="space-y-4">
-            <div className="glass rounded-xl p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-8 rounded bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">VISA</span>
+            {billingData.paymentMethod ? (
+              <div className="glass rounded-xl p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-8 rounded flex items-center justify-center ${
+                      billingData.paymentMethod.brand === 'visa' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
+                      billingData.paymentMethod.brand === 'mastercard' ? 'bg-gradient-to-r from-red-500 to-yellow-500' :
+                      'bg-gradient-to-r from-gray-500 to-gray-600'
+                    }`}>
+                      <span className="text-white text-xs font-bold">
+                        {billingData.paymentMethod.brand.toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">**** **** **** {billingData.paymentMethod.last4}</p>
+                      <p className="text-sm text-foreground-muted">Expires {billingData.paymentMethod.expiry}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-foreground">**** **** **** {billingData.paymentMethod.last4}</p>
-                    <p className="text-sm text-foreground-muted">Expires {billingData.paymentMethod.expiry}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-success/20 text-success">
+                      Default
+                    </span>
+                    <button className="text-accent hover:text-accent-hover text-sm font-medium">
+                      Edit
+                    </button>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-success/20 text-success">
-                    Default
-                  </span>
-                  <button className="text-accent hover:text-accent-hover text-sm font-medium">
-                    Edit
-                  </button>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">💳</div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">No payment method</h3>
+                <p className="text-foreground-muted mb-4">Add a payment method to manage your subscription</p>
+                <button className="btn-primary px-6 py-3">
+                  Add Payment Method
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -226,30 +313,46 @@ export default function BillingPage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold text-foreground">Videos Created</span>
-                  <span className="text-foreground-muted">8 / Unlimited</span>
+                  <span className="text-foreground-muted">
+                    {billingData.usage.videos} / {billingData.usage.videoLimit === 'unlimited' ? 'Unlimited' : billingData.usage.videoLimit}
+                  </span>
                 </div>
                 <div className="w-full bg-surface rounded-full h-2">
-                  <div className="bg-accent h-2 rounded-full" style={{ width: '20%' }}></div>
+                  <div 
+                    className="bg-accent h-2 rounded-full transition-all duration-300" 
+                    style={{ 
+                      width: billingData.usage.videoLimit === 'unlimited' ? '5%' : 
+                             `${Math.min(100, (billingData.usage.videos / Number(billingData.usage.videoLimit)) * 100)}%` 
+                    }}
+                  ></div>
                 </div>
               </div>
               
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold text-foreground">Storage Used</span>
-                  <span className="text-foreground-muted">2.4GB / 10GB</span>
+                  <span className="text-foreground-muted">{billingData.usage.storage}GB / {billingData.usage.storageLimit}GB</span>
                 </div>
                 <div className="w-full bg-surface rounded-full h-2">
-                  <div className="bg-accent h-2 rounded-full" style={{ width: '24%' }}></div>
+                  <div 
+                    className="bg-accent h-2 rounded-full transition-all duration-300" 
+                    style={{ 
+                      width: `${Math.min(100, (billingData.usage.storage / billingData.usage.storageLimit) * 100)}%` 
+                    }}
+                  ></div>
                 </div>
               </div>
               
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold text-foreground">Bandwidth This Month</span>
-                  <span className="text-foreground-muted">15.2GB / Unlimited</span>
+                  <span className="text-foreground-muted">{billingData.usage.bandwidth}GB / Unlimited</span>
                 </div>
                 <div className="w-full bg-surface rounded-full h-2">
-                  <div className="bg-accent h-2 rounded-full" style={{ width: '5%' }}></div>
+                  <div 
+                    className="bg-accent h-2 rounded-full transition-all duration-300" 
+                    style={{ width: '5%' }}
+                  ></div>
                 </div>
               </div>
             </div>

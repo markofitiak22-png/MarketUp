@@ -25,12 +25,16 @@ export const authOptions: NextAuthOptions = {
         // Check if remember me is enabled in localStorage (client-side)
         // This is a simplified approach - in production you might want server-side validation
         token.rememberMe = false; // Will be updated by client-side logic
+        token.sub = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (token.rememberMe) {
         session.rememberMe = token.rememberMe;
+      }
+      if (token.sub) {
+        session.user.id = token.sub;
       }
       return session;
     },

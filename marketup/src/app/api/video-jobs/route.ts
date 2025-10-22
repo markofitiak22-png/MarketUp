@@ -20,8 +20,8 @@ export async function POST(request: Request) {
   const job = await prisma.videoJob.create({
     data: {
       script: d.script,
-      backgroundImageUrls: d.backgroundImageUrls as any,
-      productImageUrls: d.productImageUrls as any,
+      backgroundImageUrls: d.backgroundImageUrls as string[],
+      productImageUrls: d.productImageUrls as string[],
       contactAddress: d.contactAddress,
       contactPhone: d.contactPhone,
       logoImageUrl: d.logoImageUrl,

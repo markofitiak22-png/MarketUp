@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 
 interface GenerationStepProps {
@@ -43,51 +43,73 @@ export default function GenerationStep({
   }, []);
 
   const startGeneration = async () => {
+    // Validate required data before starting
+    if (!data.avatar || !data.language || !data.backgrounds || data.backgrounds.length === 0 || !data.text) {
+      alert('Please complete all required steps before generating the video.');
+      return;
+    }
+
     setIsGenerating(true);
     setCurrentStep(0);
     setProgress(0);
     
-    // Calculate total estimated time
-    const totalTime = generationSteps.reduce((sum, step) => sum + step.duration, 0);
-    setEstimatedTime(Math.ceil(totalTime / 1000));
-    
-    // Generate unique ID for this generation
-    // const id = `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    // setGenerationId(id);
-    
-    // Simulate generation process with proper step progression
-    let currentProgress = 0;
-    let stepIndex = 0;
-    
-    intervalRef.current = setInterval(() => {
-      // Move to next step if current step is complete
-      if (stepIndex < generationSteps.length) {
-        // const step = generationSteps[stepIndex];
-        const stepProgress = (stepIndex + 1) * (100 / generationSteps.length);
-        
-        if (currentProgress >= stepProgress) {
-          stepIndex++;
-          setCurrentStep(stepIndex);
-        }
-      }
+    try {
+      // Call the real API to start video generation
+      const response = await fetch('/api/video/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          avatar: data.avatar?.name || 'default',
+          language: data.language?.name || 'English',
+          background: data.backgrounds?.[0]?.image || '',
+          text: data.text,
+          title: `Video ${new Date().toLocaleDateString()}`
+        }),
+      });
+
+      const result = await response.json();
       
-      // Update progress
-      currentProgress += 100 / (generationSteps.length * 10); // Slower progress
-      setProgress(Math.min(currentProgress, 100));
-      
-      // Check if generation is complete
-      if (stepIndex >= generationSteps.length && currentProgress >= 100) {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-        setTimeout(() => {
-          setIsGenerating(false);
-          onNext();
-        }, 1000); // Small delay before moving to next step
-        return;
+      if (!result.success) {
+        const errorMessage = result.details 
+          ? Object.values(result.details).filter(Boolean).join(', ')
+          : result.error || 'Failed to start generation';
+        throw new Error(errorMessage);
       }
-    }, 500); // Slower interval for better UX
+
+      // Start polling for status updates
+      const videoId = result.videoId;
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusResponse = await fetch(`/api/video/generate?videoId=${videoId}`);
+          const statusData = await statusResponse.json();
+          
+          if (statusData.success) {
+            if (statusData.status === 'completed') {
+              clearInterval(pollInterval);
+              setIsGenerating(false);
+              onNext();
+            } else if (statusData.status === 'processing') {
+              setProgress(statusData.progress || 0);
+              // Update current step based on progress
+              const stepIndex = Math.floor((statusData.progress || 0) / (100 / generationSteps.length));
+              setCurrentStep(Math.min(stepIndex, generationSteps.length - 1));
+            }
+          }
+        } catch (error) {
+          console.error('Error checking generation status:', error);
+        }
+      }, 2000); // Poll every 2 seconds
+
+      // Store interval reference for cleanup
+      intervalRef.current = pollInterval;
+      
+    } catch (error) {
+      console.error('Error starting generation:', error);
+      setIsGenerating(false);
+      alert(`Error starting video generation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const cancelGeneration = () => {

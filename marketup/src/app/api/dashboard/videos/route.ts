@@ -1,106 +1,103 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const filter = searchParams.get("filter") || "all";
-    const search = searchParams.get("search") || "";
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const status = searchParams.get('status');
+    const search = searchParams.get('search');
 
-    // Mock data - replace with actual database queries
-    const allVideos = [
-      {
-        id: 1,
-        title: "Coffee Shop Promo",
-        status: "Completed",
-        createdAt: "2024-01-15",
-        duration: "0:30",
-        thumbnail: "☕",
-        views: 1250,
-        downloads: 45
-      },
-      {
-        id: 2,
-        title: "Restaurant Menu Showcase",
-        status: "Processing",
-        createdAt: "2024-01-14",
-        duration: "1:15",
-        thumbnail: "🍽️",
-        views: 0,
-        downloads: 0
-      },
-      {
-        id: 3,
-        title: "Product Launch Video",
-        status: "Completed",
-        createdAt: "2024-01-12",
-        duration: "0:45",
-        thumbnail: "🚀",
-        views: 2100,
-        downloads: 78
-      },
-      {
-        id: 4,
-        title: "Brand Story",
-        status: "Draft",
-        createdAt: "2024-01-10",
-        duration: "2:30",
-        thumbnail: "📖",
-        views: 0,
-        downloads: 0
-      },
-      {
-        id: 5,
-        title: "Holiday Special",
-        status: "Completed",
-        createdAt: "2024-01-08",
-        duration: "1:00",
-        thumbnail: "🎄",
-        views: 3400,
-        downloads: 120
-      }
-    ];
+    const skip = (page - 1) * limit;
 
-    // Filter videos
-    let filteredVideos = allVideos;
-    
-    if (filter !== "all") {
-      filteredVideos = allVideos.filter(video => 
-        video.status.toLowerCase() === filter
-      );
+    // Build where clause
+    const where: any = {
+      userId: session.user.id
+    };
+
+    if (status && status !== 'all') {
+      where.status = status.toUpperCase();
     }
-    
+
     if (search) {
-      filteredVideos = filteredVideos.filter(video =>
-        video.title.toLowerCase().includes(search.toLowerCase())
-      );
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { script: { contains: search, mode: 'insensitive' } }
+      ];
     }
 
-    // Pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedVideos = filteredVideos.slice(startIndex, endIndex);
+    // Get videos with pagination
+    const [videos, total] = await Promise.all([
+      prisma.videoJob.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          createdAt: true,
+          duration: true,
+          thumbnailUrl: true,
+          views: true,
+          downloads: true,
+          videoUrl: true,
+          quality: true,
+          format: true,
+          fileSize: true,
+          resolution: true
+        }
+      }),
+      prisma.videoJob.count({ where })
+    ]);
+
+    // Format videos for frontend
+    const formattedVideos = videos.map(video => ({
+      id: video.id,
+      title: video.title || `Video ${video.id.slice(-8)}`,
+      status: video.status === 'COMPLETED' ? 'Completed' : 
+              video.status === 'PROCESSING' ? 'Processing' : 
+              video.status === 'QUEUED' ? 'Queued' : 'Failed',
+      createdAt: video.createdAt.toISOString().split('T')[0],
+      duration: video.duration ? `${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}` : '0:00',
+      thumbnail: video.thumbnailUrl ? '🎥' : '📹',
+      views: video.views,
+      downloads: video.downloads,
+      videoUrl: video.videoUrl,
+      metadata: {
+        quality: video.quality,
+        format: video.format,
+        fileSize: video.fileSize,
+        resolution: video.resolution
+      }
+    }));
 
     return NextResponse.json({
-      videos: paginatedVideos,
+      success: true,
+      videos: formattedVideos,
       pagination: {
         page,
         limit,
-        total: filteredVideos.length,
-        totalPages: Math.ceil(filteredVideos.length / limit)
+        total,
+        pages: Math.ceil(total / limit)
       }
     });
+
   } catch (error) {
-    console.error("Dashboard videos error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Get videos error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

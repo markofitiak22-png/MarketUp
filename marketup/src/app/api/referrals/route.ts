@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
       const fingerprint = getHeader(request, "x-fingerprint");
       const ipHashHeader = getHeader(request, "x-ip-hash");
-      const clientIp = normalizeIpForHash(getHeader(request as any, "x-client-ip") || getHeader(request, "x-forwarded-for"));
+      const clientIp = normalizeIpForHash(getHeader(request as Request, "x-client-ip") || getHeader(request, "x-forwarded-for"));
       const ipHash = ipHashHeader || (clientIp ? hashValue(clientIp.split(",")[0]) : null);
       const userAgent = getHeader(request, "user-agent");
 
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ error: "unknown action" }, { status: 400 });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }

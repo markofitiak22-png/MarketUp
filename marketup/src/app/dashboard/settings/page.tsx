@@ -1,9 +1,40 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RememberMeSettings from "@/components/RememberMeSettings";
 
+interface UserData {
+  id: string;
+  email: string | null;
+  name: string | null;
+  locale: string | null;
+  country: string | null;
+  createdAt: Date;
+  memberSince: string;
+}
+
+interface SettingsData {
+  notifications: {
+    email: boolean;
+    push: boolean;
+    marketing: boolean;
+    updates: boolean;
+  };
+  privacy: {
+    profile: string;
+    analytics: boolean;
+    dataSharing: boolean;
+  };
+  preferences: {
+    theme: string;
+    language: string;
+    timezone: string;
+    dateFormat: string;
+  };
+}
+
 export default function SettingsPage() {
-  const [settings, setSettings] = useState({
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [settings, setSettings] = useState<SettingsData>({
     notifications: {
       email: true,
       push: false,
@@ -22,6 +53,59 @@ export default function SettingsPage() {
       dateFormat: "MM/DD/YYYY"
     }
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  // Fetch settings data
+  const fetchSettingsData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/dashboard/settings');
+      const data = await response.json();
+      
+      if (data.success) {
+        setUserData(data.data.user);
+        setSettings(data.data.settings);
+      }
+    } catch (error) {
+      console.error('Error fetching settings data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Save settings
+  const saveSettings = async () => {
+    try {
+      setSaving(true);
+      const response = await fetch('/api/dashboard/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          settings,
+          userData
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Show success message
+        alert('Settings saved successfully!');
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      alert('Error saving settings. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettingsData();
+  }, []);
 
   const handleNotificationChange = (key: string, value: boolean) => {
     setSettings(prev => ({
@@ -53,6 +137,26 @@ export default function SettingsPage() {
     }));
   };
 
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="glass-elevated rounded-3xl p-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-surface rounded mb-4"></div>
+            <div className="h-4 bg-surface rounded w-2/3"></div>
+          </div>
+        </div>
+        <div className="glass-elevated rounded-2xl p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-16 bg-surface rounded"></div>
+            <div className="h-16 bg-surface rounded"></div>
+            <div className="h-16 bg-surface rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
@@ -61,20 +165,99 @@ export default function SettingsPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-accent-2/10 rounded-3xl" />
         
         <div className="relative glass-elevated rounded-3xl p-8">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-              <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+                <p className="text-lg text-foreground-muted">Manage your account preferences and settings</p>
+                {userData && (
+                  <p className="text-sm text-foreground-muted mt-1">
+                    Member since {userData.memberSince}
+                  </p>
+                )}
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-              <p className="text-lg text-foreground-muted">Manage your account preferences and settings</p>
-            </div>
+            <button
+              onClick={saveSettings}
+              disabled={saving}
+              className="btn-primary px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* User Information */}
+      {userData && (
+        <div className="glass-elevated rounded-2xl p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+              <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-foreground">Account Information</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Email</label>
+                <input
+                  type="email"
+                  value={userData.email || ''}
+                  disabled
+                  className="w-full px-4 py-3 rounded-xl border border-border-strong bg-surface text-foreground-muted cursor-not-allowed"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+                <input
+                  type="text"
+                  value={userData.name || ''}
+                  onChange={(e) => setUserData(prev => prev ? { ...prev, name: e.target.value } : null)}
+                  className="w-full px-4 py-3 rounded-xl border border-border-strong bg-surface text-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light"
+                />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Country</label>
+                <select
+                  value={userData.country || ''}
+                  onChange={(e) => setUserData(prev => prev ? { ...prev, country: e.target.value } : null)}
+                  className="w-full px-4 py-3 rounded-xl border border-border-strong bg-surface text-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light"
+                >
+                  <option value="">Select Country</option>
+                  <option value="US">United States</option>
+                  <option value="UA">Ukraine</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="CA">Canada</option>
+                  <option value="DE">Germany</option>
+                  <option value="FR">France</option>
+                  <option value="ES">Spain</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Member Since</label>
+                <input
+                  type="text"
+                  value={userData.memberSince}
+                  disabled
+                  className="w-full px-4 py-3 rounded-xl border border-border-strong bg-surface text-foreground-muted cursor-not-allowed"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Notifications */}
       <div className="glass-elevated rounded-2xl p-6">
@@ -371,7 +554,20 @@ export default function SettingsPage() {
                   <p className="text-sm text-foreground-muted">{item.description}</p>
                 </div>
               </div>
-              <button className={item.buttonClass}>
+              <button 
+                className={item.buttonClass}
+                onClick={() => {
+                  if (item.title === 'Export Data') {
+                    // TODO: Implement data export
+                    alert('Data export feature coming soon!');
+                  } else if (item.title === 'Delete Account') {
+                    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                      // TODO: Implement account deletion
+                      alert('Account deletion feature coming soon!');
+                    }
+                  }
+                }}
+              >
                 {item.buttonText}
               </button>
             </div>

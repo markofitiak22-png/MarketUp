@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const sub = await prisma.subscription.create({
     data: {
       userId: user.id,
-      tier: tier as any,
+      tier: tier as "FREE" | "PRO" | "ENTERPRISE",
       status: "ACTIVE",
       currentPeriodStart: now,
       currentPeriodEnd: end,

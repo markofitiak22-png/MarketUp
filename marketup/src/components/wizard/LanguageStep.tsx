@@ -15,10 +15,10 @@ const languages = [
     name: 'English',
     flag: '🇺🇸',
     voices: [
-      { id: 'sarah_en', name: 'Sarah', gender: 'female' as const, accent: 'American' },
-      { id: 'michael_en', name: 'Michael', gender: 'male' as const, accent: 'American' },
-      { id: 'emma_en', name: 'Emma', gender: 'female' as const, accent: 'British' },
-      { id: 'david_en', name: 'David', gender: 'male' as const, accent: 'British' }
+      { id: 'sarah_en', name: 'Sarah', gender: 'female' as const, accent: 'American', tone: 'professional' as const },
+      { id: 'michael_en', name: 'Michael', gender: 'male' as const, accent: 'American', tone: 'energetic' as const },
+      { id: 'emma_en', name: 'Emma', gender: 'female' as const, accent: 'British', tone: 'calm' as const },
+      { id: 'david_en', name: 'David', gender: 'male' as const, accent: 'British', tone: 'expressive' as const }
     ]
   },
   {
@@ -26,10 +26,10 @@ const languages = [
     name: 'Spanish',
     flag: '🇪🇸',
     voices: [
-      { id: 'maria_es', name: 'María', gender: 'female' as const, accent: 'Castilian' },
-      { id: 'carlos_es', name: 'Carlos', gender: 'male' as const, accent: 'Castilian' },
-      { id: 'ana_es', name: 'Ana', gender: 'female' as const, accent: 'Mexican' },
-      { id: 'jose_es', name: 'José', gender: 'male' as const, accent: 'Mexican' }
+      { id: 'maria_es', name: 'María', gender: 'female' as const, accent: 'Castilian', tone: 'professional' as const },
+      { id: 'carlos_es', name: 'Carlos', gender: 'male' as const, accent: 'Castilian', tone: 'energetic' as const },
+      { id: 'ana_es', name: 'Ana', gender: 'female' as const, accent: 'Mexican', tone: 'calm' as const },
+      { id: 'jose_es', name: 'José', gender: 'male' as const, accent: 'Mexican', tone: 'expressive' as const }
     ]
   },
   {
@@ -37,8 +37,8 @@ const languages = [
     name: 'French',
     flag: '🇫🇷',
     voices: [
-      { id: 'marie_fr', name: 'Marie', gender: 'female' as const, accent: 'Parisian' },
-      { id: 'pierre_fr', name: 'Pierre', gender: 'male' as const, accent: 'Parisian' }
+      { id: 'marie_fr', name: 'Marie', gender: 'female' as const, accent: 'Parisian', tone: 'professional' as const },
+      { id: 'pierre_fr', name: 'Pierre', gender: 'male' as const, accent: 'Parisian', tone: 'energetic' as const }
     ]
   },
   {
@@ -46,8 +46,8 @@ const languages = [
     name: 'German',
     flag: '🇩🇪',
     voices: [
-      { id: 'anna_de', name: 'Anna', gender: 'female' as const, accent: 'Standard' },
-      { id: 'klaus_de', name: 'Klaus', gender: 'male' as const, accent: 'Standard' }
+      { id: 'anna_de', name: 'Anna', gender: 'female' as const, accent: 'Standard', tone: 'calm' as const },
+      { id: 'klaus_de', name: 'Klaus', gender: 'male' as const, accent: 'Standard', tone: 'professional' as const }
     ]
   },
   {
@@ -55,8 +55,8 @@ const languages = [
     name: 'Italian',
     flag: '🇮🇹',
     voices: [
-      { id: 'giulia_it', name: 'Giulia', gender: 'female' as const, accent: 'Standard' },
-      { id: 'marco_it', name: 'Marco', gender: 'male' as const, accent: 'Standard' }
+      { id: 'giulia_it', name: 'Giulia', gender: 'female' as const, accent: 'Standard', tone: 'expressive' as const },
+      { id: 'marco_it', name: 'Marco', gender: 'male' as const, accent: 'Standard', tone: 'energetic' as const }
     ]
   },
   {
@@ -64,15 +64,24 @@ const languages = [
     name: 'Portuguese',
     flag: '🇵🇹',
     voices: [
-      { id: 'sofia_pt', name: 'Sofia', gender: 'female' as const, accent: 'European' },
-      { id: 'joao_pt', name: 'João', gender: 'male' as const, accent: 'European' }
+      { id: 'sofia_pt', name: 'Sofia', gender: 'female' as const, accent: 'European', tone: 'calm' as const },
+      { id: 'joao_pt', name: 'João', gender: 'male' as const, accent: 'European', tone: 'professional' as const }
     ]
   }
+];
+
+const toneFilters = [
+  { id: 'all', name: 'All Tones', icon: '🎵' },
+  { id: 'professional', name: 'Professional', icon: '💼' },
+  { id: 'energetic', name: 'Energetic', icon: '⚡' },
+  { id: 'calm', name: 'Calm', icon: '🌊' },
+  { id: 'expressive', name: 'Expressive', icon: '🎭' }
 ];
 
 export default function LanguageStep({ data, onUpdate, onNext, onPrev }: LanguageStepProps) {
   const [selectedLanguage, setSelectedLanguage] = useState(data.language?.code || '');
   const [selectedVoice, setSelectedVoice] = useState(data.language?.voice.id || '');
+  const [selectedTone, setSelectedTone] = useState('all');
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
 
   const handleLanguageSelect = (language: typeof languages[0]) => {
@@ -105,6 +114,16 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
     setPlayingVoice(voiceId);
     // Simulate audio playback
     setTimeout(() => setPlayingVoice(null), 2000);
+  };
+
+  // Get filtered voices based on selected language and tone
+  const getFilteredVoices = () => {
+    const language = languages.find(l => l.code === selectedLanguage);
+    if (!language) return [];
+    
+    return language.voices.filter(voice => 
+      selectedTone === 'all' || voice.tone === selectedTone
+    );
   };
 
   const handleNext = () => {
@@ -166,8 +185,27 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
             
             <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Choose Voice</h3>
+            
+            {/* Tone Filters */}
+            <div className="flex flex-wrap gap-2 justify-center mb-8">
+              {toneFilters.map((tone) => (
+                <button
+                  key={tone.id}
+                  onClick={() => setSelectedTone(tone.id)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    selectedTone === tone.id
+                      ? 'bg-accent-2 text-white'
+                      : 'bg-surface-elevated text-foreground-muted hover:text-foreground hover:bg-surface'
+                  }`}
+                >
+                  <span className="mr-2">{tone.icon}</span>
+                  {tone.name}
+                </button>
+              ))}
+            </div>
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {currentLanguage.voices.map((voice) => (
+              {getFilteredVoices().map((voice) => (
                 <div
                   key={voice.id}
                   className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
@@ -187,6 +225,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
                       <div>
                         <div className="font-semibold text-foreground text-lg">{voice.name}</div>
                         <div className="text-sm text-foreground-muted">{voice.accent}</div>
+                        <div className="text-xs text-accent-2 font-medium capitalize">{voice.tone}</div>
                       </div>
                     </div>
                     

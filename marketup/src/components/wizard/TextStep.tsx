@@ -66,15 +66,20 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
     // Estimate duration: ~150 words per minute for natural speech
     const duration = Math.max(1, Math.ceil(wordsCount / 2.5));
     setEstimatedDuration(duration);
-    
-    onUpdate({
-      text,
-      settings: {
-        ...data.settings,
-        duration
-      }
-    });
-  }, [text, data.settings, onUpdate]);
+  }, [text]);
+
+  // Separate effect for updating parent component
+  useEffect(() => {
+    if (estimatedDuration > 0) {
+      onUpdate({
+        text,
+        settings: {
+          ...data.settings,
+          duration: estimatedDuration
+        }
+      });
+    }
+  }, [text, estimatedDuration]);
 
   const handleTemplateSelect = (template: typeof templates[0]) => {
     setText(template.text);

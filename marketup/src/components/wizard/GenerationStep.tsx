@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 
 interface GenerationStepProps {
@@ -30,7 +30,17 @@ export default function GenerationStep({
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [estimatedTime, setEstimatedTime] = useState(0);
-  // const [generationId, setGenerationId] = useState<string | null>(null);
+  const [generationId, setGenerationId] = useState<string | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   const startGeneration = async () => {
     setIsGenerating(true);
@@ -45,30 +55,46 @@ export default function GenerationStep({
     const id = `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     setGenerationId(id);
     
-    // Simulate generation process
+    // Simulate generation process with proper step progression
     let currentProgress = 0;
     let stepIndex = 0;
     
-    const interval = setInterval(() => {
-      const step = generationSteps[stepIndex];
-      if (!step) {
-        clearInterval(interval);
-        setIsGenerating(false);
-        onNext();
-        return;
+    intervalRef.current = setInterval(() => {
+      // Move to next step if current step is complete
+      if (stepIndex < generationSteps.length) {
+        const step = generationSteps[stepIndex];
+        const stepProgress = (stepIndex + 1) * (100 / generationSteps.length);
+        
+        if (currentProgress >= stepProgress) {
+          stepIndex++;
+          setCurrentStep(stepIndex);
+        }
       }
       
-      currentProgress += 100 / generationSteps.length;
+      // Update progress
+      currentProgress += 100 / (generationSteps.length * 10); // Slower progress
       setProgress(Math.min(currentProgress, 100));
       
-      if (currentProgress >= ((stepIndex + 1) * 100) / generationSteps.length) {
-        stepIndex++;
-        setCurrentStep(stepIndex);
+      // Check if generation is complete
+      if (stepIndex >= generationSteps.length && currentProgress >= 100) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        setTimeout(() => {
+          setIsGenerating(false);
+          onNext();
+        }, 1000); // Small delay before moving to next step
+        return;
       }
-    }, 200);
+    }, 500); // Slower interval for better UX
   };
 
   const cancelGeneration = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     setIsGenerating(false);
     setCurrentStep(0);
     setProgress(0);

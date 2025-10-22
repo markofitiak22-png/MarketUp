@@ -25,15 +25,19 @@ export interface WizardData {
       id: string;
       name: string;
       gender: 'male' | 'female';
+      accent: string;
+      tone: 'professional' | 'energetic' | 'calm' | 'expressive';
       preview?: string;
     };
   } | null;
-  background: {
+  backgrounds: {
     id: string;
     name: string;
     image: string;
     type: 'image' | 'video';
-  } | null;
+    category: string;
+    description: string;
+  }[] | null;
   text: string;
   settings: {
     duration: number;
@@ -45,7 +49,7 @@ export interface WizardData {
 const steps = [
   { id: 'avatar', title: 'Choose Avatar', description: 'Select your virtual presenter' },
   { id: 'language', title: 'Language & Voice', description: 'Pick language and voice' },
-  { id: 'background', title: 'Background', description: 'Choose your scene' },
+  { id: 'background', title: 'Backgrounds', description: 'Choose multiple scenes' },
   { id: 'text', title: 'Script', description: 'Write your message' },
   { id: 'generation', title: 'Generate', description: 'Create your video' },
   { id: 'preview', title: 'Preview', description: 'Review and download' }

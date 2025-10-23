@@ -157,7 +157,16 @@ export default function AuthPage() {
       });
       
       if (result?.error) {
-        setErrors({ general: result.error });
+        // Provide user-friendly error messages
+        let errorMessage = "An error occurred. Please try again.";
+        if (result.error === "CredentialsSignin") {
+          errorMessage = "Invalid email or password. Please check your credentials and try again.";
+        } else if (result.error === "CallbackRouteError") {
+          errorMessage = "Authentication failed. Please try again.";
+        } else if (result.error === "Configuration") {
+          errorMessage = "Authentication service is temporarily unavailable. Please try again later.";
+        }
+        setErrors({ general: errorMessage });
       } else {
         // Store remember me preference in localStorage
         if (rememberMe) {

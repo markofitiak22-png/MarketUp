@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return NextResponse.json({ error: "email_taken" }, { status: 409 });
     const passwordHash = await hash(password, 10);
-    // const user = await prisma.user.create({ data: { email, passwordHash } });
+    const user = await prisma.user.create({ data: { email, passwordHash } });
     
     // Send welcome email
     try {

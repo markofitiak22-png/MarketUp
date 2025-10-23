@@ -76,7 +76,7 @@ export default function Header() {
             );
           })}
           <div className="flex items-center gap-4 pl-4 border-l border-[var(--border)]">
-            <a href="/pricing" className="btn-outline btn-sm hover:bg-accent/10 transition-all duration-200">Pricing</a>
+            {/* <a href="/pricing" className="btn-outline btn-sm hover:bg-accent/10 transition-all duration-200">Pricing</a> */}
             <a href="/onboarding" className="btn-primary btn-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200">Get started</a>
             <UserMenu />
           </div>

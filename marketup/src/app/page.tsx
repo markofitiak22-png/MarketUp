@@ -1,7 +1,7 @@
-import DemoVideo from "@/components/DemoVideo";
+// import DemoVideo from "@/components/DemoVideo";
 // import LanguageSelector from "@/components/LanguageSelector";
 // import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
 export default async function Home() {

@@ -1,4 +1,4 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 // import { PrismaAdapter } from "@next-auth/prisma-adapter";

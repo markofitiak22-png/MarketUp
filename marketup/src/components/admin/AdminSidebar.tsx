@@ -72,54 +72,72 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-border">
-      <div className="flex flex-col h-full">
-        {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
-          <div className="w-8 h-8 bg-gradient-to-br from-accent to-accent-2 rounded-lg flex items-center justify-center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
-            </svg>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-foreground">MarketUp</h1>
-            <p className="text-xs text-foreground-muted">Admin Panel</p>
+    <div className="fixed inset-y-0 left-0 z-50 w-72 flex flex-col">
+      <div className="flex grow flex-col overflow-y-auto glass-elevated">
+        {/* Header */}
+        <div className="flex h-20 shrink-0 items-center px-8">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Admin Panel</h2>
+              <p className="text-sm text-foreground-muted">Platform Management</p>
+            </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? "bg-accent text-white shadow-lg"
-                    : "text-foreground-muted hover:text-foreground hover:bg-surface-elevated"
-                }`}
-              >
-                {item.icon}
-                {item.name}
-              </Link>
-            );
-          })}
+        <nav className="flex flex-1 flex-col px-6 py-4">
+          <ul role="list" className="flex flex-1 flex-col gap-2">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={`group flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-semibold transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg"
+                        : "text-foreground-muted hover:text-foreground hover:bg-surface-elevated"
+                    }`}
+                  >
+                    <div className={`w-6 h-6 flex items-center justify-center ${
+                      isActive ? "text-white" : "text-foreground-muted group-hover:text-foreground"
+                    }`}>
+                      {item.icon}
+                    </div>
+                    <span>{item.name}</span>
+                    {isActive && (
+                      <div className="ml-auto w-2 h-2 bg-white rounded-full"></div>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
 
-        {/* User Info */}
-        <div className="p-4 border-t border-border">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">A</span>
+        {/* User section */}
+        <div className="p-6">
+          <div className="glass-elevated rounded-2xl p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
+                <span className="text-sm font-bold text-white">A</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground truncate">Admin User</p>
+                <p className="text-xs text-foreground-muted">admin@marketup.com</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">Admin User</p>
-              <p className="text-xs text-foreground-muted">admin@marketup.com</p>
-            </div>
+            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl hover:bg-red-500/20 transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Sign out
+            </button>
           </div>
         </div>
       </div>

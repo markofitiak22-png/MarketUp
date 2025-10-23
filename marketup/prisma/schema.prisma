@@ -83,7 +83,15 @@ model ContactMessage {
     userId    String?
     user      User?    @relation(fields: [userId], references: [id])
 
+    // Ticket system fields
+    status   String @default("PENDING") // PENDING, IN_PROGRESS, RESOLVED, CLOSED
+    priority String @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+    category String @default("GENERAL") // TECHNICAL, BILLING, FEATURE_REQUEST, BUG_REPORT, GENERAL
+
     @@index([userId])
+    @@index([status])
+    @@index([priority])
+    @@index([category])
 }
 
 enum PlanTier {
@@ -245,5 +253,26 @@ model VideoJob {
     publishAtTikTok    DateTime?
     publishAtInstagram DateTime?
 
+    scheduledPosts ScheduledPost[]
+
     @@index([userId])
+}
+
+/// Scheduled posts for social media publishing
+model ScheduledPost {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    videoJobId String
+    videoJob   VideoJob @relation(fields: [videoJobId], references: [id])
+
+    socialNetwork String // youtube, instagram, tiktok, facebook, twitter, linkedin
+    scheduledDate DateTime
+    status        String   @default("SCHEDULED") // SCHEDULED, PUBLISHED, FAILED, CANCELLED
+    customMessage String?
+
+    @@index([videoJobId])
+    @@index([socialNetwork])
+    @@index([scheduledDate])
 }

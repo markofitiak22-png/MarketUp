@@ -33,9 +33,11 @@ export default function AdminLayout({
             <AdminHeader />
             <div className="flex">
               <AdminSidebar />
-              <main className="flex-1 ml-64 pt-20">
-                <div className="p-8">
-                  {children}
+              <main className="flex-1 ml-72 pt-20">
+                <div className="p-6 lg:p-8">
+                  <div className="max-w-7xl mx-auto">
+                    {children}
+                  </div>
                 </div>
               </main>
             </div>

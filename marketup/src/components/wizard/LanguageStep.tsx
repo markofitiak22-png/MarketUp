@@ -103,7 +103,9 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
           voice: {
             id: voice.id,
             name: voice.name,
-            gender: voice.gender
+            gender: voice.gender,
+            accent: voice.accent || 'neutral',
+            tone: voice.tone || 'professional'
           }
         }
       });

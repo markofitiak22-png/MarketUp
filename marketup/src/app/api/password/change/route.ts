@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 import { compare, hash } from "bcrypt";
 
@@ -8,7 +9,7 @@ const schema = z.object({ currentPassword: z.string().min(6), newPassword: z.str
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
     const json = await request.json();
@@ -25,7 +26,7 @@ export async function POST(request: Request) {
     const passwordHash = await hash(newPassword, 10);
     await prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
     return NextResponse.json({ ok: true });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }

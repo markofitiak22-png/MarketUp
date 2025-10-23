@@ -3,15 +3,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session?.user || !(session.user as { id: string }).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = (session.user as { id: string }).id;
 
     // Get user's subscription
     const subscription = await prisma.subscription.findFirst({
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
           "Basic templates",
           "Community support"
         ],
-        current: !subscription || subscription.tier === 'FREE',
+        current: !subscription,
         popular: false
       },
       {

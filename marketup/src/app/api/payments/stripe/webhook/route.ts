@@ -10,7 +10,7 @@ async function buffer(req: Request) {
 export async function POST(req: Request) {
   const sig = (req.headers.get("stripe-signature") || "").toString();
   const buf = await buffer(req);
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", { apiVersion: "2024-06-20" });
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", { apiVersion: "2025-09-30.clover" });
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET || "");

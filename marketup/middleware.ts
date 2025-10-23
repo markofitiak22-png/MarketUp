@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  const clientIp = (request.headers.get("x-forwarded-for") || request.ip || "").split(",")[0];
+  const clientIp = (request.headers.get("x-forwarded-for") || "").split(",")[0];
   if (fingerprint) response.headers.set("x-fingerprint", fingerprint);
   if (clientIp) response.headers.set("x-client-ip", clientIp);
 

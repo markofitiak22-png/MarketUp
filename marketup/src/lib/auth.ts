@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token.rememberMe) {
-        session.rememberMe = token.rememberMe;
+        session.rememberMe = Boolean(token.rememberMe);
       }
       if (token.sub) {
         session.user.id = token.sub;

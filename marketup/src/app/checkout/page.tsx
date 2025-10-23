@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const plans = {
   }
 };
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
                 </div>
                 <h4 className="text-lg font-semibold text-foreground mb-2">Payment Processing Coming Soon</h4>
                 <p className="text-foreground-muted mb-6">
-                  We're setting up secure payment processing. Contact us for early access.
+                  We&apos;re setting up secure payment processing. Contact us for early access.
                 </p>
                 <button
                   onClick={handleSuccess}
@@ -205,5 +205,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutPageContent />
+    </Suspense>
   );
 }

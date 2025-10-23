@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
       ...recentVideos.map(video => ({
         type: 'video_created',
         title: 'Video created',
-        description: `"${video.title}" by ${video.user.name || video.user.email}`,
+        description: `"${video.title}" by ${video.user?.name || video.user?.email || 'Unknown'}`,
         timestamp: video.createdAt,
         icon: 'video',
         status: video.status

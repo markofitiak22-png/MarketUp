@@ -12,7 +12,7 @@ function client() {
 export async function POST(request: Request) {
   const { orderId } = await request.json();
   const req = new paypal.orders.OrdersCaptureRequest(orderId);
-  req.requestBody({});
+  req.requestBody({ payment_source: { token: { id: orderId, type: "BILLING_AGREEMENT" } } });
   const res = await client().execute(req);
   return NextResponse.json({ ok: true, result: res.result });
 }

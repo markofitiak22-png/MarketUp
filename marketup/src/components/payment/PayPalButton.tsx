@@ -24,9 +24,8 @@ export default function PayPalButton({
     const loadPayPalScript = async () => {
       try {
         await loadScript({
-          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+          clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
           currency: "USD",
-          intent: "subscription",
         });
         setIsLoaded(true);
       } catch {
@@ -101,7 +100,7 @@ export default function PayPalButton({
     }
   };
 
-  const onError = () => {
+  const handlePayPalError = () => {
     // PayPal error handled silently
     onError("PayPal payment failed. Please try again.");
   };
@@ -130,7 +129,7 @@ export default function PayPalButton({
               window.paypal.Buttons({
                 createOrder: ${createOrder.toString()},
                 onApprove: ${onApprove.toString()},
-                onError: ${onError.toString()},
+                onError: ${handlePayPalError.toString()},
                 style: {
                   layout: 'vertical',
                   color: 'blue',

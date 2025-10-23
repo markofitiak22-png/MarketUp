@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     await prisma.verificationToken.delete({ where: { token: code } });
 
     return NextResponse.json({ ok: true });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }

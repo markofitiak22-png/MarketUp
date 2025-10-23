@@ -322,19 +322,19 @@ export default function SubscriptionPage() {
                 <h2 className="text-4xl font-bold text-foreground mb-3">Current Plan</h2>
                 <p className="text-xl text-foreground-muted">Manage your subscription and billing</p>
               </div>
-              <div className="flex items-center gap-4">
-                <span className={`px-6 py-3 rounded-2xl text-lg font-bold ${
-                  subscriptionData.currentPlan.status === 'active' 
-                    ? 'bg-success/20 text-success border border-success/30' 
-                    : subscriptionData.currentPlan.cancelAtPeriodEnd
-                    ? 'bg-warning/20 text-warning border border-warning/30'
+                <div className="flex items-center gap-4">
+                  <span className={`px-6 py-3 rounded-2xl text-lg font-bold ${
+                    subscriptionData?.currentPlan?.status === 'active' 
+                      ? 'bg-success/20 text-success border border-success/30' 
+                      : subscriptionData?.currentPlan?.cancelAtPeriodEnd
+                      ? 'bg-warning/20 text-warning border border-warning/30'
                     : 'bg-error/20 text-error border border-error/30'
                 }`}>
-                  {subscriptionData.currentPlan.cancelAtPeriodEnd ? 'Cancelling' : subscriptionData.currentPlan.status}
+                  {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? 'Cancelling' : subscriptionData?.currentPlan?.status}
                 </span>
-                {subscriptionData.currentPlan.cancelAtPeriodEnd && (
+                {subscriptionData?.currentPlan?.cancelAtPeriodEnd && (
                   <span className="text-lg text-foreground-muted bg-surface/50 px-4 py-2 rounded-xl">
-                    Ends {subscriptionData.currentPlan.nextBilling}
+                    Ends {subscriptionData?.currentPlan?.nextBilling}
                   </span>
                 )}
               </div>
@@ -345,20 +345,20 @@ export default function SubscriptionPage() {
                 <div className="glass rounded-3xl p-10 hover:scale-[1.02] transition-all duration-300 group">
                   <div className="flex items-center gap-8 mb-8">
                     <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-4xl shadow-xl group-hover:scale-110 transition-transform">
-                      {subscriptionData.currentPlan.tier === 'FREE' ? '🆓' :
-                       subscriptionData.currentPlan.tier === 'BASIC' ? '⭐' :
-                       subscriptionData.currentPlan.tier === 'STANDARD' ? '💎' : '🏢'}
+                      {subscriptionData?.currentPlan?.tier === 'FREE' ? '🆓' :
+                        subscriptionData?.currentPlan?.tier === 'BASIC' ? '⭐' :
+                        subscriptionData?.currentPlan?.tier === 'STANDARD' ? '💎' : '🏢'}
                     </div>
                     <div>
-                      <h3 className="text-3xl font-bold text-foreground mb-3">{subscriptionData.currentPlan.name}</h3>
+                      <h3 className="text-3xl font-bold text-foreground mb-3">{subscriptionData?.currentPlan?.name}</h3>
                       <p className="text-2xl text-foreground-muted">
-                        {subscriptionData.currentPlan.price === 0 ? 'Free' : `$${subscriptionData.currentPlan.price}/${subscriptionData.currentPlan.period}`}
+                        {subscriptionData?.currentPlan?.price === 0 ? 'Free' : `$${subscriptionData?.currentPlan?.price}/${subscriptionData?.currentPlan?.period}`}
                       </p>
                     </div>
                   </div>
                   
                   <div className="space-y-4">
-                    {subscriptionData.currentPlan.features.map((feature, index) => (
+                    {subscriptionData?.currentPlan?.features?.map((feature, index) => (
                       <div key={index} className="flex items-center gap-4">
                         <span className="text-success text-xl">✓</span>
                         <span className="text-lg text-foreground">{feature}</span>
@@ -369,34 +369,34 @@ export default function SubscriptionPage() {
               </div>
 
               <div className="space-y-8">
-                {subscriptionData.currentPlan.nextBilling && (
+                {subscriptionData?.currentPlan?.nextBilling && (
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
                     <h4 className="text-xl font-bold text-foreground mb-4">Next Billing</h4>
                     <p className="text-4xl font-bold text-foreground mb-3">
-                      {subscriptionData.currentPlan.price === 0 ? 'Free' : `$${subscriptionData.currentPlan.price}`}
+                      {subscriptionData?.currentPlan?.price === 0 ? 'Free' : `$${subscriptionData?.currentPlan?.price}`}
                     </p>
-                    <p className="text-lg text-foreground-muted">{subscriptionData.currentPlan.nextBilling}</p>
+                    <p className="text-lg text-foreground-muted">{subscriptionData?.currentPlan?.nextBilling}</p>
                   </div>
                 )}
                 
                 <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
                   <h4 className="text-xl font-bold text-foreground mb-4">Usage This Month</h4>
                   <p className="text-4xl font-bold text-foreground mb-3">
-                    {subscriptionData.usage.videosThisMonth}/{subscriptionData.usage.limit === 'unlimited' ? '∞' : subscriptionData.usage.limit}
+                    {subscriptionData?.usage?.videosThisMonth}/{subscriptionData?.usage?.limit === 'unlimited' ? '∞' : subscriptionData?.usage?.limit}
                   </p>
                   <p className="text-lg text-foreground-muted mb-6">Videos created</p>
-                  {subscriptionData.usage.limit !== 'unlimited' && (
+                  {subscriptionData?.usage?.limit !== 'unlimited' && (
                     <div className="space-y-3">
                       <div className="w-full bg-border rounded-full h-4">
                         <div 
                           className="bg-gradient-to-r from-accent to-accent-2 h-4 rounded-full transition-all duration-500 shadow-lg"
                           style={{ 
-                            width: `${Math.min(100, (subscriptionData.usage.videosThisMonth / Number(subscriptionData.usage.limit)) * 100)}%` 
+                            width: `${Math.min(100, ((subscriptionData?.usage?.videosThisMonth || 0) / Number(subscriptionData?.usage?.limit || 1)) * 100)}%` 
                           }}
                         />
                       </div>
                       <p className="text-foreground-muted">
-                        {Math.round((subscriptionData.usage.videosThisMonth / Number(subscriptionData.usage.limit)) * 100)}% used
+                        {Math.round(((subscriptionData?.usage?.videosThisMonth || 0) / Number(subscriptionData?.usage?.limit || 1)) * 100)}% used
                       </p>
                     </div>
                   )}
@@ -405,7 +405,7 @@ export default function SubscriptionPage() {
             </div>
 
             <div className="flex flex-wrap gap-6 mt-10">
-              {subscriptionData.currentPlan.tier !== 'FREE' && (
+              {subscriptionData?.currentPlan?.tier !== 'FREE' && (
                 <>
                   <button 
                     className="btn-outline px-10 py-5 text-xl font-bold hover:scale-105 transition-all duration-300"
@@ -423,11 +423,11 @@ export default function SubscriptionPage() {
                     className="px-10 py-5 text-xl font-bold text-error hover:text-error/80 border border-error/20 rounded-3xl hover:bg-error/10 transition-all duration-300 hover:scale-105"
                     onClick={() => alert('Cancel Subscription functionality coming soon!')}
                   >
-                    {subscriptionData.currentPlan.cancelAtPeriodEnd ? 'Reactivate' : 'Cancel Subscription'}
+                    {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? 'Reactivate' : 'Cancel Subscription'}
                   </button>
                 </>
               )}
-              {subscriptionData.currentPlan.tier === 'FREE' && (
+              {subscriptionData?.currentPlan?.tier === 'FREE' && (
                 <button 
                   className="btn-primary px-10 py-5 text-xl font-bold hover:scale-105 transition-all duration-300"
                   onClick={() => alert('Upgrade Plan functionality coming soon!')}
@@ -446,7 +446,7 @@ export default function SubscriptionPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-              {subscriptionData.availablePlans.map((plan, index) => (
+              {subscriptionData?.availablePlans?.map((plan, index) => (
                 <div
                   key={index}
                   className={`glass rounded-3xl p-10 relative hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group ${
@@ -516,8 +516,8 @@ export default function SubscriptionPage() {
             </div>
             
             <div className="space-y-8">
-              {subscriptionData.billingHistory.length > 0 ? (
-                subscriptionData.billingHistory.map((invoice, index) => (
+              {(subscriptionData?.billingHistory?.length || 0) > 0 ? (
+                subscriptionData?.billingHistory?.map((invoice, index) => (
                 <div key={index} className="flex items-center justify-between p-8 glass rounded-3xl hover:scale-[1.02] transition-all duration-300 group">
                   <div className="flex items-center gap-8">
                     <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center text-3xl shadow-xl group-hover:scale-110 transition-transform">

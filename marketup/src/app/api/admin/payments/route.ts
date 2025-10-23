@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
             }
           }
         },
-        orderBy: sortBy === 'user' ? { user: { name: sortOrder } } : {
+        orderBy: sortBy === 'user' ? { user: { name: sortOrder as 'asc' | 'desc' } } : {
           [actualSortBy]: sortOrder
         },
         skip: (page - 1) * limit,

@@ -471,7 +471,7 @@ export default function PublicationScheduler() {
                             {/* Custom Message */}
                             {post.customMessage && (
                               <p className="text-lg text-foreground-muted mb-4">
-                                "{post.customMessage}"
+                                &ldquo;{post.customMessage}&rdquo;
                               </p>
                             )}
 

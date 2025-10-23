@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import crypto from "node:crypto";
 import { sendPasswordResetEmail } from "@/lib/mailer";
 
 const schema = z.object({ email: z.string().email() });
@@ -39,7 +38,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }

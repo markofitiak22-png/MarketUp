@@ -3,15 +3,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session?.user || !(session.user as { id: string }).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = (session.user as { id: string }).id;
 
     // Get user's subscription
     const subscription = await prisma.subscription.findFirst({
@@ -77,11 +77,11 @@ export async function GET(request: NextRequest) {
       storage: storageUsedGB,
       bandwidth: bandwidthUsed,
       totalVideos,
-      storageLimit: subscription?.tier === 'FREE' ? 1 : 
-                   subscription?.tier === 'BASIC' ? 5 : 
-                   subscription?.tier === 'STANDARD' ? 10 : 50, // GB
-      videoLimit: subscription?.tier === 'FREE' ? 3 : 
-                 subscription?.tier === 'BASIC' ? 10 : 'unlimited'
+      storageLimit: !subscription ? 1 : 
+                   subscription.tier === 'BASIC' ? 5 : 
+                   subscription.tier === 'STANDARD' ? 10 : 50, // GB
+      videoLimit: !subscription ? 3 : 
+                 subscription.tier === 'BASIC' ? 10 : 'unlimited'
     };
 
     // Mock payment method (in real app, this would come from payment provider)

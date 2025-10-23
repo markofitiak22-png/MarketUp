@@ -309,7 +309,7 @@ export default function AboutPage() {
                     </svg>
                   </div>
                   <p className="text-2xl md:text-3xl font-bold text-foreground leading-relaxed">
-                    "MarketUp – where your ideas become marketing power"
+                    &ldquo;MarketUp – where your ideas become marketing power&rdquo;
                   </p>
                 </div>
               </div>
@@ -338,7 +338,7 @@ export default function AboutPage() {
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-4">Slogan</h3>
                   <p className="text-lg text-foreground-muted leading-relaxed">
-                    "MarketUp – your business deserves to be seen"
+                    &ldquo;MarketUp – your business deserves to be seen&rdquo;
                   </p>
                 </div>
                 <div className="group glass-elevated rounded-3xl p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl hover:shadow-accent-2/20">
@@ -349,7 +349,7 @@ export default function AboutPage() {
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-4">Tagline</h3>
                   <p className="text-lg text-foreground-muted leading-relaxed">
-                    "Your story, our technology – one vision for success"
+                    &ldquo;Your story, our technology – one vision for success&rdquo;
                   </p>
                 </div>
               </div>

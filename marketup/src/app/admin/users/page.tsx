@@ -25,7 +25,7 @@ interface EditUserData {
   email: string;
   role: string;
   status: "active" | "inactive" | "suspended";
-  subscription: "Basic" | "Premium" | "Enterprise";
+  subscription: "Basic" | "Premium" | "Enterprise" | "Free";
 }
 
 export default function UsersPage() {

@@ -104,7 +104,7 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
         category: bg.category,
         description: bg.description
       } : null;
-    }).filter(Boolean);
+    }).filter((bg): bg is NonNullable<typeof bg> => bg !== null);
     
     onUpdate({
       backgrounds: selectedBgObjects
@@ -218,9 +218,9 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
             <div className="aspect-video bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-xl overflow-hidden">
               <div className="w-full h-full flex items-center justify-center">
                 <div className="text-6xl opacity-50">
-                  {selectedBgs.length > 0 && selectedBgs[0].category === 'Professional' && '🏢'}
-                  {selectedBgs.length > 0 && selectedBgs[0].category === 'Casual' && '🏠'}
-                  {selectedBgs.length > 0 && selectedBgs[0].category === 'Creative' && '🎨'}
+                  {selectedBgs.length > 0 && selectedBgs[0]?.category === 'Professional' && '🏢'}
+                  {selectedBgs.length > 0 && selectedBgs[0]?.category === 'Casual' && '🏠'}
+                  {selectedBgs.length > 0 && selectedBgs[0]?.category === 'Creative' && '🎨'}
                 </div>
               </div>
               
@@ -235,10 +235,10 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
             
             <div className="mt-4 text-center">
               <h4 className="text-lg font-semibold text-foreground">
-                {selectedBgs.length > 0 ? selectedBgs[0].name : 'Selected Backgrounds'}
+                {selectedBgs.length > 0 ? selectedBgs[0]?.name : 'Selected Backgrounds'}
               </h4>
               <p className="text-sm text-foreground-muted">
-                {selectedBgs.length > 0 ? selectedBgs[0].description : `${selectedBackgrounds.length} background${selectedBackgrounds.length !== 1 ? 's' : ''} selected`}
+                {selectedBgs.length > 0 ? selectedBgs[0]?.description : `${selectedBackgrounds.length} background${selectedBackgrounds.length !== 1 ? 's' : ''} selected`}
               </p>
               {selectedBgs.length > 1 && (
                 <div className="mt-2 text-xs text-accent">

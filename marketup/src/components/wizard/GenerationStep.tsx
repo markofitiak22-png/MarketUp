@@ -193,7 +193,7 @@ export default function GenerationStep({
                 <span className="text-lg">🎬</span>
               </div>
               <div>
-                <div className="font-medium text-foreground">{data.background?.name}</div>
+                <div className="font-medium text-foreground">{data.backgrounds?.[0]?.name}</div>
                 <div className="text-sm text-foreground-muted">Background</div>
               </div>
             </div>

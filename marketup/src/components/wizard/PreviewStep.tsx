@@ -133,7 +133,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
             </div>
             <div className="flex items-center justify-between">
               <span className="text-foreground-muted">Background</span>
-              <span className="font-medium text-foreground">{data.background?.name}</span>
+              <span className="font-medium text-foreground">{data.backgrounds?.[0]?.name}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-foreground-muted">Resolution</span>

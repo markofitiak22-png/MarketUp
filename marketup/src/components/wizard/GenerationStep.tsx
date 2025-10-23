@@ -29,7 +29,7 @@ export default function GenerationStep({
 }: GenerationStepProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [estimatedTime, setEstimatedTime] = useState(0);
+  const [estimatedTime] = useState(0);
   // const [generationId, setGenerationId] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 

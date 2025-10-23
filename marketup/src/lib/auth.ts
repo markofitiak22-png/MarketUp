@@ -93,6 +93,7 @@ export const authOptions: NextAuthOptions = {
           } as { id: string; email?: string };
         } catch (error) {
           console.error('Auth error:', error);
+          console.error('Auth error stack:', error instanceof Error ? error.stack : 'No stack trace');
           return null;
         }
       },

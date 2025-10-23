@@ -7,11 +7,11 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (session?.user?.id) {
+    if ((session as any)?.user?.id) {
       // Clear remember me sessions for this user
       await prisma.session.updateMany({
         where: { 
-          userId: session.user.id,
+          userId: (session as any).user.id,
           rememberMe: true
         },
         data: {

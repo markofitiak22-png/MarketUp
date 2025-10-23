@@ -7,7 +7,7 @@ import { randomBytes } from "crypto";
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    if (!(session as any)?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       // Store the token in database
       await prisma.session.updateMany({
         where: { 
-          userId: session.user.id,
+          userId: (session as any).user.id,
           expires: { gt: new Date() }
         },
         data: {
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       // Remove remember me token
       await prisma.session.updateMany({
         where: { 
-          userId: session.user.id,
+          userId: (session as any).user.id,
           expires: { gt: new Date() }
         },
         data: {
@@ -66,14 +66,14 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    if (!(session as any)?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Clear all remember me sessions for this user
     await prisma.session.updateMany({
       where: { 
-        userId: session.user.id,
+        userId: (session as any).user.id,
         rememberMe: true
       },
       data: {

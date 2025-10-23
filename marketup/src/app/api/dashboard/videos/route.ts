@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.id) {
+    if (!(session as any)?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Build where clause
     const where: Record<string, unknown> = {
-      userId: session.user.id
+      userId: (session as any).user.id
     };
 
     if (status && status !== 'all') {

@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
               value: (amount / 100).toFixed(2), // Convert from cents
             },
             description: `Subscription to ${planId} plan (${billingPeriod})`,
-            custom_id: `${session.user?.id || session.user?.email}_${planId}_${billingPeriod}`,
+            custom_id: `${(session as any).user?.id || (session as any).user?.email}_${planId}_${billingPeriod}`,
           },
         ],
         application_context: {

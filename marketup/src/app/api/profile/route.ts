@@ -6,8 +6,8 @@ import { z } from "zod";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!(session as any)?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const user = await prisma.user.findUnique({ where: { email: (session as any).user.email } });
   return NextResponse.json({ name: user?.name || null, locale: user?.locale || null, country: user?.country || null, email: user?.email });
 }
 
@@ -18,7 +18,7 @@ const updateSchema = z.object({
 });
 export async function PATCH(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!(session as any)?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   
   const json = await request.json();
   console.log("Profile PATCH - Received data:", json);
@@ -41,7 +41,7 @@ export async function PATCH(request: Request) {
   
   console.log("Profile PATCH - Data to update:", dataToUpdate);
   
-  const updated = await prisma.user.update({ where: { email: session.user.email }, data: dataToUpdate });
+  const updated = await prisma.user.update({ where: { email: (session as any).user.email }, data: dataToUpdate });
   console.log("Profile PATCH - Updated user:", updated);
   
   return NextResponse.json({ ok: true, name: updated.name, locale: updated.locale, country: updated.country });

@@ -1,4 +1,4 @@
-import type { NextAuthOptions } from "next-auth/next";
+// import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 // import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -7,7 +7,7 @@ import { compare } from "bcrypt";
 import { z } from "zod";
 // import { randomBytes } from "crypto";
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: any = {
   session: { 
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days default
@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: false, // Disable debug to reduce logs
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
         // Check if remember me is enabled in localStorage (client-side)
         // This is a simplified approach - in production you might want server-side validation
@@ -29,12 +29,12 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (token.rememberMe) {
         session.rememberMe = Boolean(token.rememberMe);
       }
       if (token.sub) {
-        session.user.id = token.sub;
+        (session as any).user.id = token.sub;
       }
       return session;
     },

@@ -5,13 +5,13 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!(session as any)?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const form = await request.formData();
   const amount = Number(form.get("amount"));
   const currency = String(form.get("currency") || "USD");
   const note = String(form.get("note") || "");
   const receiptUrl = String(form.get("receiptUrl") || "");
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  const user = await prisma.user.findUnique({ where: { email: (session as any).user.email } });
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const created = await prisma.manualPayment.create({ data: { userId: user.id, amountCents: Math.round(amount * 100), currency, note, receiptUrl } });
   return NextResponse.json({ ok: true, id: created.id });

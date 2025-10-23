@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder"
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!(session as any)?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const { tier } = await request.json();
 
   const priceMap: Record<string, string> = {
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   const checkout = await stripe.checkout.sessions.create({
     mode: "subscription",
-    customer_email: session.user.email,
+    customer_email: (session as any).user.email,
     line_items: [{ price, quantity: 1 }],
     allow_promotion_codes: true,
     payment_method_types: ["card", "klarna"],

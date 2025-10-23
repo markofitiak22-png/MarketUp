@@ -7,11 +7,11 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session || !(session as any).user || !((session as any).user as any).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = ((session as any).user as any).id;
     console.log('Admin Videos API - User ID:', userId);
 
     // Get query parameters
@@ -184,7 +184,7 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session || !(session as any).user || !((session as any).user as any).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

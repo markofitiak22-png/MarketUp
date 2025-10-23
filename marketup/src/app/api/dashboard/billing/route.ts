@@ -7,11 +7,11 @@ export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as { id: string }).id) {
+    if (!session || !(session as any).user || !((session as any).user as { id: string }).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as { id: string }).id;
+    const userId = ((session as any).user as { id: string }).id;
 
     // Get user's subscription
     const subscription = await prisma.subscription.findFirst({

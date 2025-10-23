@@ -9,12 +9,12 @@ export async function GET(request: NextRequest) {
     
     console.log('Admin API - Session:', session);
     
-    if (!session || !session.user || !(session.user as any).id) {
+    if (!session || !(session as any).user || !((session as any).user as any).id) {
       console.log('Admin API - Unauthorized access attempt');
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = ((session as any).user as any).id;
     console.log('Admin API - User ID:', userId);
 
     // Check if user is admin (in real app, you'd have an admin role system)

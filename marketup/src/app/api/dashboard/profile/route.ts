@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
 
     // Mock data - replace with actual database queries
     const profile = {
-      name: session.user?.name || "",
-      email: session.user?.email || "",
+      name: (session as any).user?.name || "",
+      email: (session as any).user?.email || "",
       bio: "Creative professional passionate about video marketing",
       company: "TechCorp",
       website: "https://example.com",

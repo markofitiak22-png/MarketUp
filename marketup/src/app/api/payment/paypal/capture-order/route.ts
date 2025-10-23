@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     if (captureData.status === 'COMPLETED') {
       // Update user subscription in database
-      console.log(`User ${session.user?.id || session.user?.email} subscribed to ${planId} plan (${billingPeriod}) via PayPal`);
+      console.log(`User ${(session as any).user?.id || (session as any).user?.email} subscribed to ${planId} plan (${billingPeriod}) via PayPal`);
       
       // Here you would typically:
       // 1. Update user subscription in your database

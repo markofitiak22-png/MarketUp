@@ -8,8 +8,8 @@ const schema = z.object({ tier: z.enum(["BASIC", "STANDARD", "PREMIUM"]) });
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!(session as any)?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const user = await prisma.user.findUnique({ where: { email: (session as any).user.email } });
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const parsed = schema.safeParse(await request.json());

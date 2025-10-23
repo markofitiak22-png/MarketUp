@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session || !(session as any).user || !((session as any).user as any).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Create video job in database
     const videoJob = await prisma.videoJob.create({
       data: {
-        userId: (session.user as any).id,
+        userId: ((session as any).user as any).id,
         script: text,
         backgroundImageUrls: [background],
         productImageUrls: [],
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session || !(session as any).user || !((session as any).user as any).id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
     const videoJob = await prisma.videoJob.findFirst({
       where: {
         id: videoId,
-        userId: (session.user as any).id
+        userId: ((session as any).user as any).id
       }
     });
 

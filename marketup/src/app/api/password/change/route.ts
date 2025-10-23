@@ -10,14 +10,14 @@ const schema = z.object({ currentPassword: z.string().min(6), newPassword: z.str
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    if (!(session as any)?.user?.email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
     const json = await request.json();
     const parsed = schema.safeParse(json);
     if (!parsed.success) return NextResponse.json({ error: "invalid_input" }, { status: 400 });
 
     const { currentPassword, newPassword } = parsed.data;
-    const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+    const user = await prisma.user.findUnique({ where: { email: (session as any).user.email } });
     if (!user?.passwordHash) return NextResponse.json({ error: "no_password_set" }, { status: 400 });
 
     const ok = await compare(currentPassword, user.passwordHash);

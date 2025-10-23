@@ -123,7 +123,7 @@ export default function PricingPage() {
       // Redirect to contact form for enterprise
       router.push('/contact?plan=enterprise');
     } else {
-      setSelectedPlan(planId);
+      // setSelectedPlan(planId);
       router.push(`/checkout?plan=${planId}&billing=${billingPeriod}`);
     }
   };

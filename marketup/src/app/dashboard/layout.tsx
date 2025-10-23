@@ -20,5 +20,5 @@ export default async function DashboardLayout({
     );
   }
 
-  return <DashboardClient userEmail={session.user?.email || ""}>{children}</DashboardClient>;
+  return <DashboardClient userEmail={(session as any).user?.email || ""}>{children}</DashboardClient>;
 }

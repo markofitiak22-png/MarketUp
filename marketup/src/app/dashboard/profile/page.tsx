@@ -7,13 +7,13 @@ import ProfileClient from "./ProfileClient";
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   
-  if (!session?.user?.email) {
+  if (!(session as any)?.user?.email) {
     redirect("/auth");
   }
 
   // Get user data from database
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
+    where: { email: (session as any).user.email },
     select: {
       name: true,
       email: true,

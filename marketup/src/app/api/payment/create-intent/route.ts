@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
             country: billingInfo.country,
           },
           metadata: {
-            userId: session.user?.id || session.user?.email || '',
+            userId: (session as any).user?.id || (session as any).user?.email || '',
             planId,
             billingPeriod,
           },
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         planId,
         billingPeriod,
-        userId: session.user?.id || session.user?.email || '',
+        userId: (session as any).user?.id || (session as any).user?.email || '',
       },
       description: `Subscription to ${planId} plan (${billingPeriod})`,
       automatic_payment_methods: {

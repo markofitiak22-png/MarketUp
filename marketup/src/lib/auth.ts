@@ -52,21 +52,49 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(raw) {
-        const schema = z.object({ 
-          email: z.string().email(), 
-          password: z.string().min(6)
-        });
-        const parsed = schema.safeParse(raw);
-        if (!parsed.success) return null;
-        const { email, password } = parsed.data;
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.passwordHash) return null;
-        const ok = await compare(password, user.passwordHash);
-        if (!ok) return null;
-        return { 
-          id: user.id, 
-          email: user.email || undefined
-        } as { id: string; email?: string };
+        try {
+          console.log('Auth attempt started');
+          
+          const schema = z.object({ 
+            email: z.string().email(), 
+            password: z.string().min(6)
+          });
+          const parsed = schema.safeParse(raw);
+          if (!parsed.success) {
+            console.log('Auth validation failed:', parsed.error);
+            return null;
+          }
+          
+          const { email, password } = parsed.data;
+          console.log('Auth validated data:', { email });
+          
+          console.log('Looking up user in database...');
+          const user = await prisma.user.findUnique({ where: { email } });
+          console.log('User found:', !!user, 'Has password hash:', !!user?.passwordHash);
+          
+          if (!user || !user.passwordHash) {
+            console.log('User not found or no password hash');
+            return null;
+          }
+          
+          console.log('Comparing password...');
+          const ok = await compare(password, user.passwordHash);
+          console.log('Password comparison result:', ok);
+          
+          if (!ok) {
+            console.log('Password mismatch');
+            return null;
+          }
+          
+          console.log('Auth successful for user:', user.id);
+          return { 
+            id: user.id, 
+            email: user.email || undefined
+          } as { id: string; email?: string };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
+        }
       },
     }),
   ],

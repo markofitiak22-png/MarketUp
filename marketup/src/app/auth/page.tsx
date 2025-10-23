@@ -2,13 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import LanguageSelector from "@/components/LanguageSelector";
-
-// const languages = [
-//   { code: "en", label: "English" },
-//   { code: "uk", label: "Українська" },
-//   { code: "ar", label: "العربية" },
-// ];
 
 interface FormErrors {
   email?: string;
@@ -246,8 +239,6 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Language Selector */}
-      <LanguageSelector />
       
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />

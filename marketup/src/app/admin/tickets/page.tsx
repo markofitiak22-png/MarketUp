@@ -447,99 +447,99 @@ export default function TicketSystem() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            {/* Search */}
-            <div>
+          {/* Search */}
+          <div>
               <label className="block text-lg font-bold text-foreground mb-3">
-                Search
-              </label>
-              <input
-                type="text"
-                placeholder="Search tickets..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+              Search
+            </label>
+            <input
+              type="text"
+              placeholder="Search tickets..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
-              />
-            </div>
+            />
+          </div>
 
-            {/* Status Filter */}
-            <div>
+          {/* Status Filter */}
+          <div>
               <label className="block text-lg font-bold text-foreground mb-3">
-                Status
-              </label>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value as any)}
+              Status
+            </label>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value as any)}
                 className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
-              >
-                <option value="all">All Status</option>
-                <option value="open">Open</option>
-                <option value="in_progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
-              </select>
-            </div>
+            >
+              <option value="all">All Status</option>
+              <option value="open">Open</option>
+              <option value="in_progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
 
-            {/* Priority Filter */}
-            <div>
+          {/* Priority Filter */}
+          <div>
               <label className="block text-lg font-bold text-foreground mb-3">
-                Priority
-              </label>
-              <select
-                value={filterPriority}
-                onChange={(e) => setFilterPriority(e.target.value as any)}
+              Priority
+            </label>
+            <select
+              value={filterPriority}
+              onChange={(e) => setFilterPriority(e.target.value as any)}
                 className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
-              >
-                <option value="all">All Priority</option>
-                <option value="urgent">Urgent</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-            </div>
+            >
+              <option value="all">All Priority</option>
+              <option value="urgent">Urgent</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
 
-            {/* Category Filter */}
-            <div>
+          {/* Category Filter */}
+          <div>
               <label className="block text-lg font-bold text-foreground mb-3">
-                Category
-              </label>
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value as any)}
+              Category
+            </label>
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value as any)}
                 className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
-              >
-                <option value="all">All Categories</option>
-                <option value="technical">Technical</option>
-                <option value="billing">Billing</option>
-                <option value="feature_request">Feature Request</option>
-                <option value="bug_report">Bug Report</option>
-                <option value="general">General</option>
-              </select>
-            </div>
+            >
+              <option value="all">All Categories</option>
+              <option value="technical">Technical</option>
+              <option value="billing">Billing</option>
+              <option value="feature_request">Feature Request</option>
+              <option value="bug_report">Bug Report</option>
+              <option value="general">General</option>
+            </select>
+          </div>
 
-            {/* Subscription Filter */}
-            <div>
+          {/* Subscription Filter */}
+          <div>
               <label className="block text-lg font-bold text-foreground mb-3">
-                Subscription
-              </label>
-              <select
-                value={filterSubscription}
-                onChange={(e) => setFilterSubscription(e.target.value as any)}
+              Subscription
+            </label>
+            <select
+              value={filterSubscription}
+              onChange={(e) => setFilterSubscription(e.target.value as any)}
                 className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
-              >
-                <option value="all">All Subscriptions</option>
-                <option value="premium">Premium</option>
-                <option value="enterprise">Enterprise</option>
-              </select>
-            </div>
+            >
+              <option value="all">All Subscriptions</option>
+              <option value="premium">Premium</option>
+              <option value="enterprise">Enterprise</option>
+            </select>
           </div>
         </div>
+      </div>
 
-        {/* Tickets List */}
+      {/* Tickets List */}
         <div className="glass-elevated rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-          {loading ? (
+        {loading ? (
             <div className="p-10">
               <div className="space-y-6">
-                {[...Array(5)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                   <div key={i} className="flex items-center space-x-6 p-6">
                     <div className="w-16 h-16 bg-surface-elevated rounded-2xl animate-pulse"></div>
                     <div className="flex-1 space-y-3">
@@ -547,221 +547,221 @@ export default function TicketSystem() {
                       <div className="h-4 bg-surface-elevated rounded animate-pulse w-1/2"></div>
                     </div>
                     <div className="w-24 h-8 bg-surface-elevated rounded-full animate-pulse"></div>
-                  </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {filteredTickets.map((ticket) => (
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {filteredTickets.map((ticket) => (
                 <div key={ticket.id} className="p-8 hover:bg-surface/50 transition-all duration-300 hover:scale-[1.01] group">
-                  <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-6">
-                      {/* User Avatar */}
-                      <img
-                        src={ticket.user.avatar}
-                        alt={ticket.user.name}
+                    {/* User Avatar */}
+                    <img
+                      src={ticket.user.avatar}
+                      alt={ticket.user.name}
                         className="w-16 h-16 rounded-2xl group-hover:scale-110 transition-transform"
-                      />
+                    />
 
-                      {/* Ticket Info */}
-                      <div className="flex-1">
+                    {/* Ticket Info */}
+                    <div className="flex-1">
                         <div className="flex items-center space-x-4 mb-3">
                           <h3 className="text-2xl font-bold text-foreground">{ticket.subject}</h3>
                           <span className="text-lg text-foreground-muted">•</span>
                           <span className="text-lg text-foreground-muted">{ticket.id}</span>
-                        </div>
-                        
+                      </div>
+                      
                         <div className="flex items-center space-x-6 text-lg text-foreground-muted mb-4">
-                          <span>{ticket.user.name}</span>
-                          <span>•</span>
-                          <span>{ticket.user.email}</span>
-                          <span>•</span>
-                          <span className="capitalize">{ticket.user.subscription}</span>
-                        </div>
+                        <span>{ticket.user.name}</span>
+                        <span>•</span>
+                        <span>{ticket.user.email}</span>
+                        <span>•</span>
+                        <span className="capitalize">{ticket.user.subscription}</span>
+                      </div>
 
                         <p className="text-lg text-foreground-muted mb-4 line-clamp-2">
-                          {ticket.description}
-                        </p>
+                        {ticket.description}
+                      </p>
 
-                        {/* Tags and Metadata */}
-                        <div className="flex items-center space-x-4">
+                      {/* Tags and Metadata */}
+                      <div className="flex items-center space-x-4">
                           <span className="text-base bg-surface-elevated px-4 py-2 rounded-2xl font-bold">
-                            {getCategoryIcon(ticket.category)} {ticket.category.replace('_', ' ')}
-                          </span>
-                          {ticket.assignedAdmin && (
+                          {getCategoryIcon(ticket.category)} {ticket.category.replace('_', ' ')}
+                        </span>
+                        {ticket.assignedAdmin && (
                             <span className="text-base bg-accent/10 text-accent px-4 py-2 rounded-2xl font-bold">
-                              Assigned to {ticket.assignedAdmin.name}
-                            </span>
-                          )}
-                          <span className="text-base text-foreground-muted">
-                            {ticket.messages.length} messages
+                            Assigned to {ticket.assignedAdmin.name}
                           </span>
+                        )}
                           <span className="text-base text-foreground-muted">
-                            {getTimeAgo(ticket.lastMessageAt)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Status and Actions */}
-                    <div className="flex flex-col items-end space-y-4">
-                      <div className="flex items-center space-x-3">
-                        {getStatusBadge(ticket.status)}
-                        {getPriorityBadge(ticket.priority)}
-                      </div>
-
-                      <div className="flex space-x-3">
-                        <button
-                          onClick={() => {
-                            setSelectedTicket(ticket);
-                            setShowModal(true);
-                          }}
-                          className="px-6 py-3 bg-accent text-white rounded-2xl hover:bg-accent-hover transition-all duration-300 text-lg font-bold hover:scale-105"
-                        >
-                          View
-                        </button>
+                          {ticket.messages.length} messages
+                        </span>
+                          <span className="text-base text-foreground-muted">
+                          {getTimeAgo(ticket.lastMessageAt)}
+                        </span>
                       </div>
                     </div>
                   </div>
+
+                  {/* Status and Actions */}
+                    <div className="flex flex-col items-end space-y-4">
+                      <div className="flex items-center space-x-3">
+                      {getStatusBadge(ticket.status)}
+                      {getPriorityBadge(ticket.priority)}
+                    </div>
+
+                      <div className="flex space-x-3">
+                      <button
+                        onClick={() => {
+                          setSelectedTicket(ticket);
+                          setShowModal(true);
+                        }}
+                          className="px-6 py-3 bg-accent text-white rounded-2xl hover:bg-accent-hover transition-all duration-300 text-lg font-bold hover:scale-105"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
-        {/* Ticket Details Modal */}
-        {showModal && selectedTicket && (
+      {/* Ticket Details Modal */}
+      {showModal && selectedTicket && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
             <div className="glass-elevated rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300 animate-in zoom-in-95 duration-300">
               <div className="p-8 border-b border-border">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="flex items-center justify-between">
+                <div>
                     <h2 className="text-3xl font-bold text-foreground">{selectedTicket.subject}</h2>
                     <p className="text-lg text-foreground-muted">{selectedTicket.id}</p>
-                  </div>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110"
-                  >
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
                 </div>
+                <button
+                  onClick={() => setShowModal(false)}
+                    className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110"
+                >
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
+            </div>
 
               <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-120px)]">
-                {/* Ticket Info */}
+              {/* Ticket Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
+                <div>
                     <h3 className="text-2xl font-bold text-foreground mb-4">Ticket Information</h3>
                     <div className="space-y-3 text-lg">
-                      <div><span className="font-bold">Status:</span> {getStatusBadge(selectedTicket.status)}</div>
-                      <div><span className="font-bold">Priority:</span> {getPriorityBadge(selectedTicket.priority)}</div>
-                      <div><span className="font-bold">Category:</span> {getCategoryIcon(selectedTicket.category)} {selectedTicket.category.replace('_', ' ')}</div>
-                      <div><span className="font-bold">Created:</span> {formatDate(selectedTicket.createdAt)}</div>
-                      <div><span className="font-bold">Updated:</span> {formatDate(selectedTicket.updatedAt)}</div>
-                    </div>
+                    <div><span className="font-bold">Status:</span> {getStatusBadge(selectedTicket.status)}</div>
+                    <div><span className="font-bold">Priority:</span> {getPriorityBadge(selectedTicket.priority)}</div>
+                    <div><span className="font-bold">Category:</span> {getCategoryIcon(selectedTicket.category)} {selectedTicket.category.replace('_', ' ')}</div>
+                    <div><span className="font-bold">Created:</span> {formatDate(selectedTicket.createdAt)}</div>
+                    <div><span className="font-bold">Updated:</span> {formatDate(selectedTicket.updatedAt)}</div>
                   </div>
+                </div>
 
-                  <div>
+                <div>
                     <h3 className="text-2xl font-bold text-foreground mb-4">User Information</h3>
                     <div className="flex items-center space-x-4 mb-6">
-                      <img
-                        src={selectedTicket.user.avatar}
-                        alt={selectedTicket.user.name}
+                    <img
+                      src={selectedTicket.user.avatar}
+                      alt={selectedTicket.user.name}
                         className="w-16 h-16 rounded-2xl"
-                      />
-                      <div>
+                    />
+                    <div>
                         <div className="text-xl font-bold text-foreground">{selectedTicket.user.name}</div>
                         <div className="text-lg text-foreground-muted">{selectedTicket.user.email}</div>
                         <div className="text-base text-accent font-bold capitalize">{selectedTicket.user.subscription}</div>
                       </div>
-                    </div>
-                    {selectedTicket.assignedAdmin && (
-                      <div className="text-lg">
-                        <span className="font-bold">Assigned to:</span> {selectedTicket.assignedAdmin.name}
-                      </div>
-                    )}
                   </div>
+                  {selectedTicket.assignedAdmin && (
+                      <div className="text-lg">
+                      <span className="font-bold">Assigned to:</span> {selectedTicket.assignedAdmin.name}
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                {/* Description */}
-                <div>
+              {/* Description */}
+              <div>
                   <h3 className="text-2xl font-bold text-foreground mb-4">Description</h3>
                   <p className="text-lg text-foreground-muted bg-surface-elevated p-6 rounded-2xl">
-                    {selectedTicket.description}
-                  </p>
-                </div>
+                  {selectedTicket.description}
+                </p>
+              </div>
 
-                {/* Messages */}
-                <div>
+              {/* Messages */}
+              <div>
                   <h3 className="text-2xl font-bold text-foreground mb-4">Conversation</h3>
                   <div className="space-y-6 max-h-80 overflow-y-auto">
-                    {selectedTicket.messages.map((message) => (
-                      <div key={message.id} className={`flex ${message.sender === "admin" ? "justify-end" : "justify-start"}`}>
+                  {selectedTicket.messages.map((message) => (
+                    <div key={message.id} className={`flex ${message.sender === "admin" ? "justify-end" : "justify-start"}`}>
                         <div className={`max-w-md px-6 py-4 rounded-2xl ${
-                          message.sender === "admin" 
-                            ? "bg-accent text-white" 
-                            : "bg-surface-elevated text-foreground"
-                        }`}>
+                        message.sender === "admin" 
+                          ? "bg-accent text-white" 
+                          : "bg-surface-elevated text-foreground"
+                      }`}>
                           <div className="text-lg font-bold mb-2">{message.senderName}</div>
                           <div className="text-lg">{message.content}</div>
                           <div className="text-base opacity-75 mt-2">
-                            {formatDate(message.timestamp)}
+                          {formatDate(message.timestamp)}
                           </div>
-                        </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
-                {/* Actions */}
+              {/* Actions */}
                 <div className="flex justify-between items-center pt-6 border-t border-border">
                   <div className="flex space-x-4">
-                    <select
-                      value={selectedTicket.status}
-                      onChange={(e) => handleUpdateStatus(selectedTicket.id, e.target.value as Ticket["status"])}
+                  <select
+                    value={selectedTicket.status}
+                    onChange={(e) => handleUpdateStatus(selectedTicket.id, e.target.value as Ticket["status"])}
                       className="px-6 py-3 rounded-2xl border border-border bg-surface-elevated text-foreground text-lg"
-                    >
-                      <option value="open">Open</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="resolved">Resolved</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                    
-                    {!selectedTicket.assignedAdmin && (
-                      <button
-                        onClick={() => handleAssignTicket(selectedTicket.id, "Admin")}
+                  >
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                  
+                  {!selectedTicket.assignedAdmin && (
+                    <button
+                      onClick={() => handleAssignTicket(selectedTicket.id, "Admin")}
                         className="px-6 py-3 bg-blue-500 text-white rounded-2xl hover:bg-blue-600 transition-all duration-300 text-lg font-bold hover:scale-105"
-                      >
-                        Assign to Me
-                      </button>
-                    )}
-                  </div>
+                    >
+                      Assign to Me
+                    </button>
+                  )}
+                </div>
 
                   <div className="flex space-x-4">
-                    <input
-                      type="text"
-                      placeholder="Type your response..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
+                  <input
+                    type="text"
+                    placeholder="Type your response..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
                       className="px-6 py-3 rounded-2xl border border-border bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-lg"
-                    />
-                    <button
-                      onClick={handleSendMessage}
-                      disabled={!newMessage.trim()}
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!newMessage.trim()}
                       className="px-6 py-3 bg-accent text-white rounded-2xl hover:bg-accent-hover transition-all duration-300 text-lg font-bold hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Send
-                    </button>
-                  </div>
+                  >
+                    Send
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
       </div>
     </div>
   );

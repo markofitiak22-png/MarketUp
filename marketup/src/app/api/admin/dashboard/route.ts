@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     
     console.log('Admin API - Session:', session);
     
-    if (!session?.user || !(session.user as any).id) {
+    if (!session || !session.user || !(session.user as any).id) {
       console.log('Admin API - Unauthorized access attempt');
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

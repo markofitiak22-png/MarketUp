@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface Video {
@@ -29,7 +29,7 @@ export default function VideosPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   // Fetch videos from API
-  const fetchVideos = async () => {
+  const fetchVideos = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -51,11 +51,11 @@ export default function VideosPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, filter, searchTerm]);
 
   useEffect(() => {
     fetchVideos();
-  }, [page, filter, searchTerm]);
+  }, [fetchVideos]);
 
 
   // Debounce search
@@ -67,7 +67,7 @@ export default function VideosPage() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, fetchVideos]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -83,10 +83,12 @@ export default function VideosPage() {
     switch (action) {
       case 'download':
         // TODO: Implement download functionality
+        console.log('Download video:', videoId);
         alert('Download functionality coming soon!');
         break;
       case 'share':
         // TODO: Implement share functionality
+        console.log('Share video:', videoId);
         alert('Share functionality coming soon!');
         break;
       case 'delete':

@@ -72,7 +72,7 @@ export default function DashboardClient({ children, userEmail }: DashboardClient
   return (
     <div className="min-h-screen bg-background">
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+      <div className="hidden lg:fixed lg:top-20 lg:bottom-0 lg:left-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         <div className="flex grow flex-col overflow-y-auto glass-elevated">
           {/* Header */}
           <div className="flex h-20 shrink-0 items-center px-8">

@@ -270,15 +270,15 @@ export default function PublicationScheduler() {
     switch (status) {
       case "scheduled":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1.5"></div>
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-400 rounded-full mr-1 sm:mr-1.5"></div>
             Scheduled
           </span>
         );
       case "published":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
             Published
@@ -286,8 +286,8 @@ export default function PublicationScheduler() {
         );
       case "failed":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
             Failed
@@ -295,8 +295,8 @@ export default function PublicationScheduler() {
         );
       case "cancelled":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
             Cancelled
@@ -348,46 +348,46 @@ export default function PublicationScheduler() {
 
       <div className="relative z-10 space-y-8">
         {/* Hero Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
             Publication Scheduler
           </h1>
-          <p className="text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
             Schedule video publications across social networks
           </p>
         </div>
 
         {/* Action Button */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <button
             onClick={() => setShowScheduler(true)}
-            className="btn-primary px-10 py-5 text-xl font-bold hover:scale-105 transition-all duration-300"
+            className="btn-primary px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-base sm:text-lg lg:text-xl font-bold hover:scale-105 transition-all duration-300"
           >
             + Schedule New Post
           </button>
         </div>
 
         {/* Enhanced Filters */}
-        <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-600">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
+          <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-600 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
                 <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/>
                 <path d="M9 14l2 2 4-4"/>
               </svg>
             </div>
-            <h2 className="text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-lg font-bold text-foreground mb-3">
+              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
                 Status Filter
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
-                className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
                 <option value="all">All Status</option>
                 <option value="scheduled">Scheduled</option>
@@ -398,13 +398,13 @@ export default function PublicationScheduler() {
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-foreground mb-3">
+              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
                 Social Network
               </label>
               <select
                 value={filterNetwork}
                 onChange={(e) => setFilterNetwork(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
                 <option value="all">All Networks</option>
                 {socialNetworks.map(network => (
@@ -418,18 +418,18 @@ export default function PublicationScheduler() {
         </div>
 
         {/* Scheduled Posts */}
-        <div className="glass-elevated rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           {loading ? (
-            <div className="p-10">
-              <div className="space-y-6">
+            <div className="p-4 sm:p-6 lg:p-10">
+              <div className="space-y-4 sm:space-y-6">
                 {[...Array(3)].map((_, i) => (
-                  <div key={i} className="flex items-center space-x-6 p-6">
-                    <div className="w-24 h-16 bg-surface-elevated rounded-2xl animate-pulse"></div>
-                    <div className="flex-1 space-y-3">
-                      <div className="h-5 bg-surface-elevated rounded animate-pulse w-3/4"></div>
-                      <div className="h-4 bg-surface-elevated rounded animate-pulse w-1/2"></div>
+                  <div key={i} className="flex items-center space-x-3 sm:space-x-6 p-4 sm:p-6">
+                    <div className="w-16 h-10 sm:w-20 sm:h-12 lg:w-24 lg:h-16 bg-surface-elevated rounded-xl sm:rounded-2xl animate-pulse"></div>
+                    <div className="flex-1 space-y-2 sm:space-y-3">
+                      <div className="h-4 sm:h-5 bg-surface-elevated rounded animate-pulse w-3/4"></div>
+                      <div className="h-3 sm:h-4 bg-surface-elevated rounded animate-pulse w-1/2"></div>
                     </div>
-                    <div className="w-24 h-8 bg-surface-elevated rounded-full animate-pulse"></div>
+                    <div className="w-16 sm:w-20 lg:w-24 h-6 sm:h-8 bg-surface-elevated rounded-full animate-pulse"></div>
                   </div>
                 ))}
               </div>
@@ -439,48 +439,48 @@ export default function PublicationScheduler() {
               {filteredPosts.map((post) => {
                 const network = getNetworkInfo(post.socialNetwork);
                 return (
-                  <div key={post.id} className="p-8 hover:bg-surface/50 transition-all duration-300 hover:scale-[1.01] group">
-                    <div className="flex items-start space-x-6">
+                  <div key={post.id} className="p-4 sm:p-6 lg:p-8 hover:bg-surface/50 transition-all duration-300 hover:scale-[1.01] group">
+                    <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
                       {/* Video Thumbnail */}
-                      <div className="flex-shrink-0">
+                      <div className="flex-shrink-0 w-full sm:w-auto">
                         <img
                           src={post.video.thumbnail}
                           alt={post.video.title}
-                          className="w-28 h-20 object-cover rounded-2xl group-hover:scale-105 transition-transform"
+                          className="w-full sm:w-20 lg:w-28 h-16 sm:h-16 lg:h-20 object-cover rounded-xl sm:rounded-2xl group-hover:scale-105 transition-transform"
                         />
                       </div>
 
                       {/* Post Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h3 className="text-2xl font-bold text-foreground mb-3">
+                      <div className="flex-1 min-w-0 w-full">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between space-y-4 sm:space-y-0">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 sm:mb-3">
                               {post.video.title}
                             </h3>
                             
                             {/* Social Network */}
-                            <div className="flex items-center space-x-3 mb-4">
-                              <span className={`inline-flex items-center px-4 py-2 rounded-2xl text-lg font-bold text-white ${network?.color}`}>
+                            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-3 sm:mb-4">
+                              <span className={`inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-sm sm:text-base lg:text-lg font-bold text-white ${network?.color}`}>
                                 {network?.icon} {network?.name}
                               </span>
-                              <span className="text-lg text-foreground-muted">
+                              <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">
                                 • {formatDate(post.scheduledDate)}
                               </span>
                             </div>
 
                             {/* Custom Message */}
                             {post.customMessage && (
-                              <p className="text-lg text-foreground-muted mb-4">
+                              <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-3 sm:mb-4">
                                 &ldquo;{post.customMessage}&rdquo;
                               </p>
                             )}
 
                             {/* Time Info */}
-                            <div className="flex items-center space-x-6 text-lg text-foreground-muted">
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
                               <span className="font-bold">Duration: {post.video.duration}</span>
                               <span className="font-bold">Category: {post.video.category}</span>
                               {post.status === "scheduled" && (
-                                <span className="text-blue-600 font-bold text-xl">
+                                <span className="text-blue-600 font-bold text-base sm:text-lg lg:text-xl">
                                   Publishes in: {getTimeUntilPublish(post.scheduledDate)}
                                 </span>
                               )}
@@ -488,20 +488,22 @@ export default function PublicationScheduler() {
                           </div>
 
                           {/* Status and Actions */}
-                          <div className="flex flex-col items-end space-y-4">
-                            {getStatusBadge(post.status)}
+                          <div className="flex flex-col sm:flex-row sm:flex-col items-start sm:items-end space-y-3 sm:space-y-4 w-full sm:w-auto">
+                            <div className="flex-shrink-0">
+                              {getStatusBadge(post.status)}
+                            </div>
                             
                             {post.status === "scheduled" && (
-                              <div className="flex space-x-3">
+                              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
                                 <button
                                   onClick={() => handlePublishNow(post.id)}
-                                  className="px-6 py-3 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-all duration-300 text-lg font-bold hover:scale-105"
+                                  className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-xl sm:rounded-2xl hover:bg-green-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                                 >
                                   Publish Now
                                 </button>
                                 <button
                                   onClick={() => handleCancelPost(post.id)}
-                                  className="px-6 py-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-all duration-300 text-lg font-bold hover:scale-105"
+                                  className="px-4 sm:px-6 py-2 sm:py-3 bg-red-500 text-white rounded-xl sm:rounded-2xl hover:bg-red-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                                 >
                                   Cancel
                                 </button>
@@ -528,49 +530,49 @@ export default function PublicationScheduler() {
               }
             }}
           >
-            <div className="glass-elevated rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300 animate-in zoom-in-95 duration-300">
-              <div className="p-8 border-b border-border">
+            <div className="glass-elevated rounded-2xl sm:rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300 animate-in zoom-in-95 duration-300">
+              <div className="p-4 sm:p-6 lg:p-8 border-b border-border">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-bold text-foreground">Schedule New Post</h2>
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">Schedule New Post</h2>
                   <button
                     onClick={() => setShowScheduler(false)}
-                    className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110"
+                    className="p-2 sm:p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-110"
                   >
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
               </div>
 
-              <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-120px)]">
                 {/* Video Selection */}
                 <div>
-                  <label className="block text-2xl font-bold text-foreground mb-6">
+                  <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">
                     Select Video *
                   </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     {videos.map((video) => (
                       <div
                         key={video.id}
-                        className={`p-6 rounded-2xl border cursor-pointer transition-all duration-300 hover:scale-105 ${
+                        className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border cursor-pointer transition-all duration-300 hover:scale-105 ${
                           selectedVideo?.id === video.id
                             ? "border-accent bg-accent/10"
                             : "border-border hover:border-accent/50"
                         }`}
                         onClick={() => setSelectedVideo(video)}
                       >
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-3 sm:space-x-4">
                           <img
                             src={video.thumbnail}
                             alt={video.title}
-                            className="w-16 h-12 object-cover rounded-xl"
+                            className="w-12 h-9 sm:w-16 sm:h-12 object-cover rounded-lg sm:rounded-xl"
                           />
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-foreground text-lg line-clamp-1">
+                            <h4 className="font-bold text-foreground text-sm sm:text-base lg:text-lg line-clamp-1">
                               {video.title}
                             </h4>
-                            <p className="text-base text-foreground-muted">
+                            <p className="text-xs sm:text-sm lg:text-base text-foreground-muted">
                               {video.duration} • {video.category}
                             </p>
                           </div>
@@ -582,14 +584,14 @@ export default function PublicationScheduler() {
 
                 {/* Social Networks Selection */}
                 <div>
-                  <label className="block text-2xl font-bold text-foreground mb-6">
+                  <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">
                     Select Social Networks *
                   </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {socialNetworks.map((network) => (
                       <label
                         key={network.id}
-                        className={`p-6 rounded-2xl border cursor-pointer transition-all duration-300 hover:scale-105 ${
+                        className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border cursor-pointer transition-all duration-300 hover:scale-105 ${
                           selectedNetworks.includes(network.id)
                             ? "border-accent bg-accent/10"
                             : "border-border hover:border-accent/50"
@@ -607,9 +609,9 @@ export default function PublicationScheduler() {
                           }}
                           className="sr-only"
                         />
-                        <div className="flex items-center space-x-4">
-                          <span className="text-3xl">{network.icon}</span>
-                          <span className="font-bold text-foreground text-lg">{network.name}</span>
+                        <div className="flex items-center space-x-3 sm:space-x-4">
+                          <span className="text-2xl sm:text-3xl">{network.icon}</span>
+                          <span className="font-bold text-foreground text-sm sm:text-base lg:text-lg">{network.name}</span>
                         </div>
                       </label>
                     ))}
@@ -617,9 +619,9 @@ export default function PublicationScheduler() {
                 </div>
 
                 {/* Date and Time Selection */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <label className="block text-2xl font-bold text-foreground mb-4">
+                    <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
                       Publication Date *
                     </label>
                     <input
@@ -627,26 +629,26 @@ export default function PublicationScheduler() {
                       value={scheduledDate}
                       onChange={(e) => setScheduledDate(e.target.value)}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-2xl font-bold text-foreground mb-4">
+                    <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
                       Publication Time *
                     </label>
                     <input
                       type="time"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
                     />
                   </div>
                 </div>
 
                 {/* Custom Message */}
                 <div>
-                  <label className="block text-2xl font-bold text-foreground mb-4">
+                  <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
                     Custom Message (Optional)
                   </label>
                   <textarea
@@ -654,22 +656,22 @@ export default function PublicationScheduler() {
                     onChange={(e) => setCustomMessage(e.target.value)}
                     placeholder="Add a custom message to accompany your video..."
                     rows={4}
-                    className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
                   />
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-end space-x-6 pt-6 border-t border-border">
+                <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-6 pt-4 sm:pt-6 border-t border-border">
                   <button
                     onClick={() => setShowScheduler(false)}
-                    className="px-8 py-4 bg-surface text-foreground rounded-2xl hover:bg-surface-elevated transition-all duration-300 text-lg font-bold hover:scale-105"
+                    className="px-6 sm:px-8 py-3 sm:py-4 bg-surface text-foreground rounded-xl sm:rounded-2xl hover:bg-surface-elevated transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSchedulePost}
                     disabled={isSubmitting}
-                    className={`px-8 py-4 rounded-2xl transition-all duration-300 text-lg font-bold hover:scale-105 ${
+                    className={`px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none ${
                       isSubmitting 
                         ? 'bg-accent/50 text-white cursor-not-allowed' 
                         : 'bg-accent text-white hover:bg-accent-hover'

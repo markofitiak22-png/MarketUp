@@ -4,6 +4,7 @@ import "../globals.css";
 import Providers from "@/components/Providers";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import AdminLayoutClient from "@/components/admin/AdminLayoutClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,19 +30,9 @@ export default function AdminLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
-          <div className="min-h-screen bg-background">
-            <AdminHeader />
-            <div className="flex">
-              <AdminSidebar />
-              <main className="flex-1 ml-72 pt-20">
-                <div className="p-6 lg:p-8">
-                  <div className="max-w-7xl mx-auto">
-                    {children}
-                  </div>
-                </div>
-              </main>
-            </div>
-          </div>
+          <AdminLayoutClient>
+            {children}
+          </AdminLayoutClient>
         </Providers>
       </body>
     </html>

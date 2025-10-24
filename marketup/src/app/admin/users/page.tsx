@@ -206,7 +206,7 @@ export default function UsersPage() {
     };
     
     return (
-      <span className={`px-3 py-2 rounded-full text-sm font-bold border ${styles[status as keyof typeof styles]}`}>
+      <span className={`px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold border ${styles[status as keyof typeof styles]}`}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
@@ -221,7 +221,7 @@ export default function UsersPage() {
     };
     
     return (
-      <span className={`px-3 py-2 rounded-full text-sm font-bold border ${styles[subscription as keyof typeof styles] || styles.Free}`}>
+      <span className={`px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold border ${styles[subscription as keyof typeof styles] || styles.Free}`}>
         {subscription}
       </span>
     );
@@ -236,40 +236,40 @@ export default function UsersPage() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="relative z-10 space-y-8">
+      <div className="relative z-10 space-y-8 max-w-full overflow-x-hidden">
         {/* Hero Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-6">
+        <div className="text-center mb-8 sm:mb-12 max-w-full overflow-hidden">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
             Users Management
           </h1>
-          <p className="text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
             Manage platform users, their accounts, and permissions
           </p>
         </div>
 
         {/* Action Button */}
-        <div className="flex justify-center mb-8">
-          <button className="btn-primary px-10 py-5 text-xl font-bold hover:scale-105 transition-all duration-300">
+        <div className="flex justify-center mb-6 sm:mb-8">
+          <button className="btn-primary px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-base sm:text-lg lg:text-xl font-bold hover:scale-105 transition-all duration-300">
             Add User
           </button>
         </div>
 
         {/* Enhanced Filters */}
-        <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group max-w-full overflow-hidden">
+          <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
                 <circle cx="11" cy="11" r="8"/>
                 <path d="M21 21l-4.35-4.35"/>
               </svg>
             </div>
-            <h2 className="text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-4 sm:mb-6">
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted">
+              <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted sm:w-5 sm:h-5">
                   <circle cx="11" cy="11" r="8"/>
                   <path d="M21 21l-4.35-4.35"/>
                 </svg>
@@ -279,14 +279,14 @@ export default function UsersPage() {
                 placeholder="Search users..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-6 py-4 bg-surface-elevated border border-border rounded-2xl text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-4 bg-surface-elevated border border-border rounded-xl sm:rounded-2xl text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               />
             </div>
             
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-6 py-4 bg-surface-elevated border border-border rounded-2xl text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+              className="px-4 sm:px-6 py-3 sm:py-4 bg-surface-elevated border border-border rounded-xl sm:rounded-2xl text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -297,7 +297,7 @@ export default function UsersPage() {
             <select
               value={filterSubscription}
               onChange={(e) => setFilterSubscription(e.target.value)}
-              className="px-6 py-4 bg-surface-elevated border border-border rounded-2xl text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+              className="px-4 sm:px-6 py-3 sm:py-4 bg-surface-elevated border border-border rounded-xl sm:rounded-2xl text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
             >
               <option value="all">All Subscriptions</option>
               <option value="Free">Free</option>
@@ -306,11 +306,11 @@ export default function UsersPage() {
               <option value="Enterprise">Enterprise</option>
             </select>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="flex-1 px-6 py-4 bg-surface-elevated border border-border rounded-2xl text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="flex-1 px-4 sm:px-6 py-3 sm:py-4 bg-surface-elevated border border-border rounded-xl sm:rounded-2xl text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
                 <option value="joinDate">Sort by Join Date</option>
                 <option value="name">Sort by Name</option>
@@ -321,9 +321,9 @@ export default function UsersPage() {
               </select>
               <button
                 onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                className="p-4 bg-surface-elevated border border-border rounded-2xl hover:bg-surface transition-all duration-300 hover:scale-105"
+                className="p-3 sm:p-4 bg-surface-elevated border border-border rounded-xl sm:rounded-2xl hover:bg-surface transition-all duration-300 hover:scale-105"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground-muted sm:w-5 sm:h-5">
                   {sortOrder === "asc" ? (
                     <path d="M3 6h18M7 12h10M10 18h4"/>
                   ) : (
@@ -336,32 +336,32 @@ export default function UsersPage() {
 
           {/* Bulk Actions */}
           {selectedUsers.length > 0 && (
-            <div className="flex items-center gap-6 p-6 bg-accent/5 border border-accent/20 rounded-2xl">
-              <span className="text-lg font-bold text-foreground">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 sm:p-6 bg-accent/5 border border-accent/20 rounded-xl sm:rounded-2xl">
+              <span className="text-base sm:text-lg font-bold text-foreground">
                 {selectedUsers.length} user{selectedUsers.length !== 1 ? 's' : ''} selected
               </span>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => handleBulkAction('activate')}
-                  className="px-6 py-3 bg-success/10 text-success border border-success/20 rounded-xl text-lg font-bold hover:bg-success/20 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-success/10 text-success border border-success/20 rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold hover:bg-success/20 transition-all duration-300 hover:scale-105"
                 >
                   Activate
                 </button>
                 <button
                   onClick={() => handleBulkAction('suspend')}
-                  className="px-6 py-3 bg-warning/10 text-warning border border-warning/20 rounded-xl text-lg font-bold hover:bg-warning/20 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-warning/10 text-warning border border-warning/20 rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold hover:bg-warning/20 transition-all duration-300 hover:scale-105"
                 >
                   Suspend
                 </button>
                 <button
                   onClick={() => handleBulkAction('delete')}
-                  className="px-6 py-3 bg-error/10 text-error border border-error/20 rounded-xl text-lg font-bold hover:bg-error/20 transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-error/10 text-error border border-error/20 rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold hover:bg-error/20 transition-all duration-300 hover:scale-105"
                 >
                   Delete
                 </button>
                 <button
                   onClick={() => setSelectedUsers([])}
-                  className="px-6 py-3 bg-surface-elevated border border-border rounded-xl text-lg font-bold hover:bg-surface transition-all duration-300 hover:scale-105"
+                  className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-surface-elevated border border-border rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold hover:bg-surface transition-all duration-300 hover:scale-105"
                 >
                   Clear
                 </button>
@@ -371,119 +371,123 @@ export default function UsersPage() {
         </div>
 
         {/* Users Table */}
-        <div className="glass-elevated rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-          <div className="overflow-x-auto">
-            <table className="w-full">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group max-w-full">
+          <div className="overflow-x-auto max-w-full">
+            <table className="w-full min-w-0">
               <thead className="bg-surface-elevated border-b border-border">
                 <tr>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider">
                     <input
                       type="checkbox"
                       checked={selectedUsers.length === filteredUsers.length && filteredUsers.length > 0}
                       onChange={handleSelectAll}
-                      className="w-5 h-5 rounded border-border-strong text-accent focus:ring-accent focus:ring-2"
+                      className="w-4 h-4 sm:w-5 sm:h-5 rounded border-border-strong text-accent focus:ring-accent focus:ring-2"
                     />
                   </th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">User</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">Status</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">Subscription</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">Videos</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">Total Spent</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">Last Active</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-foreground-muted uppercase tracking-wider">Actions</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider">User</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider hidden sm:table-cell">Status</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider hidden md:table-cell">Subscription</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider hidden lg:table-cell">Videos</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider hidden lg:table-cell">Total Spent</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider hidden md:table-cell">Last Active</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left text-xs sm:text-sm font-bold text-foreground-muted uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   Array.from({ length: 4 }).map((_, i) => (
                     <tr key={i}>
-                      <td className="px-8 py-6">
-                        <div className="w-5 h-5 bg-surface-elevated rounded animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 bg-surface-elevated rounded animate-pulse"></div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-surface-elevated rounded-full animate-pulse"></div>
-                          <div className="space-y-3">
-                            <div className="w-32 h-5 bg-surface-elevated rounded animate-pulse"></div>
-                            <div className="w-48 h-4 bg-surface-elevated rounded animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-surface-elevated rounded-full animate-pulse"></div>
+                          <div className="space-y-2 sm:space-y-3">
+                            <div className="w-24 sm:w-32 h-4 sm:h-5 bg-surface-elevated rounded animate-pulse"></div>
+                            <div className="w-32 sm:w-48 h-3 sm:h-4 bg-surface-elevated rounded animate-pulse"></div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="w-20 h-8 bg-surface-elevated rounded-full animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden sm:table-cell">
+                        <div className="w-16 sm:w-20 h-6 sm:h-8 bg-surface-elevated rounded-full animate-pulse"></div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="w-24 h-8 bg-surface-elevated rounded-full animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden md:table-cell">
+                        <div className="w-20 sm:w-24 h-6 sm:h-8 bg-surface-elevated rounded-full animate-pulse"></div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="w-12 h-5 bg-surface-elevated rounded animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden lg:table-cell">
+                        <div className="w-8 sm:w-12 h-4 sm:h-5 bg-surface-elevated rounded animate-pulse"></div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="w-20 h-5 bg-surface-elevated rounded animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden lg:table-cell">
+                        <div className="w-16 sm:w-20 h-4 sm:h-5 bg-surface-elevated rounded animate-pulse"></div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="w-24 h-5 bg-surface-elevated rounded animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden md:table-cell">
+                        <div className="w-20 sm:w-24 h-4 sm:h-5 bg-surface-elevated rounded animate-pulse"></div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="w-16 h-8 bg-surface-elevated rounded animate-pulse"></div>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+                        <div className="w-12 sm:w-16 h-6 sm:h-8 bg-surface-elevated rounded animate-pulse"></div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   filteredUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-surface-elevated transition-all duration-300 hover:scale-[1.01] group">
-                      <td className="px-8 py-6">
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                         <input
                           type="checkbox"
                           checked={selectedUsers.includes(user.id)}
                           onChange={() => handleUserSelect(user.id)}
-                          className="w-5 h-5 rounded border-border-strong text-accent focus:ring-accent focus:ring-2"
+                          className="w-4 h-4 sm:w-5 sm:h-5 rounded border-border-strong text-accent focus:ring-accent focus:ring-2"
                         />
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <span className="text-white text-lg font-bold">
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-0 min-w-0">
+                        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                            <span className="text-white text-sm sm:text-base lg:text-lg font-bold">
                               {user.name.split(' ').map(n => n[0]).join('')}
                             </span>
                           </div>
-                          <div>
-                            <p className="text-lg font-bold text-foreground">{user.name}</p>
-                            <p className="text-base text-foreground-muted">{user.email}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm sm:text-base lg:text-lg font-bold text-foreground truncate">{user.name}</p>
+                            <p className="text-xs sm:text-sm lg:text-base text-foreground-muted truncate">{user.email}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-6">
-                        {getStatusBadge(user.status)}
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden sm:table-cell max-w-0 min-w-0">
+                        <div className="truncate">
+                          {getStatusBadge(user.status)}
+                        </div>
                       </td>
-                      <td className="px-8 py-6">
-                        {getSubscriptionBadge(user.subscription)}
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden md:table-cell max-w-0 min-w-0">
+                        <div className="truncate">
+                          {getSubscriptionBadge(user.subscription)}
+                        </div>
                       </td>
-                      <td className="px-8 py-6">
-                        <span className="text-lg font-bold text-foreground">{user.videosCreated}</span>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden lg:table-cell max-w-0 min-w-0">
+                        <span className="text-sm sm:text-base lg:text-lg font-bold text-foreground truncate block">{user.videosCreated}</span>
                       </td>
-                      <td className="px-8 py-6">
-                        <span className="text-lg font-bold text-foreground">
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden lg:table-cell max-w-0 min-w-0">
+                        <span className="text-sm sm:text-base lg:text-lg font-bold text-foreground truncate block">
                           ${user.totalSpent.toFixed(2)}
                         </span>
                       </td>
-                      <td className="px-8 py-6">
-                        <span className="text-base text-foreground-muted">{user.lastActive}</span>
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden md:table-cell max-w-0 min-w-0">
+                        <span className="text-xs sm:text-sm lg:text-base text-foreground-muted truncate block">{user.lastActive}</span>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="flex items-center gap-3">
+                      <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-0 min-w-0">
+                        <div className="flex items-center gap-1 sm:gap-2 min-w-0">
                           <button 
                             onClick={() => handleEditUser(user)}
-                            className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110"
+                            className="p-1.5 sm:p-2 lg:p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105"
                             title="Edit user"
                           >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="sm:w-4 sm:h-4 lg:w-5 lg:h-5">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                             </svg>
                           </button>
-                          <button className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <button className="p-1.5 sm:p-2 lg:p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="sm:w-4 sm:h-4 lg:w-5 lg:h-5">
                               <path d="M3 6h18"/>
                               <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
                               <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>

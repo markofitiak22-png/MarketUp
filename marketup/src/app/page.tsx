@@ -7,10 +7,10 @@ import { authOptions } from "@/lib/auth";
 export default async function Home() {
   const session = await getServerSession(authOptions);
   return (
-    <>
+    <div className="home-page">
       
       {/* Hero Section */}
-      <section className="h-[60vh] flex items-center relative overflow-hidden w-full">
+      <section className="min-h-[70vh] sm:min-h-[80vh] lg:h-[60vh] flex items-center relative overflow-hidden w-full max-w-full">
         {/* Full-width background image */}
         <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-accent-2/6 to-accent/8" />
         <div 
@@ -22,29 +22,29 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-transparent" />
         
         {/* Content overlaid on the background */}
-        <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10 max-w-full overflow-hidden">
           <div className="max-w-6xl mx-auto">
-            <div className="space-y-8 pr-96">
+            <div className="space-y-6 sm:space-y-8 lg:pr-96 max-w-full">
             
               
               {/* Main heading */}
-              <div className="space-y-6">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95]">
+              <div className="space-y-4 sm:space-y-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[0.95]">
                   Create premium <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">AI avatar videos</span><br />
                   in under 5 minutes.
                 </h1>
                 
-                <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-2xl leading-relaxed font-light">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-2xl leading-relaxed font-light">
                   For cafes, restaurants, stores, and creators. <span className="text-accent font-medium">Elegant, futuristic, simple.</span>
                 </p>
               </div>
               
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                 {session ? (
-                  <a href="/onboarding" className="group relative btn-primary btn-lg px-10 py-5 text-lg font-bold overflow-hidden">
-                    <span className="relative z-10 flex items-center gap-3">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <a href="/onboarding" className="group relative btn-primary btn-lg px-6 sm:px-8 lg:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold overflow-hidden">
+                    <span className="relative z-10 flex items-center justify-center gap-3">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                       Get started
@@ -98,44 +98,44 @@ export default async function Home() {
         </div>
       </section>
 
-      <div className="container">
+      <div className="container max-w-full overflow-hidden">
         {/* How it works Section */}
-        <section className="section relative overflow-hidden">
+        <section className="section relative overflow-hidden w-full max-w-full">
         {/* Enhanced Animated background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000 overflow-hidden"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500 overflow-hidden"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700 overflow-hidden"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300 overflow-hidden"></div>
         
         
         <div className="relative z-10">
-          <div className="text-center mb-24">
-            <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+          <div className="text-center mb-16 sm:mb-20 lg:mb-24">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight">
               How it <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">works</span>
             </h2>
-            <p className="text-2xl md:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light px-4">
               Create professional marketing videos in just <span className="text-accent font-medium">4 simple steps</span>
             </p>
           </div>
           
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-8 lg:space-y-6">
             {/* Step 01 - Left */}
             <div className="flex justify-start">
               <div className="group">
-                <div className="glass-elevated rounded-3xl p-10 w-[420px] h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
+                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-6 mb-8">
-                      <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
                         01
                       </div>
-                      <div className="w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
+                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
                     </div>
-                    <h3 className="text-3xl font-bold text-foreground mb-6">Write your script</h3>
-                    <p className="text-foreground-muted leading-relaxed text-xl">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Write your script</h3>
+                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
                       Write a short script or paste your product pitch. Our AI will optimize it for video.
                     </p>
                   </div>
@@ -144,20 +144,20 @@ export default async function Home() {
             </div>
 
             {/* Step 02 - Right */}
-            <div className="flex justify-end -mt-24">
+            <div className="flex justify-end -mt-4 sm:-mt-16 lg:-mt-24">
               <div className="group">
-                <div className="glass-elevated rounded-3xl p-10 w-[420px] h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
+                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-6 mb-8">
-                      <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
                         02
                       </div>
-                      <div className="w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
+                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
                     </div>
-                    <h3 className="text-3xl font-bold text-foreground mb-6">Choose avatar & backgrounds</h3>
-                    <p className="text-foreground-muted leading-relaxed text-xl">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Choose avatar & backgrounds</h3>
+                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
                       Pick an avatar and set 2-4 backgrounds that match your brand and message.
                     </p>
                   </div>
@@ -166,20 +166,20 @@ export default async function Home() {
             </div>
 
             {/* Step 03 - Left */}
-            <div className="flex justify-start -mt-20">
+            <div className="flex justify-start -mt-2 sm:-mt-12 lg:-mt-20">
               <div className="group">
-                <div className="glass-elevated rounded-3xl p-10 w-[420px] h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
+                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-6 mb-8">
-                      <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
                         03
                       </div>
-                      <div className="w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
+                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
                     </div>
-                    <h3 className="text-3xl font-bold text-foreground mb-6">Add visual elements</h3>
-                    <p className="text-foreground-muted leading-relaxed text-xl">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Add visual elements</h3>
+                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
                       Add product, device, or food images for visual moments that engage your audience.
                     </p>
                   </div>
@@ -188,20 +188,20 @@ export default async function Home() {
             </div>
 
             {/* Step 04 - Right */}
-            <div className="flex justify-end -mt-20">
+            <div className="flex justify-end -mt-2 sm:-mt-12 lg:-mt-20">
               <div className="group">
-                <div className="glass-elevated rounded-3xl p-10 w-[420px] h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
+                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-6 mb-8">
-                      <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
                         04
                       </div>
-                      <div className="w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
+                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
                     </div>
-                    <h3 className="text-3xl font-bold text-foreground mb-6">Export & share</h3>
-                    <p className="text-foreground-muted leading-relaxed text-xl">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Export & share</h3>
+                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
                       Export a video with subtle logo overlay and your contact info ready to share.
                     </p>
                   </div>
@@ -213,14 +213,14 @@ export default async function Home() {
       </section>
 
       {/* Preview Section */}
-      <section className="section relative overflow-hidden">
+      <section className="section relative overflow-hidden w-full max-w-full">
         {/* Enhanced Background elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000 overflow-hidden"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500 overflow-hidden"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700 overflow-hidden"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300 overflow-hidden"></div>
         
         
         <div className="relative z-10">
@@ -246,49 +246,22 @@ export default async function Home() {
                   <div className="bg-black rounded-2xl aspect-video relative overflow-hidden">
                     {/* Video Player Placeholder */}
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-2xl flex items-center justify-center">
-                          <svg className="w-12 h-12 text-accent" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
-                          </svg>
-                        </div>
-                        <h3 className="text-2xl font-bold mb-2">AI Avatar Video</h3>
-                        <p className="text-lg opacity-75">Premium Quality Demo</p>
-                      </div>
-                    </div>
-                    
-                    {/* Video Controls Overlay */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="flex items-center justify-between bg-black/50 backdrop-blur-sm rounded-xl p-3">
-                        <div className="flex items-center gap-3">
-                          <button className="w-10 h-10 bg-accent rounded-full flex items-center justify-center hover:bg-accent-2 transition-colors">
-                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="text-center text-white">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-2 sm:mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-2xl flex items-center justify-center">
+                            <svg className="w-8 h-8 sm:w-10 sm:h-10 text-accent" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z"/>
                             </svg>
-                          </button>
-                          <div className="text-white text-sm">
-                            <span>0:15</span> / <span>2:30</span>
                           </div>
+                          <h3 className="text-sm sm:text-lg font-bold mb-1">AI Avatar Video</h3>
+                          <p className="text-xs sm:text-sm opacity-75">Premium Quality Demo</p>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <button className="p-2 text-white hover:bg-white/20 rounded-lg transition-colors">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                          </button>
-                          <button className="p-2 text-white hover:bg-white/20 rounded-lg transition-colors">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
                     </div>
+                    
                   </div>
                   
                   {/* Feature Highlights */}
-                  <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-2/10 border border-accent/20">
+                  <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+                    <div className="text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-2/10 border border-accent/20">
                       <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent-2 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -298,7 +271,7 @@ export default async function Home() {
                       <p className="text-sm text-foreground-muted">Generate in under 5 minutes</p>
                     </div>
                     
-                    <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-accent-2/10 to-purple-500/10 border border-accent-2/20">
+                    <div className="text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent-2/10 to-purple-500/10 border border-accent-2/20">
                       <div className="w-16 h-16 bg-gradient-to-br from-accent-2 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -308,7 +281,7 @@ export default async function Home() {
                       <p className="text-sm text-foreground-muted">Professional 4K videos</p>
                     </div>
                     
-                    <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+                    <div className="text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -328,7 +301,7 @@ export default async function Home() {
       </section>
 
       {/* Pricing Teaser Section */}
-      <section className="section relative overflow-hidden">
+      <section className="section relative overflow-hidden w-full max-w-full">
         <div className="absolute inset-0  from-accent/8 via-accent-2/5 to-purple-500/5 rounded-3xl" />
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-accent/5 to-transparent" />
         
@@ -374,6 +347,6 @@ export default async function Home() {
         </div>
       </section>
       </div>
-    </>
+    </div>
   );
 }

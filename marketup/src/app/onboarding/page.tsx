@@ -30,8 +30,8 @@ export default function OnboardingPage() {
   const progress = (currentStep / totalSteps) * 100;
 
   useEffect(() => {
-    // Block scroll on body
-    document.body.style.overflow = 'hidden';
+    // Add onboarding page class but allow scrolling
+    document.body.classList.add('onboarding-page');
     
     (async () => {
       const res = await fetch("/api/profile");
@@ -42,9 +42,9 @@ export default function OnboardingPage() {
       }
     })();
 
-    // Cleanup: restore scroll when component unmounts
+    // Cleanup: remove class when component unmounts
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('onboarding-page');
     };
   }, []);
 
@@ -84,38 +84,14 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="h-screen bg-background relative overflow-hidden" style={{ height: '100vh', overflow: 'hidden' }}>
+    <div className="onboarding-page min-h-screen bg-background relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
       <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
       
       <div className="relative z-10">
-        {/* Progress Bar */}
-        <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-[var(--border)]">
-          <div className="container py-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-sm">
-                  M
-                </div>
-                <span className="text-lg font-bold text-gradient bg-gradient-to-r from-foreground to-foreground-muted bg-clip-text text-transparent">
-                  MarketUp
-                </span>
-              </div>
-              <div className="text-sm text-foreground-muted">
-                Step {currentStep} of {totalSteps}
-              </div>
-            </div>
-            <div className="w-full bg-[var(--border)] rounded-full h-2">
-              <div 
-                className="bg-gradient-to-r from-accent to-accent-2 h-2 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
+        
         {/* Main Content */}
         <div>
           <section className="section-lg text-center">

@@ -76,27 +76,27 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
+      <div className="text-center px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-4 sm:mb-6">
           Choose your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">avatar</span>
         </h1>
-        <p className="text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
+        <p className="text-base sm:text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
           Select a virtual presenter who will deliver your message. <span className="text-accent font-medium">Each avatar has a unique personality and speaking style.</span>
         </p>
       </div>
 
       {/* Avatar Grid */}
-      <div className="max-w-5xl mx-auto">
-        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {avatars.map((avatar) => (
               <div
                 key={avatar.id}
-                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                className={`group relative p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
                   selectedAvatar === avatar.id
                     ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20 scale-105'
                     : 'border-[var(--border)] hover:border-accent/50 hover:bg-accent/5 hover:scale-102'
@@ -104,17 +104,17 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 onClick={() => handleAvatarSelect(avatar)}
               >
                 <div className="relative">
-                  <div className="aspect-square rounded-xl overflow-hidden mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20">
+                  <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20">
                     <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-2xl font-bold">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-xl sm:text-2xl font-bold">
                         {avatar.name.charAt(0)}
                       </div>
                     </div>
                   </div>
                   
                   {selectedAvatar === avatar.id && (
-                    <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
@@ -122,8 +122,8 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 </div>
                 
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-foreground mb-2">{avatar.name}</h3>
-                  <p className="text-sm text-foreground-muted">{avatar.description}</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2">{avatar.name}</h3>
+                  <p className="text-xs sm:text-sm text-foreground-muted">{avatar.description}</p>
                 </div>
               </div>
             ))}
@@ -133,26 +133,26 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
 
       {/* Preview Section */}
       {selectedAvatar && (
-        <div className="max-w-2xl mx-auto">
-          <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+        <div className="max-w-2xl mx-auto px-4">
+          <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
             
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Preview</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Preview</h3>
             <div className="flex items-center justify-center">
               <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-3xl font-bold">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
+                  <div className="w-18 h-18 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
                     {data.avatar?.name.charAt(0)}
                   </div>
                 </div>
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
                 </div>
               </div>
             </div>
-            <p className="text-center text-foreground-muted mt-4 text-lg">
+            <p className="text-center text-foreground-muted mt-3 sm:mt-4 text-base sm:text-lg">
               <span className="font-semibold text-accent">{data.avatar?.name}</span> will present your video
             </p>
           </div>
@@ -160,15 +160,15 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
       )}
 
       {/* Navigation */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
         <button
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+          className="group relative btn-primary btn-lg px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="relative z-10 flex items-center gap-3">
+          <span className="relative z-10 flex items-center gap-2 sm:gap-3">
             Continue
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </span>

@@ -130,15 +130,15 @@ export default function VideoModeration() {
     switch (status) {
       case "pending":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-            <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1.5 animate-pulse"></div>
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-yellow-400 rounded-full mr-1 sm:mr-1.5 animate-pulse"></div>
             Pending
           </span>
         );
       case "approved":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
             Approved
@@ -146,8 +146,8 @@ export default function VideoModeration() {
         );
       case "rejected":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
             Rejected
@@ -179,33 +179,33 @@ export default function VideoModeration() {
 
       <div className="relative z-10 space-y-8">
         {/* Hero Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
             Video Moderation
           </h1>
-          <p className="text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
             Review and moderate video content uploaded by users
           </p>
-          <div className="mt-6 text-lg text-foreground-muted">
-            <span className="font-bold text-foreground text-2xl">{filteredVideos.length}</span> videos to review
+          <div className="mt-4 sm:mt-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
+            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredVideos.length}</span> videos to review
           </div>
         </div>
 
         {/* Enhanced Filters */}
-        <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
+          <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
                 <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h2 className="text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Search */}
             <div>
-              <label className="block text-lg font-bold text-foreground mb-3">
+              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
                 Search
               </label>
               <input
@@ -213,19 +213,19 @@ export default function VideoModeration() {
                 placeholder="Search videos or uploaders..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               />
             </div>
 
             {/* Status Filter */}
             <div>
-              <label className="block text-lg font-bold text-foreground mb-3">
+              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
                 Status
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
-                className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -236,13 +236,13 @@ export default function VideoModeration() {
 
             {/* Sort By */}
             <div>
-              <label className="block text-lg font-bold text-foreground mb-3">
+              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
                 Sort By
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
                 <option value="uploadDate">Upload Date</option>
                 <option value="title">Title</option>
@@ -253,13 +253,13 @@ export default function VideoModeration() {
 
             {/* Sort Order */}
             <div>
-              <label className="block text-lg font-bold text-foreground mb-3">
+              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
                 Order
               </label>
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as any)}
-                className="w-full px-6 py-4 rounded-2xl border border-border bg-surface-elevated text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
                 <option value="desc">Newest First</option>
                 <option value="asc">Oldest First</option>
@@ -269,18 +269,18 @@ export default function VideoModeration() {
         </div>
 
         {/* Videos List */}
-        <div className="glass-elevated rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
+        <div className="glass-elevated rounded-2xl sm:rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           {loading ? (
-            <div className="p-10">
-              <div className="space-y-6">
+            <div className="p-4 sm:p-6 lg:p-10">
+              <div className="space-y-4 sm:space-y-6">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="flex items-center space-x-6 p-6">
-                    <div className="w-24 h-16 bg-surface-elevated rounded-2xl animate-pulse"></div>
-                    <div className="flex-1 space-y-3">
-                      <div className="h-5 bg-surface-elevated rounded animate-pulse w-3/4"></div>
-                      <div className="h-4 bg-surface-elevated rounded animate-pulse w-1/2"></div>
+                  <div key={i} className="flex items-center space-x-3 sm:space-x-6 p-4 sm:p-6">
+                    <div className="w-16 h-10 sm:w-20 sm:h-12 lg:w-24 lg:h-16 bg-surface-elevated rounded-xl sm:rounded-2xl animate-pulse"></div>
+                    <div className="flex-1 space-y-2 sm:space-y-3">
+                      <div className="h-4 sm:h-5 bg-surface-elevated rounded animate-pulse w-3/4"></div>
+                      <div className="h-3 sm:h-4 bg-surface-elevated rounded animate-pulse w-1/2"></div>
                     </div>
-                    <div className="w-24 h-8 bg-surface-elevated rounded-full animate-pulse"></div>
+                    <div className="w-16 sm:w-20 lg:w-24 h-6 sm:h-8 bg-surface-elevated rounded-full animate-pulse"></div>
                   </div>
                 ))}
               </div>
@@ -288,64 +288,64 @@ export default function VideoModeration() {
           ) : (
             <div className="divide-y divide-border">
               {filteredVideos.map((video) => (
-                <div key={video.id} className="p-8 hover:bg-surface/50 transition-all duration-300 hover:scale-[1.01] group">
-                  <div className="flex items-start space-x-6">
+                <div key={video.id} className="p-4 sm:p-6 lg:p-8 hover:bg-surface/50 transition-all duration-300 hover:scale-[1.01] group">
+                  <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
                     {/* Thumbnail */}
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 w-full sm:w-auto">
                       <div className="relative">
                         <img
                           src={video.thumbnail}
                           alt={video.title}
-                          className="w-32 h-20 object-cover rounded-2xl group-hover:scale-105 transition-transform"
+                          className="w-full sm:w-24 lg:w-32 h-16 sm:h-16 lg:h-20 object-cover rounded-xl sm:rounded-2xl group-hover:scale-105 transition-transform"
                         />
-                        <div className="absolute bottom-2 right-2 bg-black/80 text-white text-sm px-2 py-1 rounded-lg">
+                        <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 bg-black/80 text-white text-xs sm:text-sm px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg">
                           {video.duration}
                         </div>
                       </div>
                     </div>
 
                     {/* Video Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-2xl font-bold text-foreground mb-3 line-clamp-2">
+                    <div className="flex-1 min-w-0 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between space-y-4 sm:space-y-0">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 sm:mb-3 line-clamp-2">
                             {video.title}
                           </h3>
-                          <p className="text-lg text-foreground-muted mb-4 line-clamp-2">
+                          <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-3 sm:mb-4 line-clamp-2">
                             {video.description}
                           </p>
                           
                           {/* Uploader Info */}
-                          <div className="flex items-center space-x-3 mb-4">
+                          <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
                             <img
                               src={video.uploader.avatar}
                               alt={video.uploader.name}
-                              className="w-8 h-8 rounded-full"
+                              className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
                             />
-                            <span className="text-lg text-foreground-muted">
+                            <span className="text-sm sm:text-base lg:text-lg text-foreground-muted truncate">
                               {video.uploader.name}
                             </span>
-                            <span className="text-base text-foreground-muted">
+                            <span className="text-xs sm:text-sm lg:text-base text-foreground-muted hidden sm:inline">
                               • {formatDate(video.uploadDate)}
                             </span>
                           </div>
 
                           {/* Stats */}
-                          <div className="flex items-center space-x-6 text-lg text-foreground-muted mb-4">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-6 text-sm sm:text-base lg:text-lg text-foreground-muted mb-3 sm:mb-4">
                             <span className="font-bold">{video.views.toLocaleString()} views</span>
                             <span className="font-bold">{video.likes} likes</span>
                             <span className="text-red-500 font-bold">{video.flags} flags</span>
-                            <span className="bg-surface-elevated px-4 py-2 rounded-full text-base font-bold">
+                            <span className="bg-surface-elevated px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-full text-xs sm:text-sm lg:text-base font-bold">
                               {video.category}
                             </span>
                           </div>
 
                           {/* Tags */}
-                          <div className="flex flex-wrap gap-2 mt-3">
+                          <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 sm:mt-3">
                             {video.tags.map((tag, index) => (
                               <span
                                 key={index}
-                                className="text-base bg-accent/10 text-accent px-3 py-2 rounded-xl font-bold"
+                                className="text-xs sm:text-sm lg:text-base bg-accent/10 text-accent px-2 sm:px-3 py-1 sm:py-1.5 lg:py-2 rounded-lg sm:rounded-xl font-bold"
                               >
                                 #{tag}
                               </span>
@@ -354,17 +354,19 @@ export default function VideoModeration() {
                         </div>
 
                         {/* Status and Actions */}
-                        <div className="flex flex-col items-end space-y-4">
-                          {getStatusBadge(video.status)}
+                        <div className="flex flex-col sm:flex-row sm:flex-col items-start sm:items-end space-y-3 sm:space-y-4 w-full sm:w-auto">
+                          <div className="flex-shrink-0">
+                            {getStatusBadge(video.status)}
+                          </div>
                           
                           {video.status === "pending" && (
-                            <div className="flex space-x-3">
+                            <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
                               <button
                                 onClick={() => {
                                   setSelectedVideo(video);
                                   setShowModal(true);
                                 }}
-                                className="px-8 py-4 bg-accent text-white rounded-2xl hover:bg-accent-hover transition-all duration-300 text-lg font-bold hover:scale-105"
+                                className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 bg-accent text-white rounded-xl sm:rounded-2xl hover:bg-accent-hover transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                               >
                                 Review
                               </button>
@@ -372,7 +374,7 @@ export default function VideoModeration() {
                           )}
 
                           {video.status === "rejected" && video.reason && (
-                            <div className="text-base text-red-500 text-right max-w-64">
+                            <div className="text-xs sm:text-sm lg:text-base text-red-500 text-left sm:text-right max-w-full sm:max-w-64">
                               Reason: {video.reason}
                             </div>
                           )}

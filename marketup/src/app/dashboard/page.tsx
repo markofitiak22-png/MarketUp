@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface DashboardData {
   stats: {
@@ -33,6 +34,7 @@ interface DashboardData {
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  const { translations } = useTranslations();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -104,7 +106,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2">
-                  Welcome back, <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">Creator!</span>
+                  {translations.dashboardWelcomeBack} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.dashboardCreator}</span>
                 </h1>
                 <p className="text-sm sm:text-base lg:text-lg text-foreground-muted">{session?.user?.email}</p>
               </div>
@@ -121,12 +123,12 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">Total Videos</h3>
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">{translations.dashboardTotalVideos}</h3>
                   </div>
                   <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent mb-1 sm:mb-2">
                     {dashboardData?.stats.totalVideos || 0}
                   </p>
-                  <p className="text-xs sm:text-sm text-foreground-muted">+{dashboardData?.stats.videosThisMonth || 0} this month</p>
+                  <p className="text-xs sm:text-sm text-foreground-muted">+{dashboardData?.stats.videosThisMonth || 0} {translations.dashboardThisMonth}</p>
                 </div>
               </div>
               
@@ -139,15 +141,15 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                       </svg>
                     </div>
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">Current Plan</h3>
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">{translations.dashboardCurrentPlan}</h3>
                   </div>
                   <p className="text-xl sm:text-2xl lg:text-2xl font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent mb-1 sm:mb-2">
-                    {dashboardData?.subscription?.tier || 'Free Plan'}
+                    {dashboardData?.subscription?.tier || translations.dashboardFreePlan}
                   </p>
                   <p className="text-xs sm:text-sm text-foreground-muted">
                     {dashboardData?.subscription ? 
                       `$29/month` : 
-                      'Upgrade to Pro'
+                      translations.dashboardUpgradeToPro
                     }
                   </p>
                 </div>
@@ -162,13 +164,13 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
                       </svg>
                     </div>
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">Storage Used</h3>
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">{translations.dashboardStorageUsed}</h3>
                   </div>
                   <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gradient bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-1 sm:mb-2">
                     {dashboardData?.stats.storageUsed || 0}GB
                   </p>
                   <p className="text-xs sm:text-sm text-foreground-muted">
-                    of {dashboardData?.stats.storageLimit || 10}GB used ({dashboardData?.stats.storagePercentage || 0}%)
+                    {translations.dashboardOfUsed} {dashboardData?.stats.storageLimit || 10}GB used ({dashboardData?.stats.storagePercentage || 0}%)
                   </p>
                 </div>
               </div>
@@ -187,12 +189,12 @@ export default function DashboardPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">Completed</h3>
+                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">{translations.dashboardCompleted}</h3>
               </div>
               <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
                 {dashboardData?.stats.completedVideos || 0}
               </p>
-              <p className="text-xs sm:text-sm text-foreground-muted">Ready to view</p>
+              <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardReadyToView}</p>
             </div>
           </div>
           
@@ -205,12 +207,12 @@ export default function DashboardPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">Processing</h3>
+                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">{translations.dashboardProcessing}</h3>
               </div>
               <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
                 {dashboardData?.stats.processingVideos || 0}
               </p>
-              <p className="text-xs sm:text-sm text-foreground-muted">In progress</p>
+              <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardInProgress}</p>
             </div>
           </div>
           
@@ -224,12 +226,12 @@ export default function DashboardPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">Total Views</h3>
+                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">{translations.dashboardTotalViews}</h3>
               </div>
               <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
                 {dashboardData?.stats.totalViews || 0}
               </p>
-              <p className="text-xs sm:text-sm text-foreground-muted">All time</p>
+              <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardAllTime}</p>
             </div>
           </div>
           
@@ -242,12 +244,12 @@ export default function DashboardPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
-                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">Downloads</h3>
+                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-foreground">{translations.dashboardDownloads}</h3>
               </div>
               <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
                 {dashboardData?.stats.totalDownloads || 0}
               </p>
-              <p className="text-xs sm:text-sm text-foreground-muted">All time</p>
+              <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardAllTime}</p>
             </div>
           </div>
         </div>
@@ -256,7 +258,7 @@ export default function DashboardPage() {
         <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
           <div className="relative z-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6 sm:mb-8">Quick Actions</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6 sm:mb-8">{translations.dashboardQuickActions}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <Link
                 href="/studio"
@@ -270,9 +272,9 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">Create Video</h3>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">{translations.dashboardCreateVideo}</h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Start a new video project</p>
+                  <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardStartNewProject}</p>
                 </div>
               </Link>
               
@@ -288,9 +290,9 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                       </svg>
                     </div>
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">My Videos</h3>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">{translations.dashboardMyVideos}</h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-foreground-muted">View all your videos</p>
+                  <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardViewAllVideos}</p>
                 </div>
               </Link>
               
@@ -306,9 +308,9 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                       </svg>
                     </div>
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">Upgrade Plan</h3>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">{translations.dashboardUpgradePlan}</h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Manage your subscription</p>
+                  <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardManageSubscription}</p>
                 </div>
               </Link>
               
@@ -325,9 +327,9 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">Settings</h3>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-foreground">{translations.dashboardSettings}</h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-foreground-muted">Account preferences</p>
+                  <p className="text-xs sm:text-sm text-foreground-muted">{translations.dashboardAccountPreferences}</p>
                 </div>
               </Link>
             </div>
@@ -339,12 +341,12 @@ export default function DashboardPage() {
           <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-accent-2/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Recent Videos</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground">{translations.dashboardRecentVideos}</h2>
               <Link
                 href="/dashboard/videos"
                 className="text-accent hover:text-accent-hover font-medium transition-colors text-sm sm:text-base lg:text-lg"
               >
-                View all →
+                {translations.dashboardViewAll}
               </Link>
             </div>
             
@@ -366,13 +368,13 @@ export default function DashboardPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                               </svg>
-                              {video.views} views
+                              {video.views} {translations.dashboardViews}
                             </span>
                             <span className="text-xs sm:text-sm text-foreground-muted flex items-center gap-1 sm:gap-2">
                               <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
-                              {video.downloads} downloads
+                              {video.downloads} {translations.dashboardDownloads}
                             </span>
                           </div>
                         )}
@@ -394,8 +396,8 @@ export default function DashboardPage() {
               ) : (
                 <div className="text-center py-12 sm:py-16">
                   <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎥</div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">No videos yet</h3>
-                  <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-6 sm:mb-8">Create your first video to get started</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.dashboardNoVideosYet}</h3>
+                  <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-6 sm:mb-8">{translations.dashboardCreateFirstVideo}</p>
                   <Link
                     href="/studio"
                     className="group relative btn-primary btn-lg px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-sm sm:text-base lg:text-lg font-bold overflow-hidden"
@@ -404,7 +406,7 @@ export default function DashboardPage() {
                       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
-                      Create Video
+                      {translations.dashboardCreateVideo}
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </Link>

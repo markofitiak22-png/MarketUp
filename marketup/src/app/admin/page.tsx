@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface DashboardMetrics {
   totalUsers: number;
@@ -36,6 +37,7 @@ interface AdminData {
 }
 
 export default function AdminDashboard() {
+  const { translations } = useTranslations();
   const [adminData, setAdminData] = useState<AdminData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,11 +58,11 @@ export default function AdminDashboard() {
         setAdminData(data.data);
       } else {
         console.error('Admin API returned error:', data.error);
-        setError(data.error || 'Failed to fetch admin data');
+        setError(data.error || translations.adminErrorLoadingData);
       }
     } catch (error) {
       console.error('Error fetching admin data:', error);
-      setError('Network error occurred');
+      setError(translations.adminNetworkErrorOccurred);
     } finally {
       setLoading(false);
     }
@@ -150,13 +152,13 @@ export default function AdminDashboard() {
           <div className="max-w-7xl mx-auto">
             <div className="glass-elevated rounded-2xl p-6 sm:p-8 lg:p-10 text-center">
               <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">⚠️</div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">Error loading admin data</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">{translations.adminErrorLoadingData}</h2>
               <p className="text-sm sm:text-base lg:text-xl text-foreground-muted mb-6 sm:mb-8">{error}</p>
               <button 
                 onClick={fetchAdminData}
                 className="btn-primary px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-sm sm:text-base lg:text-xl font-bold hover:scale-105 transition-all duration-300 rounded-xl sm:rounded-2xl"
               >
-                Try Again
+                {translations.adminTryAgain}
               </button>
             </div>
           </div>
@@ -170,7 +172,7 @@ export default function AdminDashboard() {
           {/* Hero Header */}
           <div className="text-center mb-8 sm:mb-12">
             <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-foreground-muted max-w-2xl mx-auto leading-relaxed">
-              Overview of your platform metrics and analytics
+              {translations.adminOverviewDescription}
             </p>
           </div>
 
@@ -180,21 +182,21 @@ export default function AdminDashboard() {
               onClick={() => alert('Export feature coming soon!')}
               className="btn-outline px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 transition-all duration-300 rounded-xl sm:rounded-2xl"
             >
-              Export Report
+              {translations.adminExportReport}
             </button>
             <button 
               onClick={fetchAdminData}
               disabled={loading}
               className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl sm:rounded-2xl"
             >
-              {loading ? 'Refreshing...' : 'Refresh Data'}
+              {loading ? translations.adminRefreshing : translations.adminRefreshData}
             </button>
           </div>
 
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto">
           <StatCard
-            title="Total Users"
+            title={translations.adminTotalUsers}
             value={loading ? "..." : formatNumber(adminData?.metrics.totalUsers || 0)}
             growth={adminData?.metrics.userGrowth || 0}
             color="bg-accent/10"
@@ -209,7 +211,7 @@ export default function AdminDashboard() {
           />
 
           <StatCard
-            title="Total Revenue"
+            title={translations.adminTotalRevenue}
             value={loading ? "..." : formatCurrency(adminData?.metrics.totalRevenue || 0)}
             growth={adminData?.metrics.revenueGrowth || 0}
             color="bg-success/10"
@@ -222,7 +224,7 @@ export default function AdminDashboard() {
           />
 
           <StatCard
-            title="Videos Created"
+            title={translations.adminVideosCreated}
             value={loading ? "..." : formatNumber(adminData?.metrics.totalVideos || 0)}
             growth={adminData?.metrics.videoGrowth || 0}
             color="bg-warning/10"
@@ -235,7 +237,7 @@ export default function AdminDashboard() {
           />
 
           <StatCard
-            title="Active Users"
+            title={translations.adminActiveUsers}
             value={loading ? "..." : formatNumber(adminData?.metrics.activeUsers || 0)}
             growth={5.2}
             color="bg-accent-2/10"
@@ -252,10 +254,10 @@ export default function AdminDashboard() {
             {/* Revenue Chart */}
             <div className="glass-elevated rounded-2xl p-4 sm:p-6 lg:p-8 xl:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
               <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
-                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">Revenue Trend</h3>
+                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">{translations.adminRevenueTrend}</h3>
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-accent rounded-full"></div>
-                  <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Revenue</span>
+                  <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.adminRevenue}</span>
                 </div>
               </div>
               <div className="h-60 sm:h-70 lg:h-80 flex items-center justify-center">
@@ -264,7 +266,7 @@ export default function AdminDashboard() {
                     <path d="M3 3v18h18"/>
                     <path d="M18.5 8.5l-3 3-2-2-4 4"/>
                   </svg>
-                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">Chart visualization coming soon</p>
+                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminChartVisualizationComingSoon}</p>
                 </div>
               </div>
             </div>
@@ -272,10 +274,10 @@ export default function AdminDashboard() {
             {/* User Activity Chart */}
             <div className="glass-elevated rounded-2xl p-4 sm:p-6 lg:p-8 xl:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
               <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
-                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">User Activity</h3>
+                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">{translations.adminUserActivity}</h3>
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-success rounded-full"></div>
-                  <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Active Users</span>
+                  <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.adminActiveUsers}</span>
                 </div>
               </div>
               <div className="h-60 sm:h-70 lg:h-80 flex items-center justify-center">
@@ -286,7 +288,7 @@ export default function AdminDashboard() {
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                   </svg>
-                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">Chart visualization coming soon</p>
+                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminChartVisualizationComingSoon}</p>
                 </div>
               </div>
             </div>
@@ -294,7 +296,7 @@ export default function AdminDashboard() {
 
           {/* Recent Activity */}
           <div className="glass-elevated rounded-2xl p-4 sm:p-6 lg:p-8 xl:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group max-w-6xl mx-auto">
-            <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground mb-4 sm:mb-6 lg:mb-8">Recent Activity</h3>
+            <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground mb-4 sm:mb-6 lg:mb-8">{translations.adminRecentActivity}</h3>
             <div className="space-y-3 sm:space-y-4 lg:space-y-6">
               {loading ? (
                 <div className="space-y-3 sm:space-y-4 lg:space-y-6">
@@ -350,8 +352,8 @@ export default function AdminDashboard() {
                   <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground-muted mb-4 sm:mb-6 mx-auto">
                     <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                   </svg>
-                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-3 sm:mb-4">No recent activity</h3>
-                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">Activity will appear here as users interact with the platform</p>
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-3 sm:mb-4">{translations.adminNoRecentActivity}</h3>
+                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminActivityWillAppearHere}</p>
                 </div>
               )}
             </div>

@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "@/hooks/useTranslations";
 
 // Step components
 import AvatarStep from "@/components/wizard/AvatarStep";
@@ -46,19 +47,21 @@ export interface WizardData {
   };
 }
 
-const steps = [
-  { id: 'avatar', title: 'Choose Avatar', description: 'Select your virtual presenter' },
-  { id: 'language', title: 'Language & Voice', description: 'Pick language and voice' },
-  { id: 'background', title: 'Backgrounds', description: 'Choose multiple scenes' },
-  { id: 'text', title: 'Script', description: 'Write your message' },
-  { id: 'generation', title: 'Generate', description: 'Create your video' },
-  { id: 'preview', title: 'Preview', description: 'Review and download' }
+const getSteps = (translations: any) => [
+  { id: 'avatar', title: translations.studioChooseAvatar, description: translations.studioSelectPresenter },
+  { id: 'language', title: translations.studioLanguageVoice, description: translations.studioPickLanguage },
+  { id: 'background', title: translations.studioBackgrounds, description: translations.studioChooseScenes },
+  { id: 'text', title: translations.studioScript, description: translations.studioWriteMessage },
+  { id: 'generation', title: translations.studioGenerate, description: translations.studioCreateVideo },
+  { id: 'preview', title: translations.studioPreview, description: translations.studioReviewDownload }
 ];
 
 export default function VideoCreationWizard() {
   const { data: session } = useSession();
   const router = useRouter();
+  const { translations } = useTranslations();
   const [currentStep, setCurrentStep] = useState(0);
+  const steps = getSteps(translations);
   const [wizardData, setWizardData] = useState<WizardData>({
     avatar: null,
     language: null,
@@ -170,13 +173,13 @@ export default function VideoCreationWizard() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="text-center max-w-md mx-auto">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">Access Denied</h1>
-          <p className="text-sm sm:text-base text-foreground-muted mb-4 sm:mb-6">Please sign in to create videos</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.studioAccessDenied}</h1>
+          <p className="text-sm sm:text-base text-foreground-muted mb-4 sm:mb-6">{translations.studioSignInRequired}</p>
           <button
             onClick={() => router.push('/auth')}
             className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold"
           >
-            Sign In
+            {translations.studioSignIn}
           </button>
         </div>
       </div>
@@ -201,7 +204,7 @@ export default function VideoCreationWizard() {
                 {/* Step Badge */}
                 <div className="mx-auto glass-glow rounded-xl sm:rounded-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4 inline-flex items-center gap-2 sm:gap-3 text-xs sm:text-sm border border-accent/20 mb-8 sm:mb-12">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                  <span className="text-gradient font-semibold text-sm sm:text-base">Step {currentStep + 1} of {steps.length}</span>
+                  <span className="text-gradient font-semibold text-sm sm:text-base">{translations.studioStep} {currentStep + 1} {translations.studioOf} {steps.length}</span>
                   <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent-2 rounded-full animate-ping" />
                 </div>
                 

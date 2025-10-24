@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function RememberMeSettings() {
   const { data: session } = useSession();
+  const { translations } = useTranslations();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
@@ -18,15 +20,15 @@ export default function RememberMeSettings() {
       });
       
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Remember me sessions cleared successfully' });
+        setMessage({ type: 'success', text: translations.rememberMeSessionsClearedSuccessfully });
         // Also clear localStorage
         localStorage.removeItem('rememberMe');
         localStorage.removeItem('rememberedEmail');
       } else {
-        setMessage({ type: 'error', text: 'Failed to clear remember me sessions' });
+        setMessage({ type: 'error', text: translations.rememberMeFailedToClearSessions });
       }
     } catch {
-      setMessage({ type: 'error', text: 'An error occurred while clearing sessions' });
+      setMessage({ type: 'error', text: translations.rememberMeErrorOccurred });
     } finally {
       setLoading(false);
     }
@@ -42,14 +44,13 @@ export default function RememberMeSettings() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
         </div>
-        <h3 className="text-lg sm:text-xl font-bold text-foreground">Remember Me Settings</h3>
+        <h3 className="text-lg sm:text-xl font-bold text-foreground">{translations.rememberMeSettings}</h3>
       </div>
       
       <div className="space-y-4 sm:space-y-6">
         <div className="p-3 sm:p-4 rounded-xl bg-surface-elevated">
           <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed">
-            Remember Me allows you to stay signed in for up to 30 days on trusted devices.
-            If you&apos;re using a shared or public computer, we recommend not using this feature.
+            {translations.rememberMeDescription}
           </p>
         </div>
 
@@ -61,9 +62,9 @@ export default function RememberMeSettings() {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm sm:text-base font-semibold text-foreground">Clear Remember Me Sessions</h4>
+              <h4 className="text-sm sm:text-base font-semibold text-foreground">{translations.rememberMeClearSessions}</h4>
               <p className="text-xs sm:text-sm text-foreground-muted">
-                This will sign you out of all devices where you&apos;ve chosen to be remembered.
+                {translations.rememberMeClearSessionsDescription}
               </p>
             </div>
           </div>
@@ -75,10 +76,10 @@ export default function RememberMeSettings() {
             {loading ? (
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin"></div>
-                <span>Clearing...</span>
+                <span>{translations.rememberMeClearing}</span>
               </div>
             ) : (
-              'Clear All Sessions'
+              translations.rememberMeClearAllSessions
             )}
           </button>
         </div>

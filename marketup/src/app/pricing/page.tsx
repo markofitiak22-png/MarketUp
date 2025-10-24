@@ -3,120 +3,124 @@ import React, { useState } from "react";
 // import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import LanguageSelector from "@/components/LanguageSelector";
+import { useTranslations } from "@/hooks/useTranslations";
 
-const plans = [
+const getPlans = (translations: any) => [
   {
     id: 'free',
-    name: 'Free',
+    name: translations.pricingFree,
     price: 0,
     period: 'forever',
-    description: 'Perfect for getting started',
+    description: translations.pricingPerfectForGettingStarted,
     features: [
-      '3 videos per month',
-      'Standard quality (720p)',
-      'Basic avatars',
-      '5 languages',
-      'Community support',
-      'Watermark on videos'
+      translations.pricing3VideosPerMonth,
+      translations.pricingStandardQuality720p,
+      translations.pricingBasicAvatars,
+      translations.pricing5Languages,
+      translations.pricingCommunitySupport,
+      translations.pricingWatermarkOnVideos
     ],
     popular: false,
-    cta: 'Get Started Free',
+    cta: translations.pricingGetStartedFree,
     color: 'border-border'
   },
   {
     id: 'pro',
-    name: 'Pro',
+    name: translations.pricingPro,
     price: 29,
     period: 'month',
-    description: 'Best for professionals and creators',
+    description: translations.pricingBestForProfessionals,
     features: [
-      '50 videos per month',
-      'HD quality (1080p)',
-      'All avatars & voices',
-      '20+ languages',
-      'Priority support',
-      'No watermark',
-      'Custom backgrounds',
-      'Advanced editing tools',
-      'API access'
+      translations.pricing50VideosPerMonth,
+      translations.pricingHDQuality1080p,
+      translations.pricingAllAvatarsVoices,
+      translations.pricing20PlusLanguages,
+      translations.pricingPrioritySupport,
+      translations.pricingNoWatermark,
+      translations.pricingCustomBackgrounds,
+      translations.pricingAdvancedEditingTools,
+      translations.pricingAPIAccess
     ],
     popular: true,
-    cta: 'Start Pro Trial',
+    cta: translations.pricingStartProTrial,
     color: 'border-accent',
-    badge: 'Most Popular'
+    badge: translations.pricingMostPopular
   },
   {
     id: 'enterprise',
-    name: 'Enterprise',
+    name: translations.pricingEnterprise,
     price: 99,
     period: 'month',
-    description: 'For teams and large organizations',
+    description: translations.pricingForTeamsOrganizations,
     features: [
-      'Unlimited videos',
-      '4K quality (2160p)',
-      'Custom avatars',
-      'All languages & voices',
-      'Dedicated support',
-      'No watermark',
-      'Custom branding',
-      'Team collaboration',
-      'Advanced analytics',
-      'White-label solution',
-      'Custom integrations',
-      'SLA guarantee'
+      translations.pricingUnlimitedVideos,
+      translations.pricing4KQuality2160p,
+      translations.pricingCustomAvatars,
+      translations.pricingAllLanguagesVoices,
+      translations.pricingDedicatedSupport,
+      translations.pricingNoWatermark,
+      translations.pricingCustomBranding,
+      translations.pricingTeamCollaboration,
+      translations.pricingAdvancedAnalytics,
+      translations.pricingWhiteLabelSolution,
+      translations.pricingCustomIntegrations,
+      translations.pricingSLAGuarantee
     ],
     popular: false,
-    cta: 'Contact Sales',
+    cta: translations.pricingContactSales,
     color: 'border-accent-2',
-    badge: 'Enterprise'
+    badge: translations.pricingEnterpriseBadge
   }
 ];
 
-const features = [
+const getFeatures = (translations: any) => [
   {
-    category: 'Video Creation',
+    category: translations.pricingVideoCreation,
     items: [
-      { name: 'Videos per month', free: '3', pro: '50', enterprise: 'Unlimited' },
-      { name: 'Video quality', free: '720p', pro: '1080p', enterprise: '4K' },
-      { name: 'Video duration', free: '60s max', pro: '10 min max', enterprise: 'Unlimited' },
-      { name: 'Export formats', free: 'MP4', pro: 'MP4, WebM', enterprise: 'All formats' }
+      { name: translations.pricingVideosPerMonth, free: '3', pro: '50', enterprise: translations.pricingUnlimitedVideos },
+      { name: translations.pricingVideoQuality, free: '720p', pro: '1080p', enterprise: '4K' },
+      { name: translations.pricingVideoDuration, free: '60s max', pro: '10 min max', enterprise: translations.pricingUnlimitedVideos },
+      { name: translations.pricingExportFormats, free: 'MP4', pro: 'MP4, WebM', enterprise: 'All formats' }
     ]
   },
   {
-    category: 'Avatars & Voices',
+    category: translations.pricingAvatarsVoices,
     items: [
-      { name: 'Available avatars', free: '3', pro: '12+', enterprise: 'Unlimited + Custom' },
-      { name: 'Voice options', free: '5 languages', pro: '20+ languages', enterprise: 'All languages' },
-      { name: 'Voice quality', free: 'Standard', pro: 'Premium', enterprise: 'Ultra HD' },
-      { name: 'Custom voices', free: '❌', pro: '❌', enterprise: '✅' }
+      { name: translations.pricingAvailableAvatars, free: '3', pro: '12+', enterprise: 'Unlimited + Custom' },
+      { name: translations.pricingVoiceOptions, free: translations.pricing5Languages, pro: translations.pricing20PlusLanguages, enterprise: translations.pricingAllLanguagesVoices },
+      { name: translations.pricingVoiceQuality, free: 'Standard', pro: 'Premium', enterprise: 'Ultra HD' },
+      { name: translations.pricingCustomVoices, free: '❌', pro: '❌', enterprise: '✅' }
     ]
   },
   {
-    category: 'Features',
+    category: translations.pricingFeatures,
     items: [
-      { name: 'Background options', free: '5', pro: '20+', enterprise: 'Unlimited + Custom' },
+      { name: translations.pricingBackgroundOptions, free: '5', pro: '20+', enterprise: 'Unlimited + Custom' },
       { name: 'Watermark', free: 'Yes', pro: 'No', enterprise: 'No' },
       { name: 'API access', free: '❌', pro: '✅', enterprise: '✅' },
-      { name: 'Team collaboration', free: '❌', pro: '❌', enterprise: '✅' }
+      { name: translations.pricingTeamCollaboration, free: '❌', pro: '❌', enterprise: '✅' }
     ]
   },
   {
-    category: 'Support',
+    category: translations.pricingSupport,
     items: [
-      { name: 'Email support', free: '✅', pro: '✅', enterprise: '✅' },
-      { name: 'Priority support', free: '❌', pro: '✅', enterprise: '✅' },
-      { name: 'Dedicated support', free: '❌', pro: '❌', enterprise: '✅' },
-      { name: 'SLA guarantee', free: '❌', pro: '❌', enterprise: '✅' }
+      { name: translations.pricingEmailSupport, free: '✅', pro: '✅', enterprise: '✅' },
+      { name: translations.pricingPrioritySupport, free: '❌', pro: '✅', enterprise: '✅' },
+      { name: translations.pricingDedicatedSupport, free: '❌', pro: '❌', enterprise: '✅' },
+      { name: translations.pricingSLAGuarantee, free: '❌', pro: '❌', enterprise: '✅' }
     ]
   }
 ];
 
 export default function PricingPage() {
+  const { translations } = useTranslations();
   // const { data: session } = useSession();
   const router = useRouter();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
   // const [selectedPlan] = useState<string | null>(null);
+  
+  const plans = getPlans(translations);
+  const features = getFeatures(translations);
 
   const handlePlanSelect = (planId: string) => {
     if (planId === 'enterprise') {
@@ -138,9 +142,6 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Language Selector */}
-      <LanguageSelector />
-      
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
       <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
@@ -154,18 +155,18 @@ export default function PricingPage() {
               {/* Badge */}
               <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
                 <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                <span className="text-gradient font-semibold text-base">Transparent Pricing</span>
+                <span className="text-gradient font-semibold text-base">{translations.pricingTransparentPricing}</span>
                 <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
               </div>
               
               {/* Main heading */}
               <div className="space-y-8 mb-16">
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9]">
-                  Simple, transparent <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">pricing</span>
+                  {translations.pricingSimpleTransparent} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">pricing</span>
                 </h1>
                 
                 <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                  Choose the perfect plan for your AI video creation needs. <span className="text-accent font-medium">No hidden fees, cancel anytime.</span>
+                  {translations.pricingChoosePerfectPlan} <span className="text-accent font-medium">{translations.pricingNoHiddenFees}</span>
                 </p>
               </div>
             
@@ -179,7 +180,7 @@ export default function PricingPage() {
                       : 'text-foreground-muted hover:text-foreground hover:bg-accent/5'
                   }`}
                 >
-                  Monthly
+                  {translations.pricingMonthly}
                 </button>
                 <button
                   onClick={() => setBillingPeriod('yearly')}
@@ -189,10 +190,10 @@ export default function PricingPage() {
                       : 'text-foreground-muted hover:text-foreground hover:bg-accent/5'
                   }`}
                 >
-                  Yearly
+                  {translations.pricingYearly}
                   {billingPeriod === 'yearly' && (
                     <span className="absolute -top-2 -right-2 bg-gradient-to-r from-success to-green-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
-                      Save 20%
+                      {translations.pricingSave20}
                     </span>
                   )}
                 </button>
@@ -243,14 +244,14 @@ export default function PricingPage() {
                               }
                             </span>
                             <span className="text-xl text-foreground-muted ml-2">
-                              /{plan.period === 'forever' ? 'forever' : billingPeriod === 'yearly' ? 'year' : 'month'}
+                              /{plan.period === 'forever' ? translations.pricingForever : billingPeriod === 'yearly' ? translations.pricingYear : translations.pricingMonth}
                             </span>
                           </div>
                           
                           {billingPeriod === 'yearly' && plan.price > 0 && (
                             <div className="mt-3">
                               <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-success to-green-500 text-white shadow-lg">
-                                Save ${getYearlyDiscount(plan.price)}/year
+                                {translations.pricingSavePerYear.replace('$', `$${getYearlyDiscount(plan.price)}`)}
                               </span>
                             </div>
                           )}
@@ -302,13 +303,13 @@ export default function PricingPage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                Feature Comparison
+                {translations.pricingFeatureComparison}
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
-                Compare all <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">features</span>
+                {translations.pricingCompareAllFeatures} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">features</span>
               </h2>
               <p className="text-xl md:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                Everything you need to choose the right plan
+                {translations.pricingEverythingYouNeed}
               </p>
             </div>
 
@@ -317,15 +318,15 @@ export default function PricingPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-[var(--border)]">
-                      <th className="text-left py-8 px-8 font-bold text-foreground text-xl">Features</th>
-                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl">Free</th>
+                      <th className="text-left py-8 px-8 font-bold text-foreground text-xl">{translations.pricingFeatures}</th>
+                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl">{translations.pricingFree}</th>
                       <th className="text-center py-8 px-8 font-bold text-foreground text-xl bg-gradient-to-br from-accent/10 to-accent-2/10 relative">
-                        Pro
+                        {translations.pricingPro}
                         <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-accent to-accent-2 text-white text-sm font-bold">
-                          Most Popular
+                          {translations.pricingMostPopular}
                         </div>
                       </th>
-                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl">Enterprise</th>
+                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl">{translations.pricingEnterprise}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -388,34 +389,34 @@ export default function PricingPage() {
                 FAQ
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
-                Frequently asked <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">questions</span>
+                {translations.pricingFrequentlyAsked} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.pricingQuestions}</span>
               </h2>
               <p className="text-xl md:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                Everything you need to know about our pricing
+                {translations.pricingEverythingYouNeedToKnow}
               </p>
             </div>
 
             <div className="grid gap-6 max-w-4xl mx-auto">
               {[
                 {
-                  question: "Can I change my plan anytime?",
-                  answer: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any billing differences."
+                  question: translations.pricingCanChangePlanAnytime,
+                  answer: translations.pricingCanChangePlanAnytimeAnswer
                 },
                 {
-                  question: "What happens to my videos if I downgrade?",
-                  answer: "Your existing videos remain accessible. You'll just have reduced limits for new video creation based on your new plan."
+                  question: translations.pricingWhatHappensToVideos,
+                  answer: translations.pricingWhatHappensToVideosAnswer
                 },
                 {
-                  question: "Do you offer refunds?",
-                  answer: "We offer a 30-day money-back guarantee for all paid plans. Contact our support team if you're not satisfied."
+                  question: translations.pricingDoYouOfferRefunds,
+                  answer: translations.pricingDoYouOfferRefundsAnswer
                 },
                 {
-                  question: "Can I cancel my subscription?",
-                  answer: "Yes, you can cancel anytime from your account settings. Your subscription will remain active until the end of your billing period."
+                  question: translations.pricingCanCancelSubscription,
+                  answer: translations.pricingCanCancelSubscriptionAnswer
                 },
                 {
-                  question: "Do you offer custom enterprise solutions?",
-                  answer: "Absolutely! Contact our sales team to discuss custom pricing, features, and integrations for your organization."
+                  question: translations.pricingCustomEnterpriseSolutions,
+                  answer: translations.pricingCustomEnterpriseSolutionsAnswer
                 }
               ].map((faq, index) => (
                 <div key={index} className="group glass-elevated rounded-3xl p-8 hover:border-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-accent/10">
@@ -438,14 +439,14 @@ export default function PricingPage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Get Started
+                {translations.pricingGetStarted}
               </div>
               
               <h2 className="text-5xl md:text-6xl font-bold mb-8 text-white leading-tight">
-                Ready to create amazing <span className="text-gradient bg-gradient-to-r from-white via-accent-2 to-purple-300 bg-clip-text text-transparent">AI videos?</span>
+                {translations.pricingReadyToCreate} <span className="text-gradient bg-gradient-to-r from-white via-accent-2 to-purple-300 bg-clip-text text-transparent">AI videos?</span>
               </h2>
               <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
-                Join thousands of creators and businesses who are already using our platform to create professional AI avatar videos.
+                {translations.pricingJoinThousands}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -457,7 +458,7 @@ export default function PricingPage() {
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    Start Free Trial
+                    {translations.pricingStartFreeTrial}
                   </span>
                 </button>
                 <Link
@@ -468,7 +469,7 @@ export default function PricingPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
-                    Contact Sales
+                    {translations.pricingContactSales}
                   </span>
                 </Link>
               </div>

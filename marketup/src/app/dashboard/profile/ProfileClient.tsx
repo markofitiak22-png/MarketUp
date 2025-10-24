@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface ProfileClientProps {
   initialData: {
@@ -11,6 +12,7 @@ interface ProfileClientProps {
 }
 
 export default function ProfileClient({ initialData }: ProfileClientProps) {
+  const { translations } = useTranslations();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -92,7 +94,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
               {/* User Info */}
               <div className="flex-1 min-w-0">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 sm:mb-3">
-                  {formData.name || "Anonymous User"}
+                  {formData.name || translations.profileAnonymousUser}
                 </h1>
                 <p className="text-base sm:text-lg lg:text-xl text-foreground-muted mb-3 sm:mb-4">{formData.email}</p>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-foreground-muted">
@@ -103,7 +105,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
-                    {formData.country || "Not set"}
+                    {formData.country || translations.profileNotSet}
                   </span>
                   <span className="flex items-center gap-2 text-sm sm:text-base lg:text-lg">
                     <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-accent-2/10 flex items-center justify-center">
@@ -111,7 +113,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                       </svg>
                     </div>
-                    {formData.locale || "Not set"}
+                    {formData.locale || translations.profileNotSet}
                   </span>
                 </div>
               </div>
@@ -132,14 +134,14 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        Cancel
+                        {translations.profileCancel}
                       </>
                     ) : (
                       <>
                         <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Edit Profile
+                        {translations.profileEditProfile}
                       </>
                     )}
                   </span>
@@ -165,14 +167,14 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Personal Information</h2>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-foreground">{translations.profilePersonalInformation}</h2>
                 </div>
             
                 <form className="space-y-6 sm:space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <div className="space-y-2 sm:space-y-3">
                       <label className="block text-base sm:text-lg font-bold text-foreground">
-                        Full Name
+                        {translations.profileFullName}
                       </label>
                       <input
                         type="text"
@@ -180,28 +182,28 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         disabled={!isEditing}
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm sm:text-base lg:text-lg"
-                        placeholder="Enter your full name"
+                        placeholder={translations.profileEnterFullName}
                       />
                     </div>
                     
                     <div className="space-y-2 sm:space-y-3">
                       <label className="block text-base sm:text-lg font-bold text-foreground">
-                        Email Address
+                        {translations.profileEmailAddress}
                       </label>
                       <input
                         type="email"
                         value={formData.email}
                         disabled
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none opacity-50 cursor-not-allowed text-sm sm:text-base lg:text-lg"
-                        placeholder="Enter your email"
+                        placeholder={translations.profileEnterEmail}
                       />
-                      <p className="text-xs sm:text-sm text-foreground-muted">Email cannot be changed</p>
+                      <p className="text-xs sm:text-sm text-foreground-muted">{translations.profileEmailCannotBeChanged}</p>
                     </div>
                   </div>
 
                   <div className="space-y-2 sm:space-y-3">
                     <label className="block text-base sm:text-lg font-bold text-foreground">
-                      Bio
+                      {translations.profileBio}
                     </label>
                     <textarea
                       value={formData.bio}
@@ -209,14 +211,14 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                       disabled={!isEditing}
                       rows={4}
                       className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 resize-none text-sm sm:text-base lg:text-lg"
-                      placeholder="Tell us about yourself..."
+                      placeholder={translations.profileTellAboutYourself}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <div className="space-y-2 sm:space-y-3">
                       <label className="block text-base sm:text-lg font-bold text-foreground">
-                        Country
+                        {translations.profileCountry}
                       </label>
                       <select
                         value={formData.country}
@@ -224,7 +226,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         disabled={!isEditing}
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm sm:text-base lg:text-lg"
                       >
-                        <option value="">Select your country</option>
+                        <option value="">{translations.profileSelectCountry}</option>
                         <option value="US">🇺🇸 United States</option>
                         <option value="SE">🇸🇪 Sweden</option>
                         <option value="AE">🇦🇪 United Arab Emirates</option>
@@ -240,7 +242,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                     
                     <div className="space-y-2 sm:space-y-3">
                       <label className="block text-base sm:text-lg font-bold text-foreground">
-                        Language
+                        {translations.profileLanguage}
                       </label>
                       <select
                         value={formData.locale}
@@ -248,7 +250,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         disabled={!isEditing}
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm sm:text-base lg:text-lg"
                       >
-                        <option value="">Select your language</option>
+                        <option value="">{translations.profileSelectLanguage}</option>
                         <option value="en">🇺🇸 English</option>
                         <option value="sv">🇸🇪 Swedish</option>
                         <option value="ar">🇦🇪 Arabic</option>
@@ -260,7 +262,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <div className="space-y-2 sm:space-y-3">
                       <label className="block text-base sm:text-lg font-bold text-foreground">
-                        Company
+                        {translations.profileCompany}
                       </label>
                       <input
                         type="text"
@@ -268,13 +270,13 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                         disabled={!isEditing}
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm sm:text-base lg:text-lg"
-                        placeholder="Your company name"
+                        placeholder={translations.profileCompanyName}
                       />
                     </div>
                     
                     <div className="space-y-2 sm:space-y-3">
                       <label className="block text-base sm:text-lg font-bold text-foreground">
-                        Website
+                        {translations.profileWebsite}
                       </label>
                       <input
                         type="url"
@@ -282,7 +284,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                         disabled={!isEditing}
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm sm:text-base lg:text-lg"
-                        placeholder="https://yourwebsite.com"
+                        placeholder={translations.profileWebsiteUrl}
                       />
                     </div>
                   </div>
@@ -299,14 +301,14 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                           {saving ? (
                             <>
                               <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                              <span>Saving...</span>
+                              <span>{translations.profileSaving}</span>
                             </>
                           ) : (
                             <>
                               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
-                              Save Changes
+                              {translations.profileSaveChanges}
                             </>
                           )}
                         </span>
@@ -318,7 +320,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         disabled={saving}
                         className="btn-outline btn-lg px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                       >
-                        Cancel
+                        {translations.profileCancel}
                       </button>
                     </div>
                   )}
@@ -333,11 +335,11 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
             <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
               <div className="relative z-10">
-                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">Profile Stats</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{translations.profileProfileStats}</h3>
                 <div className="space-y-4 sm:space-y-6">
                   <div className="space-y-2 sm:space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Profile Completion</span>
+                      <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.profileProfileCompletion}</span>
                       <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">75%</span>
                     </div>
                     <div className="w-full bg-surface rounded-full h-2 sm:h-3">
@@ -347,11 +349,11 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                   <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-3 sm:pt-4">
                     <div className="text-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent/5 to-accent-2/5">
                       <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">0</div>
-                      <div className="text-xs sm:text-sm text-foreground-muted font-medium">Videos</div>
+                      <div className="text-xs sm:text-sm text-foreground-muted font-medium">{translations.profileVideos}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent-2/5 to-purple-500/5">
                       <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent">0</div>
-                      <div className="text-xs sm:text-sm text-foreground-muted font-medium">Projects</div>
+                      <div className="text-xs sm:text-sm text-foreground-muted font-medium">{translations.profileProjects}</div>
                     </div>
                   </div>
                 </div>
@@ -362,7 +364,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
             <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent-2/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
               <div className="relative z-10">
-                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">Account Settings</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{translations.profileAccountSettings}</h3>
                 <div className="space-y-3 sm:space-y-4">
                   <button className="w-full flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl hover:bg-surface-elevated transition-all duration-300 hover:scale-[1.02] group">
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -372,8 +374,8 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <div className="font-bold text-foreground text-sm sm:text-base lg:text-lg">Change Password</div>
-                        <div className="text-xs sm:text-sm text-foreground-muted">Update your password</div>
+                        <div className="font-bold text-foreground text-sm sm:text-base lg:text-lg">{translations.profileChangePassword}</div>
+                        <div className="text-xs sm:text-sm text-foreground-muted">{translations.profileUpdatePassword}</div>
                       </div>
                     </div>
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-foreground-muted group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -389,8 +391,8 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <div className="font-bold text-foreground text-sm sm:text-base lg:text-lg">Two-Factor Auth</div>
-                        <div className="text-xs sm:text-sm text-foreground-muted">Add extra security</div>
+                        <div className="font-bold text-foreground text-sm sm:text-base lg:text-lg">{translations.profileTwoFactorAuth}</div>
+                        <div className="text-xs sm:text-sm text-foreground-muted">{translations.profileAddExtraSecurity}</div>
                       </div>
                     </div>
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-foreground-muted group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -406,8 +408,8 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <div className="font-bold text-red-400 text-sm sm:text-base lg:text-lg group-hover:text-red-300">Delete Account</div>
-                        <div className="text-xs sm:text-sm text-foreground-muted">Permanently delete account</div>
+                        <div className="font-bold text-red-400 text-sm sm:text-base lg:text-lg group-hover:text-red-300">{translations.profileDeleteAccount}</div>
+                        <div className="text-xs sm:text-sm text-foreground-muted">{translations.profilePermanentlyDeleteAccount}</div>
                       </div>
                     </div>
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-foreground-muted group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">

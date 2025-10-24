@@ -1,10 +1,11 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
-const navigation = [
+const getNavigation = (translations: any) => [
   {
-    name: "Dashboard",
+    name: translations.adminSidebarDashboard,
     href: "/admin",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -16,7 +17,7 @@ const navigation = [
     ),
   },
   {
-    name: "Users",
+    name: translations.adminSidebarUsers,
     href: "/admin/users",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -28,7 +29,7 @@ const navigation = [
     ),
   },
   {
-    name: "Video Moderation",
+    name: translations.adminSidebarVideoModeration,
     href: "/admin/videos",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -38,7 +39,7 @@ const navigation = [
     ),
   },
   {
-    name: "Publication Scheduler",
+    name: translations.adminSidebarPublicationScheduler,
     href: "/admin/scheduler",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -48,7 +49,7 @@ const navigation = [
     ),
   },
   {
-    name: "Payment Management",
+    name: translations.adminSidebarPaymentManagement,
     href: "/admin/payments",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -58,7 +59,7 @@ const navigation = [
     ),
   },
   {
-    name: "Ticket System",
+    name: translations.adminSidebarTicketSystem,
     href: "/admin/tickets",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -75,6 +76,8 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { translations } = useTranslations();
+  const navigation = getNavigation(translations);
 
   return (
     <>
@@ -97,7 +100,7 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
       `}>
         <div className="flex grow flex-col overflow-y-auto glass-elevated h-full min-h-screen lg:min-h-full">
         {/* Header */}
-        <div className="flex h-16 sm:h-20 shrink-0 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 sm:h-20 shrink-0 items-center justify-between px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
               <svg className="w-4 h-4 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,8 +108,8 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
               </svg>
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-foreground">Admin Panel</h2>
-              <p className="text-xs sm:text-sm text-foreground-muted">Platform Management</p>
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">{translations.adminSidebarAdminPanel}</h2>
+              <p className="text-xs sm:text-sm text-foreground-muted">{translations.adminSidebarManagePlatform}</p>
             </div>
           </div>
           
@@ -122,7 +125,7 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col px-4 sm:px-6 py-3 sm:py-4">
+        <nav className="flex flex-1 flex-col px-4 sm:px-6 py-3 sm:py-4 pt-4 sm:pt-6">
           <ul role="list" className="flex flex-1 flex-col gap-1 sm:gap-2">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
@@ -154,14 +157,14 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
         </nav>
 
         {/* User section */}
-        <div className="p-4 sm:p-6 mt-auto">
+        <div className="p-4 sm:p-6 mt-auto pb-6 sm:pb-8">
           <div className="glass-elevated rounded-2xl p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
                 <span className="text-xs sm:text-sm font-bold text-white">A</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm font-semibold text-foreground truncate">Admin User</p>
+                <p className="text-xs sm:text-sm font-semibold text-foreground truncate">{translations.adminHeaderAdminUser}</p>
                 <p className="text-xs text-foreground-muted truncate">admin@marketup.com</p>
               </div>
             </div>
@@ -169,7 +172,7 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
               <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
-              Sign out
+              {translations.adminSidebarSignOut}
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SubscriptionData {
   currentPlan: {
@@ -36,6 +37,7 @@ interface SubscriptionData {
 }
 
 export default function SubscriptionPage() {
+  const { translations } = useTranslations();
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpgrading, setIsUpgrading] = useState(false);
@@ -279,13 +281,13 @@ export default function SubscriptionPage() {
           <div className="max-w-7xl mx-auto">
             <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
               <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">⚠️</div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">Error loading subscription data</h2>
-              <p className="text-base sm:text-lg text-foreground-muted mb-4 sm:mb-6">Please try refreshing the page</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.subscriptionErrorLoadingData}</h2>
+              <p className="text-base sm:text-lg text-foreground-muted mb-4 sm:mb-6">{translations.subscriptionPleaseTryRefreshing}</p>
               <button 
                 onClick={() => window.location.reload()}
                 className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg rounded-xl sm:rounded-2xl"
               >
-                Refresh Page
+                {translations.subscriptionRefreshPage}
               </button>
             </div>
           </div>
@@ -308,10 +310,10 @@ export default function SubscriptionPage() {
           {/* Hero Header */}
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-3 sm:mb-4">
-              Subscription Management
+              {translations.subscriptionManagement}
             </h1>
             <p className="text-sm sm:text-base md:text-lg text-foreground-muted max-w-2xl mx-auto leading-relaxed">
-              Manage your subscription, billing, and upgrade your plan to unlock more features
+              {translations.subscriptionManageBillingUpgrade}
             </p>
           </div>
 
@@ -319,8 +321,8 @@ export default function SubscriptionPage() {
           <div className="glass-elevated rounded-2xl p-6 sm:p-8 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4 sm:gap-0">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Current Plan</h2>
-                <p className="text-sm sm:text-base text-foreground-muted">Manage your subscription and billing</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">{translations.subscriptionCurrentPlan}</h2>
+                <p className="text-sm sm:text-base text-foreground-muted">{translations.subscriptionManageSubscriptionBilling}</p>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                 <span className={`px-4 py-2 rounded-xl text-sm font-bold ${
@@ -330,11 +332,11 @@ export default function SubscriptionPage() {
                     ? 'bg-warning/20 text-warning border border-warning/30'
                   : 'bg-error/20 text-error border border-error/30'
                 }`}>
-                  {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? 'Cancelling' : subscriptionData?.currentPlan?.status}
+                  {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? translations.subscriptionCancelling : subscriptionData?.currentPlan?.status}
                 </span>
                 {subscriptionData?.currentPlan?.cancelAtPeriodEnd && (
                   <span className="text-sm text-foreground-muted bg-surface/50 px-3 py-2 rounded-lg">
-                    Ends {subscriptionData?.currentPlan?.nextBilling}
+                    {translations.subscriptionEnds} {subscriptionData?.currentPlan?.nextBilling}
                   </span>
                 )}
               </div>
@@ -371,7 +373,7 @@ export default function SubscriptionPage() {
               <div className="space-y-4">
                 {subscriptionData?.currentPlan?.nextBilling && (
                   <div className="glass rounded-2xl p-4 hover:scale-[1.02] transition-all duration-300 group">
-                    <h4 className="text-sm font-bold text-foreground mb-2">Next Billing</h4>
+                    <h4 className="text-sm font-bold text-foreground mb-2">{translations.subscriptionNextBilling}</h4>
                     <p className="text-2xl font-bold text-foreground mb-1">
                       {subscriptionData?.currentPlan?.price === 0 ? 'Free' : `$${subscriptionData?.currentPlan?.price}`}
                     </p>
@@ -380,11 +382,11 @@ export default function SubscriptionPage() {
                 )}
                 
                 <div className="glass rounded-2xl p-4 hover:scale-[1.02] transition-all duration-300 group">
-                  <h4 className="text-sm font-bold text-foreground mb-2">Usage This Month</h4>
+                  <h4 className="text-sm font-bold text-foreground mb-2">{translations.subscriptionUsageThisMonth}</h4>
                   <p className="text-2xl font-bold text-foreground mb-1">
                     {subscriptionData?.usage?.videosThisMonth}/{subscriptionData?.usage?.limit === 'unlimited' ? '∞' : subscriptionData?.usage?.limit}
                   </p>
-                  <p className="text-xs text-foreground-muted mb-3">Videos created</p>
+                  <p className="text-xs text-foreground-muted mb-3">{translations.subscriptionVideosCreated}</p>
                   {subscriptionData?.usage?.limit !== 'unlimited' && (
                     <div className="space-y-2">
                       <div className="w-full bg-border rounded-full h-2">
@@ -396,7 +398,7 @@ export default function SubscriptionPage() {
                         />
                       </div>
                       <p className="text-xs text-foreground-muted">
-                        {Math.round(((subscriptionData?.usage?.videosThisMonth || 0) / Number(subscriptionData?.usage?.limit || 1)) * 100)}% used
+                        {Math.round(((subscriptionData?.usage?.videosThisMonth || 0) / Number(subscriptionData?.usage?.limit || 1)) * 100)}% {translations.subscriptionUsed}
                       </p>
                     </div>
                   )}
@@ -409,30 +411,30 @@ export default function SubscriptionPage() {
                 <>
                   <button 
                     className="btn-outline px-4 py-2 text-sm font-bold hover:scale-105 transition-all duration-300 rounded-xl"
-                    onClick={() => alert('Change Plan functionality coming soon!')}
+                    onClick={() => alert(translations.subscriptionChangePlanFunctionalityComingSoon)}
                   >
-                    Change Plan
+                    {translations.subscriptionChangePlan}
                   </button>
                   <button 
                     className="btn-outline px-4 py-2 text-sm font-bold hover:scale-105 transition-all duration-300 rounded-xl"
-                    onClick={() => alert('Update Payment functionality coming soon!')}
+                    onClick={() => alert(translations.subscriptionUpdatePaymentFunctionalityComingSoon)}
                   >
-                    Update Payment
+                    {translations.subscriptionUpdatePayment}
                   </button>
                   <button 
                     className="px-4 py-2 text-sm font-bold text-error hover:text-error/80 border border-error/20 rounded-xl hover:bg-error/10 transition-all duration-300 hover:scale-105"
-                    onClick={() => alert('Cancel Subscription functionality coming soon!')}
+                    onClick={() => alert(translations.subscriptionCancelSubscriptionFunctionalityComingSoon)}
                   >
-                    {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? 'Reactivate' : 'Cancel Subscription'}
+                    {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? translations.subscriptionReactivate : translations.subscriptionCancelSubscription}
                   </button>
                 </>
               )}
               {subscriptionData?.currentPlan?.tier === 'FREE' && (
                 <button 
                   className="btn-primary px-4 py-2 text-sm font-bold hover:scale-105 transition-all duration-300 rounded-xl"
-                  onClick={() => alert('Upgrade Plan functionality coming soon!')}
+                  onClick={() => alert(translations.subscriptionUpgradePlanFunctionalityComingSoon)}
                 >
-                  Upgrade Plan
+                  {translations.subscriptionUpgradePlan}
                 </button>
               )}
             </div>
@@ -441,8 +443,8 @@ export default function SubscriptionPage() {
           {/* Available Plans */}
           <div className="glass-elevated rounded-2xl p-6 sm:p-8 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3">Available Plans</h2>
-              <p className="text-sm sm:text-base text-foreground-muted max-w-2xl mx-auto leading-relaxed">Choose the plan that best fits your needs and unlock more features</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3">{translations.subscriptionAvailablePlans}</h2>
+              <p className="text-sm sm:text-base text-foreground-muted max-w-2xl mx-auto leading-relaxed">{translations.subscriptionChoosePlanBestFits}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -456,7 +458,7 @@ export default function SubscriptionPage() {
                   {plan.popular && (
                     <div className="absolute -top-2 left-1/2 -translate-x-1/2">
                       <span className="bg-gradient-to-r from-accent to-accent-2 text-white px-3 py-1 rounded-xl text-xs font-bold shadow-xl">
-                        Most Popular
+                        {translations.subscriptionMostPopular}
                       </span>
                     </div>
                   )}
@@ -464,7 +466,7 @@ export default function SubscriptionPage() {
                   {plan.current && (
                     <div className="absolute -top-2 left-1/2 -translate-x-1/2">
                       <span className="bg-gradient-to-r from-success to-success/80 text-white px-3 py-1 rounded-xl text-xs font-bold shadow-xl">
-                        Current Plan
+                        {translations.subscriptionCurrentPlan}
                       </span>
                     </div>
                   )}
@@ -497,11 +499,11 @@ export default function SubscriptionPage() {
                     disabled={plan.current}
                     onClick={() => {
                       if (plan.current) return;
-                      alert(`Upgrade to ${plan.name} plan functionality coming soon!`);
+                      alert(translations.subscriptionUpgradeToPlanFunctionalityComingSoon.replace('{plan}', plan.name));
                       setIsUpgrading(true);
                     }}
                   >
-                    {plan.current ? 'Current Plan' : 'Choose Plan'}
+                    {plan.current ? translations.subscriptionCurrentPlan : translations.subscriptionChoosePlan}
                   </button>
                 </div>
               ))}
@@ -511,8 +513,8 @@ export default function SubscriptionPage() {
           {/* Billing History */}
           <div className="glass-elevated rounded-2xl p-6 sm:p-8 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3">Billing History</h2>
-              <p className="text-sm sm:text-base text-foreground-muted max-w-2xl mx-auto leading-relaxed">Track your payment history and download invoices</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3">{translations.subscriptionBillingHistory}</h2>
+              <p className="text-sm sm:text-base text-foreground-muted max-w-2xl mx-auto leading-relaxed">{translations.subscriptionTrackPaymentHistory}</p>
             </div>
             
             <div className="space-y-3 sm:space-y-4">
@@ -535,9 +537,9 @@ export default function SubscriptionPage() {
                     </span>
                     <button 
                       className="text-accent hover:text-accent-hover text-xs font-bold hover:scale-105 transition-all duration-300"
-                      onClick={() => alert('Download invoice functionality coming soon!')}
+                      onClick={() => alert(translations.subscriptionDownloadInvoiceFunctionalityComingSoon)}
                     >
-                      Download
+                      {translations.subscriptionDownload}
                     </button>
                   </div>
                 </div>
@@ -545,8 +547,8 @@ export default function SubscriptionPage() {
               ) : (
                 <div className="text-center py-8 sm:py-12">
                   <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🧾</div>
-                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">No billing history</h3>
-                  <p className="text-sm sm:text-base text-foreground-muted">Your billing history will appear here</p>
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">{translations.subscriptionNoBillingHistory}</h3>
+                  <p className="text-sm sm:text-base text-foreground-muted">{translations.subscriptionBillingHistoryWillAppear}</p>
                 </div>
               )}
             </div>

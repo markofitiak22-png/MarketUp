@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "@/hooks/useTranslations";
 
-const navigation = [
+const getNavigation = (translations: any) => [
   { 
-    name: "Overview", 
+    name: translations.dashboardSidebarOverview, 
     href: "/dashboard", 
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +15,7 @@ const navigation = [
     )
   },
   { 
-    name: "Profile", 
+    name: translations.dashboardSidebarProfile, 
     href: "/dashboard/profile", 
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,7 +24,7 @@ const navigation = [
     )
   },
   { 
-    name: "Videos", 
+    name: translations.dashboardSidebarVideos, 
     href: "/dashboard/videos", 
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +33,7 @@ const navigation = [
     )
   },
   { 
-    name: "Subscription", 
+    name: translations.dashboardSidebarSubscription, 
     href: "/dashboard/subscription", 
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +42,7 @@ const navigation = [
     )
   },
   { 
-    name: "Billing", 
+    name: translations.dashboardSidebarBilling, 
     href: "/dashboard/billing", 
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +51,7 @@ const navigation = [
     )
   },
   { 
-    name: "Settings", 
+    name: translations.dashboardSidebarSettings, 
     href: "/dashboard/settings", 
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,6 +69,8 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ children, userEmail }: DashboardClientProps) {
   const pathname = usePathname();
+  const { translations } = useTranslations();
+  const navigation = getNavigation(translations);
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,8 +86,8 @@ export default function DashboardClient({ children, userEmail }: DashboardClient
                 </svg>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-foreground">Dashboard</h2>
-                <p className="text-sm text-foreground-muted">Welcome back</p>
+                <h2 className="text-xl font-bold text-foreground">{translations.dashboardSidebarTitle}</h2>
+                <p className="text-sm text-foreground-muted">{translations.dashboardSidebarWelcomeBack}</p>
               </div>
             </div>
           </div>
@@ -130,7 +133,7 @@ export default function DashboardClient({ children, userEmail }: DashboardClient
                   <p className="text-sm font-semibold text-foreground truncate">
                     {userEmail}
                   </p>
-                  <p className="text-xs text-foreground-muted">Account</p>
+                  <p className="text-xs text-foreground-muted">{translations.dashboardSidebarAccount}</p>
                 </div>
               </div>
               <button
@@ -140,7 +143,7 @@ export default function DashboardClient({ children, userEmail }: DashboardClient
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                Sign out
+                {translations.dashboardSidebarSignOut}
               </button>
             </div>
           </div>
@@ -162,9 +165,9 @@ export default function DashboardClient({ children, userEmail }: DashboardClient
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
-                  {navigation.find(item => item.href === pathname)?.name || 'Dashboard'}
+                  {navigation.find(item => item.href === pathname)?.name || translations.dashboardSidebarTitle}
                 </h1>
-                <p className="text-sm text-foreground-muted">Manage your account and preferences</p>
+                <p className="text-sm text-foreground-muted">{translations.dashboardSidebarManageAccount}</p>
               </div>
             </div>
             

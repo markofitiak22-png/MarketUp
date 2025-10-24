@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { WizardData } from "@/app/studio/page";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface BackgroundStepProps {
   data: WizardData;
@@ -76,14 +77,17 @@ const backgrounds = [
   }
 ];
 
-const categories = ['All', 'Professional', 'Casual', 'Creative'];
+const getCategories = (translations: any) => [translations.studioAll, translations.studioProfessional, translations.studioCasual, translations.studioCreative];
 
 export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: BackgroundStepProps) {
+  const { translations } = useTranslations();
   const [selectedBackgrounds, setSelectedBackgrounds] = useState<string[]>(data.backgrounds?.map(bg => bg.id) || []);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(translations.studioAll);
   const [previewMode, setPreviewMode] = useState(false);
+  
+  const categories = getCategories(translations);
 
-  const filteredBackgrounds = selectedCategory === 'All' 
+  const filteredBackgrounds = selectedCategory === translations.studioAll 
     ? backgrounds 
     : backgrounds.filter(bg => bg.category === selectedCategory);
 
@@ -123,9 +127,9 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Choose Backgrounds</h2>
+        <h2 className="text-3xl font-bold text-foreground mb-4">{translations.studioChooseBackgrounds}</h2>
         <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          Select multiple backgrounds for your video. You can choose 2-4 different scenes to create dynamic transitions.
+          {translations.studioSelectMultipleBackgrounds} {translations.studioChoose2To4Scenes}
         </p>
       </div>
 
@@ -196,7 +200,7 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span className="font-medium">{selectedBackgrounds.length} background{selectedBackgrounds.length !== 1 ? 's' : ''} selected</span>
+            <span className="font-medium">{selectedBackgrounds.length} {translations.studioBackgroundsSelected}</span>
           </div>
         </div>
       )}
@@ -205,12 +209,12 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
       {selectedBackgrounds.length > 0 && (
         <div className="glass-elevated rounded-2xl p-8">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-foreground">Preview</h3>
+            <h3 className="text-xl font-semibold text-foreground">{translations.studioPreview}</h3>
             <button
               onClick={() => setPreviewMode(!previewMode)}
               className="btn-outline btn-sm"
             >
-              {previewMode ? 'Exit Preview' : 'Preview Mode'}
+              {previewMode ? translations.studioExitPreview : translations.studioPreviewMode}
             </button>
           </div>
           
@@ -235,14 +239,14 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
             
             <div className="mt-4 text-center">
               <h4 className="text-lg font-semibold text-foreground">
-                {selectedBgs.length > 0 ? selectedBgs[0]?.name : 'Selected Backgrounds'}
+                {selectedBgs.length > 0 ? selectedBgs[0]?.name : translations.studioSelectedBackgrounds}
               </h4>
               <p className="text-sm text-foreground-muted">
-                {selectedBgs.length > 0 ? selectedBgs[0]?.description : `${selectedBackgrounds.length} background${selectedBackgrounds.length !== 1 ? 's' : ''} selected`}
+                {selectedBgs.length > 0 ? selectedBgs[0]?.description : `${selectedBackgrounds.length} ${translations.studioBackgroundsSelected}`}
               </p>
               {selectedBgs.length > 1 && (
                 <div className="mt-2 text-xs text-accent">
-                  +{selectedBgs.length - 1} more background{selectedBgs.length - 1 !== 1 ? 's' : ''}
+                  +{selectedBgs.length - 1} {translations.studioMoreBackgrounds}
                 </div>
               )}
             </div>
@@ -259,7 +263,7 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          {translations.studioBack}
         </button>
         
         <button
@@ -267,7 +271,7 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
           disabled={selectedBackgrounds.length === 0}
           className="btn-primary btn-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Continue
+          {translations.studioContinue}
           <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

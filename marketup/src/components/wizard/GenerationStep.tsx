@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface GenerationStepProps {
   data: WizardData;
@@ -11,13 +12,13 @@ interface GenerationStepProps {
   setIsGenerating: (generating: boolean) => void;
 }
 
-const generationSteps = [
-  { id: 'preparing', label: 'Preparing assets', duration: 2000 },
-  { id: 'avatar', label: 'Generating avatar animation', duration: 8000 },
-  { id: 'voice', label: 'Synthesizing voice', duration: 6000 },
-  { id: 'background', label: 'Processing background', duration: 4000 },
-  { id: 'compositing', label: 'Compositing video', duration: 10000 },
-  { id: 'finalizing', label: 'Finalizing output', duration: 3000 }
+const getGenerationSteps = (translations: any) => [
+  { id: 'preparing', label: translations.studioPreparingAssets, duration: 2000 },
+  { id: 'avatar', label: translations.studioGeneratingAvatarAnimation, duration: 8000 },
+  { id: 'voice', label: translations.studioSynthesizingVoice, duration: 6000 },
+  { id: 'background', label: translations.studioProcessingBackground, duration: 4000 },
+  { id: 'compositing', label: translations.studioCompositingVideo, duration: 10000 },
+  { id: 'finalizing', label: translations.studioFinalizingOutput, duration: 3000 }
 ];
 
 export default function GenerationStep({ 
@@ -27,11 +28,14 @@ export default function GenerationStep({
   isGenerating, 
   setIsGenerating 
 }: GenerationStepProps) {
+  const { translations } = useTranslations();
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [estimatedTime] = useState(0);
   // const [generationId, setGenerationId] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const generationSteps = getGenerationSteps(translations);
 
   // Cleanup interval on unmount
   useEffect(() => {
@@ -153,15 +157,15 @@ export default function GenerationStep({
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Generate Your Video</h2>
+        <h2 className="text-3xl font-bold text-foreground mb-4">{translations.studioGenerateYourVideo}</h2>
         <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          We&apos;ll create your personalized video using AI. This process typically takes 2-3 minutes.
+          {translations.studioCreatePersonalizedVideo} {translations.studioProcessTakes2To3Minutes}
         </p>
       </div>
 
       {/* Video Summary */}
       <div className="glass-elevated rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Video Summary</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">{translations.studioVideoSummary}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -172,7 +176,7 @@ export default function GenerationStep({
               </div>
               <div>
                 <div className="font-medium text-foreground">{data.avatar?.name}</div>
-                <div className="text-sm text-foreground-muted">Avatar</div>
+                <div className="text-sm text-foreground-muted">{translations.studioAvatar}</div>
               </div>
             </div>
             
@@ -194,7 +198,7 @@ export default function GenerationStep({
               </div>
               <div>
                 <div className="font-medium text-foreground">{data.backgrounds?.[0]?.name}</div>
-                <div className="text-sm text-foreground-muted">Background</div>
+                <div className="text-sm text-foreground-muted">{translations.studioBackground}</div>
               </div>
             </div>
             
@@ -203,8 +207,8 @@ export default function GenerationStep({
                 <span className="text-lg">📝</span>
               </div>
               <div>
-                <div className="font-medium text-foreground">{data.settings.duration}s duration</div>
-                <div className="text-sm text-foreground-muted">{data.text.split(' ').length} words</div>
+                <div className="font-medium text-foreground">{data.settings.duration}s {translations.studioDuration}</div>
+                <div className="text-sm text-foreground-muted">{data.text.split(' ').length} {translations.studioWords}</div>
               </div>
             </div>
           </div>
@@ -218,14 +222,14 @@ export default function GenerationStep({
             <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full flex items-center justify-center">
               <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Generating Your Video</h3>
-            <p className="text-foreground-muted">Please don&apos;t close this window while we create your video.</p>
+            <h3 className="text-xl font-semibold text-foreground mb-2">{translations.studioGeneratingYourVideo}</h3>
+            <p className="text-foreground-muted">{translations.studioDontCloseWindow}</p>
           </div>
 
           {/* Progress Bar */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-foreground">Progress</span>
+              <span className="text-sm font-medium text-foreground">{translations.studioProgress}</span>
               <span className="text-sm text-foreground-muted">{Math.round(progress)}%</span>
             </div>
             <div className="w-full bg-border rounded-full h-3">
@@ -247,12 +251,12 @@ export default function GenerationStep({
                   <div className="font-medium text-foreground">{step.label}</div>
                   {index === currentStep && isGenerating && (
                     <div className="text-sm text-foreground-muted">
-                      Processing... {Math.round((index + 1) * 100 / generationSteps.length)}%
+                      {translations.studioProcessing} {Math.round((index + 1) * 100 / generationSteps.length)}%
                     </div>
                   )}
                 </div>
                 {index < currentStep && (
-                  <div className="text-success text-sm font-medium">Complete</div>
+                  <div className="text-success text-sm font-medium">{translations.studioComplete}</div>
                 )}
               </div>
             ))}
@@ -261,7 +265,7 @@ export default function GenerationStep({
           {/* Estimated Time */}
           <div className="mt-6 text-center">
             <div className="text-sm text-foreground-muted">
-              Estimated time remaining: {formatTime(Math.max(0, estimatedTime - Math.floor(progress * estimatedTime / 100)))}
+              {translations.studioEstimatedTimeRemaining} {formatTime(Math.max(0, estimatedTime - Math.floor(progress * estimatedTime / 100)))}
             </div>
           </div>
 
@@ -271,7 +275,7 @@ export default function GenerationStep({
               onClick={cancelGeneration}
               className="btn-outline btn-sm"
             >
-              Cancel Generation
+              {translations.studioCancelGeneration}
             </button>
           </div>
         </div>
@@ -282,9 +286,9 @@ export default function GenerationStep({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">Ready to Generate</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-2">{translations.studioReadyToGenerate}</h3>
           <p className="text-foreground-muted mb-6">
-            Your video will be created with the settings above. Click the button below to start generation.
+            {translations.studioVideoCreatedWithSettings}
           </p>
           <button
             onClick={startGeneration}
@@ -293,7 +297,7 @@ export default function GenerationStep({
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Start Generation
+            {translations.studioStartGeneration}
           </button>
         </div>
       )}
@@ -308,7 +312,7 @@ export default function GenerationStep({
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          {translations.studioBack}
         </button>
         
         {!isGenerating && (
@@ -316,7 +320,7 @@ export default function GenerationStep({
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Generation typically takes 2-3 minutes
+            {translations.studioGenerationTakes2To3Minutes}
           </div>
         )}
       </div>

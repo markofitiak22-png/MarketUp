@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface User {
   id: string;
@@ -45,6 +46,7 @@ interface Ticket {
 }
 
 export default function TicketSystem() {
+  const { translations } = useTranslations();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -134,11 +136,11 @@ export default function TicketSystem() {
     setNewMessage("");
       } else {
         console.error('Failed to send message:', data.error);
-        alert('Failed to send message. Please try again.');
+        alert(translations.adminTicketsFailedToSendMessage);
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      alert('Error sending message. Please try again.');
+      alert(translations.adminTicketsErrorSendingMessage);
     }
   };
 
@@ -168,11 +170,11 @@ export default function TicketSystem() {
     ));
       } else {
         console.error('Failed to update status:', data.error);
-        alert('Failed to update status. Please try again.');
+        alert(translations.adminTicketsFailedToUpdateStatus);
       }
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Error updating status. Please try again.');
+      alert(translations.adminTicketsErrorUpdatingStatus);
     }
   };
 
@@ -207,11 +209,11 @@ export default function TicketSystem() {
     ));
       } else {
         console.error('Failed to assign ticket:', data.error);
-        alert('Failed to assign ticket. Please try again.');
+        alert(translations.adminTicketsFailedToAssignTicket);
       }
     } catch (error) {
       console.error('Error assigning ticket:', error);
-      alert('Error assigning ticket. Please try again.');
+      alert(translations.adminTicketsErrorAssigningTicket);
     }
   };
 
@@ -224,14 +226,14 @@ export default function TicketSystem() {
         return (
           <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
             <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-red-400 rounded-full mr-1 sm:mr-1.5"></div>
-            Open
+            {translations.adminTicketsOpen}
           </span>
         );
       case "in_progress":
         return (
           <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-yellow-400 rounded-full mr-1 sm:mr-1.5 animate-pulse"></div>
-            In Progress
+            {translations.adminTicketsInProgress}
           </span>
         );
       case "resolved":
@@ -240,7 +242,7 @@ export default function TicketSystem() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            Resolved
+            {translations.adminTicketsResolved}
           </span>
         );
       case "closed":
@@ -249,7 +251,7 @@ export default function TicketSystem() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Closed
+            {translations.adminTicketsClosed}
           </span>
         );
       default:
@@ -262,25 +264,25 @@ export default function TicketSystem() {
       case "urgent":
         return (
           <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-            🔥 Urgent
+            🔥 {translations.adminTicketsUrgent}
           </span>
         );
       case "high":
         return (
           <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-            ⚡ High
+            ⚡ {translations.adminTicketsHigh}
           </span>
         );
       case "medium":
         return (
           <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-            📋 Medium
+            📋 {translations.adminTicketsMedium}
           </span>
         );
       case "low":
         return (
           <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            📝 Low
+            📝 {translations.adminTicketsLow}
           </span>
         );
       default:
@@ -320,10 +322,10 @@ export default function TicketSystem() {
     const date = new Date(dateString);
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
     
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
+    if (diffInHours < 1) return translations.adminTicketsJustNow;
+    if (diffInHours < 24) return `${diffInHours}${translations.adminTicketsHoursAgo}`;
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d ago`;
+    if (diffInDays < 7) return `${diffInDays}${translations.adminTicketsDaysAgo}`;
     return formatDate(dateString);
   };
 
@@ -352,13 +354,13 @@ export default function TicketSystem() {
         {/* Hero Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
-            Support Tickets
+            {translations.adminTicketsSupportTickets}
           </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
-            Manage customer support tickets for premium clients
+            {translations.adminTicketsManageCustomerSupport}
           </p>
           <div className="mt-4 sm:mt-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
-            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredTickets.length}</span> tickets
+            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredTickets.length}</span> {translations.adminTicketsTickets}
           </div>
         </div>
 
@@ -367,7 +369,7 @@ export default function TicketSystem() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           <div className="flex items-center justify-between">
             <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Total Tickets</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminTicketsTotalTickets}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.total}</p>
             </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -381,7 +383,7 @@ export default function TicketSystem() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           <div className="flex items-center justify-between">
             <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Open</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminTicketsOpen}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.open}</p>
             </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -395,7 +397,7 @@ export default function TicketSystem() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           <div className="flex items-center justify-between">
             <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">In Progress</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminTicketsInProgress}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.inProgress}</p>
             </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -409,7 +411,7 @@ export default function TicketSystem() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           <div className="flex items-center justify-between">
             <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Resolved</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminTicketsResolved}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.resolved}</p>
             </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -423,7 +425,7 @@ export default function TicketSystem() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
           <div className="flex items-center justify-between">
             <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Urgent</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminTicketsUrgent}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.urgent}</p>
             </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -443,18 +445,18 @@ export default function TicketSystem() {
                 <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">{translations.adminTicketsSearchFilters}</h2>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
           {/* Search */}
           <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-              Search
+              {translations.adminTicketsSearch}
             </label>
             <input
               type="text"
-              placeholder="Search tickets..."
+              placeholder={translations.adminTicketsSearchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
@@ -464,71 +466,71 @@ export default function TicketSystem() {
           {/* Status Filter */}
           <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-              Status
+              {translations.adminTicketsStatus}
             </label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
             >
-              <option value="all">All Status</option>
-              <option value="open">Open</option>
-              <option value="in_progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-              <option value="closed">Closed</option>
+              <option value="all">{translations.adminTicketsAllStatus}</option>
+              <option value="open">{translations.adminTicketsOpen}</option>
+              <option value="in_progress">{translations.adminTicketsInProgress}</option>
+              <option value="resolved">{translations.adminTicketsResolved}</option>
+              <option value="closed">{translations.adminTicketsClosed}</option>
             </select>
           </div>
 
           {/* Priority Filter */}
           <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-              Priority
+              {translations.adminTicketsPriority}
             </label>
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
             >
-              <option value="all">All Priority</option>
-              <option value="urgent">Urgent</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
+              <option value="all">{translations.adminTicketsAllPriority}</option>
+              <option value="urgent">{translations.adminTicketsUrgent}</option>
+              <option value="high">{translations.adminTicketsHigh}</option>
+              <option value="medium">{translations.adminTicketsMedium}</option>
+              <option value="low">{translations.adminTicketsLow}</option>
             </select>
           </div>
 
           {/* Category Filter */}
           <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-              Category
+              {translations.adminTicketsCategory}
             </label>
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
             >
-              <option value="all">All Categories</option>
-              <option value="technical">Technical</option>
-              <option value="billing">Billing</option>
-              <option value="feature_request">Feature Request</option>
-              <option value="bug_report">Bug Report</option>
-              <option value="general">General</option>
+              <option value="all">{translations.adminTicketsAllCategories}</option>
+              <option value="technical">{translations.adminTicketsTechnical}</option>
+              <option value="billing">{translations.adminTicketsBilling}</option>
+              <option value="feature_request">{translations.adminTicketsFeatureRequest}</option>
+              <option value="bug_report">{translations.adminTicketsBugReport}</option>
+              <option value="general">{translations.adminTicketsGeneral}</option>
             </select>
           </div>
 
           {/* Subscription Filter */}
           <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-              Subscription
+              {translations.adminTicketsSubscription}
             </label>
             <select
               value={filterSubscription}
               onChange={(e) => setFilterSubscription(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
             >
-              <option value="all">All Subscriptions</option>
-              <option value="premium">Premium</option>
-              <option value="enterprise">Enterprise</option>
+              <option value="all">{translations.adminTicketsAllSubscriptions}</option>
+              <option value="premium">{translations.adminTicketsPremium}</option>
+              <option value="enterprise">{translations.adminTicketsEnterprise}</option>
             </select>
           </div>
         </div>
@@ -591,11 +593,11 @@ export default function TicketSystem() {
                         </span>
                         {ticket.assignedAdmin && (
                             <span className="text-xs sm:text-sm lg:text-base bg-accent/10 text-accent px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg sm:rounded-xl lg:rounded-2xl font-bold">
-                            Assigned to {ticket.assignedAdmin.name}
+                            {translations.adminTicketsAssignedTo} {ticket.assignedAdmin.name}
                           </span>
                         )}
                           <span className="text-xs sm:text-sm lg:text-base text-foreground-muted">
-                          {ticket.messages.length} messages
+                          {ticket.messages.length} {translations.adminTicketsMessages}
                         </span>
                           <span className="text-xs sm:text-sm lg:text-base text-foreground-muted">
                           {getTimeAgo(ticket.lastMessageAt)}
@@ -619,7 +621,7 @@ export default function TicketSystem() {
                         }}
                           className="px-4 sm:px-6 py-2 sm:py-3 bg-accent text-white rounded-xl sm:rounded-2xl hover:bg-accent-hover transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                       >
-                        View
+                        {translations.adminTicketsView}
                       </button>
                     </div>
                   </div>
@@ -655,18 +657,18 @@ export default function TicketSystem() {
               {/* Ticket Info */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                 <div>
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">Ticket Information</h3>
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.adminTicketsTicketInformation}</h3>
                     <div className="space-y-2 sm:space-y-3 text-sm sm:text-base lg:text-lg">
-                    <div><span className="font-bold">Status:</span> {getStatusBadge(selectedTicket.status)}</div>
-                    <div><span className="font-bold">Priority:</span> {getPriorityBadge(selectedTicket.priority)}</div>
-                    <div><span className="font-bold">Category:</span> {getCategoryIcon(selectedTicket.category)} {selectedTicket.category.replace('_', ' ')}</div>
+                    <div><span className="font-bold">{translations.adminTicketsStatus}:</span> {getStatusBadge(selectedTicket.status)}</div>
+                    <div><span className="font-bold">{translations.adminTicketsPriority}:</span> {getPriorityBadge(selectedTicket.priority)}</div>
+                    <div><span className="font-bold">{translations.adminTicketsCategory}:</span> {getCategoryIcon(selectedTicket.category)} {selectedTicket.category.replace('_', ' ')}</div>
                     <div><span className="font-bold">Created:</span> {formatDate(selectedTicket.createdAt)}</div>
                     <div><span className="font-bold">Updated:</span> {formatDate(selectedTicket.updatedAt)}</div>
                   </div>
                 </div>
 
                 <div>
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">User Information</h3>
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.adminTicketsUserInformation}</h3>
                     <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
                     <img
                       src={selectedTicket.user.avatar}
@@ -681,7 +683,7 @@ export default function TicketSystem() {
                   </div>
                   {selectedTicket.assignedAdmin && (
                       <div className="text-sm sm:text-base lg:text-lg">
-                      <span className="font-bold">Assigned to:</span> {selectedTicket.assignedAdmin.name}
+                      <span className="font-bold">{translations.adminTicketsAssignedTo}:</span> {selectedTicket.assignedAdmin.name}
                     </div>
                   )}
                 </div>
@@ -689,7 +691,7 @@ export default function TicketSystem() {
 
               {/* Description */}
               <div>
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">Description</h3>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.adminTicketsDescription}</h3>
                   <p className="text-sm sm:text-base lg:text-lg text-foreground-muted bg-surface-elevated p-4 sm:p-6 rounded-xl sm:rounded-2xl">
                   {selectedTicket.description}
                 </p>
@@ -697,7 +699,7 @@ export default function TicketSystem() {
 
               {/* Messages */}
               <div>
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">Conversation</h3>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.adminTicketsConversation}</h3>
                   <div className="space-y-4 sm:space-y-6 max-h-60 sm:max-h-80 overflow-y-auto">
                   {selectedTicket.messages.map((message) => (
                     <div key={message.id} className={`flex ${message.sender === "admin" ? "justify-end" : "justify-start"}`}>
@@ -725,10 +727,10 @@ export default function TicketSystem() {
                     onChange={(e) => handleUpdateStatus(selectedTicket.id, e.target.value as Ticket["status"])}
                       className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-foreground text-sm sm:text-base lg:text-lg"
                   >
-                    <option value="open">Open</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="closed">Closed</option>
+                    <option value="open">{translations.adminTicketsOpen}</option>
+                    <option value="in_progress">{translations.adminTicketsInProgress}</option>
+                    <option value="resolved">{translations.adminTicketsResolved}</option>
+                    <option value="closed">{translations.adminTicketsClosed}</option>
                   </select>
                   
                   {!selectedTicket.assignedAdmin && (
@@ -736,7 +738,7 @@ export default function TicketSystem() {
                       onClick={() => handleAssignTicket(selectedTicket.id, "Admin")}
                         className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-500 text-white rounded-xl sm:rounded-2xl hover:bg-blue-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105"
                     >
-                      Assign to Me
+                      {translations.adminTicketsAssignToMe}
                     </button>
                   )}
                 </div>
@@ -744,7 +746,7 @@ export default function TicketSystem() {
                   <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                   <input
                     type="text"
-                    placeholder="Type your response..."
+                    placeholder={translations.adminTicketsTypeYourResponse}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                       className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm sm:text-base lg:text-lg"
@@ -754,7 +756,7 @@ export default function TicketSystem() {
                     disabled={!newMessage.trim()}
                       className="px-4 sm:px-6 py-2 sm:py-3 bg-accent text-white rounded-xl sm:rounded-2xl hover:bg-accent-hover transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Send
+                    {translations.adminTicketsSend}
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface Video {
   id: string;
@@ -25,6 +26,7 @@ interface Video {
 }
 
 export default function VideoModeration() {
+  const { translations } = useTranslations();
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -132,7 +134,7 @@ export default function VideoModeration() {
         return (
           <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-yellow-400 rounded-full mr-1 sm:mr-1.5 animate-pulse"></div>
-            Pending
+            {translations.adminVideosPending}
           </span>
         );
       case "approved":
@@ -141,7 +143,7 @@ export default function VideoModeration() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            Approved
+            {translations.adminVideosApproved}
           </span>
         );
       case "rejected":
@@ -150,7 +152,7 @@ export default function VideoModeration() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Rejected
+            {translations.adminVideosRejected}
           </span>
         );
       default:
@@ -181,13 +183,13 @@ export default function VideoModeration() {
         {/* Hero Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
-            Video Moderation
+            {translations.adminVideosModeration}
           </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
-            Review and moderate video content uploaded by users
+            {translations.adminVideosModerationDescription}
           </p>
           <div className="mt-4 sm:mt-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
-            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredVideos.length}</span> videos to review
+            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredVideos.length}</span> {translations.adminVideosToReview}
           </div>
         </div>
 
@@ -199,18 +201,18 @@ export default function VideoModeration() {
                 <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">{translations.adminVideosSearchFilters}</h2>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Search */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Search
+                {translations.adminVideosSearch}
               </label>
               <input
                 type="text"
-                placeholder="Search videos or uploaders..."
+                placeholder={translations.adminVideosSearchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
@@ -220,49 +222,49 @@ export default function VideoModeration() {
             {/* Status Filter */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Status
+                {translations.adminVideosStatus}
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
+                <option value="all">{translations.adminVideosAllStatus}</option>
+                <option value="pending">{translations.adminVideosPending}</option>
+                <option value="approved">{translations.adminVideosApproved}</option>
+                <option value="rejected">{translations.adminVideosRejected}</option>
               </select>
             </div>
 
             {/* Sort By */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Sort By
+                {translations.adminVideosSortBy}
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="uploadDate">Upload Date</option>
-                <option value="title">Title</option>
-                <option value="uploader">Uploader</option>
-                <option value="flags">Flags</option>
+                <option value="uploadDate">{translations.adminVideosUploadDate}</option>
+                <option value="title">{translations.adminVideosTitle}</option>
+                <option value="uploader">{translations.adminVideosUploader}</option>
+                <option value="flags">{translations.adminVideosFlags}</option>
               </select>
             </div>
 
             {/* Sort Order */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Order
+                {translations.adminVideosOrder}
               </label>
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="desc">Newest First</option>
-                <option value="asc">Oldest First</option>
+                <option value="desc">{translations.adminVideosNewestFirst}</option>
+                <option value="asc">{translations.adminVideosOldestFirst}</option>
               </select>
             </div>
           </div>
@@ -332,9 +334,9 @@ export default function VideoModeration() {
 
                           {/* Stats */}
                           <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-6 text-sm sm:text-base lg:text-lg text-foreground-muted mb-3 sm:mb-4">
-                            <span className="font-bold">{video.views.toLocaleString()} views</span>
-                            <span className="font-bold">{video.likes} likes</span>
-                            <span className="text-red-500 font-bold">{video.flags} flags</span>
+                            <span className="font-bold">{video.views.toLocaleString()} {translations.adminVideosViews}</span>
+                            <span className="font-bold">{video.likes} {translations.adminVideosLikes}</span>
+                            <span className="text-red-500 font-bold">{video.flags} {translations.adminVideosFlagsCount}</span>
                             <span className="bg-surface-elevated px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-full text-xs sm:text-sm lg:text-base font-bold">
                               {video.category}
                             </span>
@@ -368,14 +370,14 @@ export default function VideoModeration() {
                                 }}
                                 className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 bg-accent text-white rounded-xl sm:rounded-2xl hover:bg-accent-hover transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                               >
-                                Review
+                                {translations.adminVideosReview}
                               </button>
                             </div>
                           )}
 
                           {video.status === "rejected" && video.reason && (
                             <div className="text-xs sm:text-sm lg:text-base text-red-500 text-left sm:text-right max-w-full sm:max-w-64">
-                              Reason: {video.reason}
+                              {translations.adminVideosReason}: {video.reason}
                             </div>
                           )}
                         </div>
@@ -394,7 +396,7 @@ export default function VideoModeration() {
             <div className="glass-elevated rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300">
               <div className="p-8 border-b border-border">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-bold text-foreground">Review Video</h2>
+                  <h2 className="text-3xl font-bold text-foreground">{translations.adminVideosReviewVideo}</h2>
                   <button
                     onClick={() => setShowModal(false)}
                     className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110"
@@ -413,26 +415,26 @@ export default function VideoModeration() {
                     <svg className="w-24 h-24 mx-auto mb-6 opacity-50" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
-                    <p className="text-2xl font-bold">Video Player</p>
-                    <p className="text-lg opacity-75">Click to play</p>
+                    <p className="text-2xl font-bold">{translations.adminVideosVideoPlayer}</p>
+                    <p className="text-lg opacity-75">{translations.adminVideosClickToPlay}</p>
                   </div>
                 </div>
 
                 {/* Video Details */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-4">Video Information</h3>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminVideosVideoInformation}</h3>
                     <div className="space-y-3 text-lg">
-                      <div><span className="font-bold">Title:</span> {selectedVideo.title}</div>
-                      <div><span className="font-bold">Duration:</span> {selectedVideo.duration}</div>
-                      <div><span className="font-bold">Category:</span> {selectedVideo.category}</div>
-                      <div><span className="font-bold">Upload Date:</span> {formatDate(selectedVideo.uploadDate)}</div>
-                      <div><span className="font-bold">Flags:</span> {selectedVideo.flags}</div>
+                      <div><span className="font-bold">{translations.adminVideosTitle}:</span> {selectedVideo.title}</div>
+                      <div><span className="font-bold">{translations.adminVideosDuration}:</span> {selectedVideo.duration}</div>
+                      <div><span className="font-bold">{translations.adminVideosCategory}:</span> {selectedVideo.category}</div>
+                      <div><span className="font-bold">{translations.adminVideosUploadDate}:</span> {formatDate(selectedVideo.uploadDate)}</div>
+                      <div><span className="font-bold">{translations.adminVideosFlagsCount}:</span> {selectedVideo.flags}</div>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-4">Uploader Information</h3>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminVideosUploaderInformation}</h3>
                     <div className="flex items-center space-x-4 mb-4">
                       <img
                         src={selectedVideo.uploader.avatar}
@@ -445,21 +447,21 @@ export default function VideoModeration() {
                       </div>
                     </div>
                     <div className="space-y-3 text-lg">
-                      <div><span className="font-bold">Views:</span> {selectedVideo.views.toLocaleString()}</div>
-                      <div><span className="font-bold">Likes:</span> {selectedVideo.likes}</div>
+                      <div><span className="font-bold">{translations.adminVideosViews}:</span> {selectedVideo.views.toLocaleString()}</div>
+                      <div><span className="font-bold">{translations.adminVideosLikes}:</span> {selectedVideo.likes}</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Description */}
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Description</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminVideosDescription}</h3>
                   <p className="text-lg text-foreground-muted">{selectedVideo.description}</p>
                 </div>
 
                 {/* Tags */}
                 <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Tags</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminVideosTags}</h3>
                   <div className="flex flex-wrap gap-3">
                     {selectedVideo.tags.map((tag, index) => (
                       <span
@@ -476,18 +478,18 @@ export default function VideoModeration() {
                 <div className="flex justify-end space-x-6 pt-6 border-t border-border">
                   <button
                     onClick={() => {
-                      const reason = prompt("Enter rejection reason:");
+                      const reason = prompt(translations.adminVideosEnterRejectionReason);
                       if (reason) handleReject(selectedVideo.id, reason);
                     }}
                     className="px-8 py-4 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-all duration-300 text-lg font-bold hover:scale-105"
                   >
-                    Reject
+                    {translations.adminVideosReject}
                   </button>
                   <button
                     onClick={() => handleApprove(selectedVideo.id)}
                     className="px-8 py-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-all duration-300 text-lg font-bold hover:scale-105"
                   >
-                    Approve
+                    {translations.adminVideosApprove}
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import RememberMeSettings from "@/components/RememberMeSettings";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface UserData {
   id: string;
@@ -33,6 +34,7 @@ interface SettingsData {
 }
 
 export default function SettingsPage() {
+  const { translations } = useTranslations();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [settings, setSettings] = useState<SettingsData>({
     notifications: {
@@ -93,11 +95,11 @@ export default function SettingsPage() {
       
       if (data.success) {
         // Show success message
-        alert('Settings saved successfully!');
+        alert(translations.settingsSettingsSavedSuccessfully);
       }
     } catch (error) {
       console.error('Error saving settings:', error);
-      alert('Error saving settings. Please try again.');
+      alert(translations.settingsErrorSavingSettings);
     } finally {
       setSaving(false);
     }
@@ -182,14 +184,14 @@ export default function SettingsPage() {
           {/* Hero Header */}
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-3 sm:mb-4">
-              Settings
+              {translations.settingsTitle}
             </h1>
             <p className="text-sm sm:text-base md:text-lg text-foreground-muted max-w-2xl mx-auto leading-relaxed">
-              Manage your account preferences, notifications, and security settings
+              {translations.settingsManageAccountPreferences}
             </p>
             {userData && (
               <p className="text-sm sm:text-base text-foreground-muted mt-3 sm:mt-4">
-                Member since {userData.memberSince}
+                {translations.settingsMemberSince} {userData.memberSince}
               </p>
             )}
           </div>
@@ -201,7 +203,7 @@ export default function SettingsPage() {
               disabled={saving}
               className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl sm:rounded-2xl"
             >
-              {saving ? 'Saving...' : 'Save Changes'}
+              {saving ? translations.settingsSaving : translations.settingsSaveChanges}
             </button>
           </div>
 
@@ -212,13 +214,13 @@ export default function SettingsPage() {
                 <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 transition-transform">
                   👤
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">Account Information</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">{translations.settingsAccountInformation}</h2>
               </div>
           
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-4 sm:space-y-6">
                   <div>
-                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">Email</label>
+                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{translations.settingsEmail}</label>
                     <input
                       type="email"
                       value={userData.email || ''}
@@ -227,7 +229,7 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">Name</label>
+                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{translations.settingsName}</label>
                     <input
                       type="text"
                       value={userData.name || ''}
@@ -238,13 +240,13 @@ export default function SettingsPage() {
                 </div>
                 <div className="space-y-4 sm:space-y-6">
                   <div>
-                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">Country</label>
+                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{translations.settingsCountry}</label>
                     <select
                       value={userData.country || ''}
                       onChange={(e) => setUserData(prev => prev ? { ...prev, country: e.target.value } : null)}
                       className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface text-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light text-sm sm:text-base transition-all duration-300"
                     >
-                      <option value="">Select Country</option>
+                      <option value="">{translations.settingsSelectCountry}</option>
                       <option value="US">United States</option>
                       <option value="UA">Ukraine</option>
                       <option value="GB">United Kingdom</option>
@@ -255,7 +257,7 @@ export default function SettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">Member Since</label>
+                    <label className="block text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{translations.settingsMemberSince}</label>
                     <input
                       type="text"
                       value={userData.memberSince}
@@ -274,33 +276,33 @@ export default function SettingsPage() {
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 transition-transform">
                 🔔
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Notifications</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">{translations.settingsNotifications}</h2>
             </div>
         
             <div className="space-y-4 sm:space-y-6">
               {[
                 {
                   key: 'email',
-                  title: 'Email Notifications',
-                  description: 'Receive notifications via email',
+                  title: translations.settingsEmailNotifications,
+                  description: translations.settingsReceiveNotificationsViaEmail,
                   icon: '📧'
                 },
                 {
                   key: 'push',
-                  title: 'Push Notifications',
-                  description: 'Receive push notifications in your browser',
+                  title: translations.settingsPushNotifications,
+                  description: translations.settingsReceivePushNotificationsInBrowser,
                   icon: '🔔'
                 },
                 {
                   key: 'marketing',
-                  title: 'Marketing Emails',
-                  description: 'Receive updates about new features and tips',
+                  title: translations.settingsMarketingEmails,
+                  description: translations.settingsReceiveUpdatesAboutNewFeatures,
                   icon: '📢'
                 },
                 {
                   key: 'updates',
-                  title: 'Product Updates',
-                  description: 'Get notified about new features and improvements',
+                  title: translations.settingsProductUpdates,
+                  description: translations.settingsGetNotifiedAboutNewFeatures,
                   icon: '🔄'
                 }
               ].map((item) => (
@@ -337,21 +339,21 @@ export default function SettingsPage() {
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 transition-transform">
                 🔒
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Privacy & Security</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">{translations.settingsPrivacySecurity}</h2>
             </div>
         
             <div className="space-y-4 sm:space-y-6">
               <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-surface-elevated hover:scale-[1.02] transition-all duration-300">
-                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">Profile Visibility</h3>
-                <p className="text-xs sm:text-sm text-foreground-muted mb-4 sm:mb-6">Control who can see your profile information</p>
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-2 sm:mb-3">{translations.settingsProfileVisibility}</h3>
+                <p className="text-xs sm:text-sm text-foreground-muted mb-4 sm:mb-6">{translations.settingsControlWhoCanSeeProfile}</p>
                 <select
                   value={settings.privacy.profile}
                   onChange={(e) => handlePrivacyChange('profile', e.target.value)}
                   className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface text-foreground focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light text-sm sm:text-base transition-all duration-300"
                 >
-                  <option value="public">Public</option>
-                  <option value="private">Private</option>
-                  <option value="friends">Friends Only</option>
+                  <option value="public">{translations.settingsPublic}</option>
+                  <option value="private">{translations.settingsPrivate}</option>
+                  <option value="friends">{translations.settingsFriendsOnly}</option>
                 </select>
               </div>
 
@@ -359,14 +361,14 @@ export default function SettingsPage() {
                 {[
                   {
                     key: 'analytics',
-                    title: 'Analytics',
-                    description: 'Help us improve by sharing anonymous usage data',
+                    title: translations.settingsAnalytics,
+                    description: translations.settingsHelpUsImproveBySharing,
                     icon: '📊'
                   },
                   {
                     key: 'dataSharing',
-                    title: 'Data Sharing',
-                    description: 'Allow sharing data with third-party partners',
+                    title: translations.settingsDataSharing,
+                    description: translations.settingsAllowSharingDataWithPartners,
                     icon: '🤝'
                   }
                 ].map((item) => (
@@ -401,51 +403,51 @@ export default function SettingsPage() {
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-orange-500/20 to-orange-600/20 flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 transition-transform">
                 ⚙️
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Preferences</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">{translations.settingsPreferences}</h2>
             </div>
         
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {[
                 {
                   key: 'theme',
-                  label: 'Theme',
+                  label: translations.settingsTheme,
                   options: [
-                    { value: 'dark', label: 'Dark' },
-                    { value: 'light', label: 'Light' },
-                    { value: 'auto', label: 'Auto' }
+                    { value: 'dark', label: translations.settingsDark },
+                    { value: 'light', label: translations.settingsLight },
+                    { value: 'auto', label: translations.settingsAuto }
                   ],
                   icon: '🌙'
                 },
                 {
                   key: 'language',
-                  label: 'Language',
+                  label: translations.settingsLanguage,
                   options: [
-                    { value: 'en', label: 'English' },
-                    { value: 'uk', label: 'Українська' },
-                    { value: 'es', label: 'Español' },
-                    { value: 'fr', label: 'Français' }
+                    { value: 'en', label: translations.settingsEnglish },
+                    { value: 'uk', label: translations.settingsUkrainian },
+                    { value: 'es', label: translations.settingsSpanish },
+                    { value: 'fr', label: translations.settingsFrench }
                   ],
                   icon: '🌍'
                 },
                 {
                   key: 'timezone',
-                  label: 'Timezone',
+                  label: translations.settingsTimezone,
                   options: [
-                    { value: 'UTC', label: 'UTC' },
-                    { value: 'America/New_York', label: 'Eastern Time' },
-                    { value: 'America/Los_Angeles', label: 'Pacific Time' },
-                    { value: 'Europe/London', label: 'London' },
-                    { value: 'Europe/Kiev', label: 'Kiev' }
+                    { value: 'UTC', label: translations.settingsUTC },
+                    { value: 'America/New_York', label: translations.settingsEasternTime },
+                    { value: 'America/Los_Angeles', label: translations.settingsPacificTime },
+                    { value: 'Europe/London', label: translations.settingsLondon },
+                    { value: 'Europe/Kiev', label: translations.settingsKiev }
                   ],
                   icon: '🕐'
                 },
                 {
                   key: 'dateFormat',
-                  label: 'Date Format',
+                  label: translations.settingsDateFormat,
                   options: [
-                    { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY' },
-                    { value: 'DD/MM/YYYY', label: 'DD/MM/YYYY' },
-                    { value: 'YYYY-MM-DD', label: 'YYYY-MM-DD' }
+                    { value: 'MM/DD/YYYY', label: translations.settingsMMDDYYYY },
+                    { value: 'DD/MM/YYYY', label: translations.settingsDDMMYYYY },
+                    { value: 'YYYY-MM-DD', label: translations.settingsYYYYMMDD }
                   ],
                   icon: '📅'
                 }
@@ -477,22 +479,22 @@ export default function SettingsPage() {
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-red-500/20 to-red-600/20 flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 transition-transform">
                 ⚠️
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Danger Zone</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">{translations.settingsDangerZone}</h2>
             </div>
         
             <div className="space-y-4 sm:space-y-6">
               {[
                 {
-                  title: 'Export Data',
-                  description: 'Download a copy of your data',
-                  buttonText: 'Export',
+                  title: translations.settingsExportData,
+                  description: translations.settingsDownloadCopyOfData,
+                  buttonText: translations.settingsExport,
                   buttonClass: 'px-4 sm:px-6 py-2 sm:py-3 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-xl sm:rounded-2xl hover:bg-blue-500/20 transition-all duration-300 font-bold text-sm sm:text-base hover:scale-105',
                   icon: '📥'
                 },
                 {
-                  title: 'Delete Account',
-                  description: 'Permanently delete your account and all data',
-                  buttonText: 'Delete Account',
+                  title: translations.settingsDeleteAccount,
+                  description: translations.settingsPermanentlyDeleteAccount,
+                  buttonText: translations.settingsDeleteAccount,
                   buttonClass: 'px-4 sm:px-6 py-2 sm:py-3 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl sm:rounded-2xl hover:bg-red-500/20 transition-all duration-300 font-bold text-sm sm:text-base hover:scale-105',
                   icon: '🗑️'
                 }
@@ -510,11 +512,11 @@ export default function SettingsPage() {
                   <button 
                     className={item.buttonClass}
                     onClick={() => {
-                      if (item.title === 'Export Data') {
-                        alert('Data export feature coming soon!');
-                      } else if (item.title === 'Delete Account') {
-                        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                          alert('Account deletion feature coming soon!');
+                      if (item.title === translations.settingsExportData) {
+                        alert(translations.settingsDataExportFeatureComingSoon);
+                      } else if (item.title === translations.settingsDeleteAccount) {
+                        if (confirm(translations.settingsAreYouSureDeleteAccount)) {
+                          alert(translations.settingsAccountDeletionFeatureComingSoon);
                         }
                       }
                     }}

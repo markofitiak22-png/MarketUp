@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface AdminHeaderProps {
   mobileMenuOpen: boolean;
@@ -10,23 +11,24 @@ interface AdminHeaderProps {
 export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: AdminHeaderProps) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const pathname = usePathname();
+  const { translations } = useTranslations();
 
   const getPageTitle = () => {
     switch (pathname) {
       case "/admin":
-        return "Dashboard";
+        return translations.adminHeaderDashboard;
       case "/admin/users":
-        return "Users";
+        return translations.adminHeaderUsers;
       case "/admin/videos":
-        return "Video Moderation";
+        return translations.adminHeaderVideoModeration;
       case "/admin/scheduler":
-        return "Publication Scheduler";
+        return translations.adminHeaderPublicationScheduler;
       case "/admin/payments":
-        return "Payment Management";
+        return translations.adminHeaderPaymentManagement;
       case "/admin/tickets":
-        return "Ticket System";
+        return translations.adminHeaderTicketSystem;
       default:
-        return "Admin Panel";
+        return translations.adminHeaderAdminPanel;
     }
   };
 
@@ -59,7 +61,7 @@ export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: Admi
             </div>
             <div className="min-w-0 flex-1">
               <h1 className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-bold text-foreground truncate">{getPageTitle()}</h1>
-              <p className="text-xs sm:text-sm text-foreground-muted hidden sm:block">Manage your platform and analytics</p>
+              <p className="text-xs sm:text-sm text-foreground-muted hidden sm:block">{translations.adminHeaderManagePlatform}</p>
             </div>
           </div>
 
@@ -75,7 +77,7 @@ export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: Admi
               </div>
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={translations.adminHeaderSearchPlaceholder}
                 className="w-48 xl:w-64 pl-10 pr-4 py-2 bg-surface-elevated border border-border rounded-lg text-sm text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             </div>
@@ -97,20 +99,20 @@ export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: Admi
               {isNotificationOpen && (
                 <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-surface border border-border rounded-lg shadow-lg z-50">
                   <div className="p-3 sm:p-4 border-b border-border">
-                    <h3 className="text-sm font-semibold text-foreground">Notifications</h3>
+                    <h3 className="text-sm font-semibold text-foreground">{translations.adminHeaderNotifications}</h3>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
                     <div className="p-3 sm:p-4 border-b border-border hover:bg-surface-elevated">
-                      <p className="text-sm text-foreground">New user registered</p>
-                      <p className="text-xs text-foreground-muted">2 minutes ago</p>
+                      <p className="text-sm text-foreground">{translations.adminHeaderNewUserRegistered}</p>
+                      <p className="text-xs text-foreground-muted">2 {translations.adminHeaderMinutesAgo}</p>
                     </div>
                     <div className="p-3 sm:p-4 border-b border-border hover:bg-surface-elevated">
-                      <p className="text-sm text-foreground">Video processing completed</p>
-                      <p className="text-xs text-foreground-muted">5 minutes ago</p>
+                      <p className="text-sm text-foreground">{translations.adminHeaderVideoProcessingCompleted}</p>
+                      <p className="text-xs text-foreground-muted">5 {translations.adminHeaderMinutesAgo}</p>
                     </div>
                     <div className="p-3 sm:p-4 hover:bg-surface-elevated">
-                      <p className="text-sm text-foreground">System backup completed</p>
-                      <p className="text-xs text-foreground-muted">1 hour ago</p>
+                      <p className="text-sm text-foreground">{translations.adminHeaderSystemBackupCompleted}</p>
+                      <p className="text-xs text-foreground-muted">1 {translations.adminHeaderHourAgo}</p>
                     </div>
                   </div>
                 </div>
@@ -123,7 +125,7 @@ export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: Admi
                 <span className="text-white text-xs sm:text-sm font-bold">A</span>
               </div>
               <div className="text-xs sm:text-sm hidden lg:block">
-                <p className="font-medium text-foreground">Admin User</p>
+                <p className="font-medium text-foreground">{translations.adminHeaderAdminUser}</p>
                 <p className="text-foreground-muted">admin@marketup.com</p>
               </div>
             </div>

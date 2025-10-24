@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface TextStepProps {
   data: WizardData;
@@ -9,51 +10,54 @@ interface TextStepProps {
   onPrev: () => void;
 }
 
-const templates = [
+const getTemplates = (translations: any) => [
   {
     id: 'welcome',
-    title: 'Welcome Message',
+    title: translations.studioWelcomeMessage,
     text: 'Welcome to our company! We&apos;re excited to have you here and look forward to working with you.',
-    category: 'Business'
+    category: translations.studioBusiness
   },
   {
     id: 'product',
-    title: 'Product Introduction',
+    title: translations.studioProductIntroduction,
     text: 'Introducing our latest product that will revolutionize the way you work. With cutting-edge technology and user-friendly design.',
-    category: 'Marketing'
+    category: translations.studioMarketing
   },
   {
     id: 'training',
-    title: 'Training Introduction',
+    title: translations.studioTrainingIntroduction,
     text: 'Welcome to today&apos;s training session. We&apos;ll cover the key concepts and provide hands-on practice to help you succeed.',
-    category: 'Education'
+    category: translations.studioEducation
   },
   {
     id: 'announcement',
-    title: 'Company Announcement',
+    title: translations.studioCompanyAnnouncement,
     text: 'We have an important announcement to share with our team. This update will help us move forward together.',
-    category: 'Business'
+    category: translations.studioBusiness
   },
   {
     id: 'tutorial',
-    title: 'Tutorial Introduction',
+    title: translations.studioTutorialIntroduction,
     text: 'In this tutorial, we&apos;ll walk you through the process step by step. Let&apos;s get started with the basics.',
-    category: 'Education'
+    category: translations.studioEducation
   },
   {
     id: 'promotion',
-    title: 'Special Offer',
+    title: translations.studioSpecialOffer,
     text: 'Don&apos;t miss out on our limited-time offer! Get exclusive access to premium features at a special price.',
-    category: 'Marketing'
+    category: translations.studioMarketing
   }
 ];
 
 export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepProps) {
+  const { translations } = useTranslations();
   const [text, setText] = useState(data.text || '');
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [wordCount, setWordCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
   const [estimatedDuration, setEstimatedDuration] = useState(0);
+  
+  const templates = getTemplates(translations);
 
   useEffect(() => {
     const words = text.trim().split(/\s+/).filter(word => word.length > 0);
@@ -104,9 +108,9 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
   };
 
   const getDurationLabel = () => {
-    if (estimatedDuration <= 30) return 'Short';
-    if (estimatedDuration <= 60) return 'Medium';
-    return 'Long';
+    if (estimatedDuration <= 30) return translations.studioShort;
+    if (estimatedDuration <= 60) return translations.studioMedium;
+    return translations.studioLong;
   };
 
   return (
@@ -114,10 +118,10 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
-          Write your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">script</span>
+          {translations.studioWriteYourScript}
         </h1>
         <p className="text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-          Write the text that your avatar will speak. <span className="text-accent font-medium">You can start with a template or write your own content.</span>
+          {translations.studioWriteTextAvatarSpeak} <span className="text-accent font-medium">{translations.studioStartWithTemplate}</span>
         </p>
       </div>
 
@@ -126,7 +130,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
           
-          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Quick Templates</h3>
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioQuickTemplates}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {templates.map((template) => (
               <div
@@ -166,10 +170,10 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
           <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
           
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold text-foreground">Your Script</h3>
+            <h3 className="text-2xl font-bold text-foreground">{translations.studioYourScript}</h3>
             <div className="flex items-center gap-6 text-sm text-foreground-muted">
-              <span className="font-medium">{wordCount} words</span>
-              <span className="font-medium">{charCount} characters</span>
+              <span className="font-medium">{wordCount} {translations.studioWords}</span>
+              <span className="font-medium">{charCount} {translations.studioCharacters}</span>
               <span className={`font-bold ${getDurationColor()}`}>
                 ~{estimatedDuration}s ({getDurationLabel()})
               </span>
@@ -180,7 +184,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
             <textarea
               value={text}
               onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="Write your script here... Your avatar will speak this text naturally."
+              placeholder={translations.studioWriteScriptHere}
               className="w-full h-64 resize-none bg-transparent text-foreground placeholder-foreground-muted focus:outline-none text-lg leading-relaxed"
             />
           </div>
@@ -192,7 +196,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
           
-          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Writing Tips</h3>
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioWritingTips}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
@@ -201,8 +205,8 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground text-lg mb-2">Natural Speech</h4>
-                <p className="text-foreground-muted">Write as you would speak naturally, with pauses and emphasis.</p>
+                <h4 className="font-semibold text-foreground text-lg mb-2">{translations.studioNaturalSpeech}</h4>
+                <p className="text-foreground-muted">{translations.studioWriteAsYouSpeak}</p>
               </div>
             </div>
             
@@ -213,8 +217,8 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground text-lg mb-2">Optimal Length</h4>
-                <p className="text-foreground-muted">Keep videos between 30-120 seconds for best engagement.</p>
+                <h4 className="font-semibold text-foreground text-lg mb-2">{translations.studioOptimalLength}</h4>
+                <p className="text-foreground-muted">{translations.studioKeepVideos30To120}</p>
               </div>
             </div>
             
@@ -225,8 +229,8 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground text-lg mb-2">Clear Structure</h4>
-                <p className="text-foreground-muted">Start with a hook, deliver your message, and end with a call to action.</p>
+                <h4 className="font-semibold text-foreground text-lg mb-2">{translations.studioClearStructure}</h4>
+                <p className="text-foreground-muted">{translations.studioStartWithHook}</p>
               </div>
             </div>
             
@@ -237,8 +241,8 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground text-lg mb-2">Pronunciation</h4>
-                <p className="text-foreground-muted">Use phonetic spelling for difficult words: &quot;AI&quot; as &quot;A-I&quot;.</p>
+                <h4 className="font-semibold text-foreground text-lg mb-2">{translations.studioPronunciation}</h4>
+                <p className="text-foreground-muted">{translations.studioUsePhoneticSpelling}</p>
               </div>
             </div>
           </div>
@@ -251,7 +255,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
           <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
             
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Preview</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioPreview}</h3>
             <div className="flex items-start gap-6">
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center flex-shrink-0">
                 <span className="text-2xl">
@@ -280,7 +284,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          {translations.studioBack}
         </button>
         
         <button
@@ -289,7 +293,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
           className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="relative z-10 flex items-center gap-3">
-            Continue
+            {translations.studioContinue}
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

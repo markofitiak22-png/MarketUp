@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface Video {
   id: string;
@@ -21,6 +22,7 @@ interface Video {
 }
 
 export default function VideosPage() {
+  const { translations } = useTranslations();
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [videos, setVideos] = useState<Video[]>([]);
@@ -84,22 +86,22 @@ export default function VideosPage() {
       case 'download':
         // TODO: Implement download functionality
         console.log('Download video:', videoId);
-        alert('Download functionality coming soon!');
+        alert(translations.videosDownloadFunctionalityComingSoon);
         break;
       case 'share':
         // TODO: Implement share functionality
         console.log('Share video:', videoId);
-        alert('Share functionality coming soon!');
+        alert(translations.videosShareFunctionalityComingSoon);
         break;
       case 'delete':
-        if (confirm('Are you sure you want to delete this video?')) {
+        if (confirm(translations.videosAreYouSureDelete)) {
           // TODO: Implement delete functionality
-          alert('Delete functionality coming soon!');
+          alert(translations.videosDeleteFunctionalityComingSoon);
         }
         break;
       case 'duplicate':
         // TODO: Implement duplicate functionality
-        alert('Duplicate functionality coming soon!');
+        alert(translations.videosDuplicateFunctionalityComingSoon);
         break;
     }
   };
@@ -134,9 +136,9 @@ export default function VideosPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 sm:gap-8">
               <div>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 sm:mb-3">
-                  My <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">Videos</span>
+                  {translations.videosMyVideos.split(' ')[0]} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.videosMyVideos.split(' ')[1]}</span>
                 </h1>
-                <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">Manage and view all your created videos</p>
+                <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">{translations.videosManageViewAll}</p>
               </div>
               <Link
                 href="/studio"
@@ -146,7 +148,7 @@ export default function VideosPage() {
                   <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  Create New Video
+                  {translations.videosCreateNewVideo}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Link>
@@ -163,7 +165,7 @@ export default function VideosPage() {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search videos..."
+                    placeholder={translations.videosSearchVideos}
                     value={searchTerm}
                     onChange={handleSearch}
                     className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light text-sm sm:text-base lg:text-lg"
@@ -176,19 +178,31 @@ export default function VideosPage() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2 sm:gap-3">
-                {["all", "completed", "processing", "queued"].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => handleFilterChange(status)}
-                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 ${
-                      filter === status
-                        ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg shadow-accent/25"
-                        : "bg-surface text-foreground-muted hover:text-foreground hover:bg-surface-elevated border border-border-strong"
-                    }`}
-                  >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </button>
-                ))}
+                {["all", "completed", "processing", "queued"].map((status) => {
+                  const getFilterText = (status: string) => {
+                    switch (status) {
+                      case "all": return translations.videosAll;
+                      case "completed": return translations.videosCompleted;
+                      case "processing": return translations.videosProcessing;
+                      case "queued": return translations.videosQueued;
+                      default: return status.charAt(0).toUpperCase() + status.slice(1);
+                    }
+                  };
+                  
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => handleFilterChange(status)}
+                      className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 ${
+                        filter === status
+                          ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg shadow-accent/25"
+                          : "bg-surface text-foreground-muted hover:text-foreground hover:bg-surface-elevated border border-border-strong"
+                      }`}
+                    >
+                      {getFilterText(status)}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -200,7 +214,7 @@ export default function VideosPage() {
             <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
             <div className="relative z-10">
               <div className="animate-spin w-10 h-10 sm:w-12 sm:h-12 border-4 border-accent border-t-transparent rounded-full mx-auto mb-4 sm:mb-6"></div>
-              <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">Loading videos...</p>
+              <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">{translations.videosLoadingVideos}</p>
             </div>
           </div>
         )}
@@ -250,26 +264,26 @@ export default function VideosPage() {
             
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Status</span>
+                    <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosStatus}</span>
                     <span className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold ${getStatusColor(video.status)}`}>
                       {video.status}
                     </span>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Duration</span>
+                    <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosDuration}</span>
                     <span className="text-sm sm:text-base lg:text-lg font-bold text-foreground">{video.duration}</span>
                   </div>
                   
                   {video.status === "Completed" && (
                     <>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Views</span>
+                        <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosViews}</span>
                         <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">{video.views.toLocaleString()}</span>
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Downloads</span>
+                        <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosDownloads}</span>
                         <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent">{video.downloads}</span>
                       </div>
                     </>
@@ -286,13 +300,13 @@ export default function VideosPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
-                      <span className="hidden sm:inline">View</span>
-                      <span className="sm:hidden text-xs">View</span>
+                      <span className="hidden sm:inline">{translations.videosView}</span>
+                      <span className="sm:hidden text-xs">{translations.videosView}</span>
                     </button>
                   ) : (
                     <button className="btn-outline btn-lg py-2 sm:py-3 text-xs sm:text-sm lg:text-lg font-bold opacity-50 cursor-not-allowed" disabled>
-                      <span className="hidden sm:inline">{video.status === "Processing" ? "Processing..." : "View"}</span>
-                      <span className="sm:hidden text-xs">{video.status === "Processing" ? "Processing..." : "View"}</span>
+                      <span className="hidden sm:inline">{video.status === "Processing" ? translations.videosProcessingStatus : translations.videosView}</span>
+                      <span className="sm:hidden text-xs">{video.status === "Processing" ? translations.videosProcessingStatus : translations.videosView}</span>
                     </button>
                   )}
                   
@@ -300,8 +314,8 @@ export default function VideosPage() {
                     <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    <span className="hidden sm:inline">Edit</span>
-                    <span className="sm:hidden text-xs">Edit</span>
+                    <span className="hidden sm:inline">{translations.videosEdit}</span>
+                    <span className="sm:hidden text-xs">{translations.videosEdit}</span>
                   </button>
                   
                   {/* Mobile-only Download and Share buttons - hidden on md and larger */}
@@ -311,14 +325,14 @@ export default function VideosPage() {
                         className="btn-outline btn-lg py-2 text-xs font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 md:hidden"
                         onClick={() => handleVideoAction('download', video.id)}
                       >
-                        <span className="text-xs">Download</span>
+                        <span className="text-xs">{translations.videosDownload}</span>
                       </button>
                       
                       <button 
                         className="btn-outline btn-lg py-2 text-xs font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 md:hidden"
                         onClick={() => handleVideoAction('share', video.id)}
                       >
-                        <span className="text-xs">Share</span>
+                        <span className="text-xs">{translations.videosShare}</span>
                       </button>
                     </>
                   )}
@@ -330,8 +344,8 @@ export default function VideosPage() {
                     <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <span className="hidden sm:inline">Duplicate</span>
-                    <span className="sm:hidden text-xs">Duplicate</span>
+                    <span className="hidden sm:inline">{translations.videosDuplicate}</span>
+                    <span className="sm:hidden text-xs">{translations.videosDuplicate}</span>
                   </button>
                   
                   <button 
@@ -341,8 +355,8 @@ export default function VideosPage() {
                     <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    <span className="hidden sm:inline">Delete</span>
-                    <span className="sm:hidden text-xs">Delete</span>
+                    <span className="hidden sm:inline">{translations.videosDelete}</span>
+                    <span className="sm:hidden text-xs">{translations.videosDelete}</span>
                   </button>
                 </div>
               </div>
@@ -355,9 +369,9 @@ export default function VideosPage() {
         {!loading && videos.length === 0 && (
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-12 sm:p-16 text-center">
             <div className="text-6xl sm:text-8xl mb-6 sm:mb-8">🎥</div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">No videos found</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">{translations.videosNoVideosFound}</h3>
             <p className="text-base sm:text-lg lg:text-xl text-foreground-muted mb-6 sm:mb-8">
-              {searchTerm ? "Try adjusting your search terms" : "Create your first video to get started"}
+              {searchTerm ? translations.videosTryAdjustingSearch : translations.videosCreateFirstVideo}
             </p>
             <Link
               href="/studio"
@@ -366,7 +380,7 @@ export default function VideosPage() {
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              Create Video
+              {translations.videosCreateVideo}
             </Link>
           </div>
         )}
@@ -378,7 +392,7 @@ export default function VideosPage() {
             <div className="relative z-10">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
                 <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">
-                  Page <span className="font-bold text-foreground">{page}</span> of <span className="font-bold text-foreground">{totalPages}</span>
+                  {translations.videosPage} <span className="font-bold text-foreground">{page}</span> {translations.videosOf} <span className="font-bold text-foreground">{totalPages}</span>
                 </p>
                 <div className="flex gap-3 sm:gap-4">
                   <button 
@@ -390,8 +404,8 @@ export default function VideosPage() {
                       <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
-                      <span className="hidden sm:inline">Previous</span>
-                      <span className="sm:hidden">Prev</span>
+                      <span className="hidden sm:inline">{translations.videosPrevious}</span>
+                      <span className="sm:hidden">{translations.videosPrev}</span>
                     </span>
                   </button>
                   <button 
@@ -400,8 +414,8 @@ export default function VideosPage() {
                     onClick={() => setPage(page + 1)}
                   >
                     <span className="flex items-center gap-2 sm:gap-3">
-                      <span className="hidden sm:inline">Next</span>
-                      <span className="sm:hidden">Next</span>
+                      <span className="hidden sm:inline">{translations.videosNext}</span>
+                      <span className="sm:hidden">{translations.videosNext}</span>
                       <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>

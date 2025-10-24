@@ -3,21 +3,37 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import UserMenu from "@/components/UserMenu";
+import LanguageButton from "@/components/LanguageButton";
+import { useTranslations } from "@/hooks/useTranslations";
 
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/studio", label: "Studio" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/referrals", label: "Referrals" },
+  { href: "/", labelKey: "home" },
+  { href: "/pricing", labelKey: "pricing" },
+  { href: "/about", labelKey: "about", hideOnMd: true },
+  { href: "/contact", labelKey: "contact", hideOnMd: true },
+  { href: "/referrals", labelKey: "referrals", hideOnMd: true },
+];
+
+const authLinks = [
+  { href: "/", labelKey: "home" },
+  { href: "/studio", labelKey: "studio" },
+  { href: "/pricing", labelKey: "pricing" },
+  { href: "/about", labelKey: "about", hideOnMd: true },
+  { href: "/contact", labelKey: "contact", hideOnMd: true },
+  { href: "/referrals", labelKey: "referrals", hideOnMd: true },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const { translations } = useTranslations();
+  
+  const isAuthenticated = status === "authenticated";
+  const currentLinks = isAuthenticated ? authLinks : links;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -84,8 +100,8 @@ export default function Header() {
         </Link>
 
         {/* Desktop navigation */}
-        <nav className="hidden lg:flex items-center gap-8 text-sm">
-          {links.map((link) => {
+        <nav className="hidden lg:flex items-center gap-6 text-sm">
+          {currentLinks.map((link) => {
             const isActive =
               link.href === "/" ? pathname === "/" : pathname?.startsWith(link.href);
             return (
@@ -94,12 +110,14 @@ export default function Header() {
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`group relative px-3 py-2 rounded-lg outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] ${
+                  link.hideOnMd ? 'hidden xl:block' : ''
+                } ${
                   isActive
                     ? "text-foreground bg-accent/10"
                     : "text-foreground-muted hover:text-foreground hover:bg-accent/5"
                 }`}
               >
-                {link.label}
+                {translations[link.labelKey as keyof typeof translations]}
                 <span
                   aria-hidden
                   className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-0.5 rounded-full bg-[var(--accent)] transition-all ${
@@ -109,9 +127,20 @@ export default function Header() {
               </a>
             );
           })}
-          <div className="flex items-center gap-4 pl-4 border-l border-[var(--border)]">
-            <a href="/onboarding" className="btn-primary btn-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200">Get started</a>
-            <UserMenu />
+          <div className="flex items-center gap-2 pl-3 border-l border-[var(--border)]">
+            {isAuthenticated ? (
+              <>
+                <a href="/onboarding" className="btn-primary btn-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200">{translations.getStarted}</a>
+                <LanguageButton />
+                <UserMenu />
+              </>
+            ) : (
+              <>
+                <a href="/auth" className="btn-secondary btn-sm">{translations.signIn || "Sign In"}</a>
+                <a href="/auth" className="btn-primary btn-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200">{translations.signUp || "Sign Up"}</a>
+                <LanguageButton />
+              </>
+            )}
           </div>
         </nav>
 
@@ -170,7 +199,7 @@ export default function Header() {
             {/* Mobile navigation */}
             <nav className="flex-1 p-6 overflow-y-auto bg-background">
               <div className="space-y-2">
-                {links.map((link) => {
+                {currentLinks.map((link) => {
                   const isActive =
                     link.href === "/" ? pathname === "/" : pathname?.startsWith(link.href);
                   return (
@@ -221,37 +250,72 @@ export default function Header() {
                           </svg>
                         )}
                       </div>
-                      <span>{link.label}</span>
+                      <span>{translations[link.labelKey as keyof typeof translations]}</span>
                     </a>
                   );
                 })}
               </div>
 
-              {/* Account Section */}
+              {/* Language Section */}
               <div className="mt-8 pt-6 border-t border-[var(--border)]">
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-3">
-                    Account
+                    {translations.language || "Language"}
                   </h3>
-                  <UserMenu />
+                  <div className="flex justify-center">
+                    <LanguageButton />
+                  </div>
                 </div>
               </div>
 
+              {/* Account Section */}
+              {isAuthenticated ? (
+                <div className="mt-6 pt-6 border-t border-[var(--border)]">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-3">
+                      {translations.account}
+                    </h3>
+                    <UserMenu />
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-6 pt-6 border-t border-[var(--border)]">
+                  <div className="space-y-3">
+                    <a
+                      href="/auth"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="btn-secondary w-full text-center py-3 px-6"
+                    >
+                      {translations.signIn || "Sign In"}
+                    </a>
+                    <a
+                      href="/auth"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="btn-primary w-full text-center py-3 px-6 shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200"
+                    >
+                      {translations.signUp || "Sign Up"}
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {/* Mobile CTA */}
-              <div className="mt-6 pt-6 border-t border-[var(--border)] flex-shrink-0">
-                <a
-                  href="/onboarding"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="btn-primary w-full text-center py-4 px-6 shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200 text-lg font-semibold"
-                >
-                  <span className="flex items-center justify-center gap-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    Get started
-                  </span>
-                </a>
-              </div>
+              {isAuthenticated && (
+                <div className="mt-6 pt-6 border-t border-[var(--border)] flex-shrink-0">
+                  <a
+                    href="/onboarding"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="btn-primary w-full text-center py-4 px-6 shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200 text-lg font-semibold"
+                  >
+                    <span className="flex items-center justify-center gap-3">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      {translations.getStarted}
+                    </span>
+                  </a>
+                </div>
+              )}
             </nav>
           </div>
         </div>

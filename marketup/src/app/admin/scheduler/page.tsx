@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface Video {
   id: string;
@@ -32,6 +33,7 @@ interface ScheduledPost {
 }
 
 export default function PublicationScheduler() {
+  const { translations } = useTranslations();
   const [videos, setVideos] = useState<Video[]>([]);
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -140,19 +142,19 @@ export default function PublicationScheduler() {
 
   const handleSchedulePost = async () => {
     if (!selectedVideo) {
-      alert("Please select a video");
+      alert(translations.adminSchedulerPleaseSelectVideo);
       return;
     }
     if (selectedNetworks.length === 0) {
-      alert("Please select at least one social network");
+      alert(translations.adminSchedulerPleaseSelectNetwork);
       return;
     }
     if (!scheduledDate) {
-      alert("Please select a publication date");
+      alert(translations.adminSchedulerPleaseSelectDate);
       return;
     }
     if (!scheduledTime) {
-      alert("Please select a publication time");
+      alert(translations.adminSchedulerPleaseSelectTime);
       return;
     }
 
@@ -192,14 +194,14 @@ export default function PublicationScheduler() {
         setScheduledTime("");
         setCustomMessage("");
         setShowScheduler(false);
-        alert('Post scheduled successfully!');
+        alert(translations.adminSchedulerPostScheduledSuccessfully);
       } else {
         console.error('Failed to schedule post:', data.error);
-        alert('Failed to schedule post. Please try again.');
+        alert(translations.adminSchedulerFailedToSchedulePost);
       }
     } catch (error) {
       console.error('Error scheduling post:', error);
-      alert('Error scheduling post. Please try again.');
+      alert(translations.adminSchedulerErrorSchedulingPost);
     } finally {
       setIsSubmitting(false);
     }
@@ -226,11 +228,11 @@ export default function PublicationScheduler() {
         ));
       } else {
         console.error('Failed to cancel post:', data.error);
-        alert('Failed to cancel post. Please try again.');
+        alert(translations.adminSchedulerFailedToCancelPost);
       }
     } catch (error) {
       console.error('Error cancelling post:', error);
-      alert('Error cancelling post. Please try again.');
+      alert(translations.adminSchedulerErrorCancellingPost);
     }
   };
 
@@ -255,11 +257,11 @@ export default function PublicationScheduler() {
         ));
       } else {
         console.error('Failed to publish post:', data.error);
-        alert('Failed to publish post. Please try again.');
+        alert(translations.adminSchedulerFailedToPublishPost);
       }
     } catch (error) {
       console.error('Error publishing post:', error);
-      alert('Error publishing post. Please try again.');
+      alert(translations.adminSchedulerErrorPublishingPost);
     }
   };
 
@@ -272,7 +274,7 @@ export default function PublicationScheduler() {
         return (
           <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
             <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-400 rounded-full mr-1 sm:mr-1.5"></div>
-            Scheduled
+            {translations.adminSchedulerScheduled}
           </span>
         );
       case "published":
@@ -281,7 +283,7 @@ export default function PublicationScheduler() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            Published
+            {translations.adminSchedulerPublished}
           </span>
         );
       case "failed":
@@ -290,7 +292,7 @@ export default function PublicationScheduler() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Failed
+            {translations.adminSchedulerFailed}
           </span>
         );
       case "cancelled":
@@ -299,7 +301,7 @@ export default function PublicationScheduler() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Cancelled
+            {translations.adminSchedulerCancelled}
           </span>
         );
       default:
@@ -326,7 +328,7 @@ export default function PublicationScheduler() {
     const scheduled = new Date(scheduledDate);
     const diff = scheduled.getTime() - now.getTime();
     
-    if (diff <= 0) return "Overdue";
+    if (diff <= 0) return translations.adminSchedulerOverdue;
     
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -350,10 +352,10 @@ export default function PublicationScheduler() {
         {/* Hero Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
-            Publication Scheduler
+            {translations.adminSchedulerPublicationScheduler}
           </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
-            Schedule video publications across social networks
+            {translations.adminSchedulerScheduleVideoPublications}
           </p>
         </div>
 
@@ -363,7 +365,7 @@ export default function PublicationScheduler() {
             onClick={() => setShowScheduler(true)}
             className="btn-primary px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-base sm:text-lg lg:text-xl font-bold hover:scale-105 transition-all duration-300"
           >
-            + Schedule New Post
+            {translations.adminSchedulerScheduleNewPost}
           </button>
         </div>
 
@@ -376,37 +378,37 @@ export default function PublicationScheduler() {
                 <path d="M9 14l2 2 4-4"/>
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">{translations.adminSchedulerSearchFilters}</h2>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Status Filter
+                {translations.adminSchedulerStatusFilter}
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="all">All Status</option>
-                <option value="scheduled">Scheduled</option>
-                <option value="published">Published</option>
-                <option value="failed">Failed</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="all">{translations.adminSchedulerAllStatus}</option>
+                <option value="scheduled">{translations.adminSchedulerScheduled}</option>
+                <option value="published">{translations.adminSchedulerPublished}</option>
+                <option value="failed">{translations.adminSchedulerFailed}</option>
+                <option value="cancelled">{translations.adminSchedulerCancelled}</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Social Network
+                {translations.adminSchedulerSocialNetwork}
               </label>
               <select
                 value={filterNetwork}
                 onChange={(e) => setFilterNetwork(e.target.value)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="all">All Networks</option>
+                <option value="all">{translations.adminSchedulerAllNetworks}</option>
                 {socialNetworks.map(network => (
                   <option key={network.id} value={network.id}>
                     {network.icon} {network.name}
@@ -477,11 +479,11 @@ export default function PublicationScheduler() {
 
                             {/* Time Info */}
                             <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
-                              <span className="font-bold">Duration: {post.video.duration}</span>
-                              <span className="font-bold">Category: {post.video.category}</span>
+                              <span className="font-bold">{translations.adminSchedulerDuration}: {post.video.duration}</span>
+                              <span className="font-bold">{translations.adminSchedulerCategory}: {post.video.category}</span>
                               {post.status === "scheduled" && (
                                 <span className="text-blue-600 font-bold text-base sm:text-lg lg:text-xl">
-                                  Publishes in: {getTimeUntilPublish(post.scheduledDate)}
+                                  {translations.adminSchedulerPublishesIn}: {getTimeUntilPublish(post.scheduledDate)}
                                 </span>
                               )}
                             </div>
@@ -499,13 +501,13 @@ export default function PublicationScheduler() {
                                   onClick={() => handlePublishNow(post.id)}
                                   className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-xl sm:rounded-2xl hover:bg-green-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                                 >
-                                  Publish Now
+                                  {translations.adminSchedulerPublishNow}
                                 </button>
                                 <button
                                   onClick={() => handleCancelPost(post.id)}
                                   className="px-4 sm:px-6 py-2 sm:py-3 bg-red-500 text-white rounded-xl sm:rounded-2xl hover:bg-red-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                                 >
-                                  Cancel
+                                  {translations.adminSchedulerCancel}
                                 </button>
                               </div>
                             )}
@@ -533,7 +535,7 @@ export default function PublicationScheduler() {
             <div className="glass-elevated rounded-2xl sm:rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300 animate-in zoom-in-95 duration-300">
               <div className="p-4 sm:p-6 lg:p-8 border-b border-border">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">Schedule New Post</h2>
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{translations.adminSchedulerScheduleNewPost}</h2>
                   <button
                     onClick={() => setShowScheduler(false)}
                     className="p-2 sm:p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-110"
@@ -549,7 +551,7 @@ export default function PublicationScheduler() {
                 {/* Video Selection */}
                 <div>
                   <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">
-                    Select Video *
+                    {translations.adminSchedulerSelectVideo}
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     {videos.map((video) => (
@@ -585,7 +587,7 @@ export default function PublicationScheduler() {
                 {/* Social Networks Selection */}
                 <div>
                   <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">
-                    Select Social Networks *
+                    {translations.adminSchedulerSelectSocialNetworks}
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {socialNetworks.map((network) => (
@@ -622,7 +624,7 @@ export default function PublicationScheduler() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-                      Publication Date *
+                      {translations.adminSchedulerPublicationDate}
                     </label>
                     <input
                       type="date"
@@ -635,7 +637,7 @@ export default function PublicationScheduler() {
 
                   <div>
                     <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-                      Publication Time *
+                      {translations.adminSchedulerPublicationTime}
                     </label>
                     <input
                       type="time"
@@ -649,12 +651,12 @@ export default function PublicationScheduler() {
                 {/* Custom Message */}
                 <div>
                   <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-                    Custom Message (Optional)
+                    {translations.adminSchedulerCustomMessageOptional}
                   </label>
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    placeholder="Add a custom message to accompany your video..."
+                    placeholder={translations.adminSchedulerCustomMessagePlaceholder}
                     rows={4}
                     className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
                   />
@@ -666,7 +668,7 @@ export default function PublicationScheduler() {
                     onClick={() => setShowScheduler(false)}
                     className="px-6 sm:px-8 py-3 sm:py-4 bg-surface text-foreground rounded-xl sm:rounded-2xl hover:bg-surface-elevated transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
                   >
-                    Cancel
+                    {translations.adminSchedulerCancel}
                   </button>
                   <button
                     onClick={handleSchedulePost}
@@ -677,7 +679,7 @@ export default function PublicationScheduler() {
                         : 'bg-accent text-white hover:bg-accent-hover'
                     }`}
                   >
-                    {isSubmitting ? 'Scheduling...' : 'Schedule Post'}
+                    {isSubmitting ? translations.adminSchedulerScheduling : translations.adminSchedulerSchedulePost}
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { WizardData } from "@/app/studio/page";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface PreviewStepProps {
   data: WizardData;
@@ -10,6 +11,7 @@ interface PreviewStepProps {
 }
 
 export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: PreviewStepProps) {
+  const { translations } = useTranslations();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -54,9 +56,9 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">Your Video is Ready!</h2>
+        <h2 className="text-3xl font-bold text-foreground mb-4">{translations.studioYourVideoReady}</h2>
         <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-          Review your generated video and download it when you&apos;re satisfied with the result.
+          {translations.studioReviewGeneratedVideo}
         </p>
       </div>
 
@@ -76,7 +78,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
                 )}
               </div>
               <div className="text-foreground-muted">
-                {isPlaying ? 'Playing...' : 'Click to preview'}
+                {isPlaying ? translations.studioPlaying : translations.studioClickToPreview}
               </div>
             </div>
           </div>
@@ -100,19 +102,19 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-foreground">{videoStats.duration}s</div>
-            <div className="text-sm text-foreground-muted">Duration</div>
+            <div className="text-sm text-foreground-muted">{translations.studioDuration}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-foreground">{videoStats.quality}</div>
-            <div className="text-sm text-foreground-muted">Quality</div>
+            <div className="text-sm text-foreground-muted">{translations.studioQuality}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-foreground">{videoStats.format}</div>
-            <div className="text-sm text-foreground-muted">Format</div>
+            <div className="text-sm text-foreground-muted">{translations.studioFormat}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-foreground">{videoStats.size}</div>
-            <div className="text-sm text-foreground-muted">File Size</div>
+            <div className="text-sm text-foreground-muted">{translations.studioFileSize}</div>
           </div>
         </div>
       </div>
@@ -121,34 +123,34 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Settings Summary */}
         <div className="glass rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Video Settings</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-4">{translations.studioVideoSettings}</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-foreground-muted">Avatar</span>
+              <span className="text-foreground-muted">{translations.studioAvatar}</span>
               <span className="font-medium text-foreground">{data.avatar?.name}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-foreground-muted">Voice</span>
+              <span className="text-foreground-muted">{translations.studioVoice}</span>
               <span className="font-medium text-foreground">{data.language?.voice.name} ({data.language?.name})</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-foreground-muted">Background</span>
+              <span className="text-foreground-muted">{translations.studioBackground}</span>
               <span className="font-medium text-foreground">{data.backgrounds?.[0]?.name}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-foreground-muted">Resolution</span>
+              <span className="text-foreground-muted">{translations.studioResolution}</span>
               <span className="font-medium text-foreground">{videoStats.resolution}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-foreground-muted">Script Length</span>
-              <span className="font-medium text-foreground">{data.text.split(' ').length} words</span>
+              <span className="text-foreground-muted">{translations.studioScriptLength}</span>
+              <span className="font-medium text-foreground">{data.text.split(' ').length} {translations.studioWords}</span>
             </div>
           </div>
         </div>
 
         {/* Script Preview */}
         <div className="glass rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Script</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-4">{translations.studioScript}</h3>
           <div className="bg-surface-elevated rounded-lg p-4 max-h-48 overflow-y-auto">
             <p className="text-foreground leading-relaxed">{data.text}</p>
           </div>
@@ -157,7 +159,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
 
       {/* Actions */}
       <div className="glass-elevated rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Actions</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">{translations.studioActions}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
             onClick={handleDownload}
@@ -167,14 +169,14 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
             {isDownloading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                Downloading... {downloadProgress}%
+                {translations.studioDownloading} {downloadProgress}%
               </>
             ) : (
               <>
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Download Video
+                {translations.studioDownloadVideo}
               </>
             )}
           </button>
@@ -186,7 +188,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            Regenerate
+            {translations.studioRegenerate}
           </button>
           
           <button
@@ -196,7 +198,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Save & Continue
+            {translations.studioSaveContinue}
           </button>
         </div>
       </div>
@@ -205,7 +207,7 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
       {isDownloading && (
         <div className="glass rounded-2xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-foreground">Download Progress</span>
+            <span className="text-sm font-medium text-foreground">{translations.studioDownloadProgress}</span>
             <span className="text-sm text-foreground-muted">{downloadProgress}%</span>
           </div>
           <div className="w-full bg-border rounded-full h-2">
@@ -226,12 +228,12 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          {translations.studioBack}
         </button>
         
         <div className="flex items-center gap-4">
           <span className="text-sm text-foreground-muted">
-            Video generated successfully
+            {translations.studioVideoGeneratedSuccessfully}
           </span>
           <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
         </div>

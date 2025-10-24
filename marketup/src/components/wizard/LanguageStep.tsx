@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { WizardData } from "@/app/studio/page";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface LanguageStepProps {
   data: WizardData;
@@ -70,19 +71,22 @@ const languages = [
   }
 ];
 
-const toneFilters = [
-  { id: 'all', name: 'All Tones', icon: '🎵' },
-  { id: 'professional', name: 'Professional', icon: '💼' },
-  { id: 'energetic', name: 'Energetic', icon: '⚡' },
-  { id: 'calm', name: 'Calm', icon: '🌊' },
-  { id: 'expressive', name: 'Expressive', icon: '🎭' }
+const getToneFilters = (translations: any) => [
+  { id: 'all', name: translations.studioAllTones, icon: '🎵' },
+  { id: 'professional', name: translations.studioProfessional, icon: '💼' },
+  { id: 'energetic', name: translations.studioEnergetic, icon: '⚡' },
+  { id: 'calm', name: translations.studioCalm, icon: '🌊' },
+  { id: 'expressive', name: translations.studioExpressive, icon: '🎭' }
 ];
 
 export default function LanguageStep({ data, onUpdate, onNext, onPrev }: LanguageStepProps) {
+  const { translations } = useTranslations();
   const [selectedLanguage, setSelectedLanguage] = useState(data.language?.code || '');
   const [selectedVoice, setSelectedVoice] = useState(data.language?.voice.id || '');
   const [selectedTone, setSelectedTone] = useState('all');
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
+  
+  const toneFilters = getToneFilters(translations);
 
   const handleLanguageSelect = (language: typeof languages[0]) => {
     setSelectedLanguage(language.code);
@@ -141,10 +145,10 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
       {/* Header */}
       <div className="text-center px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-4 sm:mb-6">
-          Language & <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">Voice</span>
+          {translations.studioLanguageVoice}
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-          Choose the language and voice for your video. <span className="text-accent font-medium">You can preview each voice before selecting.</span>
+          {translations.studioChooseLanguageVoice} <span className="text-accent font-medium">{translations.studioPreviewEachVoice}</span>
         </p>
       </div>
 
@@ -153,7 +157,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
         <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
           
-          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Select Language</h3>
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">{translations.studioSelectLanguage}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             {languages.map((language) => (
               <button
@@ -186,7 +190,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
           <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
             
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Choose Voice</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioChooseVoice}</h3>
             
             {/* Tone Filters */}
             <div className="flex flex-wrap gap-2 justify-center mb-8">
@@ -251,14 +255,14 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
                     {playingVoice === voice.id ? (
                       <>
                         <div className="w-5 h-5 border-2 border-accent-2 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-sm font-medium">Playing...</span>
+                        <span className="text-sm font-medium">{translations.studioPlaying}</span>
                       </>
                     ) : (
                       <>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span className="text-sm font-medium">Preview</span>
+                        <span className="text-sm font-medium">{translations.studioPreview}</span>
                       </>
                     )}
                   </button>
@@ -275,7 +279,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
           <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
             
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Selected Voice</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioSelectedVoice}</h3>
             <div className="flex items-center justify-center gap-6">
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
                 <span className="text-3xl">
@@ -300,7 +304,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          {translations.studioBack}
         </button>
         
         <button
@@ -309,7 +313,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
           className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="relative z-10 flex items-center gap-3">
-            Continue
+            {translations.studioContinue}
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function AboutPage() {
+  const { translations } = useTranslations();
+  
   return (
     <>
       {/* Hero Section */}
@@ -29,7 +32,7 @@ export default function AboutPage() {
               {/* Enhanced Badge */}
               <div className="inline-flex items-center gap-2 sm:gap-4 px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 glass-glow rounded-2xl sm:rounded-3xl border border-accent/30 text-xs sm:text-sm group hover:scale-105 transition-all duration-300">
                 <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                <span className="text-gradient font-bold text-sm sm:text-base lg:text-lg">About MarketUp</span>
+                <span className="text-gradient font-bold text-sm sm:text-base lg:text-lg">{translations.aboutTitle}</span>
                 <div className="w-2 h-2 sm:w-3 sm:h-3 bg-accent-2 rounded-full animate-ping" />
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-500 rounded-full animate-pulse delay-300" />
               </div>
@@ -37,11 +40,11 @@ export default function AboutPage() {
               {/* Enhanced Main heading */}
               <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.9]">
-                  About <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent animate-pulse">MarketUp</span>
+                  {translations.aboutTitle} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent animate-pulse">MarketUp</span>
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-foreground-muted max-w-3xl leading-relaxed font-light">
-                  Welcome to MarketUp, a European platform designed to help everyone — from small shop owners and cafés to large companies — promote their business <span className="text-accent font-semibold bg-gradient-to-r from-accent/20 to-accent-2/20 px-1 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-sm sm:text-base">easily and affordably.</span>
+                  {translations.aboutWelcome} {translations.aboutEasilyAffordably}
                 </p>
               </div>
               
@@ -53,7 +56,7 @@ export default function AboutPage() {
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="font-medium">European platform</span>
+                  <span className="font-medium">{translations.aboutEuropeanPlatform}</span>
                 </div>
                 <div className="group flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-foreground-muted hover:text-accent-2 transition-colors duration-300">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -61,7 +64,7 @@ export default function AboutPage() {
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="font-medium">For everyone</span>
+                  <span className="font-medium">{translations.aboutForEveryone}</span>
                 </div>
                 <div className="group flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-foreground-muted hover:text-purple-500 transition-colors duration-300">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -69,7 +72,7 @@ export default function AboutPage() {
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="font-medium">Easy & affordable</span>
+                  <span className="font-medium">{translations.aboutEasyAffordable}</span>
                 </div>
               </div>
             </div>
@@ -93,10 +96,10 @@ export default function AboutPage() {
             <div className="text-center mb-12 sm:mb-16 lg:mb-24 px-4">
               
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
-                Our <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">Mission</span> & Vision
+                {translations.aboutOurMissionVision}
               </h2>
               <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light">
-                Driving innovation in marketing technology for <span className="text-accent font-medium">everyone</span>
+                {translations.aboutDrivingInnovation} <span className="text-accent font-medium">{translations.aboutEveryone}</span>
               </p>
             </div>
 
@@ -114,10 +117,10 @@ export default function AboutPage() {
                       </svg>
                     </div>
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
-                      Our <span className="text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">Mission</span>
+                      {translations.aboutOurMission}
                     </h3>
                     <p className="text-base sm:text-lg lg:text-xl text-foreground-muted leading-relaxed">
-                      Our mission is to empower individuals and businesses to promote their products or services without the need for expensive advertising agencies — just simple, smart, and effective marketing.
+                      {translations.aboutMissionText}
                     </p>
                   </div>
                 </div>
@@ -135,10 +138,10 @@ export default function AboutPage() {
                       </svg>
                     </div>
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
-                      Our <span className="text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent">Vision</span>
+                      {translations.aboutOurVision}
                     </h3>
                     <p className="text-base sm:text-lg lg:text-xl text-foreground-muted leading-relaxed">
-                      Our vision for the future is to expand MarketUp in new and innovative ways that make marketing even easier and more powerful for all users.
+                      {translations.aboutVisionText}
                     </p>
                   </div>
                 </div>
@@ -167,10 +170,10 @@ export default function AboutPage() {
                 <div className="relative z-10">
                   
                   <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 lg:mb-10 leading-tight text-foreground">
-                    What Makes Us <span className="text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent animate-pulse">Different</span>
+                    {translations.aboutWhatMakesDifferent}
                   </h2>
                   <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground leading-relaxed max-w-4xl mx-auto group-hover:text-foreground transition-colors duration-300">
-                    What makes us different is our focus on <span className="text-accent-2 font-bold bg-gradient-to-r from-accent-2/20 to-purple-500/20 px-2 sm:px-3 py-1 rounded-lg sm:rounded-xl text-sm sm:text-base">simplicity, quality, and accessibility.</span>
+                    {translations.aboutDifferentText}{translations.aboutSimplicityQualityAccessibility}
                   </p>
                   
                   {/* Decorative floating elements */}
@@ -186,93 +189,117 @@ export default function AboutPage() {
         <section className="section relative overflow-hidden">
           {/* Enhanced Animated background */}
           <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000 overflow-hidden"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500 overflow-hidden"></div>
+          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700 overflow-hidden"></div>
+          <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300 overflow-hidden"></div>
           
           <div className="relative z-10">
-            <div className="max-w-6xl mx-auto px-4">
-              <div className="text-center mb-12 sm:mb-16 lg:mb-24">
-                
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
-                  What <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">MarketUp</span> Offers
-                </h2>
-                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light">
-                  Comprehensive solutions for all your <span className="text-accent font-medium">marketing needs</span>
-                </p>
-              </div>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
-                {[
-                  {
-                    icon: (
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                    ),
-                    title: "Smart AI-powered video creation",
-                    description: "for marketing",
-                    gradient: "from-accent to-accent-2"
-                  },
-                  {
-                    icon: (
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                      </svg>
-                    ),
-                    title: "Affordable pricing plans",
-                    description: "suitable for all users",
-                    gradient: "from-accent-2 to-purple-500"
-                  },
-                  {
-                    icon: (
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                      </svg>
-                    ),
-                    title: "Multilingual support team",
-                    description: "English, Arabic, Swedish, and Turkish",
-                    gradient: "from-purple-500 to-pink-500"
-                  },
-                  {
-                    icon: (
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    ),
-                    title: "Easy-to-use tools",
-                    description: "that make video marketing faster, more creative, and within everyone's reach",
-                    gradient: "from-pink-500 to-accent"
-                  }
-                ].map((feature, index) => (
-                  <div key={index} className="group glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-2xl group-hover:shadow-accent/30 group-hover:border-accent/50 relative overflow-hidden border border-accent/10 hover:border-accent/30">
-                    <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
-                    <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-2xl sm:rounded-tr-3xl" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Floating decorative elements */}
-                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-accent/40 to-accent-2/40 rounded-full animate-pulse"></div>
-                    <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-br from-accent-2/40 to-purple-500/40 rounded-full animate-pulse delay-500"></div>
-                    
-                    <div className="relative z-10">
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-white mb-6 sm:mb-8 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-2xl`}>
-                        <svg className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          {feature.icon.props.children}
-                        </svg>
+            <div className="text-center mb-16 sm:mb-20 lg:mb-24">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight">
+                {translations.aboutWhatMarketUpOffers}
+              </h2>
+              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light px-4">
+                {translations.aboutComprehensiveSolutions} <span className="text-accent font-medium">{translations.aboutMarketingNeeds}</span>
+              </p>
+            </div>
+            
+            <div className="max-w-4xl mx-auto space-y-8 sm:space-y-8 lg:space-y-6">
+              {/* Feature 01 - Left */}
+              <div className="flex justify-start">
+                <div className="group">
+                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10 h-full flex flex-col justify-center">
+                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
                       </div>
-                      <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6 group-hover:text-accent transition-colors duration-300">{feature.title}</h3>
-                      <p className="text-sm sm:text-base lg:text-lg text-foreground-muted leading-relaxed group-hover:text-foreground transition-colors duration-300">{feature.description}</p>
-                      
-                      {/* Status indicator */}
-                      <div className="flex items-center gap-2 mt-4 sm:mt-6">
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent rounded-full animate-pulse"></div>
-                        <span className="text-xs sm:text-sm text-accent font-medium">Active</span>
-                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutSmartAIVideo}</h3>
+                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
+                        {translations.aboutForMarketing}
+                      </p>
                     </div>
                   </div>
-                ))}
+                </div>
+              </div>
+
+              {/* Feature 02 - Right */}
+              <div className="flex justify-end -mt-4 sm:-mt-16 lg:-mt-24">
+                <div className="group">
+                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10 h-full flex flex-col justify-center">
+                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                          </svg>
+                        </div>
+                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutAffordablePricing}</h3>
+                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
+                        {translations.aboutSuitableForAll}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 03 - Left */}
+              <div className="flex justify-start -mt-2 sm:-mt-12 lg:-mt-20">
+                <div className="group">
+                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10 h-full flex flex-col justify-center">
+                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                          </svg>
+                        </div>
+                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-purple-500 to-transparent rounded-full" />
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutMultilingualSupport}</h3>
+                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
+                        {translations.aboutLanguages}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 04 - Right */}
+              <div className="flex justify-end -mt-2 sm:-mt-12 lg:-mt-20">
+                <div className="group">
+                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10 h-full flex flex-col justify-center">
+                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-pink-500 to-accent flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                        </div>
+                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-pink-500 to-transparent rounded-full" />
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutEasyToUse}</h3>
+                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
+                        {translations.aboutMakeVideoMarketing}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -287,10 +314,10 @@ export default function AboutPage() {
               <div className="glass-elevated rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-center">
                
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight text-foreground">
-                  Our <span className="text-gradient bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">Commitment</span>
+                  {translations.aboutOurCommitment}
                 </h2>
                 <p className="text-base sm:text-lg lg:text-xl text-foreground leading-relaxed max-w-3xl mx-auto">
-                  We aim to provide continuous support, smarter tools, and creative solutions to deliver the best possible experience for every customer.
+                  {translations.aboutCommitmentText}
                 </p>
               </div>
             </div>
@@ -311,7 +338,7 @@ export default function AboutPage() {
                     </svg>
                   </div>
                   <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-foreground leading-relaxed">
-                    &ldquo;MarketUp – where your ideas become marketing power&rdquo;
+                    {translations.aboutQuote}
                   </p>
                 </div>
               </div>
@@ -327,7 +354,7 @@ export default function AboutPage() {
               <div className="text-center mb-8 sm:mb-12">
                
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-                  Our <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">Slogans</span>
+                  {translations.aboutOurSlogans}
                 </h2>
               </div>
               
@@ -338,9 +365,9 @@ export default function AboutPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">Slogan</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">{translations.aboutSlogan}</h3>
                   <p className="text-base sm:text-lg text-foreground-muted leading-relaxed">
-                    &ldquo;MarketUp – your business deserves to be seen&rdquo;
+                    {translations.aboutSloganText}
                   </p>
                 </div>
                 <div className="group glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl hover:shadow-accent-2/20">
@@ -349,9 +376,9 @@ export default function AboutPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">Tagline</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">{translations.aboutTagline}</h3>
                   <p className="text-base sm:text-lg text-foreground-muted leading-relaxed">
-                    &ldquo;Your story, our technology – one vision for success&rdquo;
+                    {translations.aboutTaglineText}
                   </p>
                 </div>
               </div>
@@ -366,10 +393,10 @@ export default function AboutPage() {
               
               
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 sm:mb-8 text-foreground leading-tight">
-                Ready to transform your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">marketing?</span>
+                {translations.aboutReadyToTransform} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.aboutMarketing}</span>?
               </h2>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto mb-12 sm:mb-16 leading-relaxed font-light">
-                Join thousands of businesses who are already using MarketUp to create professional marketing videos.
+                {translations.aboutJoinThousands}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 justify-center items-center">
@@ -382,7 +409,7 @@ export default function AboutPage() {
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    Get Started
+                    {translations.aboutGetStarted}
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-pulse"></div>
                   </span>
                 </Link>
@@ -394,7 +421,7 @@ export default function AboutPage() {
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                     </svg>
-                    See Pricing
+                    {translations.aboutSeePricing}
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent rounded-full animate-pulse"></div>
                   </span>
                 </Link>

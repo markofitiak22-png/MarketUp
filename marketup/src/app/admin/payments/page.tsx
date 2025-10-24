@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface Transaction {
   id: string;
@@ -30,6 +31,7 @@ interface Transaction {
 }
 
 export default function PaymentManagement() {
+  const { translations } = useTranslations();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
@@ -104,11 +106,11 @@ export default function PaymentManagement() {
         setSelectedTransaction(null);
       } else {
         console.error('Failed to confirm payment:', data.error);
-        alert('Failed to confirm payment. Please try again.');
+        alert(translations.adminPaymentsFailedToConfirmPayment);
       }
     } catch (error) {
       console.error('Error confirming payment:', error);
-      alert('Error confirming payment. Please try again.');
+      alert(translations.adminPaymentsErrorConfirmingPayment);
     }
   };
 
@@ -128,10 +130,10 @@ export default function PaymentManagement() {
       ));
       setShowModal(false);
       setSelectedTransaction(null);
-      alert('Refund functionality would be implemented here');
+      alert(translations.adminPaymentsRefundFunctionalityWouldBeImplemented);
     } catch (error) {
       console.error('Error processing refund:', error);
-      alert('Error processing refund. Please try again.');
+      alert(translations.adminPaymentsErrorProcessingRefund);
     }
   };
 
@@ -166,11 +168,11 @@ export default function PaymentManagement() {
         setSelectedTransaction(null);
       } else {
         console.error('Failed to cancel payment:', data.error);
-        alert('Failed to cancel payment. Please try again.');
+        alert(translations.adminPaymentsFailedToCancelPayment);
       }
     } catch (error) {
       console.error('Error cancelling payment:', error);
-      alert('Error cancelling payment. Please try again.');
+      alert(translations.adminPaymentsErrorCancellingPayment);
     }
   };
 
@@ -183,7 +185,7 @@ export default function PaymentManagement() {
         return (
           <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-yellow-400 rounded-full mr-1 sm:mr-1.5 animate-pulse"></div>
-            Pending
+            {translations.adminPaymentsPending}
           </span>
         );
       case "completed":
@@ -192,7 +194,7 @@ export default function PaymentManagement() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            Completed
+            {translations.adminPaymentsCompleted}
           </span>
         );
       case "failed":
@@ -201,7 +203,7 @@ export default function PaymentManagement() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Failed
+            {translations.adminPaymentsFailed}
           </span>
         );
       case "refunded":
@@ -210,7 +212,7 @@ export default function PaymentManagement() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
             </svg>
-            Refunded
+            {translations.adminPaymentsRefunded}
           </span>
         );
       case "cancelled":
@@ -219,7 +221,7 @@ export default function PaymentManagement() {
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Cancelled
+            {translations.adminPaymentsCancelled}
           </span>
         );
       default:
@@ -303,13 +305,13 @@ export default function PaymentManagement() {
         {/* Hero Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
-            Payment Management
+            {translations.adminPaymentsPaymentManagement}
           </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
-            View and manage payment transactions
+            {translations.adminPaymentsViewManageTransactions}
           </p>
           <div className="mt-4 sm:mt-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
-            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredTransactions.length}</span> transactions
+            <span className="font-bold text-foreground text-lg sm:text-xl lg:text-2xl">{filteredTransactions.length}</span> {translations.adminPaymentsTransactions}
           </div>
         </div>
 
@@ -318,7 +320,7 @@ export default function PaymentManagement() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Total Revenue</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminPaymentsTotalRevenue}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{formatAmount(stats.total, "USD")}</p>
               </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -333,7 +335,7 @@ export default function PaymentManagement() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Completed</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminPaymentsCompleted}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{formatAmount(stats.completed, "USD")}</p>
               </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -347,7 +349,7 @@ export default function PaymentManagement() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Pending</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminPaymentsPending}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.pending}</p>
               </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -361,7 +363,7 @@ export default function PaymentManagement() {
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">Failed</p>
+                <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-1 sm:mb-2">{translations.adminPaymentsFailed}</p>
                 <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{stats.failed}</p>
               </div>
               <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -381,18 +383,18 @@ export default function PaymentManagement() {
                 <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">Search & Filters</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">{translations.adminPaymentsSearchFilters}</h2>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Search */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Search
+                {translations.adminPaymentsSearch}
               </label>
               <input
                 type="text"
-                placeholder="Search transactions..."
+                placeholder={translations.adminPaymentsSearchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
@@ -402,55 +404,55 @@ export default function PaymentManagement() {
             {/* Status Filter */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Status
+                {translations.adminPaymentsStatus}
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
-                <option value="failed">Failed</option>
-                <option value="refunded">Refunded</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="all">{translations.adminPaymentsAllStatus}</option>
+                <option value="pending">{translations.adminPaymentsPending}</option>
+                <option value="completed">{translations.adminPaymentsCompleted}</option>
+                <option value="failed">{translations.adminPaymentsFailed}</option>
+                <option value="refunded">{translations.adminPaymentsRefunded}</option>
+                <option value="cancelled">{translations.adminPaymentsCancelled}</option>
               </select>
             </div>
 
             {/* Type Filter */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Type
+                {translations.adminPaymentsType}
               </label>
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="all">All Types</option>
-                <option value="subscription">Subscription</option>
-                <option value="one_time">One Time</option>
-                <option value="refund">Refund</option>
-                <option value="upgrade">Upgrade</option>
+                <option value="all">{translations.adminPaymentsAllTypes}</option>
+                <option value="subscription">{translations.adminPaymentsSubscription}</option>
+                <option value="one_time">{translations.adminPaymentsOneTime}</option>
+                <option value="refund">{translations.adminPaymentsRefund}</option>
+                <option value="upgrade">{translations.adminPaymentsUpgrade}</option>
               </select>
             </div>
 
             {/* Date Range */}
             <div>
               <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                Date Range
+                {translations.adminPaymentsDateRange}
               </label>
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value as any)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
               >
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
+                <option value="all">{translations.adminPaymentsAllTime}</option>
+                <option value="today">{translations.adminPaymentsToday}</option>
+                <option value="week">{translations.adminPaymentsThisWeek}</option>
+                <option value="month">{translations.adminPaymentsThisMonth}</option>
+                <option value="year">{translations.adminPaymentsThisYear}</option>
               </select>
             </div>
           </div>
@@ -497,7 +499,7 @@ export default function PaymentManagement() {
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-6 text-sm sm:text-base lg:text-lg text-foreground-muted mb-3 sm:mb-4">
                           <span className="truncate">{transaction.description}</span>
                           <span className="hidden sm:inline">•</span>
-                          <span className="text-xs sm:text-sm lg:text-base">Invoice: {transaction.invoiceNumber}</span>
+                          <span className="text-xs sm:text-sm lg:text-base">{translations.adminPaymentsInvoice}: {transaction.invoiceNumber}</span>
                           <span className="hidden sm:inline">•</span>
                           <span className="text-xs sm:text-sm lg:text-base">{formatDate(transaction.createdAt)}</span>
                         </div>
@@ -537,16 +539,16 @@ export default function PaymentManagement() {
                               onClick={() => handleConfirmPayment(transaction.id)}
                               className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white text-sm sm:text-base lg:text-lg font-bold rounded-xl sm:rounded-2xl hover:bg-green-600 transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
                             >
-                              Confirm
+                              {translations.adminPaymentsConfirm}
                             </button>
                             <button
                               onClick={() => {
-                                const reason = prompt("Enter cancellation reason:");
+                                const reason = prompt(translations.adminPaymentsEnterCancellationReason);
                                 if (reason) handleCancelPayment(transaction.id, reason);
                               }}
                               className="px-4 sm:px-6 py-2 sm:py-3 bg-red-500 text-white text-sm sm:text-base lg:text-lg font-bold rounded-xl sm:rounded-2xl hover:bg-red-600 transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
                             >
-                              Cancel
+                              {translations.adminPaymentsCancel}
                             </button>
                           </>
                         )}
@@ -554,12 +556,12 @@ export default function PaymentManagement() {
                         {transaction.status === "completed" && (
                           <button
                             onClick={() => {
-                              const reason = prompt("Enter refund reason:");
+                              const reason = prompt(translations.adminPaymentsEnterRefundReason);
                               if (reason) handleRefundPayment(transaction.id, reason);
                             }}
                             className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-500 text-white text-sm sm:text-base lg:text-lg font-bold rounded-xl sm:rounded-2xl hover:bg-blue-600 transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
                           >
-                            Refund
+                            {translations.adminPaymentsRefund}
                           </button>
                         )}
 
@@ -570,7 +572,7 @@ export default function PaymentManagement() {
                           }}
                           className="px-4 sm:px-6 py-2 sm:py-3 bg-surface text-foreground text-sm sm:text-base lg:text-lg font-bold rounded-xl sm:rounded-2xl hover:bg-surface-elevated transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
                         >
-                          View
+                          {translations.adminPaymentsView}
                         </button>
                       </div>
 
@@ -593,7 +595,7 @@ export default function PaymentManagement() {
             <div className="glass-elevated rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300 animate-in zoom-in-95 duration-300">
               <div className="p-8 border-b border-border">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-bold text-foreground">Transaction Details</h2>
+                  <h2 className="text-3xl font-bold text-foreground">{translations.adminPaymentsTransactionDetails}</h2>
                   <button
                     onClick={() => setShowModal(false)}
                     className="p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-xl transition-all duration-300 hover:scale-110"
@@ -609,12 +611,12 @@ export default function PaymentManagement() {
                 {/* Transaction Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-4">Transaction Information</h3>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminPaymentsTransactionInformation}</h3>
                     <div className="space-y-3 text-lg">
                       <div><span className="font-bold">ID:</span> {selectedTransaction.id}</div>
-                      <div><span className="font-bold">Invoice:</span> {selectedTransaction.invoiceNumber}</div>
+                      <div><span className="font-bold">{translations.adminPaymentsInvoice}:</span> {selectedTransaction.invoiceNumber}</div>
                       <div><span className="font-bold">Amount:</span> {formatAmount(selectedTransaction.amount, selectedTransaction.currency)}</div>
-                      <div><span className="font-bold">Status:</span> {selectedTransaction.status}</div>
+                      <div><span className="font-bold">{translations.adminPaymentsStatus}:</span> {selectedTransaction.status}</div>
                       <div><span className="font-bold">Created:</span> {formatDate(selectedTransaction.createdAt)}</div>
                       {selectedTransaction.processedAt && (
                         <div><span className="font-bold">Processed:</span> {formatDate(selectedTransaction.processedAt)}</div>
@@ -623,7 +625,7 @@ export default function PaymentManagement() {
                   </div>
 
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-4">User Information</h3>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminPaymentsUserInformation}</h3>
                     <div className="flex items-center space-x-4 mb-6">
                       <img
                         src={selectedTransaction.user.avatar}
@@ -637,7 +639,7 @@ export default function PaymentManagement() {
                     </div>
                     <div className="space-y-3 text-lg">
                       <div><span className="font-bold">Payment Method:</span> {selectedTransaction.paymentMethod}</div>
-                      <div><span className="font-bold">Type:</span> {selectedTransaction.transactionType}</div>
+                      <div><span className="font-bold">{translations.adminPaymentsType}:</span> {selectedTransaction.transactionType}</div>
                       <div><span className="font-bold">Description:</span> {selectedTransaction.description}</div>
                     </div>
                   </div>
@@ -646,19 +648,19 @@ export default function PaymentManagement() {
                 {/* Metadata */}
                 {selectedTransaction.metadata && (
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-4">Additional Information</h3>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">{translations.adminPaymentsAdditionalInformation}</h3>
                     <div className="glass-elevated rounded-2xl p-6 space-y-3 text-lg">
                       {selectedTransaction.metadata.planName && (
-                        <div><span className="font-bold">Plan:</span> {selectedTransaction.metadata.planName}</div>
+                        <div><span className="font-bold">{translations.adminPaymentsPlan}:</span> {selectedTransaction.metadata.planName}</div>
                       )}
                       {selectedTransaction.metadata.billingCycle && (
-                        <div><span className="font-bold">Billing:</span> {selectedTransaction.metadata.billingCycle}</div>
+                        <div><span className="font-bold">{translations.adminPaymentsBilling}:</span> {selectedTransaction.metadata.billingCycle}</div>
                       )}
                       {selectedTransaction.metadata.discountCode && (
-                        <div><span className="font-bold">Discount:</span> {selectedTransaction.metadata.discountCode}</div>
+                        <div><span className="font-bold">{translations.adminPaymentsDiscount}:</span> {selectedTransaction.metadata.discountCode}</div>
                       )}
                       {selectedTransaction.metadata.taxAmount && (
-                        <div><span className="font-bold">Tax:</span> {formatAmount(selectedTransaction.metadata.taxAmount, "USD")}</div>
+                        <div><span className="font-bold">{translations.adminPaymentsTax}:</span> {formatAmount(selectedTransaction.metadata.taxAmount, "USD")}</div>
                       )}
                     </div>
                   </div>
@@ -669,27 +671,27 @@ export default function PaymentManagement() {
                   <div className="flex justify-end space-x-6 pt-6 border-t border-border">
                     <button
                       onClick={() => {
-                        const reason = prompt("Enter cancellation reason:");
+                        const reason = prompt(translations.adminPaymentsEnterCancellationReason);
                         if (reason) handleCancelPayment(selectedTransaction.id, reason);
                       }}
                       className="px-8 py-4 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-all duration-300 text-lg font-bold hover:scale-105"
                     >
-                      Cancel Payment
+                      {translations.adminPaymentsCancelPayment}
                     </button>
                     <button
                       onClick={() => {
-                        const reason = prompt("Enter refund reason:");
+                        const reason = prompt(translations.adminPaymentsEnterRefundReason);
                         if (reason) handleRefundPayment(selectedTransaction.id, reason);
                       }}
                       className="px-8 py-4 bg-yellow-500 text-white rounded-2xl hover:bg-yellow-600 transition-all duration-300 text-lg font-bold hover:scale-105"
                     >
-                      Refund
+                      {translations.adminPaymentsRefund}
                     </button>
                     <button
                       onClick={() => handleConfirmPayment(selectedTransaction.id)}
                       className="px-8 py-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-all duration-300 text-lg font-bold hover:scale-105"
                     >
-                      Confirm Payment
+                      {translations.adminPaymentsConfirmPayment}
                     </button>
                   </div>
                 )}

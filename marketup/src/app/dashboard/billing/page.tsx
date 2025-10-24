@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface BillingData {
   currentPeriod: {
@@ -34,6 +35,7 @@ interface BillingData {
 }
 
 export default function BillingPage() {
+  const { translations } = useTranslations();
   const [activeTab, setActiveTab] = useState("overview");
   const [billingData, setBillingData] = useState<BillingData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -100,13 +102,13 @@ export default function BillingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="glass-elevated rounded-3xl p-8 text-center">
               <div className="text-6xl mb-6">⚠️</div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Error loading billing data</h2>
-              <p className="text-lg text-foreground-muted mb-6">Please try refreshing the page</p>
+              <h2 className="text-2xl font-bold text-foreground mb-4">{translations.billingErrorLoadingData}</h2>
+              <p className="text-lg text-foreground-muted mb-6">{translations.billingPleaseTryRefreshing}</p>
               <button 
                 onClick={() => window.location.reload()}
                 className="btn-primary px-8 py-4 text-lg"
               >
-                Refresh Page
+                {translations.billingRefreshPage}
               </button>
             </div>
           </div>
@@ -116,10 +118,10 @@ export default function BillingPage() {
   }
 
   const tabs = [
-    { id: "overview", name: "Overview", icon: "📊" },
-    { id: "invoices", name: "Invoices", icon: "🧾" },
-    { id: "payment", name: "Payment Methods", icon: "💳" },
-    { id: "usage", name: "Usage", icon: "📈" }
+    { id: "overview", name: translations.billingOverview, icon: "📊" },
+    { id: "invoices", name: translations.billingInvoices, icon: "🧾" },
+    { id: "payment", name: translations.billingPaymentMethods, icon: "💳" },
+    { id: "usage", name: translations.billingUsage, icon: "📈" }
   ];
 
   return (
@@ -136,10 +138,10 @@ export default function BillingPage() {
           {/* Hero Header */}
           <div className="text-center mb-12">
             <h1 className="text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-6">
-              Billing & Invoices
+              {translations.billingInvoices}
             </h1>
             <p className="text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed">
-              Manage your billing information, payment methods, and track your usage
+              {translations.billingManageBillingInformation}
             </p>
           </div>
 
@@ -168,19 +170,19 @@ export default function BillingPage() {
             <div className="space-y-8">
               {/* Current Billing Period */}
               <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-                <h2 className="text-4xl font-bold text-foreground mb-8">Current Billing Period</h2>
+                <h2 className="text-4xl font-bold text-foreground mb-8">{translations.billingCurrentBillingPeriod}</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
-                    <h3 className="text-xl font-bold text-foreground mb-4">Period</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-4">{translations.billingPeriod}</h3>
                     <p className="text-3xl font-bold text-foreground mb-2">
                       {billingData.currentPeriod.start} - {billingData.currentPeriod.end}
                     </p>
-                    <p className="text-lg text-foreground-muted">Current billing cycle</p>
+                    <p className="text-lg text-foreground-muted">{translations.billingCurrentBillingCycle}</p>
                   </div>
                   
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
-                    <h3 className="text-xl font-bold text-foreground mb-4">Amount</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-4">{translations.billingAmount}</h3>
                     <p className="text-3xl font-bold text-foreground mb-2">
                       {billingData.currentPeriod.amount === 0 ? 'Free' : `$${billingData.currentPeriod.amount}`}
                     </p>
@@ -188,7 +190,7 @@ export default function BillingPage() {
                   </div>
                   
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
-                    <h3 className="text-xl font-bold text-foreground mb-4">Status</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-4">{translations.billingStatus}</h3>
                     <div className="flex items-center gap-3 mb-3">
                       <span className={`w-3 h-3 rounded-full ${
                         billingData.currentPeriod.status === 'active' ? 'bg-success' : 'bg-warning'
@@ -196,7 +198,7 @@ export default function BillingPage() {
                       <span className="text-2xl font-bold text-foreground capitalize">{billingData.currentPeriod.status}</span>
                     </div>
                     <p className="text-lg text-foreground-muted">
-                      {billingData.currentPeriod.amount === 0 ? 'Free plan' : 'Auto-renewal enabled'}
+                      {billingData.currentPeriod.amount === 0 ? translations.billingFreePlan : translations.billingAutoRenewalEnabled}
                     </p>
                   </div>
                 </div>
@@ -204,27 +206,27 @@ export default function BillingPage() {
 
               {/* Usage Summary */}
               <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-                <h2 className="text-4xl font-bold text-foreground mb-8">Usage This Month</h2>
+                <h2 className="text-4xl font-bold text-foreground mb-8">{translations.billingUsageThisMonth}</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
                     <div className="flex items-center gap-4 mb-6">
                       <span className="text-4xl">🎥</span>
-                      <h3 className="text-xl font-bold text-foreground">Videos Created</h3>
+                      <h3 className="text-xl font-bold text-foreground">{translations.billingVideosCreated}</h3>
                     </div>
                     <p className="text-4xl font-bold text-accent mb-3">{billingData.usage.videos}</p>
                     <p className="text-lg text-foreground-muted">
-                      of {billingData.usage.videoLimit === 'unlimited' ? 'unlimited' : billingData.usage.videoLimit}
+                      {translations.billingOf} {billingData.usage.videoLimit === 'unlimited' ? translations.billingUnlimited : billingData.usage.videoLimit}
                     </p>
                   </div>
                   
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
                     <div className="flex items-center gap-4 mb-6">
                       <span className="text-4xl">💾</span>
-                      <h3 className="text-xl font-bold text-foreground">Storage Used</h3>
+                      <h3 className="text-xl font-bold text-foreground">{translations.billingStorageUsed}</h3>
                     </div>
                     <p className="text-4xl font-bold text-accent mb-3">{billingData.usage.storage}GB</p>
-                    <p className="text-lg text-foreground-muted mb-4">of {billingData.usage.storageLimit}GB</p>
+                    <p className="text-lg text-foreground-muted mb-4">{translations.billingOf} {billingData.usage.storageLimit}GB</p>
                     <div className="w-full bg-border rounded-full h-4">
                       <div 
                         className="bg-gradient-to-r from-accent to-accent-2 h-4 rounded-full transition-all duration-500 shadow-lg"
@@ -238,10 +240,10 @@ export default function BillingPage() {
                   <div className="glass rounded-3xl p-8 hover:scale-[1.02] transition-all duration-300 group">
                     <div className="flex items-center gap-4 mb-6">
                       <span className="text-4xl">🌐</span>
-                      <h3 className="text-xl font-bold text-foreground">Bandwidth</h3>
+                      <h3 className="text-xl font-bold text-foreground">{translations.billingBandwidth}</h3>
                     </div>
                     <p className="text-4xl font-bold text-accent mb-3">{billingData.usage.bandwidth}GB</p>
-                    <p className="text-lg text-foreground-muted">this month</p>
+                    <p className="text-lg text-foreground-muted">{translations.billingThisMonth}</p>
                   </div>
                 </div>
               </div>
@@ -250,7 +252,7 @@ export default function BillingPage() {
 
           {activeTab === "invoices" && (
             <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-              <h2 className="text-4xl font-bold text-foreground mb-8">Invoice History</h2>
+              <h2 className="text-4xl font-bold text-foreground mb-8">{translations.billingInvoiceHistory}</h2>
               
               <div className="space-y-6">
                 {billingData.invoices.length > 0 ? (
@@ -274,7 +276,7 @@ export default function BillingPage() {
                         className="text-accent hover:text-accent-hover text-xl font-bold hover:scale-105 transition-all duration-300"
                         onClick={() => window.open(invoice.downloadUrl, '_blank')}
                       >
-                        Download
+                        {translations.billingDownload}
                       </button>
                     </div>
                   </div>
@@ -282,8 +284,8 @@ export default function BillingPage() {
                 ) : (
                   <div className="text-center py-16">
                     <div className="text-9xl mb-8">🧾</div>
-                    <h3 className="text-3xl font-bold text-foreground mb-6">No invoices yet</h3>
-                    <p className="text-xl text-foreground-muted">Your invoice history will appear here</p>
+                    <h3 className="text-3xl font-bold text-foreground mb-6">{translations.billingNoInvoicesYet}</h3>
+                    <p className="text-xl text-foreground-muted">{translations.billingInvoiceHistoryWillAppear}</p>
                   </div>
                 )}
               </div>
@@ -293,9 +295,9 @@ export default function BillingPage() {
           {activeTab === "payment" && (
             <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-4xl font-bold text-foreground">Payment Methods</h2>
+                <h2 className="text-4xl font-bold text-foreground">{translations.billingPaymentMethods}</h2>
                 <button className="btn-primary px-8 py-4 text-lg font-bold hover:scale-105 transition-all duration-300">
-                  Add Payment Method
+                  {translations.billingAddPaymentMethod}
                 </button>
               </div>
               
@@ -320,10 +322,10 @@ export default function BillingPage() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="px-4 py-2 rounded-2xl text-lg font-bold bg-success/20 text-success border border-success/30">
-                          Default
+                          {translations.billingDefault}
                         </span>
                         <button className="text-accent hover:text-accent-hover text-xl font-bold hover:scale-105 transition-all duration-300">
-                          Edit
+                          {translations.billingEdit}
                         </button>
                       </div>
                     </div>
@@ -331,10 +333,10 @@ export default function BillingPage() {
                 ) : (
                   <div className="text-center py-16">
                     <div className="text-9xl mb-8">💳</div>
-                    <h3 className="text-3xl font-bold text-foreground mb-6">No payment method</h3>
-                    <p className="text-xl text-foreground-muted mb-8">Add a payment method to manage your subscription</p>
+                    <h3 className="text-3xl font-bold text-foreground mb-6">{translations.billingNoPaymentMethod}</h3>
+                    <p className="text-xl text-foreground-muted mb-8">{translations.billingAddPaymentMethodToManage}</p>
                     <button className="btn-primary px-10 py-5 text-xl font-bold hover:scale-105 transition-all duration-300">
-                      Add Payment Method
+                      {translations.billingAddPaymentMethod}
                     </button>
                   </div>
                 )}
@@ -345,14 +347,14 @@ export default function BillingPage() {
           {activeTab === "usage" && (
             <div className="space-y-8">
               <div className="glass-elevated rounded-3xl p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-                <h2 className="text-4xl font-bold text-foreground mb-8">Detailed Usage</h2>
+                <h2 className="text-4xl font-bold text-foreground mb-8">{translations.billingDetailedUsage}</h2>
                 
                 <div className="space-y-8">
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xl font-bold text-foreground">Videos Created</span>
+                      <span className="text-xl font-bold text-foreground">{translations.billingVideosCreated}</span>
                       <span className="text-lg text-foreground-muted">
-                        {billingData.usage.videos} / {billingData.usage.videoLimit === 'unlimited' ? 'Unlimited' : billingData.usage.videoLimit}
+                        {billingData.usage.videos} / {billingData.usage.videoLimit === 'unlimited' ? translations.billingUnlimited : billingData.usage.videoLimit}
                       </span>
                     </div>
                     <div className="w-full bg-surface rounded-full h-4">
@@ -368,7 +370,7 @@ export default function BillingPage() {
                   
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xl font-bold text-foreground">Storage Used</span>
+                      <span className="text-xl font-bold text-foreground">{translations.billingStorageUsed}</span>
                       <span className="text-lg text-foreground-muted">{billingData.usage.storage}GB / {billingData.usage.storageLimit}GB</span>
                     </div>
                     <div className="w-full bg-surface rounded-full h-4">
@@ -383,8 +385,8 @@ export default function BillingPage() {
                   
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xl font-bold text-foreground">Bandwidth This Month</span>
-                      <span className="text-lg text-foreground-muted">{billingData.usage.bandwidth}GB / Unlimited</span>
+                      <span className="text-xl font-bold text-foreground">{translations.billingBandwidthThisMonth}</span>
+                      <span className="text-lg text-foreground-muted">{billingData.usage.bandwidth}GB / {translations.billingUnlimited}</span>
                     </div>
                     <div className="w-full bg-surface rounded-full h-4">
                       <div 

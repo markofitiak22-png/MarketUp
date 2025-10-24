@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { WizardData } from "@/app/studio/page";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface AvatarStepProps {
   data: WizardData;
@@ -54,6 +55,7 @@ const avatars = [
 ];
 
 export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) {
+  const { translations } = useTranslations();
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar?.id || '');
   // const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
 
@@ -80,10 +82,10 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
       {/* Header */}
       <div className="text-center px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-4 sm:mb-6">
-          Choose your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">avatar</span>
+          {translations.studioChooseYourAvatar}
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-          Select a virtual presenter who will deliver your message. <span className="text-accent font-medium">Each avatar has a unique personality and speaking style.</span>
+          {translations.studioSelectVirtualPresenter} <span className="text-accent font-medium">{translations.studioEachAvatarUnique}</span>
         </p>
       </div>
 
@@ -137,7 +139,7 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
             
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Preview</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">{translations.studioPreview}</h3>
             <div className="flex items-center justify-center">
               <div className="relative">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
@@ -153,7 +155,7 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
               </div>
             </div>
             <p className="text-center text-foreground-muted mt-3 sm:mt-4 text-base sm:text-lg">
-              <span className="font-semibold text-accent">{data.avatar?.name}</span> will present your video
+              <span className="font-semibold text-accent">{data.avatar?.name}</span> {translations.studioWillPresentVideo}
             </p>
           </div>
         </div>
@@ -167,7 +169,7 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
           className="group relative btn-primary btn-lg px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="relative z-10 flex items-center gap-2 sm:gap-3">
-            Continue
+            {translations.studioContinue}
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

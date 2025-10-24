@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "@/hooks/useTranslations";
 
 const countries = [
   { name: "Sweden", flag: "🇸🇪" },
@@ -19,6 +20,7 @@ const languages = [
 ];
 
 export default function OnboardingPage() {
+  const { translations } = useTranslations();
   const [currentStep, setCurrentStep] = useState(1);
   const [country, setCountry] = useState("");
   const [locale, setLocale] = useState("");
@@ -68,7 +70,7 @@ export default function OnboardingPage() {
       if (!res.ok) throw new Error("Failed to save");
       router.push("/studio");
     } catch {
-      setError("Could not save preferences. Please try again.");
+      setError(translations.onboardingError);
     } finally {
       setLoading(false);
     }
@@ -102,16 +104,16 @@ export default function OnboardingPage() {
                   <div className="animate-fade-in">
                     <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
                       <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                      <span className="text-gradient font-semibold text-base">Welcome to MarketUp</span>
+                      <span className="text-gradient font-semibold text-base">{translations.onboardingWelcome}</span>
                       <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
                     </div>
                     
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9] mb-8">
-                      Let&apos;s get you <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">started</span>
+                      {translations.onboardingGetStarted}
                     </h1>
                     
                     <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light mb-12">
-                      We&apos;ll help you set up your account in just a few simple steps. <span className="text-accent font-medium">This will only take 2 minutes.</span>
+                      {translations.onboardingSetupTime}
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -119,22 +121,22 @@ export default function OnboardingPage() {
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
                           1
                         </div>
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Personalize</h3>
-                        <p className="text-sm text-foreground-muted">Choose your country and language preferences</p>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">{translations.onboardingPersonalize}</h3>
+                        <p className="text-sm text-foreground-muted">{translations.onboardingPersonalizeDesc}</p>
                       </div>
                       <div className="glass-elevated rounded-2xl p-6 text-center">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
                           2
                         </div>
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Configure</h3>
-                        <p className="text-sm text-foreground-muted">Set up your video generation preferences</p>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">{translations.onboardingConfigure}</h3>
+                        <p className="text-sm text-foreground-muted">{translations.onboardingConfigureDesc}</p>
                       </div>
                       <div className="glass-elevated rounded-2xl p-6 text-center">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
                           3
                         </div>
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Create</h3>
-                        <p className="text-sm text-foreground-muted">Start creating amazing AI videos</p>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">{translations.onboardingCreate}</h3>
+                        <p className="text-sm text-foreground-muted">{translations.onboardingCreateDesc}</p>
                       </div>
                     </div>
                   </div>
@@ -145,16 +147,16 @@ export default function OnboardingPage() {
                   <div className="animate-fade-in">
                     <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
                       <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                      <span className="text-gradient font-semibold text-base">Step 1 of 3</span>
+                      <span className="text-gradient font-semibold text-base">{translations.onboardingStep} 1 {translations.onboardingOf} 3</span>
                       <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
                     </div>
                     
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
-                      Where are you <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">located?</span>
+                      {translations.onboardingWhereLocated}
                     </h1>
                     
                     <p className="text-lg md:text-xl text-foreground-muted max-w-2xl mx-auto leading-relaxed font-light mb-12">
-                      This helps us provide relevant content and features for your region.
+                      {translations.onboardingLocationDesc}
                     </p>
 
                     <div className="max-w-3xl mx-auto">
@@ -197,16 +199,16 @@ export default function OnboardingPage() {
                   <div className="animate-fade-in">
                     <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
                       <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                      <span className="text-gradient font-semibold text-base">Step 2 of 3</span>
+                      <span className="text-gradient font-semibold text-base">{translations.onboardingStep} 2 {translations.onboardingOf} 3</span>
                       <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
                     </div>
                     
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-6">
-                      What&apos;s your <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">language?</span>
+                      {translations.onboardingWhatLanguage}
                     </h1>
                     
                     <p className="text-lg md:text-xl text-foreground-muted max-w-2xl mx-auto leading-relaxed font-light mb-12">
-                      Choose your preferred language for the interface and content.
+                      {translations.onboardingLanguageDesc}
                     </p>
 
                     <div className="max-w-3xl mx-auto">
@@ -257,7 +259,7 @@ export default function OnboardingPage() {
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
-                      Back
+                      {translations.onboardingBack}
                     </button>
                   )}
 
@@ -268,7 +270,7 @@ export default function OnboardingPage() {
                       className="group relative btn-primary btn-lg px-8 py-4 text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="relative z-10 flex items-center gap-3">
-                        Continue
+                        {translations.onboardingContinue}
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -284,7 +286,7 @@ export default function OnboardingPage() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        Skip for now
+                        {translations.onboardingSkip}
                       </a>
                       <button 
                         onClick={save}
@@ -298,14 +300,14 @@ export default function OnboardingPage() {
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                               </svg>
-                              Setting up...
+                              {translations.onboardingSettingUp}
                             </>
                           ) : (
                             <>
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
-                              Complete Setup
+                              {translations.onboardingCompleteSetup}
                             </>
                           )}
                         </span>

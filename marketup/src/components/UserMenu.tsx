@@ -4,7 +4,9 @@ import { signOut } from "next-auth/react";
 
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -15,9 +17,17 @@ export default function UserMenu() {
     return () => window.removeEventListener("click", onClick);
   }, []);
 
+  useEffect(() => {
+    if (open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setButtonRect(rect);
+    }
+  }, [open]);
+
   return (
     <div className="relative" ref={ref}>
       <button
+        ref={buttonRef}
         onClick={() => setOpen((v) => !v)}
         className="rounded border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm"
         aria-haspopup="menu"
@@ -29,7 +39,12 @@ export default function UserMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 mt-2 w-56 rounded-xl glass p-2 shadow-xl"
+          className="fixed w-56 rounded-xl glass p-2 shadow-xl"
+          style={{ 
+            zIndex: 9999,
+            top: buttonRect ? `${buttonRect.bottom + 8}px` : '80px',
+            right: buttonRect ? `${window.innerWidth - buttonRect.right}px` : '16px'
+          }}
         >
           <div className="px-2 py-1.5 text-xs uppercase tracking-wide text-[var(--muted)]">Account</div>
           <a className="block px-3 py-2 text-sm rounded hover:bg-white/5" href="/dashboard">

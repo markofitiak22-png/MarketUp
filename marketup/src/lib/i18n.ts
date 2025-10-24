@@ -8,6 +8,9 @@ export interface Translations {
   about: string;
   contact: string;
   referrals: string;
+  signIn: string;
+  signUp: string;
+  language: string;
   
   // Hero Section
   heroTitle: string;
@@ -170,7 +173,6 @@ export interface Translations {
   contactValidEmail: string;
   contactMessageLength: string;
   contactSending: string;
-  contactSendMessage: string;
   contactClear: string;
   contactSomethingWrong: string;
   contactOtherWays: string;
@@ -293,41 +295,19 @@ export interface Translations {
   pricingReadyToCreate: string;
   pricingJoinThousands: string;
   pricingStartFreeTrial: string;
-  pricingContactSales: string;
   pricingSavePerYear: string;
   pricingForever: string;
   pricingMonth: string;
   pricingYear: string;
   
-  // Studio Wizard Components
-  studioChooseAvatar: string;
-  studioSelectPresenter: string;
-  studioLanguageVoice: string;
-  studioPickLanguage: string;
-  studioBackgrounds: string;
-  studioChooseScenes: string;
-  studioScript: string;
-  studioWriteMessage: string;
-  studioGenerate: string;
-  studioCreateVideo: string;
-  studioPreview: string;
-  studioReviewDownload: string;
-  studioStep: string;
-  studioOf: string;
-  studioAccessDenied: string;
-  studioSignInRequired: string;
-  studioSignIn: string;
-  
   // Avatar Step
   studioChooseYourAvatar: string;
   studioSelectVirtualPresenter: string;
   studioEachAvatarUnique: string;
-  studioPreview: string;
   studioWillPresentVideo: string;
   studioContinue: string;
   
   // Language Step
-  studioLanguageVoice: string;
   studioChooseLanguageVoice: string;
   studioPreviewEachVoice: string;
   studioSelectLanguage: string;
@@ -338,27 +318,21 @@ export interface Translations {
   studioCalm: string;
   studioExpressive: string;
   studioPlaying: string;
-  studioPreview: string;
   studioSelectedVoice: string;
   studioBack: string;
-  studioContinue: string;
   
   // Background Step
   studioChooseBackgrounds: string;
   studioSelectMultipleBackgrounds: string;
   studioChoose2To4Scenes: string;
   studioAll: string;
-  studioProfessional: string;
   studioCasual: string;
   studioCreative: string;
   studioBackgroundsSelected: string;
-  studioPreview: string;
   studioPreviewMode: string;
   studioExitPreview: string;
   studioSelectedBackgrounds: string;
   studioMoreBackgrounds: string;
-  studioBack: string;
-  studioContinue: string;
   
   // Text Step
   studioWriteYourScript: string;
@@ -391,9 +365,6 @@ export interface Translations {
   studioStartWithHook: string;
   studioPronunciation: string;
   studioUsePhoneticSpelling: string;
-  studioPreview: string;
-  studioBack: string;
-  studioContinue: string;
   
   // Generation Step
   studioGenerateYourVideo: string;
@@ -402,8 +373,6 @@ export interface Translations {
   studioVideoSummary: string;
   studioAvatar: string;
   studioBackground: string;
-  studioDuration: string;
-  studioWords: string;
   studioGeneratingYourVideo: string;
   studioDontCloseWindow: string;
   studioProgress: string;
@@ -420,32 +389,27 @@ export interface Translations {
   studioReadyToGenerate: string;
   studioVideoCreatedWithSettings: string;
   studioStartGeneration: string;
-  studioBack: string;
   studioGenerationTakes2To3Minutes: string;
   
   // Preview Step
   studioYourVideoReady: string;
   studioReviewGeneratedVideo: string;
   studioDownloadWhenSatisfied: string;
-  studioPlaying: string;
   studioClickToPreview: string;
-  studioDuration: string;
   studioQuality: string;
   studioFormat: string;
   studioFileSize: string;
   studioVideoSettings: string;
   studioVoice: string;
-  studioBackground: string;
   studioResolution: string;
   studioScriptLength: string;
-  studioScript: string;
   studioActions: string;
   studioDownloading: string;
   studioDownloadVideo: string;
   studioRegenerate: string;
   studioSaveContinue: string;
   studioDownloadProgress: string;
-  studioBack: string;
+
   studioVideoGeneratedSuccessfully: string;
   
   // About Page
@@ -655,15 +619,12 @@ export interface Translations {
   billingNoInvoicesYet: string;
   billingInvoiceHistoryWillAppear: string;
   billingDownload: string;
-  billingPaymentMethods: string;
   billingAddPaymentMethod: string;
   billingDefault: string;
   billingEdit: string;
   billingNoPaymentMethod: string;
   billingAddPaymentMethodToManage: string;
   billingDetailedUsage: string;
-  billingVideosCreated: string;
-  billingStorageUsed: string;
   billingBandwidthThisMonth: string;
   billingUnlimited: string;
   
@@ -723,7 +684,6 @@ export interface Translations {
   settingsExport: string;
   settingsDeleteAccount: string;
   settingsPermanentlyDeleteAccount: string;
-  settingsDeleteAccount: string;
   settingsSettingsSavedSuccessfully: string;
   settingsErrorSavingSettings: string;
   settingsDataExportFeatureComingSoon: string;
@@ -767,7 +727,6 @@ export interface Translations {
   adminRevenueTrend: string;
   adminRevenue: string;
   adminUserActivity: string;
-  adminActiveUsers: string;
   adminChartVisualizationComingSoon: string;
   adminRecentActivity: string;
   adminNoRecentActivity: string;
@@ -861,8 +820,6 @@ export interface Translations {
   adminVideosVideoInformation: string;
   adminVideosDuration: string;
   adminVideosCategory: string;
-  adminVideosUploadDate: string;
-  adminVideosFlagsCount: string;
   adminVideosUploaderInformation: string;
   adminVideosDescription: string;
   adminVideosTags: string;
@@ -890,7 +847,6 @@ export interface Translations {
   adminSchedulerPublishesIn: string;
   adminSchedulerPublishNow: string;
   adminSchedulerCancel: string;
-  adminSchedulerScheduleNewPost: string;
   adminSchedulerSelectVideo: string;
   adminSchedulerSelectSocialNetworks: string;
   adminSchedulerPublicationDate: string;
@@ -898,7 +854,6 @@ export interface Translations {
   adminSchedulerCustomMessage: string;
   adminSchedulerCustomMessageOptional: string;
   adminSchedulerCustomMessagePlaceholder: string;
-  adminSchedulerCancel: string;
   adminSchedulerSchedulePost: string;
   adminSchedulerScheduling: string;
   adminSchedulerPleaseSelectVideo: string;
@@ -941,13 +896,9 @@ export interface Translations {
   adminPaymentsThisMonth: string;
   adminPaymentsThisYear: string;
   adminPaymentsTotalRevenue: string;
-  adminPaymentsCompleted: string;
-  adminPaymentsPending: string;
-  adminPaymentsFailed: string;
   adminPaymentsInvoice: string;
   adminPaymentsConfirm: string;
   adminPaymentsCancel: string;
-  adminPaymentsRefund: string;
   adminPaymentsView: string;
   adminPaymentsTransactionDetails: string;
   adminPaymentsTransactionInformation: string;
@@ -958,7 +909,6 @@ export interface Translations {
   adminPaymentsDiscount: string;
   adminPaymentsTax: string;
   adminPaymentsCancelPayment: string;
-  adminPaymentsRefund: string;
   adminPaymentsConfirmPayment: string;
   adminPaymentsEnterCancellationReason: string;
   adminPaymentsEnterRefundReason: string;
@@ -1000,10 +950,6 @@ export interface Translations {
   adminTicketsPremium: string;
   adminTicketsEnterprise: string;
   adminTicketsTotalTickets: string;
-  adminTicketsOpen: string;
-  adminTicketsInProgress: string;
-  adminTicketsResolved: string;
-  adminTicketsUrgent: string;
   adminTicketsView: string;
   adminTicketsAssignedTo: string;
   adminTicketsMessages: string;
@@ -1064,6 +1010,9 @@ export const translations: Record<Language, Translations> = {
     about: "About",
     contact: "Contact",
     referrals: "Referrals",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    language: "Language",
     
     // Hero Section
     heroTitle: "Create premium AI avatar videos in under 5 minutes.",
@@ -1226,7 +1175,6 @@ export const translations: Record<Language, Translations> = {
     contactValidEmail: "Enter a valid email address.",
     contactMessageLength: "Message should be at least 10 characters.",
     contactSending: "Sending...",
-    contactSendMessage: "Send message",
     contactClear: "Clear",
     contactSomethingWrong: "Something went wrong. Please try again.",
     contactOtherWays: "Other ways to reach us",
@@ -1349,41 +1297,20 @@ export const translations: Record<Language, Translations> = {
     pricingReadyToCreate: "Ready to create amazing AI videos?",
     pricingJoinThousands: "Join thousands of creators and businesses who are already using our platform to create professional AI avatar videos.",
     pricingStartFreeTrial: "Start Free Trial",
-    pricingContactSales: "Contact Sales",
     pricingSavePerYear: "Save $/year",
     pricingForever: "forever",
     pricingMonth: "month",
     pricingYear: "year",
     
-    // Studio Wizard Components
-    studioChooseAvatar: "Choose Avatar",
-    studioSelectPresenter: "Select Presenter",
-    studioLanguageVoice: "Language & Voice",
-    studioPickLanguage: "Pick Language",
-    studioBackgrounds: "Backgrounds",
-    studioChooseScenes: "Choose Scenes",
-    studioScript: "Script",
-    studioWriteMessage: "Write Message",
-    studioGenerate: "Generate",
-    studioCreateVideo: "Create Video",
-    studioPreview: "Preview",
-    studioReviewDownload: "Review & Download",
-    studioStep: "Step",
-    studioOf: "of",
-    studioAccessDenied: "Access Denied",
-    studioSignInRequired: "Sign in required to access the studio",
-    studioSignIn: "Sign In",
     
     // Avatar Step
     studioChooseYourAvatar: "Choose your avatar",
     studioSelectVirtualPresenter: "Select a virtual presenter who will deliver your message.",
     studioEachAvatarUnique: "Each avatar has a unique personality and speaking style.",
-    studioPreview: "Preview",
     studioWillPresentVideo: "will present your video",
     studioContinue: "Continue",
     
     // Language Step
-    studioLanguageVoice: "Language & Voice",
     studioChooseLanguageVoice: "Choose the language and voice for your video.",
     studioPreviewEachVoice: "You can preview each voice before selecting.",
     studioSelectLanguage: "Select Language",
@@ -1394,27 +1321,21 @@ export const translations: Record<Language, Translations> = {
     studioCalm: "Calm",
     studioExpressive: "Expressive",
     studioPlaying: "Playing...",
-    studioPreview: "Preview",
     studioSelectedVoice: "Selected Voice",
     studioBack: "Back",
-    studioContinue: "Continue",
     
     // Background Step
     studioChooseBackgrounds: "Choose Backgrounds",
     studioSelectMultipleBackgrounds: "Select multiple backgrounds for your video.",
     studioChoose2To4Scenes: "You can choose 2-4 different scenes to create dynamic transitions.",
     studioAll: "All",
-    studioProfessional: "Professional",
     studioCasual: "Casual",
     studioCreative: "Creative",
     studioBackgroundsSelected: "backgrounds selected",
-    studioPreview: "Preview",
     studioPreviewMode: "Preview Mode",
     studioExitPreview: "Exit Preview",
     studioSelectedBackgrounds: "Selected Backgrounds",
     studioMoreBackgrounds: "more backgrounds",
-    studioBack: "Back",
-    studioContinue: "Continue",
     
     // Text Step
     studioWriteYourScript: "Write your script",
@@ -1447,9 +1368,6 @@ export const translations: Record<Language, Translations> = {
     studioStartWithHook: "Start with a hook, deliver your message, and end with a call to action.",
     studioPronunciation: "Pronunciation",
     studioUsePhoneticSpelling: "Use phonetic spelling for difficult words: \"AI\" as \"A-I\".",
-    studioPreview: "Preview",
-    studioBack: "Back",
-    studioContinue: "Continue",
     
     // Generation Step
     studioGenerateYourVideo: "Generate Your Video",
@@ -1458,8 +1376,6 @@ export const translations: Record<Language, Translations> = {
     studioVideoSummary: "Video Summary",
     studioAvatar: "Avatar",
     studioBackground: "Background",
-    studioDuration: "Duration",
-    studioWords: "words",
     studioGeneratingYourVideo: "Generating Your Video",
     studioDontCloseWindow: "Please don't close this window while we create your video.",
     studioProgress: "Progress",
@@ -1476,32 +1392,26 @@ export const translations: Record<Language, Translations> = {
     studioReadyToGenerate: "Ready to Generate",
     studioVideoCreatedWithSettings: "Your video will be created with the settings above.",
     studioStartGeneration: "Start Generation",
-    studioBack: "Back",
     studioGenerationTakes2To3Minutes: "Generation typically takes 2-3 minutes",
     
     // Preview Step
     studioYourVideoReady: "Your Video is Ready!",
     studioReviewGeneratedVideo: "Review your generated video and download it when you're satisfied with the result.",
     studioDownloadWhenSatisfied: "Download it when you're satisfied with the result.",
-    studioPlaying: "Playing...",
     studioClickToPreview: "Click to preview",
-    studioDuration: "Duration",
     studioQuality: "Quality",
     studioFormat: "Format",
     studioFileSize: "File Size",
     studioVideoSettings: "Video Settings",
     studioVoice: "Voice",
-    studioBackground: "Background",
     studioResolution: "Resolution",
     studioScriptLength: "Script Length",
-    studioScript: "Script",
     studioActions: "Actions",
     studioDownloading: "Downloading...",
     studioDownloadVideo: "Download Video",
     studioRegenerate: "Regenerate",
     studioSaveContinue: "Save & Continue",
     studioDownloadProgress: "Download Progress",
-    studioBack: "Back",
     studioVideoGeneratedSuccessfully: "Video generated successfully",
     
     // About Page
@@ -1819,7 +1729,6 @@ export const translations: Record<Language, Translations> = {
     adminRevenueTrend: "Revenue Trend",
     adminRevenue: "Revenue",
     adminUserActivity: "User Activity",
-    adminActiveUsers: "Active Users",
     adminChartVisualizationComingSoon: "Chart visualization coming soon",
     adminRecentActivity: "Recent Activity",
     adminNoRecentActivity: "No recent activity",
@@ -1913,8 +1822,6 @@ export const translations: Record<Language, Translations> = {
     adminVideosVideoInformation: "Video Information",
     adminVideosDuration: "Duration",
     adminVideosCategory: "Category",
-    adminVideosUploadDate: "Upload Date",
-    adminVideosFlagsCount: "Flags",
     adminVideosUploaderInformation: "Uploader Information",
     adminVideosDescription: "Description",
     adminVideosTags: "Tags",
@@ -1942,7 +1849,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerPublishesIn: "Publishes in",
     adminSchedulerPublishNow: "Publish Now",
     adminSchedulerCancel: "Cancel",
-    adminSchedulerScheduleNewPost: "Schedule New Post",
     adminSchedulerSelectVideo: "Select Video *",
     adminSchedulerSelectSocialNetworks: "Select Social Networks *",
     adminSchedulerPublicationDate: "Publication Date *",
@@ -1950,7 +1856,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCustomMessage: "Custom Message",
     adminSchedulerCustomMessageOptional: "Custom Message (Optional)",
     adminSchedulerCustomMessagePlaceholder: "Add a custom message to accompany your video...",
-    adminSchedulerCancel: "Cancel",
     adminSchedulerSchedulePost: "Schedule Post",
     adminSchedulerScheduling: "Scheduling...",
     adminSchedulerPleaseSelectVideo: "Please select a video",
@@ -1993,13 +1898,9 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsThisMonth: "This Month",
     adminPaymentsThisYear: "This Year",
     adminPaymentsTotalRevenue: "Total Revenue",
-    adminPaymentsCompleted: "Completed",
-    adminPaymentsPending: "Pending",
-    adminPaymentsFailed: "Failed",
     adminPaymentsInvoice: "Invoice",
     adminPaymentsConfirm: "Confirm",
     adminPaymentsCancel: "Cancel",
-    adminPaymentsRefund: "Refund",
     adminPaymentsView: "View",
     adminPaymentsTransactionDetails: "Transaction Details",
     adminPaymentsTransactionInformation: "Transaction Information",
@@ -2010,7 +1911,6 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsDiscount: "Discount",
     adminPaymentsTax: "Tax",
     adminPaymentsCancelPayment: "Cancel Payment",
-    adminPaymentsRefund: "Refund",
     adminPaymentsConfirmPayment: "Confirm Payment",
     adminPaymentsEnterCancellationReason: "Enter cancellation reason:",
     adminPaymentsEnterRefundReason: "Enter refund reason:",
@@ -2052,10 +1952,6 @@ export const translations: Record<Language, Translations> = {
     adminTicketsPremium: "Premium",
     adminTicketsEnterprise: "Enterprise",
     adminTicketsTotalTickets: "Total Tickets",
-    adminTicketsOpen: "Open",
-    adminTicketsInProgress: "In Progress",
-    adminTicketsResolved: "Resolved",
-    adminTicketsUrgent: "Urgent",
     adminTicketsView: "View",
     adminTicketsAssignedTo: "Assigned to",
     adminTicketsMessages: "messages",
@@ -2115,6 +2011,9 @@ export const translations: Record<Language, Translations> = {
     about: "Om oss",
     contact: "Kontakt",
     referrals: "Rekommendationer",
+    signIn: "Logga in",
+    signUp: "Registrera dig",
+    language: "Språk",
     
     // Hero Section
     heroTitle: "Skapa premium AI-avatarvideos på under 5 minuter.",
@@ -2277,7 +2176,6 @@ export const translations: Record<Language, Translations> = {
     contactValidEmail: "Ange en giltig e-postadress.",
     contactMessageLength: "Meddelandet ska vara minst 10 tecken.",
     contactSending: "Skickar...",
-    contactSendMessage: "Skicka meddelande",
     contactClear: "Rensa",
     contactSomethingWrong: "Något gick fel. Försök igen.",
     contactOtherWays: "Andra sätt att nå oss",
@@ -2400,41 +2298,20 @@ export const translations: Record<Language, Translations> = {
     pricingReadyToCreate: "Redo att skapa fantastiska AI-videor?",
     pricingJoinThousands: "Gå med tusentals skapare och företag som redan använder vår plattform för att skapa professionella AI-avatarvideor.",
     pricingStartFreeTrial: "Starta gratis provperiod",
-    pricingContactSales: "Kontakta försäljning",
     pricingSavePerYear: "Spara $/år",
     pricingForever: "för alltid",
     pricingMonth: "månad",
     pricingYear: "år",
     
-    // Studio Wizard Components
-    studioChooseAvatar: "Välj Avatar",
-    studioSelectPresenter: "Välj Presentatör",
-    studioLanguageVoice: "Språk & Röst",
-    studioPickLanguage: "Välj Språk",
-    studioBackgrounds: "Bakgrunder",
-    studioChooseScenes: "Välj Scener",
-    studioScript: "Manus",
-    studioWriteMessage: "Skriv Meddelande",
-    studioGenerate: "Generera",
-    studioCreateVideo: "Skapa Video",
-    studioPreview: "Förhandsvisning",
-    studioReviewDownload: "Granska & Ladda ner",
-    studioStep: "Steg",
-    studioOf: "av",
-    studioAccessDenied: "Åtkomst Nekad",
-    studioSignInRequired: "Logga in krävs för att komma åt studion",
-    studioSignIn: "Logga in",
     
     // Avatar Step
     studioChooseYourAvatar: "Välj din avatar",
     studioSelectVirtualPresenter: "Välj en virtuell presentatör som kommer att leverera ditt meddelande.",
     studioEachAvatarUnique: "Varje avatar har en unik personlighet och talstil.",
-    studioPreview: "Förhandsvisning",
     studioWillPresentVideo: "kommer att presentera din video",
     studioContinue: "Fortsätt",
     
     // Language Step
-    studioLanguageVoice: "Språk & Röst",
     studioChooseLanguageVoice: "Välj språk och röst för din video.",
     studioPreviewEachVoice: "Du kan förhandsgranska varje röst innan du väljer.",
     studioSelectLanguage: "Välj Språk",
@@ -2445,27 +2322,21 @@ export const translations: Record<Language, Translations> = {
     studioCalm: "Lugn",
     studioExpressive: "Uttrycksfull",
     studioPlaying: "Spelar...",
-    studioPreview: "Förhandsvisning",
     studioSelectedVoice: "Vald Röst",
     studioBack: "Tillbaka",
-    studioContinue: "Fortsätt",
     
     // Background Step
     studioChooseBackgrounds: "Välj Bakgrunder",
     studioSelectMultipleBackgrounds: "Välj flera bakgrunder för din video.",
     studioChoose2To4Scenes: "Du kan välja 2-4 olika scener för att skapa dynamiska övergångar.",
     studioAll: "Alla",
-    studioProfessional: "Professionell",
     studioCasual: "Avslappnad",
     studioCreative: "Kreativ",
     studioBackgroundsSelected: "bakgrunder valda",
-    studioPreview: "Förhandsvisning",
     studioPreviewMode: "Förhandsvisningsläge",
     studioExitPreview: "Avsluta Förhandsvisning",
     studioSelectedBackgrounds: "Valda Bakgrunder",
     studioMoreBackgrounds: "fler bakgrunder",
-    studioBack: "Tillbaka",
-    studioContinue: "Fortsätt",
     
     // Text Step
     studioWriteYourScript: "Skriv ditt manus",
@@ -2498,9 +2369,6 @@ export const translations: Record<Language, Translations> = {
     studioStartWithHook: "Börja med en krok, leverera ditt meddelande och avsluta med en uppmaning till handling.",
     studioPronunciation: "Uttal",
     studioUsePhoneticSpelling: "Använd fonetisk stavning för svåra ord: \"AI\" som \"A-I\".",
-    studioPreview: "Förhandsvisning",
-    studioBack: "Tillbaka",
-    studioContinue: "Fortsätt",
     
     // Generation Step
     studioGenerateYourVideo: "Generera Din Video",
@@ -2509,8 +2377,6 @@ export const translations: Record<Language, Translations> = {
     studioVideoSummary: "Videosammanfattning",
     studioAvatar: "Avatar",
     studioBackground: "Bakgrund",
-    studioDuration: "Varaktighet",
-    studioWords: "ord",
     studioGeneratingYourVideo: "Genererar Din Video",
     studioDontCloseWindow: "Stäng inte detta fönster medan vi skapar din video.",
     studioProgress: "Framsteg",
@@ -2527,32 +2393,26 @@ export const translations: Record<Language, Translations> = {
     studioReadyToGenerate: "Redo att Generera",
     studioVideoCreatedWithSettings: "Din video kommer att skapas med inställningarna ovan.",
     studioStartGeneration: "Starta Generering",
-    studioBack: "Tillbaka",
     studioGenerationTakes2To3Minutes: "Generering tar vanligtvis 2-3 minuter",
     
     // Preview Step
     studioYourVideoReady: "Din Video är Redo!",
     studioReviewGeneratedVideo: "Granska din genererade video och ladda ner den när du är nöjd med resultatet.",
     studioDownloadWhenSatisfied: "Ladda ner den när du är nöjd med resultatet.",
-    studioPlaying: "Spelar...",
     studioClickToPreview: "Klicka för förhandsvisning",
-    studioDuration: "Varaktighet",
     studioQuality: "Kvalitet",
     studioFormat: "Format",
     studioFileSize: "Filstorlek",
     studioVideoSettings: "Videoinställningar",
     studioVoice: "Röst",
-    studioBackground: "Bakgrund",
     studioResolution: "Upplösning",
     studioScriptLength: "Manuslängd",
-    studioScript: "Manus",
     studioActions: "Åtgärder",
     studioDownloading: "Laddar ner...",
     studioDownloadVideo: "Ladda ner Video",
     studioRegenerate: "Återgenerera",
     studioSaveContinue: "Spara & Fortsätt",
     studioDownloadProgress: "Nedladdningsframsteg",
-    studioBack: "Tillbaka",
     studioVideoGeneratedSuccessfully: "Video genererad framgångsrikt",
     
     // About Page
@@ -2870,7 +2730,6 @@ export const translations: Record<Language, Translations> = {
     adminRevenueTrend: "Intäktsutveckling",
     adminRevenue: "Intäkt",
     adminUserActivity: "Användaraktivitet",
-    adminActiveUsers: "Aktiva användare",
     adminChartVisualizationComingSoon: "Diagramvisualisering kommer snart",
     adminRecentActivity: "Senaste aktivitet",
     adminNoRecentActivity: "Ingen senaste aktivitet",
@@ -2964,8 +2823,6 @@ export const translations: Record<Language, Translations> = {
     adminVideosVideoInformation: "Videoinformation",
     adminVideosDuration: "Varaktighet",
     adminVideosCategory: "Kategori",
-    adminVideosUploadDate: "Uppladdningsdatum",
-    adminVideosFlagsCount: "Flaggor",
     adminVideosUploaderInformation: "Uppladdarinformation",
     adminVideosDescription: "Beskrivning",
     adminVideosTags: "Taggar",
@@ -2993,7 +2850,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerPublishesIn: "Publiceras om",
     adminSchedulerPublishNow: "Publicera Nu",
     adminSchedulerCancel: "Avbryt",
-    adminSchedulerScheduleNewPost: "Schemalägg Nytt Inlägg",
     adminSchedulerSelectVideo: "Välj Video *",
     adminSchedulerSelectSocialNetworks: "Välj Sociala Nätverk *",
     adminSchedulerPublicationDate: "Publiceringsdatum *",
@@ -3001,7 +2857,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCustomMessage: "Anpassat Meddelande",
     adminSchedulerCustomMessageOptional: "Anpassat Meddelande (Valfritt)",
     adminSchedulerCustomMessagePlaceholder: "Lägg till ett anpassat meddelande som följer med din video...",
-    adminSchedulerCancel: "Avbryt",
     adminSchedulerSchedulePost: "Schemalägg Inlägg",
     adminSchedulerScheduling: "Schemalägger...",
     adminSchedulerPleaseSelectVideo: "Välj en video",
@@ -3044,13 +2899,9 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsThisMonth: "Denna Månad",
     adminPaymentsThisYear: "Detta År",
     adminPaymentsTotalRevenue: "Total Intäkt",
-    adminPaymentsCompleted: "Slutförd",
-    adminPaymentsPending: "Väntande",
-    adminPaymentsFailed: "Misslyckades",
     adminPaymentsInvoice: "Faktura",
     adminPaymentsConfirm: "Bekräfta",
     adminPaymentsCancel: "Avbryt",
-    adminPaymentsRefund: "Återbetalning",
     adminPaymentsView: "Visa",
     adminPaymentsTransactionDetails: "Transaktionsdetaljer",
     adminPaymentsTransactionInformation: "Transaktionsinformation",
@@ -3061,7 +2912,6 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsDiscount: "Rabatt",
     adminPaymentsTax: "Skatt",
     adminPaymentsCancelPayment: "Avbryt Betalning",
-    adminPaymentsRefund: "Återbetalning",
     adminPaymentsConfirmPayment: "Bekräfta Betalning",
     adminPaymentsEnterCancellationReason: "Ange avbrytningsanledning:",
     adminPaymentsEnterRefundReason: "Ange återbetalningsanledning:",
@@ -3103,10 +2953,6 @@ export const translations: Record<Language, Translations> = {
     adminTicketsPremium: "Premium",
     adminTicketsEnterprise: "Enterprise",
     adminTicketsTotalTickets: "Totalt Antal Ärenden",
-    adminTicketsOpen: "Öppen",
-    adminTicketsInProgress: "Pågående",
-    adminTicketsResolved: "Löst",
-    adminTicketsUrgent: "Brådskande",
     adminTicketsView: "Visa",
     adminTicketsAssignedTo: "Tilldelad till",
     adminTicketsMessages: "meddelanden",
@@ -3166,6 +3012,9 @@ export const translations: Record<Language, Translations> = {
     about: "Про нас",
     contact: "Контакти",
     referrals: "Рекомендації",
+    signIn: "Увійти",
+    signUp: "Зареєструватися",
+    language: "Мова",
     
     // Hero Section
     heroTitle: "Створюйте преміум AI-аватар відео менше ніж за 5 хвилин.",
@@ -3328,7 +3177,6 @@ export const translations: Record<Language, Translations> = {
     contactValidEmail: "Введіть дійсну адресу електронної пошти.",
     contactMessageLength: "Повідомлення має містити принаймні 10 символів.",
     contactSending: "Надсилаємо...",
-    contactSendMessage: "Надіслати повідомлення",
     contactClear: "Очистити",
     contactSomethingWrong: "Щось пішло не так. Спробуйте ще раз.",
     contactOtherWays: "Інші способи зв'язатися з нами",
@@ -3451,41 +3299,20 @@ export const translations: Record<Language, Translations> = {
     pricingReadyToCreate: "Готові створити дивовижні AI відео?",
     pricingJoinThousands: "Приєднуйтесь до тисяч творців та бізнесів, які вже використовують нашу платформу для створення професійних AI аватар відео.",
     pricingStartFreeTrial: "Почніть безкоштовний пробний період",
-    pricingContactSales: "Зв'яжіться з продажами",
     pricingSavePerYear: "Економте $/рік",
     pricingForever: "назавжди",
     pricingMonth: "місяць",
     pricingYear: "рік",
     
-    // Studio Wizard Components
-    studioChooseAvatar: "Обрати Аватар",
-    studioSelectPresenter: "Обрати Презентера",
-    studioLanguageVoice: "Мова та Голос",
-    studioPickLanguage: "Обрати Мову",
-    studioBackgrounds: "Фони",
-    studioChooseScenes: "Обрати Сцени",
-    studioScript: "Сценарій",
-    studioWriteMessage: "Написати Повідомлення",
-    studioGenerate: "Генерувати",
-    studioCreateVideo: "Створити Відео",
-    studioPreview: "Попередній Перегляд",
-    studioReviewDownload: "Переглянути та Завантажити",
-    studioStep: "Крок",
-    studioOf: "з",
-    studioAccessDenied: "Доступ Заборонено",
-    studioSignInRequired: "Потрібно увійти для доступу до студії",
-    studioSignIn: "Увійти",
     
     // Avatar Step
     studioChooseYourAvatar: "Оберіть свій аватар",
     studioSelectVirtualPresenter: "Оберіть віртуального презентера, який буде доставляти ваше повідомлення.",
     studioEachAvatarUnique: "Кожен аватар має унікальну особистість та стиль мовлення.",
-    studioPreview: "Попередній Перегляд",
     studioWillPresentVideo: "буде презентувати ваше відео",
     studioContinue: "Продовжити",
     
     // Language Step
-    studioLanguageVoice: "Мова та Голос",
     studioChooseLanguageVoice: "Оберіть мову та голос для вашого відео.",
     studioPreviewEachVoice: "Ви можете прослухати кожен голос перед вибором.",
     studioSelectLanguage: "Обрати Мову",
@@ -3496,27 +3323,22 @@ export const translations: Record<Language, Translations> = {
     studioCalm: "Спокійний",
     studioExpressive: "Виразний",
     studioPlaying: "Відтворення...",
-    studioPreview: "Попередній Перегляд",
     studioSelectedVoice: "Обраний Голос",
     studioBack: "Назад",
-    studioContinue: "Продовжити",
+
     
     // Background Step
     studioChooseBackgrounds: "Обрати Фони",
     studioSelectMultipleBackgrounds: "Оберіть кілька фонів для вашого відео.",
     studioChoose2To4Scenes: "Ви можете обрати 2-4 різні сцени для створення динамічних переходів.",
     studioAll: "Всі",
-    studioProfessional: "Професійний",
     studioCasual: "Повсякденний",
     studioCreative: "Креативний",
     studioBackgroundsSelected: "фонів обрано",
-    studioPreview: "Попередній Перегляд",
     studioPreviewMode: "Режим Попереднього Перегляду",
     studioExitPreview: "Вийти з Попереднього Перегляду",
     studioSelectedBackgrounds: "Обрані Фони",
     studioMoreBackgrounds: "більше фонів",
-    studioBack: "Назад",
-    studioContinue: "Продовжити",
     
     // Text Step
     studioWriteYourScript: "Напишіть свій сценарій",
@@ -3549,9 +3371,6 @@ export const translations: Record<Language, Translations> = {
     studioStartWithHook: "Почніть з гачка, доставте ваше повідомлення та закінчіть закликом до дії.",
     studioPronunciation: "Вимова",
     studioUsePhoneticSpelling: "Використовуйте фонетичне написання для складних слів: \"AI\" як \"А-І\".",
-    studioPreview: "Попередній Перегляд",
-    studioBack: "Назад",
-    studioContinue: "Продовжити",
     
     // Generation Step
     studioGenerateYourVideo: "Згенерувати Ваше Відео",
@@ -3560,8 +3379,6 @@ export const translations: Record<Language, Translations> = {
     studioVideoSummary: "Резюме Відео",
     studioAvatar: "Аватар",
     studioBackground: "Фон",
-    studioDuration: "Тривалість",
-    studioWords: "слів",
     studioGeneratingYourVideo: "Генерування Вашого Відео",
     studioDontCloseWindow: "Будь ласка, не закривайте це вікно, поки ми створюємо ваше відео.",
     studioProgress: "Прогрес",
@@ -3578,32 +3395,26 @@ export const translations: Record<Language, Translations> = {
     studioReadyToGenerate: "Готово до Генерування",
     studioVideoCreatedWithSettings: "Ваше відео буде створено з налаштуваннями вище.",
     studioStartGeneration: "Почати Генерування",
-    studioBack: "Назад",
     studioGenerationTakes2To3Minutes: "Генерування зазвичай займає 2-3 хвилини",
     
     // Preview Step
     studioYourVideoReady: "Ваше Відео Готове!",
     studioReviewGeneratedVideo: "Перегляньте ваше згенероване відео та завантажте його, коли будете задоволені результатом.",
     studioDownloadWhenSatisfied: "Завантажте його, коли будете задоволені результатом.",
-    studioPlaying: "Відтворення...",
     studioClickToPreview: "Натисніть для попереднього перегляду",
-    studioDuration: "Тривалість",
     studioQuality: "Якість",
     studioFormat: "Формат",
     studioFileSize: "Розмір Файлу",
     studioVideoSettings: "Налаштування Відео",
     studioVoice: "Голос",
-    studioBackground: "Фон",
     studioResolution: "Роздільна Здатність",
     studioScriptLength: "Довжина Сценарію",
-    studioScript: "Сценарій",
     studioActions: "Дії",
     studioDownloading: "Завантаження...",
     studioDownloadVideo: "Завантажити Відео",
     studioRegenerate: "Перегенерувати",
     studioSaveContinue: "Зберегти та Продовжити",
     studioDownloadProgress: "Прогрес Завантаження",
-    studioBack: "Назад",
     studioVideoGeneratedSuccessfully: "Відео успішно згенеровано",
     
     // About Page
@@ -3921,7 +3732,6 @@ export const translations: Record<Language, Translations> = {
     adminRevenueTrend: "Тенденція доходів",
     adminRevenue: "Дохід",
     adminUserActivity: "Активність користувачів",
-    adminActiveUsers: "Активні користувачі",
     adminChartVisualizationComingSoon: "Візуалізація діаграм незабаром",
     adminRecentActivity: "Остання активність",
     adminNoRecentActivity: "Немає останньої активності",
@@ -4015,8 +3825,6 @@ export const translations: Record<Language, Translations> = {
     adminVideosVideoInformation: "Інформація про Відео",
     adminVideosDuration: "Тривалість",
     adminVideosCategory: "Категорія",
-    adminVideosUploadDate: "Дата завантаження",
-    adminVideosFlagsCount: "Прапорці",
     adminVideosUploaderInformation: "Інформація про Завантажувача",
     adminVideosDescription: "Опис",
     adminVideosTags: "Теги",
@@ -4044,7 +3852,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerPublishesIn: "Опублікується через",
     adminSchedulerPublishNow: "Опублікувати Зараз",
     adminSchedulerCancel: "Скасувати",
-    adminSchedulerScheduleNewPost: "Запланувати Новий Пост",
     adminSchedulerSelectVideo: "Оберіть Відео *",
     adminSchedulerSelectSocialNetworks: "Оберіть Соціальні Мережі *",
     adminSchedulerPublicationDate: "Дата Публікації *",
@@ -4052,7 +3859,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCustomMessage: "Персональне Повідомлення",
     adminSchedulerCustomMessageOptional: "Персональне Повідомлення (Необов'язково)",
     adminSchedulerCustomMessagePlaceholder: "Додайте персональне повідомлення до вашого відео...",
-    adminSchedulerCancel: "Скасувати",
     adminSchedulerSchedulePost: "Запланувати Пост",
     adminSchedulerScheduling: "Планування...",
     adminSchedulerPleaseSelectVideo: "Будь ласка, оберіть відео",
@@ -4094,14 +3900,10 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsThisWeek: "Цей Тиждень",
     adminPaymentsThisMonth: "Цей Місяць",
     adminPaymentsThisYear: "Цей Рік",
-    adminPaymentsTotalRevenue: "Загальний Доход",
-    adminPaymentsCompleted: "Завершено",
-    adminPaymentsPending: "В очікуванні",
-    adminPaymentsFailed: "Не вдалося",
+    adminPaymentsTotalRevenue: "Загальний Дохід",
     adminPaymentsInvoice: "Рахунок",
     adminPaymentsConfirm: "Підтвердити",
     adminPaymentsCancel: "Скасувати",
-    adminPaymentsRefund: "Повернення",
     adminPaymentsView: "Переглянути",
     adminPaymentsTransactionDetails: "Деталі Транзакції",
     adminPaymentsTransactionInformation: "Інформація про Транзакцію",
@@ -4112,7 +3914,6 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsDiscount: "Знижка",
     adminPaymentsTax: "Податок",
     adminPaymentsCancelPayment: "Скасувати Платіж",
-    adminPaymentsRefund: "Повернення",
     adminPaymentsConfirmPayment: "Підтвердити Платіж",
     adminPaymentsEnterCancellationReason: "Введіть причину скасування:",
     adminPaymentsEnterRefundReason: "Введіть причину повернення:",
@@ -4154,10 +3955,6 @@ export const translations: Record<Language, Translations> = {
     adminTicketsPremium: "Преміум",
     adminTicketsEnterprise: "Підприємство",
     adminTicketsTotalTickets: "Всього Тікетів",
-    adminTicketsOpen: "Відкритий",
-    adminTicketsInProgress: "В Роботі",
-    adminTicketsResolved: "Вирішено",
-    adminTicketsUrgent: "Терміновий",
     adminTicketsView: "Переглянути",
     adminTicketsAssignedTo: "Призначено",
     adminTicketsMessages: "повідомлень",
@@ -4217,6 +4014,9 @@ export const translations: Record<Language, Translations> = {
     about: "Hakkımızda",
     contact: "İletişim",
     referrals: "Tavsiyeler",
+    signIn: "Giriş Yap",
+    signUp: "Kayıt Ol",
+    language: "Dil",
     
     // Hero Section
     heroTitle: "5 dakikadan kısa sürede premium AI avatar videoları oluşturun.",
@@ -4379,7 +4179,6 @@ export const translations: Record<Language, Translations> = {
     contactValidEmail: "Geçerli bir e-posta adresi girin.",
     contactMessageLength: "Mesaj en az 10 karakter olmalıdır.",
     contactSending: "Gönderiliyor...",
-    contactSendMessage: "Mesaj gönder",
     contactClear: "Temizle",
     contactSomethingWrong: "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
     contactOtherWays: "Bize ulaşmanın diğer yolları",
@@ -4502,41 +4301,19 @@ export const translations: Record<Language, Translations> = {
     pricingReadyToCreate: "Harika AI videoları oluşturmaya hazır mısınız?",
     pricingJoinThousands: "Profesyonel AI avatar videoları oluşturmak için platformumuzu kullanan binlerce içerik üreticisi ve işletmeye katılın.",
     pricingStartFreeTrial: "Ücretsiz Deneme Başlat",
-    pricingContactSales: "Satış Ekibiyle İletişime Geç",
     pricingSavePerYear: "Yılda $ tasarruf",
     pricingForever: "sonsuza kadar",
     pricingMonth: "ay",
     pricingYear: "yıl",
     
-    // Studio Wizard Components
-    studioChooseAvatar: "Avatar Seç",
-    studioSelectPresenter: "Sunucu Seç",
-    studioLanguageVoice: "Dil ve Ses",
-    studioPickLanguage: "Dil Seç",
-    studioBackgrounds: "Arka Planlar",
-    studioChooseScenes: "Sahne Seç",
-    studioScript: "Senaryo",
-    studioWriteMessage: "Mesaj Yaz",
-    studioGenerate: "Oluştur",
-    studioCreateVideo: "Video Oluştur",
-    studioPreview: "Önizleme",
-    studioReviewDownload: "İncele ve İndir",
-    studioStep: "Adım",
-    studioOf: "of",
-    studioAccessDenied: "Erişim Reddedildi",
-    studioSignInRequired: "Stüdyoya erişmek için giriş yapın",
-    studioSignIn: "Giriş Yap",
     
     // Avatar Step
     studioChooseYourAvatar: "Avatarınızı seçin",
     studioSelectVirtualPresenter: "Mesajınızı iletecek sanal sunucuyu seçin.",
     studioEachAvatarUnique: "Her avatarın benzersiz kişiliği ve konuşma tarzı vardır.",
-    studioPreview: "Önizleme",
     studioWillPresentVideo: "videonuzu sunacak",
     studioContinue: "Devam Et",
     
-    // Language Step
-    studioLanguageVoice: "Dil ve Ses",
     studioChooseLanguageVoice: "Videonuz için dil ve ses seçin.",
     studioPreviewEachVoice: "Seçmeden önce her sesi önizleyebilirsiniz.",
     studioSelectLanguage: "Dil Seç",
@@ -4547,27 +4324,21 @@ export const translations: Record<Language, Translations> = {
     studioCalm: "Sakin",
     studioExpressive: "İfadeli",
     studioPlaying: "Çalıyor...",
-    studioPreview: "Önizleme",
     studioSelectedVoice: "Seçilen Ses",
     studioBack: "Geri",
-    studioContinue: "Devam Et",
     
     // Background Step
     studioChooseBackgrounds: "Arka Planları Seç",
     studioSelectMultipleBackgrounds: "Videonuz için birden fazla arka plan seçin.",
     studioChoose2To4Scenes: "Dinamik geçişler oluşturmak için 2-4 farklı sahne seçebilirsiniz.",
     studioAll: "Tümü",
-    studioProfessional: "Profesyonel",
     studioCasual: "Günlük",
     studioCreative: "Yaratıcı",
     studioBackgroundsSelected: "arka plan seçildi",
-    studioPreview: "Önizleme",
     studioPreviewMode: "Önizleme Modu",
     studioExitPreview: "Önizlemeden Çık",
     studioSelectedBackgrounds: "Seçilen Arka Planlar",
     studioMoreBackgrounds: "daha fazla arka plan",
-    studioBack: "Geri",
-    studioContinue: "Devam Et",
     
     // Text Step
     studioWriteYourScript: "Senaryonuzu yazın",
@@ -4600,9 +4371,6 @@ export const translations: Record<Language, Translations> = {
     studioStartWithHook: "Bir kanca ile başlayın, mesajınızı iletin ve bir eylem çağrısı ile bitirin.",
     studioPronunciation: "Telaffuz",
     studioUsePhoneticSpelling: "Zor kelimeler için fonetik yazım kullanın: \"AI\" için \"A-I\".",
-    studioPreview: "Önizleme",
-    studioBack: "Geri",
-    studioContinue: "Devam Et",
     
     // Generation Step
     studioGenerateYourVideo: "Videonuzu Oluşturun",
@@ -4611,8 +4379,6 @@ export const translations: Record<Language, Translations> = {
     studioVideoSummary: "Video Özeti",
     studioAvatar: "Avatar",
     studioBackground: "Arka Plan",
-    studioDuration: "Süre",
-    studioWords: "kelime",
     studioGeneratingYourVideo: "Videonuz Oluşturuluyor",
     studioDontCloseWindow: "Lütfen videonuzu oluştururken bu pencereyi kapatmayın.",
     studioProgress: "İlerleme",
@@ -4629,32 +4395,26 @@ export const translations: Record<Language, Translations> = {
     studioReadyToGenerate: "Oluşturmaya Hazır",
     studioVideoCreatedWithSettings: "Videonuz yukarıdaki ayarlarla oluşturulacak.",
     studioStartGeneration: "Oluşturmayı Başlat",
-    studioBack: "Geri",
     studioGenerationTakes2To3Minutes: "Oluşturma genellikle 2-3 dakika sürer",
     
     // Preview Step
     studioYourVideoReady: "Videonuz Hazır!",
     studioReviewGeneratedVideo: "Oluşturulan videonuzu inceleyin ve sonuçtan memnun olduğunuzda indirin.",
     studioDownloadWhenSatisfied: "Sonuçtan memnun olduğunuzda indirin.",
-    studioPlaying: "Çalıyor...",
     studioClickToPreview: "Önizleme için tıklayın",
-    studioDuration: "Süre",
     studioQuality: "Kalite",
     studioFormat: "Format",
     studioFileSize: "Dosya Boyutu",
     studioVideoSettings: "Video Ayarları",
     studioVoice: "Ses",
-    studioBackground: "Arka Plan",
     studioResolution: "Çözünürlük",
     studioScriptLength: "Senaryo Uzunluğu",
-    studioScript: "Senaryo",
     studioActions: "Eylemler",
     studioDownloading: "İndiriliyor...",
     studioDownloadVideo: "Videoyu İndir",
     studioRegenerate: "Yeniden Oluştur",
     studioSaveContinue: "Kaydet ve Devam Et",
     studioDownloadProgress: "İndirme İlerlemesi",
-    studioBack: "Geri",
     studioVideoGeneratedSuccessfully: "Video başarıyla oluşturuldu",
     
     // About Page
@@ -4972,7 +4732,6 @@ export const translations: Record<Language, Translations> = {
     adminRevenueTrend: "Gelir Trendi",
     adminRevenue: "Gelir",
     adminUserActivity: "Kullanıcı Aktivitesi",
-    adminActiveUsers: "Aktif Kullanıcılar",
     adminChartVisualizationComingSoon: "Grafik görselleştirmesi yakında geliyor",
     adminRecentActivity: "Son Aktivite",
     adminNoRecentActivity: "Son aktivite yok",
@@ -5066,8 +4825,6 @@ export const translations: Record<Language, Translations> = {
     adminVideosVideoInformation: "Video Bilgileri",
     adminVideosDuration: "Süre",
     adminVideosCategory: "Kategori",
-    adminVideosUploadDate: "Yükleme Tarihi",
-    adminVideosFlagsCount: "Bayraklar",
     adminVideosUploaderInformation: "Yükleyici Bilgileri",
     adminVideosDescription: "Açıklama",
     adminVideosTags: "Etiketler",
@@ -5095,7 +4852,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerPublishesIn: "Yayınlanacak",
     adminSchedulerPublishNow: "Şimdi Yayınla",
     adminSchedulerCancel: "İptal",
-    adminSchedulerScheduleNewPost: "Yeni Gönderi Planla",
     adminSchedulerSelectVideo: "Video Seçin *",
     adminSchedulerSelectSocialNetworks: "Sosyal Ağları Seçin *",
     adminSchedulerPublicationDate: "Yayın Tarihi *",
@@ -5103,7 +4859,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCustomMessage: "Özel Mesaj",
     adminSchedulerCustomMessageOptional: "Özel Mesaj (İsteğe Bağlı)",
     adminSchedulerCustomMessagePlaceholder: "Videonuza eşlik edecek özel bir mesaj ekleyin...",
-    adminSchedulerCancel: "İptal",
     adminSchedulerSchedulePost: "Gönderi Planla",
     adminSchedulerScheduling: "Planlanıyor...",
     adminSchedulerPleaseSelectVideo: "Lütfen bir video seçin",
@@ -5146,13 +4901,9 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsThisMonth: "Bu Ay",
     adminPaymentsThisYear: "Bu Yıl",
     adminPaymentsTotalRevenue: "Toplam Gelir",
-    adminPaymentsCompleted: "Tamamlandı",
-    adminPaymentsPending: "Beklemede",
-    adminPaymentsFailed: "Başarısız",
     adminPaymentsInvoice: "Fatura",
     adminPaymentsConfirm: "Onayla",
     adminPaymentsCancel: "İptal",
-    adminPaymentsRefund: "İade",
     adminPaymentsView: "Görüntüle",
     adminPaymentsTransactionDetails: "İşlem Detayları",
     adminPaymentsTransactionInformation: "İşlem Bilgileri",
@@ -5163,7 +4914,6 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsDiscount: "İndirim",
     adminPaymentsTax: "Vergi",
     adminPaymentsCancelPayment: "Ödemeyi İptal Et",
-    adminPaymentsRefund: "İade",
     adminPaymentsConfirmPayment: "Ödemeyi Onayla",
     adminPaymentsEnterCancellationReason: "İptal sebebini girin:",
     adminPaymentsEnterRefundReason: "İade sebebini girin:",
@@ -5205,10 +4955,6 @@ export const translations: Record<Language, Translations> = {
     adminTicketsPremium: "Premium",
     adminTicketsEnterprise: "Kurumsal",
     adminTicketsTotalTickets: "Toplam Bilet",
-    adminTicketsOpen: "Açık",
-    adminTicketsInProgress: "Devam Ediyor",
-    adminTicketsResolved: "Çözüldü",
-    adminTicketsUrgent: "Acil",
     adminTicketsView: "Görüntüle",
     adminTicketsAssignedTo: "Atanan",
     adminTicketsMessages: "mesaj",
@@ -5268,6 +5014,9 @@ export const translations: Record<Language, Translations> = {
     about: "حولنا",
     contact: "اتصل بنا",
     referrals: "الإحالات",
+    signIn: "تسجيل الدخول",
+    signUp: "إنشاء حساب",
+    language: "اللغة",
     
     // Hero Section
     heroTitle: "أنشئ فيديوهات أفاتار ذكية مميزة في أقل من 5 دقائق.",
@@ -5430,7 +5179,6 @@ export const translations: Record<Language, Translations> = {
     contactValidEmail: "أدخل عنوان بريد إلكتروني صحيح.",
     contactMessageLength: "يجب أن تكون الرسالة 10 أحرف على الأقل.",
     contactSending: "جاري الإرسال...",
-    contactSendMessage: "إرسال الرسالة",
     contactClear: "مسح",
     contactSomethingWrong: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     contactOtherWays: "طرق أخرى للوصول إلينا",
@@ -5553,41 +5301,20 @@ export const translations: Record<Language, Translations> = {
     pricingReadyToCreate: "مستعد لإنشاء فيديوهات ذكية مذهلة؟",
     pricingJoinThousands: "انضم إلى آلاف المبدعين والشركات الذين يستخدمون بالفعل منصتنا لإنشاء فيديوهات أفاتار ذكية احترافية.",
     pricingStartFreeTrial: "ابدأ التجربة المجانية",
-    pricingContactSales: "تواصل مع المبيعات",
     pricingSavePerYear: "وفر $/سنة",
     pricingForever: "للأبد",
     pricingMonth: "شهر",
     pricingYear: "سنة",
     
-    // Studio Wizard Components
-    studioChooseAvatar: "اختر الصورة الرمزية",
-    studioSelectPresenter: "اختر المقدم",
-    studioLanguageVoice: "اللغة والصوت",
-    studioPickLanguage: "اختر اللغة",
-    studioBackgrounds: "الخلفيات",
-    studioChooseScenes: "اختر المشاهد",
-    studioScript: "النص",
-    studioWriteMessage: "اكتب الرسالة",
-    studioGenerate: "إنشاء",
-    studioCreateVideo: "إنشاء فيديو",
-    studioPreview: "معاينة",
-    studioReviewDownload: "مراجعة وتحميل",
-    studioStep: "خطوة",
-    studioOf: "من",
-    studioAccessDenied: "تم رفض الوصول",
-    studioSignInRequired: "يرجى تسجيل الدخول للوصول إلى الاستوديو",
-    studioSignIn: "تسجيل الدخول",
     
     // Avatar Step
     studioChooseYourAvatar: "اختر صورتك الرمزية",
     studioSelectVirtualPresenter: "اختر المقدم الافتراضي الذي سيقدم رسالتك.",
     studioEachAvatarUnique: "كل صورة رمزية لها شخصية فريدة وأسلوب كلام مميز.",
-    studioPreview: "معاينة",
     studioWillPresentVideo: "سيقدم فيديوك",
     studioContinue: "متابعة",
     
     // Language Step
-    studioLanguageVoice: "اللغة والصوت",
     studioChooseLanguageVoice: "اختر اللغة والصوت لفيديوك.",
     studioPreviewEachVoice: "يمكنك معاينة كل صوت قبل الاختيار.",
     studioSelectLanguage: "اختر اللغة",
@@ -5598,27 +5325,21 @@ export const translations: Record<Language, Translations> = {
     studioCalm: "هادئ",
     studioExpressive: "معبر",
     studioPlaying: "جاري التشغيل...",
-    studioPreview: "معاينة",
     studioSelectedVoice: "الصوت المحدد",
     studioBack: "رجوع",
-    studioContinue: "متابعة",
     
     // Background Step
     studioChooseBackgrounds: "اختر الخلفيات",
     studioSelectMultipleBackgrounds: "اختر عدة خلفيات لفيديوك.",
     studioChoose2To4Scenes: "يمكنك اختيار 2-4 مشاهد مختلفة لإنشاء انتقالات ديناميكية.",
     studioAll: "الكل",
-    studioProfessional: "مهني",
     studioCasual: "عادي",
     studioCreative: "إبداعي",
     studioBackgroundsSelected: "خلفية محددة",
-    studioPreview: "معاينة",
     studioPreviewMode: "وضع المعاينة",
     studioExitPreview: "خروج من المعاينة",
     studioSelectedBackgrounds: "الخلفيات المحددة",
     studioMoreBackgrounds: "خلفيات أكثر",
-    studioBack: "رجوع",
-    studioContinue: "متابعة",
     
     // Text Step
     studioWriteYourScript: "اكتب نصك",
@@ -5651,9 +5372,6 @@ export const translations: Record<Language, Translations> = {
     studioStartWithHook: "ابدأ بخطاف، ابلغ رسالتك، واختتم بدعوة للعمل.",
     studioPronunciation: "النطق",
     studioUsePhoneticSpelling: "استخدم الكتابة الصوتية للكلمات الصعبة: \"AI\" كـ \"A-I\".",
-    studioPreview: "معاينة",
-    studioBack: "رجوع",
-    studioContinue: "متابعة",
     
     // Generation Step
     studioGenerateYourVideo: "أنشئ فيديوك",
@@ -5662,8 +5380,6 @@ export const translations: Record<Language, Translations> = {
     studioVideoSummary: "ملخص الفيديو",
     studioAvatar: "الصورة الرمزية",
     studioBackground: "الخلفية",
-    studioDuration: "المدة",
-    studioWords: "كلمة",
     studioGeneratingYourVideo: "جاري إنشاء فيديوك",
     studioDontCloseWindow: "يرجى عدم إغلاق هذه النافذة أثناء إنشاء فيديوك.",
     studioProgress: "التقدم",
@@ -5680,32 +5396,26 @@ export const translations: Record<Language, Translations> = {
     studioReadyToGenerate: "جاهز للإنشاء",
     studioVideoCreatedWithSettings: "سيتم إنشاء فيديوك بالإعدادات أعلاه.",
     studioStartGeneration: "بدء الإنشاء",
-    studioBack: "رجوع",
     studioGenerationTakes2To3Minutes: "الإنشاء يستغرق عادة 2-3 دقائق",
     
     // Preview Step
     studioYourVideoReady: "فيديوك جاهز!",
     studioReviewGeneratedVideo: "راجع الفيديو المنشأ وقم بتحميله عندما تكون راضياً عن النتيجة.",
     studioDownloadWhenSatisfied: "قم بالتحميل عندما تكون راضياً عن النتيجة.",
-    studioPlaying: "جاري التشغيل...",
     studioClickToPreview: "انقر للمعاينة",
-    studioDuration: "المدة",
     studioQuality: "الجودة",
     studioFormat: "التنسيق",
     studioFileSize: "حجم الملف",
     studioVideoSettings: "إعدادات الفيديو",
     studioVoice: "الصوت",
-    studioBackground: "الخلفية",
     studioResolution: "الدقة",
     studioScriptLength: "طول النص",
-    studioScript: "النص",
     studioActions: "الإجراءات",
     studioDownloading: "جاري التحميل...",
     studioDownloadVideo: "تحميل الفيديو",
     studioRegenerate: "إعادة إنشاء",
     studioSaveContinue: "حفظ ومتابعة",
     studioDownloadProgress: "تقدم التحميل",
-    studioBack: "رجوع",
     studioVideoGeneratedSuccessfully: "تم إنشاء الفيديو بنجاح",
     
     // About Page
@@ -6023,7 +5733,6 @@ export const translations: Record<Language, Translations> = {
     adminRevenueTrend: "اتجاه الإيرادات",
     adminRevenue: "الإيرادات",
     adminUserActivity: "نشاط المستخدمين",
-    adminActiveUsers: "المستخدمون النشطون",
     adminChartVisualizationComingSoon: "تصور الرسوم البيانية قريباً",
     adminRecentActivity: "النشاط الأخير",
     adminNoRecentActivity: "لا يوجد نشاط حديث",
@@ -6117,8 +5826,6 @@ export const translations: Record<Language, Translations> = {
     adminVideosVideoInformation: "معلومات الفيديو",
     adminVideosDuration: "المدة",
     adminVideosCategory: "الفئة",
-    adminVideosUploadDate: "تاريخ التحميل",
-    adminVideosFlagsCount: "الأعلام",
     adminVideosUploaderInformation: "معلومات المحمل",
     adminVideosDescription: "الوصف",
     adminVideosTags: "العلامات",
@@ -6146,7 +5853,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerPublishesIn: "ينشر خلال",
     adminSchedulerPublishNow: "نشر الآن",
     adminSchedulerCancel: "إلغاء",
-    adminSchedulerScheduleNewPost: "جدولة منشور جديد",
     adminSchedulerSelectVideo: "اختر الفيديو *",
     adminSchedulerSelectSocialNetworks: "اختر الشبكات الاجتماعية *",
     adminSchedulerPublicationDate: "تاريخ النشر *",
@@ -6154,7 +5860,6 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCustomMessage: "رسالة مخصصة",
     adminSchedulerCustomMessageOptional: "رسالة مخصصة (اختياري)",
     adminSchedulerCustomMessagePlaceholder: "أضف رسالة مخصصة ترافق فيديوك...",
-    adminSchedulerCancel: "إلغاء",
     adminSchedulerSchedulePost: "جدولة المنشور",
     adminSchedulerScheduling: "جاري الجدولة...",
     adminSchedulerPleaseSelectVideo: "يرجى اختيار فيديو",
@@ -6197,13 +5902,9 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsThisMonth: "هذا الشهر",
     adminPaymentsThisYear: "هذا العام",
     adminPaymentsTotalRevenue: "إجمالي الإيرادات",
-    adminPaymentsCompleted: "مكتمل",
-    adminPaymentsPending: "في الانتظار",
-    adminPaymentsFailed: "فشل",
     adminPaymentsInvoice: "فاتورة",
     adminPaymentsConfirm: "تأكيد",
     adminPaymentsCancel: "إلغاء",
-    adminPaymentsRefund: "استرداد",
     adminPaymentsView: "عرض",
     adminPaymentsTransactionDetails: "تفاصيل المعاملة",
     adminPaymentsTransactionInformation: "معلومات المعاملة",
@@ -6214,7 +5915,6 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsDiscount: "خصم",
     adminPaymentsTax: "ضريبة",
     adminPaymentsCancelPayment: "إلغاء الدفع",
-    adminPaymentsRefund: "استرداد",
     adminPaymentsConfirmPayment: "تأكيد الدفع",
     adminPaymentsEnterCancellationReason: "أدخل سبب الإلغاء:",
     adminPaymentsEnterRefundReason: "أدخل سبب الاسترداد:",
@@ -6256,10 +5956,6 @@ export const translations: Record<Language, Translations> = {
     adminTicketsPremium: "مميز",
     adminTicketsEnterprise: "مؤسسة",
     adminTicketsTotalTickets: "إجمالي التذاكر",
-    adminTicketsOpen: "مفتوح",
-    adminTicketsInProgress: "قيد التقدم",
-    adminTicketsResolved: "محلول",
-    adminTicketsUrgent: "عاجل",
     adminTicketsView: "عرض",
     adminTicketsAssignedTo: "مُعيّن لـ",
     adminTicketsMessages: "رسائل",

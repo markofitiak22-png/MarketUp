@@ -8,7 +8,9 @@ const languages = [
   { code: "ar" as Language, name: "العربية", flag: "🇦🇪" },
   { code: "sv" as Language, name: "Svenska", flag: "🇸🇪" },
   { code: "tr" as Language, name: "Türkçe", flag: "🇹🇷" },
-  { code: "uk" as Language, name: "Українська", flag: "🇺🇦" }
+  { code: "uk" as Language, name: "Українська", flag: "🇺🇦" },
+  { code: "de" as Language, name: "Deutsch", flag: "🇩🇪" },
+  { code: "fr" as Language, name: "Français", flag: "🇫🇷" }
 ];
 
 export default function LanguageButton() {

@@ -42,6 +42,47 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(true);
   const [isUpgrading, setIsUpgrading] = useState(false);
 
+  // Function to get translated plan features
+  const getTranslatedFeatures = (planName: string) => {
+    switch (planName) {
+      case "Free":
+        return [
+          translations.planFeature3VideosPerMonth,
+          translations.planFeatureStandardQuality,
+          translations.planFeatureBasicTemplates,
+          translations.planFeatureCommunitySupport
+        ];
+      case "Basic":
+        return [
+          translations.planFeature10VideosPerMonth,
+          translations.planFeatureHDQuality,
+          translations.planFeatureCustomBranding,
+          translations.planFeatureEmailSupport,
+          translations.planFeatureBasicAnalytics
+        ];
+      case "Pro":
+        return [
+          translations.planFeatureUnlimitedVideos,
+          translations.planFeatureHDQuality,
+          translations.planFeatureCustomBranding,
+          translations.planFeaturePrioritySupport,
+          translations.planFeatureAdvancedAnalytics,
+          translations.planFeatureAPIAccess
+        ];
+      case "Enterprise":
+        return [
+          translations.planFeatureEverythingInPro,
+          translations.planFeatureWhiteLabelSolution,
+          translations.planFeatureAPIAccess,
+          translations.planFeatureDedicatedSupport,
+          translations.planFeatureCustomIntegrations,
+          translations.planFeatureOnPremiseDeployment
+        ];
+      default:
+        return [];
+    }
+  };
+
   // Fetch subscription data
   const fetchSubscriptionData = async () => {
     try {
@@ -59,12 +100,7 @@ export default function SubscriptionPage() {
             tier: "FREE",
             price: 0,
             period: "month",
-            features: [
-              "3 videos per month",
-              "Standard quality",
-              "Basic templates",
-              "Community support"
-            ],
+            features: getTranslatedFeatures("Free"),
             nextBilling: null,
             status: "active",
             cancelAtPeriodEnd: false
@@ -75,12 +111,7 @@ export default function SubscriptionPage() {
               tier: "FREE",
               price: 0,
               period: "month",
-              features: [
-                "3 videos per month",
-                "Standard quality",
-                "Basic templates",
-                "Community support"
-              ],
+              features: getTranslatedFeatures("Free"),
               current: true,
               popular: false
             },
@@ -89,13 +120,7 @@ export default function SubscriptionPage() {
               tier: "BASIC",
               price: 9,
               period: "month",
-              features: [
-                "10 videos per month",
-                "HD quality",
-                "Custom branding",
-                "Email support",
-                "Basic analytics"
-              ],
+              features: getTranslatedFeatures("Basic"),
               current: false,
               popular: false
             },
@@ -104,14 +129,7 @@ export default function SubscriptionPage() {
               tier: "STANDARD",
               price: 29,
               period: "month",
-              features: [
-                "Unlimited videos",
-                "HD quality",
-                "Custom branding",
-                "Priority support",
-                "Advanced analytics",
-                "API access"
-              ],
+              features: getTranslatedFeatures("Pro"),
               current: false,
               popular: true
             },
@@ -120,14 +138,7 @@ export default function SubscriptionPage() {
               tier: "PREMIUM",
               price: 99,
               period: "month",
-              features: [
-                "Everything in Pro",
-                "White-label solution",
-                "API access",
-                "Dedicated support",
-                "Custom integrations",
-                "On-premise deployment"
-              ],
+              features: getTranslatedFeatures("Enterprise"),
               current: false,
               popular: false
             }
@@ -149,12 +160,7 @@ export default function SubscriptionPage() {
           tier: "FREE",
           price: 0,
           period: "month",
-          features: [
-            "3 videos per month",
-            "Standard quality",
-            "Basic templates",
-            "Community support"
-          ],
+          features: getTranslatedFeatures("Free"),
           nextBilling: null,
           status: "active",
           cancelAtPeriodEnd: false
@@ -165,12 +171,7 @@ export default function SubscriptionPage() {
             tier: "FREE",
             price: 0,
             period: "month",
-            features: [
-              "3 videos per month",
-              "Standard quality",
-              "Basic templates",
-              "Community support"
-            ],
+            features: getTranslatedFeatures("Free"),
             current: true,
             popular: false
           },
@@ -179,13 +180,7 @@ export default function SubscriptionPage() {
             tier: "BASIC",
             price: 9,
             period: "month",
-            features: [
-              "10 videos per month",
-              "HD quality",
-              "Custom branding",
-              "Email support",
-              "Basic analytics"
-            ],
+            features: getTranslatedFeatures("Basic"),
             current: false,
             popular: false
           },
@@ -194,14 +189,7 @@ export default function SubscriptionPage() {
             tier: "STANDARD",
             price: 29,
             period: "month",
-            features: [
-              "Unlimited videos",
-              "HD quality",
-              "Custom branding",
-              "Priority support",
-              "Advanced analytics",
-              "API access"
-            ],
+            features: getTranslatedFeatures("Pro"),
             current: false,
             popular: true
           },
@@ -210,14 +198,7 @@ export default function SubscriptionPage() {
             tier: "PREMIUM",
             price: 99,
             period: "month",
-            features: [
-              "Everything in Pro",
-              "White-label solution",
-              "API access",
-              "Dedicated support",
-              "Custom integrations",
-              "On-premise deployment"
-            ],
+            features: getTranslatedFeatures("Enterprise"),
             current: false,
             popular: false
           }

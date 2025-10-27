@@ -23,13 +23,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       
       // Check if user has manually set a language preference
       const stored = localStorage.getItem('preferredLanguage') as Language;
-      if (stored && ['en', 'ar', 'sv', 'tr', 'uk'].includes(stored)) {
+      if (stored && ['en', 'ar', 'sv', 'tr', 'uk', 'de', 'fr'].includes(stored)) {
         return stored;
       }
       
       // Auto-detect browser language for first-time visitors
       const browserLang = navigator.language.split('-')[0] as Language;
-      if (browserLang && ['en', 'ar', 'sv', 'tr', 'uk'].includes(browserLang)) {
+      if (browserLang && ['en', 'ar', 'sv', 'tr', 'uk', 'de', 'fr'].includes(browserLang)) {
         // Save the detected language for future visits
         localStorage.setItem('preferredLanguage', browserLang);
         return browserLang;

@@ -37,6 +37,35 @@ export default function LanguageButton() {
     }
   }, [isOpen]);
 
+  // Calculate dropdown position to avoid going off-screen
+  const getDropdownPosition = () => {
+    if (!buttonRect) return { top: '80px', right: '16px' };
+    
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    const dropdownHeight = 256; // max-h-64 = 16rem = 256px
+    const dropdownWidth = 192; // w-48 = 12rem = 192px
+    
+    let top = buttonRect.bottom + 8;
+    let right = viewportWidth - buttonRect.right;
+    
+    // If dropdown would go below viewport, show it above the button
+    if (top + dropdownHeight > viewportHeight) {
+      top = buttonRect.top - dropdownHeight - 8;
+    }
+    
+    // If dropdown would go off the right edge, adjust position
+    if (right + dropdownWidth > viewportWidth) {
+      right = viewportWidth - dropdownWidth - 16;
+    }
+    
+    // Ensure minimum margins
+    top = Math.max(8, top);
+    right = Math.max(8, right);
+    
+    return { top: `${top}px`, right: `${right}px` };
+  };
+
   useEffect(() => {
     if (isInitialized) {
       const currentLang = languages.find(lang => lang.code === language);
@@ -76,15 +105,15 @@ export default function LanguageButton() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1 px-1.5 py-1 rounded-md border border-[var(--border)] bg-[var(--surface)] hover:bg-accent/5 transition-colors duration-200"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-accent/5 transition-colors duration-200 min-w-[120px]"
         aria-label="Select language"
       >
-        <span className="text-sm">{selectedLang.flag}</span>
-        <span className="text-xs font-medium text-foreground hidden xl:inline">
-          {selectedLang.code.toUpperCase()}
+        <span className="text-base">{selectedLang.flag}</span>
+        <span className="text-sm font-medium text-foreground flex-1 text-left">
+          {selectedLang.name}
         </span>
         <svg 
-          className={`w-3 h-3 text-foreground-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-4 h-4 text-foreground-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
@@ -96,25 +125,25 @@ export default function LanguageButton() {
       {isOpen && (
         <div
           role="menu"
-          className="fixed w-40 rounded-lg glass p-1.5 shadow-xl border border-[var(--border)]"
+          className="fixed w-48 rounded-lg glass p-1.5 shadow-xl border border-[var(--border)] max-h-64 overflow-y-auto"
           style={{ 
             zIndex: 9999,
-            top: buttonRect ? `${buttonRect.bottom + 8}px` : '80px',
-            right: buttonRect ? `${window.innerWidth - buttonRect.right}px` : '16px'
+            ...getDropdownPosition(),
+            maxHeight: '16rem' // 256px
           }}
         >
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageSelect(lang)}
-              className={`w-full flex items-center gap-2 px-2 py-1.5 text-left rounded-md hover:bg-accent/10 transition-colors duration-200 ${
+              className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md hover:bg-accent/10 transition-colors duration-200 ${
                 selectedLang.code === lang.code ? 'bg-accent/15' : ''
               }`}
             >
-              <span className="text-sm">{lang.flag}</span>
-              <span className="text-xs font-medium text-foreground">{lang.name}</span>
+              <span className="text-base">{lang.flag}</span>
+              <span className="text-sm font-medium text-foreground flex-1">{lang.name}</span>
               {selectedLang.code === lang.code && (
-                <svg className="w-3 h-3 text-accent ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}

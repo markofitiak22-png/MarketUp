@@ -43,10 +43,10 @@ export default function AboutPage() {
                   {translations.aboutTitle} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent animate-pulse">MarketUp</span>
                 </h1>
                 
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-foreground-muted max-w-3xl leading-relaxed font-light">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-foreground-muted max-w-3xl leading-relaxed font-light">
                   {translations.aboutWelcome}
                 </p>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-foreground-muted max-w-3xl leading-relaxed font-light mt-4">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-foreground-muted max-w-3xl leading-relaxed font-light mt-4">
                   {translations.aboutEasilyAffordably}
                 </p>
               </div>
@@ -165,7 +165,7 @@ export default function AboutPage() {
           
           <div className="relative z-10">
             <div className="max-w-5xl mx-auto px-4">
-              <div className="glass-elevated rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-500 border border-accent-2/10 hover:border-accent-2/30">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-500 shadow-2xl">
                 <div className="absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-accent-2/20 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-tr-2xl sm:rounded-tr-3xl" />
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-accent-2/10 to-purple-500/10 rounded-full blur-xl animate-pulse"></div>
@@ -209,7 +209,7 @@ export default function AboutPage() {
             </div>
             
             <div className="max-w-4xl mx-auto">
-              <div className="glass-elevated rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
                 <div className="absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-2xl sm:rounded-tr-3xl" />
                 
@@ -260,7 +260,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-purple-500/5" />
           <div className="container px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="glass-elevated rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-center">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-center shadow-2xl">
                
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight text-foreground">
                   {translations.aboutOurCommitment}
@@ -277,7 +277,7 @@ export default function AboutPage() {
         <section className="section relative">
           <div className="container px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-surface-elevated border border-accent/30 rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 relative overflow-hidden shadow-2xl shadow-accent/10">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 relative overflow-hidden shadow-2xl">
                 <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-white/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
                 <div className="absolute bottom-0 left-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-tr from-white/10 to-transparent rounded-tr-2xl sm:rounded-tr-3xl" />
                 <div className="relative z-10 text-center">
@@ -308,7 +308,7 @@ export default function AboutPage() {
               </div>
               
               <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
-                <div className="group bg-surface-elevated border border-accent/30 rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl hover:shadow-accent/20 shadow-lg">
+                <div className="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl shadow-lg">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center mb-4 sm:mb-6">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z" />
@@ -319,7 +319,7 @@ export default function AboutPage() {
                     {translations.aboutSloganText}
                   </p>
                 </div>
-                <div className="group glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl hover:shadow-accent-2/20">
+                <div className="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl shadow-lg">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center mb-4 sm:mb-6">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

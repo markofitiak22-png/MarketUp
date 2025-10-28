@@ -171,7 +171,7 @@ export default function PricingPage() {
               </div>
             
               {/* Billing Toggle */}
-              <div className="inline-flex items-center glass-elevated rounded-2xl p-2 border border-accent/20">
+              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
                 <button
                   onClick={() => setBillingPeriod('monthly')}
                   className={`px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
@@ -210,7 +210,7 @@ export default function PricingPage() {
                 {plans.map((plan) => (
                   <div
                     key={plan.id}
-                    className={`group relative glass-elevated rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02] ${
+                    className={`group relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02] shadow-lg ${
                       plan.popular 
                         ? 'border-2 border-accent shadow-2xl shadow-accent/20 bg-gradient-to-br from-accent/5 to-accent-2/5' 
                         : 'border border-[var(--border)] hover:border-accent/50 hover:shadow-xl hover:shadow-accent/10'
@@ -277,7 +277,7 @@ export default function PricingPage() {
                           plan.popular
                             ? 'bg-gradient-to-r from-accent to-accent-2 text-white hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-1'
                             : plan.id === 'free'
-                            ? 'bg-surface-elevated text-foreground border-2 border-[var(--border)] hover:border-accent/50 hover:bg-accent/5'
+                            ? 'bg-white/10 backdrop-blur-sm text-foreground border-2 border-white/20 hover:border-accent/50 hover:bg-accent/5'
                             : 'bg-gradient-to-r from-accent-2 to-purple-600 text-white hover:shadow-xl hover:shadow-accent-2/30 hover:-translate-y-1'
                         }`}
                       >
@@ -299,12 +299,7 @@ export default function PricingPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-accent/3" />
           <div className="container">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-8 backdrop-blur-sm">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                {translations.pricingFeatureComparison}
-              </div>
+              
               <h2 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
                 {translations.pricingCompareAllFeatures} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">features</span>
               </h2>
@@ -313,7 +308,7 @@ export default function PricingPage() {
               </p>
             </div>
 
-            <div className="glass-elevated rounded-3xl overflow-hidden shadow-2xl">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl overflow-hidden shadow-2xl">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -333,18 +328,18 @@ export default function PricingPage() {
                     {features.map((category, categoryIndex) => (
                       <React.Fragment key={categoryIndex}>
                         <tr>
-                          <td colSpan={4} className="py-4 px-8 font-bold text-foreground bg-surface-elevated text-lg">
+                          <td colSpan={4} className="py-4 px-8 font-bold text-foreground bg-white/10 text-lg">
                             {category.category}
                           </td>
                         </tr>
                         {category.items.map((item, itemIndex) => (
-                          <tr key={itemIndex} className="border-b border-[var(--border)]/30 hover:bg-surface-elevated/30 transition-colors">
+                          <tr key={itemIndex} className="border-b border-[var(--border)]/30 hover:bg-white/5 transition-colors">
                             <td className="py-5 px-8 text-foreground font-medium">{item.name}</td>
                             <td className="py-5 px-8 text-center">
                               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                                 item.free === '✅' ? 'bg-success/20 text-success' : 
                                 item.free === '❌' ? 'bg-error/20 text-error' : 
-                                'bg-surface-elevated text-foreground'
+                                'bg-white/10 text-foreground'
                               }`}>
                                 {item.free}
                               </span>
@@ -353,7 +348,7 @@ export default function PricingPage() {
                               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                                 item.pro === '✅' ? 'bg-success/20 text-success' : 
                                 item.pro === '❌' ? 'bg-error/20 text-error' : 
-                                'bg-surface-elevated text-foreground'
+                                'bg-white/10 text-foreground'
                               }`}>
                                 {item.pro}
                               </span>
@@ -362,7 +357,7 @@ export default function PricingPage() {
                               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                                 item.enterprise === '✅' ? 'bg-success/20 text-success' : 
                                 item.enterprise === '❌' ? 'bg-error/20 text-error' : 
-                                'bg-surface-elevated text-foreground'
+                                'bg-white/10 text-foreground'
                               }`}>
                                 {item.enterprise}
                               </span>
@@ -382,12 +377,7 @@ export default function PricingPage() {
         <section className="section relative">
           <div className="container">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-8 backdrop-blur-sm">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                FAQ
-              </div>
+              
               <h2 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
                 {translations.pricingFrequentlyAsked} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.pricingQuestions}</span>
               </h2>
@@ -419,7 +409,7 @@ export default function PricingPage() {
                   answer: translations.pricingCustomEnterpriseSolutionsAnswer
                 }
               ].map((faq, index) => (
-                <div key={index} className="group glass-elevated rounded-3xl p-8 hover:border-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-accent/10">
+                <div key={index} className="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 hover:border-accent/50 transition-all duration-300 hover:shadow-xl shadow-lg">
                   <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-accent transition-colors">{faq.question}</h3>
                   <p className="text-foreground-muted text-lg leading-relaxed">{faq.answer}</p>
                 </div>

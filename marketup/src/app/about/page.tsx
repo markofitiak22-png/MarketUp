@@ -44,7 +44,10 @@ export default function AboutPage() {
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-foreground-muted max-w-3xl leading-relaxed font-light">
-                  {translations.aboutWelcome} {translations.aboutEasilyAffordably}
+                  {translations.aboutWelcome}
+                </p>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-foreground-muted max-w-3xl leading-relaxed font-light mt-4">
+                  {translations.aboutEasilyAffordably}
                 </p>
               </div>
               
@@ -173,7 +176,7 @@ export default function AboutPage() {
                     {translations.aboutWhatMakesDifferent}
                   </h2>
                   <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground leading-relaxed max-w-4xl mx-auto group-hover:text-foreground transition-colors duration-300">
-                    {translations.aboutDifferentText}{translations.aboutSimplicityQualityAccessibility}
+                    {translations.aboutDrivingInnovation} {translations.aboutEveryone}
                   </p>
                   
                   {/* Decorative floating elements */}
@@ -201,104 +204,50 @@ export default function AboutPage() {
                 {translations.aboutWhatMarketUpOffers}
               </h2>
               <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light px-4">
-                {translations.aboutComprehensiveSolutions} <span className="text-accent font-medium">{translations.aboutMarketingNeeds}</span>
+                {translations.aboutComprehensiveSolutions}
               </p>
             </div>
             
-            <div className="max-w-4xl mx-auto space-y-8 sm:space-y-8 lg:space-y-6">
-              {/* Feature 01 - Left */}
-              <div className="flex justify-start">
-                <div className="group">
-                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative z-10 h-full flex flex-col justify-center">
-                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
+            <div className="max-w-4xl mx-auto">
+              <div className="glass-elevated rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-2xl sm:rounded-tr-3xl" />
+                
+                <div className="relative z-10">
+                  <ul className="space-y-6 sm:space-y-8 text-left">
+                    <li className="flex items-start gap-4">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full"></div>
                       </div>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutSmartAIVideo}</h3>
-                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                        {translations.aboutForMarketing}
+                      <p className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed">
+                        {translations.aboutSmartAIVideo}
                       </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feature 02 - Right */}
-              <div className="flex justify-end -mt-4 sm:-mt-16 lg:-mt-24">
-                <div className="group">
-                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative z-10 h-full flex flex-col justify-center">
-                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                          </svg>
-                        </div>
-                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full"></div>
                       </div>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutAffordablePricing}</h3>
-                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                        {translations.aboutSuitableForAll}
+                      <p className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed">
+                        {translations.aboutAffordablePricing}
                       </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feature 03 - Left */}
-              <div className="flex justify-start -mt-2 sm:-mt-12 lg:-mt-20">
-                <div className="group">
-                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative z-10 h-full flex flex-col justify-center">
-                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                          </svg>
-                        </div>
-                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-purple-500 to-transparent rounded-full" />
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full"></div>
                       </div>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutMultilingualSupport}</h3>
-                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                        {translations.aboutLanguages}
+                      <p className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed">
+                        {translations.aboutMultilingualSupport}
                       </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feature 04 - Right */}
-              <div className="flex justify-end -mt-2 sm:-mt-12 lg:-mt-20">
-                <div className="group">
-                  <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative z-10 h-full flex flex-col justify-center">
-                      <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-pink-500 to-accent flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                          <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                          </svg>
-                        </div>
-                        <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-pink-500 to-transparent rounded-full" />
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-accent flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full"></div>
                       </div>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.aboutEasyToUse}</h3>
-                      <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                        {translations.aboutMakeVideoMarketing}
+                      <p className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed">
+                        {translations.aboutEasyToUse}
                       </p>
-                    </div>
-                  </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -328,7 +277,7 @@ export default function AboutPage() {
         <section className="section relative">
           <div className="container px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="glass-elevated rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 border border-accent/20 relative overflow-hidden">
+              <div className="bg-surface-elevated border border-accent/30 rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 relative overflow-hidden shadow-2xl shadow-accent/10">
                 <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-white/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
                 <div className="absolute bottom-0 left-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-tr from-white/10 to-transparent rounded-tr-2xl sm:rounded-tr-3xl" />
                 <div className="relative z-10 text-center">
@@ -359,7 +308,7 @@ export default function AboutPage() {
               </div>
               
               <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
-                <div className="group glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl hover:shadow-accent/20">
+                <div className="group bg-surface-elevated border border-accent/30 rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl hover:shadow-accent/20 shadow-lg">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center mb-4 sm:mb-6">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z" />

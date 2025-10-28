@@ -6,8 +6,8 @@ import { sendWelcomeEmail } from "@/lib/mailer";
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
-  referralCode: z.string().optional(),
+  password: z.string().min(8),
+  referralCode: z.string().optional().nullable(),
 });
 
 export async function POST(request: Request) {
@@ -15,12 +15,21 @@ export async function POST(request: Request) {
     console.log('Registration attempt started');
     
     const json = await request.json();
-    console.log('Request data received:', { email: json.email, hasPassword: !!json.password });
+    console.log('Request data received:', { 
+      email: json.email, 
+      hasPassword: !!json.password, 
+      passwordLength: json.password?.length,
+      referralCode: json.referralCode,
+      allKeys: Object.keys(json)
+    });
     
     const parsed = schema.safeParse(json);
     if (!parsed.success) {
-      console.log('Validation failed:', parsed.error);
-      return NextResponse.json({ error: "invalid_input" }, { status: 400 });
+      console.log('Validation failed:', parsed.error.issues);
+      return NextResponse.json({ 
+        error: "invalid_input", 
+        details: parsed.error.issues 
+      }, { status: 400 });
     }
     
     const { email, password, referralCode } = parsed.data;
@@ -45,7 +54,7 @@ export async function POST(request: Request) {
     console.log('User created successfully:', { id: user.id, email: user.email });
 
     // Handle referral code if provided
-    if (referralCode) {
+    if (referralCode && referralCode.trim() !== '') {
       try {
         console.log('Processing referral code:', referralCode);
         

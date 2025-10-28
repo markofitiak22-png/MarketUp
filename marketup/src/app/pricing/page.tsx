@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-// import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "@/hooks/useTranslations";
@@ -11,300 +10,223 @@ const getPlans = (translations: any) => [
     name: translations.pricingFree,
     price: 0,
     period: 'forever',
-    description: translations.pricingPerfectForGettingStarted,
+    description: translations.pricingPerfectForTesting,
     features: [
-      translations.pricing3VideosPerMonth,
-      translations.pricingStandardQuality720p,
-      translations.pricingBasicAvatars,
-      translations.pricing5Languages,
-      translations.pricingCommunitySupport,
-      translations.pricingWatermarkOnVideos
+      translations.pricing1VideoPerMonth,
+      translations.pricingStandardQuality,
+      translations.pricingNoSubtitles,
+      translations.pricingLimitedAvatars,
+      translations.pricingNoSocialPublishing,
+      translations.pricingDefaultBackgrounds,
+      translations.pricingAdditionalSupport
     ],
     popular: false,
     cta: translations.pricingGetStartedFree,
-    color: 'border-border'
+    color: 'from-slate-500 to-slate-600',
+    bgColor: 'bg-slate-50/10',
+    borderColor: 'border-slate-200/20'
   },
   {
     id: 'pro',
     name: translations.pricingPro,
-    price: 29,
+    price: 42,
     period: 'month',
-    description: translations.pricingBestForProfessionals,
+    description: translations.pricingIdealForBusiness,
     features: [
-      translations.pricing50VideosPerMonth,
-      translations.pricingHDQuality1080p,
-      translations.pricingAllAvatarsVoices,
-      translations.pricing20PlusLanguages,
-      translations.pricingPrioritySupport,
-      translations.pricingNoWatermark,
-      translations.pricingCustomBackgrounds,
-      translations.pricingAdvancedEditingTools,
-      translations.pricingAPIAccess
+      translations.pricing4VideosPerMonth,
+      translations.pricingHDQuality,
+      translations.pricingSubtitlesIncluded,
+      translations.pricingExtendedAvatars,
+      translations.pricingSocialPublishing,
+      translations.pricing2BackgroundImages,
+      translations.pricingTeamSupport,
+      translations.pricingCompanyInfo
     ],
     popular: true,
     cta: translations.pricingStartProTrial,
-    color: 'border-accent',
-    badge: translations.pricingMostPopular
+    color: 'from-blue-500 to-purple-600',
+    bgColor: 'bg-gradient-to-br from-blue-50/20 to-purple-50/20',
+    borderColor: 'border-blue-400/30'
   },
   {
-    id: 'enterprise',
-    name: translations.pricingEnterprise,
-    price: 99,
+    id: 'premium',
+    name: translations.pricingPremium,
+    price: 59,
     period: 'month',
-    description: translations.pricingForTeamsOrganizations,
+    description: translations.pricingSuitableForEveryone,
     features: [
-      translations.pricingUnlimitedVideos,
-      translations.pricing4KQuality2160p,
-      translations.pricingCustomAvatars,
-      translations.pricingAllLanguagesVoices,
-      translations.pricingDedicatedSupport,
-      translations.pricingNoWatermark,
-      translations.pricingCustomBranding,
-      translations.pricingTeamCollaboration,
-      translations.pricingAdvancedAnalytics,
-      translations.pricingWhiteLabelSolution,
-      translations.pricingCustomIntegrations,
-      translations.pricingSLAGuarantee
+      translations.pricing7VideosPerMonth,
+      translations.pricing4KQuality,
+      translations.pricingSubtitlesIncluded,
+      translations.pricingFullAvatars,
+      translations.pricingSocialPublishing,
+      translations.pricing4BackgroundImages,
+      translations.pricingTeamSupport,
+      translations.pricingCompanyInfo,
+      translations.pricingTemplateAccess,
+      translations.pricingMarketingSupport
     ],
     popular: false,
-    cta: translations.pricingContactSales,
-    color: 'border-accent-2',
-    badge: translations.pricingEnterpriseBadge
+    cta: translations.pricingStartPremiumTrial,
+    color: 'from-amber-500 to-orange-600',
+    bgColor: 'bg-gradient-to-br from-amber-50/20 to-orange-50/20',
+    borderColor: 'border-amber-400/30'
   }
 ];
 
-const getFeatures = (translations: any) => [
-  {
-    category: translations.pricingVideoCreation,
-    items: [
-      { name: translations.pricingVideosPerMonth, free: '3', pro: '50', enterprise: translations.pricingUnlimitedVideos },
-      { name: translations.pricingVideoQuality, free: '720p', pro: '1080p', enterprise: '4K' },
-      { name: translations.pricingVideoDuration, free: '60s max', pro: '10 min max', enterprise: translations.pricingUnlimitedVideos },
-      { name: translations.pricingExportFormats, free: 'MP4', pro: 'MP4, WebM', enterprise: 'All formats' }
-    ]
-  },
-  {
-    category: translations.pricingAvatarsVoices,
-    items: [
-      { name: translations.pricingAvailableAvatars, free: '3', pro: '12+', enterprise: 'Unlimited + Custom' },
-      { name: translations.pricingVoiceOptions, free: translations.pricing5Languages, pro: translations.pricing20PlusLanguages, enterprise: translations.pricingAllLanguagesVoices },
-      { name: translations.pricingVoiceQuality, free: 'Standard', pro: 'Premium', enterprise: 'Ultra HD' },
-      { name: translations.pricingCustomVoices, free: '❌', pro: '❌', enterprise: '✅' }
-    ]
-  },
-  {
-    category: translations.pricingFeatures,
-    items: [
-      { name: translations.pricingBackgroundOptions, free: '5', pro: '20+', enterprise: 'Unlimited + Custom' },
-      { name: 'Watermark', free: 'Yes', pro: 'No', enterprise: 'No' },
-      { name: 'API access', free: '❌', pro: '✅', enterprise: '✅' },
-      { name: translations.pricingTeamCollaboration, free: '❌', pro: '❌', enterprise: '✅' }
-    ]
-  },
-  {
-    category: translations.pricingSupport,
-    items: [
-      { name: translations.pricingEmailSupport, free: '✅', pro: '✅', enterprise: '✅' },
-      { name: translations.pricingPrioritySupport, free: '❌', pro: '✅', enterprise: '✅' },
-      { name: translations.pricingDedicatedSupport, free: '❌', pro: '❌', enterprise: '✅' },
-      { name: translations.pricingSLAGuarantee, free: '❌', pro: '❌', enterprise: '✅' }
-    ]
-  }
+const getCountryPricing = (translations: any) => [
+  { country: translations.pricingJordan, free: "0", pro: "42 USD", premium: "59 USD", flag: "🇯🇴" },
+  { country: translations.pricingSweden, free: "0", pro: "41 USD", premium: "58 USD", flag: "🇸🇪" },
+  { country: translations.pricingLebanon, free: "0", pro: "31 USD", premium: "49 USD", flag: "🇱🇧" },
+  { country: translations.pricingTurkey, free: "0", pro: "35 USD", premium: "48 USD", flag: "🇹🇷" },
+  { country: translations.pricingSyria, free: "0", pro: "29 USD", premium: "45 USD", flag: "🇸🇾" }
 ];
 
 export default function PricingPage() {
   const { translations } = useTranslations();
-  // const { data: session } = useSession();
   const router = useRouter();
-  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
-  // const [selectedPlan] = useState<string | null>(null);
   
   const plans = getPlans(translations);
-  const features = getFeatures(translations);
+  const countryPricing = getCountryPricing(translations);
 
   const handlePlanSelect = (planId: string) => {
-    if (planId === 'enterprise') {
-      // Redirect to contact form for enterprise
-      router.push('/contact?plan=enterprise');
-    } else {
-      // setSelectedPlan(planId);
-      router.push(`/checkout?plan=${planId}&billing=${billingPeriod}`);
-    }
-  };
-
-  const getYearlyDiscount = (monthlyPrice: number) => {
-    return Math.round(monthlyPrice * 12 * 0.2); // 20% discount
-  };
-
-  const getYearlyPrice = (monthlyPrice: number) => {
-    return Math.round((monthlyPrice * 12 * 0.8) / 12 * 100) / 100;
+    router.push(`/checkout?plan=${planId}`);
   };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      {/* Enhanced Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40" />
+        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-accent-2/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+      </div>
       
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="section-lg text-center">
-          <div className="container">
-            <div className="max-w-4xl mx-auto">
-              {/* Badge */}
-              <div className="mx-auto glass-glow rounded-2xl px-8 py-4 inline-flex items-center gap-3 text-sm border border-accent/20 mb-12">
-                <div className="w-3 h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                <span className="text-gradient font-semibold text-base">{translations.pricingTransparentPricing}</span>
-                <div className="w-2 h-2 bg-accent-2 rounded-full animate-ping" />
-              </div>
-              
-              {/* Main heading */}
-              <div className="space-y-8 mb-16">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9]">
-                  {translations.pricingSimpleTransparent} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">pricing</span>
-                </h1>
-                
-                <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                  {translations.pricingChoosePerfectPlan} <span className="text-accent font-medium">{translations.pricingNoHiddenFees}</span>
-                </p>
-              </div>
-            
-              {/* Billing Toggle */}
-              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
-                <button
-                  onClick={() => setBillingPeriod('monthly')}
-                  className={`px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                    billingPeriod === 'monthly' 
-                      ? 'bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg shadow-accent/25' 
-                      : 'text-foreground-muted hover:text-foreground hover:bg-accent/5'
-                  }`}
-                >
-                  {translations.pricingMonthly}
-                </button>
-                <button
-                  onClick={() => setBillingPeriod('yearly')}
-                  className={`px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-300 relative ${
-                    billingPeriod === 'yearly' 
-                      ? 'bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg shadow-accent/25' 
-                      : 'text-foreground-muted hover:text-foreground hover:bg-accent/5'
-                  }`}
-                >
-                  {translations.pricingYearly}
-                  {billingPeriod === 'yearly' && (
-                    <span className="absolute -top-2 -right-2 bg-gradient-to-r from-success to-green-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
-                      {translations.pricingSave20}
-                    </span>
-                  )}
-                </button>
-              </div>
+        <section className="pt-32 pb-20 px-4">
+          <div className="max-w-7xl mx-auto text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-glow border border-accent/20 text-foreground text-sm font-medium mb-8">
+              <div className="w-2 h-2 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
+              <span>MarketUp</span>
+              <div className="w-2 h-2 bg-gradient-to-r from-accent-2 to-purple-500 rounded-full animate-pulse" />
             </div>
+            
+            {/* Main heading */}
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-white mb-8">
+              {translations.pricingSimpleTransparent}{" "}
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Pricing
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-white/70 max-w-4xl mx-auto leading-relaxed font-light mb-16">
+              {translations.pricingAllPlansDescription}
+            </p>
           </div>
         </section>
 
         {/* Pricing Cards */}
-        <section className="section relative">
-          <div className="container">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {plans.map((plan) => (
-                  <div
-                    key={plan.id}
-                    className={`group relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02] shadow-lg ${
-                      plan.popular 
-                        ? 'border-2 border-accent shadow-2xl shadow-accent/20 bg-gradient-to-br from-accent/5 to-accent-2/5' 
-                        : 'border border-[var(--border)] hover:border-accent/50 hover:shadow-xl hover:shadow-accent/10'
-                    }`}
-                  >
-                    {/* Decorative elements */}
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-3xl" />
-                    <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-accent-2/10 to-transparent rounded-tr-3xl" />
-                    
-                    {plan.badge && (
-                      <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-full text-sm font-bold shadow-lg ${
-                        plan.badge === 'Most Popular' 
-                          ? 'bg-gradient-to-r from-accent to-accent-2 text-white' 
-                          : 'bg-gradient-to-r from-accent-2 to-purple-600 text-white'
-                      }`}>
-                        {plan.badge}
+        <section className="pb-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {plans.map((plan, index) => (
+                <div
+                  key={plan.id}
+                  className={`group relative ${plan.bgColor} backdrop-blur-sm border ${plan.borderColor} rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl ${
+                    plan.popular 
+                      ? 'ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20' 
+                      : 'hover:shadow-xl hover:shadow-white/10'
+                  }`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  {/* Decorative elements */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-bl-3xl" />
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/5 to-transparent rounded-tr-3xl" />
+                  
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-full text-sm font-bold shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                      {translations.pricingMostPopular}
+                    </div>
+                  )}
+                  
+                  <div className="relative z-10">
+                    {/* Plan header */}
+                    <div className="text-center mb-8">
+                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r ${plan.color} mb-4`}>
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
                       </div>
-                    )}
-                    
-                    <div className="relative z-10">
-                      <div className="text-center mb-8">
-                        <h3 className="text-3xl font-bold text-foreground mb-3">{plan.name}</h3>
-                        <p className="text-foreground-muted mb-6 text-lg">{plan.description}</p>
-                
-                        <div className="mb-8">
-                          <div className="flex items-baseline justify-center">
-                            <span className="text-6xl font-bold text-foreground">
-                              ${billingPeriod === 'yearly' && plan.price > 0 
-                                ? getYearlyPrice(plan.price)
-                                : plan.price
-                              }
-                            </span>
-                            <span className="text-xl text-foreground-muted ml-2">
-                              /{plan.period === 'forever' ? translations.pricingForever : billingPeriod === 'yearly' ? translations.pricingYear : translations.pricingMonth}
-                            </span>
-                          </div>
-                          
-                          {billingPeriod === 'yearly' && plan.price > 0 && (
-                            <div className="mt-3">
-                              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-success to-green-500 text-white shadow-lg">
-                                {translations.pricingSavePerYear.replace('$', `$${getYearlyDiscount(plan.price)}`)}
-                              </span>
-                            </div>
-                          )}
+                      
+                      <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                      <p className="text-white/70 mb-6 text-sm leading-relaxed">{plan.description}</p>
+              
+                      <div className="mb-8">
+                        <div className="flex items-baseline justify-center">
+                          <span className="text-5xl font-bold text-white">
+                            ${plan.price}
+                          </span>
+                          <span className="text-lg text-white/60 ml-2">
+                            /{plan.period === 'forever' ? 'forever' : 'month'}
+                          </span>
                         </div>
                       </div>
-
-                      <div className="space-y-4 mb-8">
-                        {plan.features.map((feature, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-success to-green-500 flex items-center justify-center mt-0.5 shadow-lg">
-                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                            <span className="text-foreground text-base font-medium">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={() => handlePlanSelect(plan.id)}
-                        className={`group relative w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 overflow-hidden ${
-                          plan.popular
-                            ? 'bg-gradient-to-r from-accent to-accent-2 text-white hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-1'
-                            : plan.id === 'free'
-                            ? 'bg-white/10 backdrop-blur-sm text-foreground border-2 border-white/20 hover:border-accent/50 hover:bg-accent/5'
-                            : 'bg-gradient-to-r from-accent-2 to-purple-600 text-white hover:shadow-xl hover:shadow-accent-2/30 hover:-translate-y-1'
-                        }`}
-                      >
-                        <span className="relative z-10">{plan.cta}</span>
-                        {plan.popular && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        )}
-                      </button>
                     </div>
+
+                    {/* Features */}
+                    <div className="space-y-4 mb-8">
+                      {plan.features.map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex items-start gap-3">
+                          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center mt-0.5">
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <span className="text-white/90 text-sm font-medium leading-relaxed">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* CTA Button */}
+                    <button
+                      onClick={() => handlePlanSelect(plan.id)}
+                      className={`group relative w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 overflow-hidden ${
+                        plan.popular
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-1'
+                          : plan.id === 'free'
+                          ? 'bg-white/10 text-white border-2 border-white/20 hover:border-white/40 hover:bg-white/20'
+                          : `bg-gradient-to-r ${plan.color} text-white hover:shadow-xl hover:shadow-white/20 hover:-translate-y-1`
+                      }`}
+                    >
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        {plan.cta}
+                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                      {plan.popular && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      )}
+                    </button>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Feature Comparison */}
-        <section className="section relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-accent/3" />
-          <div className="container">
+        {/* Country Pricing Table */}
+        <section className="pb-20 px-4">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
-                {translations.pricingCompareAllFeatures} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">features</span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
+                {translations.pricingCountryPricing}
               </h2>
-              <p className="text-xl md:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                {translations.pricingEverythingYouNeed}
+              <p className="text-lg text-white/70 max-w-2xl mx-auto">
+                Prices vary by country to ensure accessibility and local market compatibility
               </p>
             </div>
 
@@ -312,59 +234,41 @@ export default function PricingPage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-[var(--border)]">
-                      <th className="text-left py-8 px-8 font-bold text-foreground text-xl">{translations.pricingFeatures}</th>
-                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl">{translations.pricingFree}</th>
-                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl bg-gradient-to-br from-accent/10 to-accent-2/10 relative">
-                        {translations.pricingPro}
-                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-accent to-accent-2 text-white text-sm font-bold">
+                    <tr className="border-b border-white/20">
+                      <th className="text-left py-6 px-8 font-bold text-white text-lg">Country</th>
+                      <th className="text-center py-6 px-8 font-bold text-white text-lg">Free Plan</th>
+                      <th className="text-center py-6 px-8 font-bold text-white text-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 relative">
+                        Pro Plan
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold">
                           {translations.pricingMostPopular}
                         </div>
                       </th>
-                      <th className="text-center py-8 px-8 font-bold text-foreground text-xl">{translations.pricingEnterprise}</th>
+                      <th className="text-center py-6 px-8 font-bold text-white text-lg">Premium Plan</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {features.map((category, categoryIndex) => (
-                      <React.Fragment key={categoryIndex}>
-                        <tr>
-                          <td colSpan={4} className="py-4 px-8 font-bold text-foreground bg-white/10 text-lg">
-                            {category.category}
-                          </td>
-                        </tr>
-                        {category.items.map((item, itemIndex) => (
-                          <tr key={itemIndex} className="border-b border-[var(--border)]/30 hover:bg-white/5 transition-colors">
-                            <td className="py-5 px-8 text-foreground font-medium">{item.name}</td>
-                            <td className="py-5 px-8 text-center">
-                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                item.free === '✅' ? 'bg-success/20 text-success' : 
-                                item.free === '❌' ? 'bg-error/20 text-error' : 
-                                'bg-white/10 text-foreground'
-                              }`}>
-                                {item.free}
-                              </span>
-                            </td>
-                            <td className="py-5 px-8 text-center bg-accent/5">
-                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                item.pro === '✅' ? 'bg-success/20 text-success' : 
-                                item.pro === '❌' ? 'bg-error/20 text-error' : 
-                                'bg-white/10 text-foreground'
-                              }`}>
-                                {item.pro}
-                              </span>
-                            </td>
-                            <td className="py-5 px-8 text-center">
-                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                item.enterprise === '✅' ? 'bg-success/20 text-success' : 
-                                item.enterprise === '❌' ? 'bg-error/20 text-error' : 
-                                'bg-white/10 text-foreground'
-                              }`}>
-                                {item.enterprise}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </React.Fragment>
+                    {countryPricing.map((country, index) => (
+                      <tr key={index} className="border-b border-white/10 hover:bg-white/5 transition-colors">
+                        <td className="py-5 px-8 text-white font-medium flex items-center gap-3">
+                          <span className="text-2xl">{country.flag}</span>
+                          {country.country}
+                        </td>
+                        <td className="py-5 px-8 text-center">
+                          <span className="px-4 py-2 rounded-full text-sm font-medium bg-white/10 text-white border border-white/20">
+                            {country.free}
+                          </span>
+                        </td>
+                        <td className="py-5 px-8 text-center bg-blue-500/5">
+                          <span className="px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-400/30">
+                            {country.pro}
+                          </span>
+                        </td>
+                        <td className="py-5 px-8 text-center">
+                          <span className="px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-white border border-amber-400/30">
+                            {country.premium}
+                          </span>
+                        </td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
@@ -373,90 +277,36 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <section className="section relative">
-          <div className="container">
-            <div className="text-center mb-16">
-              
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
-                {translations.pricingFrequentlyAsked} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.pricingQuestions}</span>
-              </h2>
-              <p className="text-xl md:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                {translations.pricingEverythingYouNeedToKnow}
-              </p>
-            </div>
-
-            <div className="grid gap-6 max-w-4xl mx-auto">
-              {[
-                {
-                  question: translations.pricingCanChangePlanAnytime,
-                  answer: translations.pricingCanChangePlanAnytimeAnswer
-                },
-                {
-                  question: translations.pricingWhatHappensToVideos,
-                  answer: translations.pricingWhatHappensToVideosAnswer
-                },
-                {
-                  question: translations.pricingDoYouOfferRefunds,
-                  answer: translations.pricingDoYouOfferRefundsAnswer
-                },
-                {
-                  question: translations.pricingCanCancelSubscription,
-                  answer: translations.pricingCanCancelSubscriptionAnswer
-                },
-                {
-                  question: translations.pricingCustomEnterpriseSolutions,
-                  answer: translations.pricingCustomEnterpriseSolutionsAnswer
-                }
-              ].map((faq, index) => (
-                <div key={index} className="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 hover:border-accent/50 transition-all duration-300 hover:shadow-xl shadow-lg">
-                  <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-accent transition-colors">{faq.question}</h3>
-                  <p className="text-foreground-muted text-lg leading-relaxed">{faq.answer}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
-        <section className="section relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-accent-2/5 to-purple-500/5 rounded-3xl" />
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-accent/5 to-transparent" />
-          
-          <div className="container relative z-10">
-            <div className="text-center">
-              
-              
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 text-white leading-tight">
-                {translations.pricingReadyToCreate} <span className="text-gradient bg-gradient-to-r from-white via-accent-2 to-purple-300 bg-clip-text text-transparent">AI videos?</span>
+        <section className="pb-20 px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-black rounded-3xl p-16 text-center">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                Simple pricing
               </h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
-                {translations.pricingJoinThousands}
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed">
+                Simple plans for creators and businesses. See full details on the pricing page.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  href="/pricing"
+                  className="group bg-white text-black px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 flex items-center gap-3"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                  See pricing
+                </Link>
                 <button
                   onClick={() => handlePlanSelect('pro')}
-                  className="group relative bg-white text-black px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-white/25 transition-all duration-300 hover:-translate-y-1"
+                  className="group bg-gray-800 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-700 transition-all duration-300 flex items-center gap-3"
                 >
-                  <span className="flex items-center gap-3">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    {translations.pricingStartFreeTrial}
-                  </span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Start now
                 </button>
-                <Link
-                  href="/contact"
-                  className="group bg-white/10 border border-white/20 text-white px-10 py-5 rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300"
-                >
-                  <span className="flex items-center gap-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    {translations.pricingContactSales}
-                  </span>
-                </Link>
               </div>
             </div>
           </div>

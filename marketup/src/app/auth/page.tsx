@@ -46,8 +46,10 @@ export default function AuthPage() {
     // Check for referral code in URL
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
+    console.log('Referral code from URL:', refCode);
     if (refCode) {
       setReferralCode(refCode);
+      console.log('Referral code set:', refCode);
     }
   }, []);
 
@@ -148,6 +150,7 @@ export default function AuthPage() {
 
     try {
       if (mode === "signup") {
+        console.log('Sending registration data:', { email, hasPassword: !!password, referralCode });
         const res = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

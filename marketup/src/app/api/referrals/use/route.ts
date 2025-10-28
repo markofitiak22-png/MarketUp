@@ -5,7 +5,11 @@ import { prisma } from "@/lib/prisma";
 
 // GET /api/referrals/use - Test endpoint
 export async function GET() {
-  return NextResponse.json({ message: "Referral use endpoint is working" });
+  return NextResponse.json({ 
+    message: "Referral use endpoint is working",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV
+  });
 }
 
 // POST /api/referrals/use - Use a referral code

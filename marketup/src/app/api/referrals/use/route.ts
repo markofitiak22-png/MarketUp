@@ -3,6 +3,11 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+// GET /api/referrals/use - Test endpoint
+export async function GET() {
+  return NextResponse.json({ message: "Referral use endpoint is working" });
+}
+
 // POST /api/referrals/use - Use a referral code
 export async function POST(request: NextRequest) {
   try {
@@ -19,10 +24,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the referral code
+    console.log('Looking for referral code:', code.toUpperCase());
     const referralCode = await prisma.referralCode.findUnique({
       where: { code: code.toUpperCase() },
       include: { owner: true }
     });
+
+    console.log('Found referral code:', referralCode);
 
     if (!referralCode) {
       return NextResponse.json({ error: "Invalid referral code" }, { status: 404 });

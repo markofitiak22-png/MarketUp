@@ -6,9 +6,11 @@ import { useTranslations } from "@/hooks/useTranslations";
 const countries = [
   { name: "Sweden", flag: "🇸🇪" },
   { name: "Turkey", flag: "🇹🇷" },
-  { name: "Ukraine", flag: "🇺🇦" },
-  { name: "USA", flag: "🇺🇸" },
-  { name: "UAE", flag: "🇦🇪" }
+  { name: "Lebanon", flag: "🇱🇧" },
+  { name: "Syria", flag: "🇸🇾" },
+  { name: "Jordan", flag: "🇯🇴" },
+  { name: "Germany", flag: "🇩🇪" },
+  { name: "France", flag: "🇫🇷" }
 ];
 
 const languages = [
@@ -16,7 +18,9 @@ const languages = [
   { code: "sv", name: "Svenska", flag: "🇸🇪" },
   { code: "tr", name: "Türkçe", flag: "🇹🇷" },
   { code: "uk", name: "Українська", flag: "🇺🇦" },
-  { code: "ar", name: "العربية", flag: "🇦🇪" }
+  { code: "ar", name: "العربية", flag: "🇦🇪" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "fr", name: "Français", flag: "🇫🇷" }
 ];
 
 export default function OnboardingPage() {

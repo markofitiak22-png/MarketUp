@@ -425,12 +425,7 @@ export default function PricingPage() {
           
           <div className="container relative z-10">
             <div className="text-center">
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium mb-8">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                {translations.pricingGetStarted}
-              </div>
+              
               
               <h2 className="text-5xl md:text-6xl font-bold mb-8 text-white leading-tight">
                 {translations.pricingReadyToCreate} <span className="text-gradient bg-gradient-to-r from-white via-accent-2 to-purple-300 bg-clip-text text-transparent">AI videos?</span>

@@ -28,6 +28,7 @@ export default function AuthPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [authMethod, setAuthMethod] = useState<"email" | "phone">("email");
   const [phoneCodeSent, setPhoneCodeSent] = useState(false);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
   
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -40,6 +41,13 @@ export default function AuthPage() {
     if (rememberedEmail && isRemembered) {
       setEmail(rememberedEmail);
       setRememberMe(true);
+    }
+
+    // Check for referral code in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    if (refCode) {
+      setReferralCode(refCode);
     }
   }, []);
 
@@ -143,7 +151,7 @@ export default function AuthPage() {
         const res = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password, referralCode }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Registration failed");
@@ -389,6 +397,21 @@ export default function AuthPage() {
                       }`}
                     />
                   </div>
+
+                  {/* Referral Code Display */}
+                  {referralCode && (
+                    <div className="mb-6 p-4 bg-gradient-to-r from-accent/20 to-accent-2/20 border border-accent/30 rounded-xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-r from-accent to-accent-2 rounded-full flex items-center justify-center">
+                          <span className="text-white text-sm font-bold">🎁</span>
+                        </div>
+                        <div>
+                          <div className="text-white font-semibold">Referral Code Applied!</div>
+                          <div className="text-white/70 text-sm">You'll help your friend earn rewards</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Email/Password Form */}
                   {authMethod === "email" && (

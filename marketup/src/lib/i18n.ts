@@ -150,6 +150,41 @@ export interface Translations {
   referralsEarnDesc: string;
   referralsStep: string;
   
+  // Reward Ladder
+  referralsRewardLadder: string;
+  referralsRewardLadderDesc: string;
+  referralsNextReward: string;
+  referralsUnlockNext: string;
+  referralsGreatJob: string;
+  referralsAlmostThere: string;
+  referralsRewardUnlocked: string;
+  referralsRewardLocked: string;
+  referralsSubscribers: string;
+  referralsDiscount: string;
+  referralsFreeMonth: string;
+  referralsGiftCard: string;
+  referralsWirelessPad: string;
+  referralsBluetoothHeadphones: string;
+  referralsMiniDrone: string;
+  referralsMechanicalKeyboard: string;
+  referralsAirPods: string;
+  referralsAppleWatch: string;
+  referralsNewIphone: string;
+  referralsTitle: string;
+  referralsDescription: string;
+  referralsCreateReferralCode: string;
+  referralsGenerateUnique: string;
+  referralsMyReferralCodes: string;
+  referralsUseReferralCode: string;
+  referralsHaveReferralCode: string;
+  referralsRecentActivity: string;
+  referralsTotalReferrals: string;
+  referralsTotalRewards: string;
+  referralsPending: string;
+  referralsCreating: string;
+  referralsClaimReward: string;
+  referralsClaim: string;
+  
   // Auth Page
   authTitle: string;
   authSubtitle: string;
@@ -1280,6 +1315,41 @@ export const translations: Record<Language, Translations> = {
 	  referralsEarnStep: "Earn",
 	  referralsEarnDesc: "Get rewards when they subscribe.",
 	  referralsStep: "Step",
+
+	  // Reward Ladder
+	  referralsRewardLadder: "Reward Ladder",
+	  referralsRewardLadderDesc: "Unlock amazing rewards as you refer more friends!",
+	  referralsNextReward: "You're just {count} referrals away from unlocking your next reward!",
+	  referralsUnlockNext: "Unlock next reward",
+	  referralsGreatJob: "Great job! You've just moved one step closer to the biggest reward!",
+	  referralsAlmostThere: "Almost there! Keep going!",
+	  referralsRewardUnlocked: "Unlocked!",
+	  referralsRewardLocked: "Locked",
+	  referralsSubscribers: "subscribers",
+	  referralsDiscount: "$5 discount on the next subscription",
+	  referralsFreeMonth: "1 month free plan (Pro Plan)",
+	  referralsGiftCard: "$15 gift card (Amazon / App Store / Google Play)",
+	  referralsWirelessPad: "Wireless charging pad",
+	  referralsBluetoothHeadphones: "Small Bluetooth headphones",
+	  referralsMiniDrone: "Mini Drone",
+	  referralsMechanicalKeyboard: "Mechanical keyboard or gaming mouse",
+	  referralsAirPods: "AirPods",
+	  referralsAppleWatch: "Apple Watch",
+	  referralsNewIphone: "The new iPhone",
+  referralsTitle: "Referral Program",
+  referralsDescription: "Invite friends and earn amazing rewards! Share your referral code and unlock exclusive benefits.",
+  referralsCreateReferralCode: "Create Referral Code",
+  referralsGenerateUnique: "Generate a unique referral code to share with friends and start earning rewards.",
+  referralsMyReferralCodes: "My Referral Codes",
+  referralsUseReferralCode: "Use Referral Code",
+  referralsHaveReferralCode: "Have a referral code? Enter it below to get started and help your friend earn rewards.",
+  referralsRecentActivity: "Recent Activity",
+  referralsTotalReferrals: "Total Referrals",
+  referralsTotalRewards: "Total Rewards",
+  referralsPending: "Pending",
+  referralsCreating: "Creating...",
+  referralsClaimReward: "Claim Reward",
+  referralsClaim: "Claim",
 
 	  // Contact Page
 	  contactHearFromYou: "hear from you",
@@ -2424,6 +2494,41 @@ export const translations: Record<Language, Translations> = {
     referralsEarnStep: "Tjäna",
     referralsEarnDesc: "Få belöningar när de prenumererar.",
     referralsStep: "Steg",
+
+    // Reward Ladder
+    referralsRewardLadder: "Belöningsstege",
+    referralsRewardLadderDesc: "Lås upp fantastiska belöningar när du hänvisar fler vänner!",
+    referralsNextReward: "Du är bara {count} hänvisningar från att låsa upp din nästa belöning!",
+    referralsUnlockNext: "Lås upp nästa belöning",
+    referralsGreatJob: "Bra jobbat! Du har precis tagit ett steg närmare den största belöningen!",
+    referralsAlmostThere: "Nästan där! Fortsätt så!",
+    referralsRewardUnlocked: "Upplåst!",
+    referralsRewardLocked: "Låst",
+    referralsSubscribers: "prenumeranter",
+    referralsDiscount: "$5 rabatt på nästa prenumeration",
+    referralsFreeMonth: "1 månad gratis plan (Pro Plan)",
+    referralsGiftCard: "$15 presentkort (Amazon / App Store / Google Play)",
+    referralsWirelessPad: "Trådlös laddningsplatta",
+    referralsBluetoothHeadphones: "Små Bluetooth-hörlurar",
+    referralsMiniDrone: "Mini Drone",
+    referralsMechanicalKeyboard: "Mekaniskt tangentbord eller gamingmus",
+    referralsAirPods: "AirPods",
+    referralsAppleWatch: "Apple Watch",
+    referralsNewIphone: "Den nya iPhonen",
+    referralsTitle: "Hänvisningsprogram",
+    referralsDescription: "Bjud in vänner och tjäna fantastiska belöningar! Dela din hänvisningskod och lås upp exklusiva fördelar.",
+    referralsCreateReferralCode: "Skapa hänvisningskod",
+    referralsGenerateUnique: "Generera en unik hänvisningskod att dela med vänner och börja tjäna belöningar.",
+    referralsMyReferralCodes: "Mina hänvisningskoder",
+    referralsUseReferralCode: "Använd hänvisningskod",
+    referralsHaveReferralCode: "Har du en hänvisningskod? Ange den nedan för att komma igång och hjälpa din vän att tjäna belöningar.",
+    referralsRecentActivity: "Senaste aktivitet",
+    referralsTotalReferrals: "Totalt antal hänvisningar",
+    referralsTotalRewards: "Totalt antal belöningar",
+    referralsPending: "Väntande",
+    referralsCreating: "Skapar...",
+    referralsClaimReward: "Hämta belöning",
+    referralsClaim: "Hämta",
     
     // Contact Page
     contactHearFromYou: "höra från dig",
@@ -3564,6 +3669,41 @@ export const translations: Record<Language, Translations> = {
     referralsEarnStep: "Заробляти",
     referralsEarnDesc: "Отримуйте винагороди, коли вони підписуються.",
     referralsStep: "Крок",
+
+    // Reward Ladder
+    referralsRewardLadder: "Сходинка винагород",
+    referralsRewardLadderDesc: "Розблокуйте чудові винагороди, запрошуючи більше друзів!",
+    referralsNextReward: "Вам залишилося всього {count} запрошень, щоб розблокувати наступну винагороду!",
+    referralsUnlockNext: "Розблокувати наступну винагороду",
+    referralsGreatJob: "Чудова робота! Ви зробили ще один крок до найбільшої винагороди!",
+    referralsAlmostThere: "Майже там! Продовжуйте!",
+    referralsRewardUnlocked: "Розблоковано!",
+    referralsRewardLocked: "Заблоковано",
+    referralsSubscribers: "підписників",
+    referralsDiscount: "$5 знижка на наступну підписку",
+    referralsFreeMonth: "1 місяць безкоштовного плану (Pro Plan)",
+    referralsGiftCard: "$15 подарункова карта (Amazon / App Store / Google Play)",
+    referralsWirelessPad: "Бездротова зарядна станція",
+    referralsBluetoothHeadphones: "Малі Bluetooth навушники",
+    referralsMiniDrone: "Міні дрон",
+    referralsMechanicalKeyboard: "Механічна клавіатура або ігрова миша",
+    referralsAirPods: "AirPods",
+    referralsAppleWatch: "Apple Watch",
+    referralsNewIphone: "Новий iPhone",
+    referralsTitle: "Реферальна програма",
+    referralsDescription: "Запрошуйте друзів і отримуйте чудові винагороди! Поділіться своїм реферальним кодом і розблокуйте ексклюзивні переваги.",
+    referralsCreateReferralCode: "Створити реферальний код",
+    referralsGenerateUnique: "Згенеруйте унікальний реферальний код, щоб поділитися з друзями та почати заробляти винагороди.",
+    referralsMyReferralCodes: "Мої реферальні коди",
+    referralsUseReferralCode: "Використати реферальний код",
+    referralsHaveReferralCode: "Маєте реферальний код? Введіть його нижче, щоб почати і допомогти другу заробити винагороди.",
+    referralsRecentActivity: "Остання активність",
+    referralsTotalReferrals: "Всього рефералів",
+    referralsTotalRewards: "Всього винагород",
+    referralsPending: "В очікуванні",
+    referralsCreating: "Створюємо...",
+    referralsClaimReward: "Отримати винагороду",
+    referralsClaim: "Отримати",
     
     // Contact Page
     contactHearFromYou: "почути від вас",
@@ -4707,6 +4847,41 @@ export const translations: Record<Language, Translations> = {
     referralsEarnStep: "Kazan",
     referralsEarnDesc: "Abone olduklarında ödüller kazanın.",
     referralsStep: "Adım",
+
+    // Reward Ladder
+    referralsRewardLadder: "Ödül Merdiveni",
+    referralsRewardLadderDesc: "Daha fazla arkadaş davet ederek harika ödüllerin kilidini açın!",
+    referralsNextReward: "Bir sonraki ödülünüzün kilidini açmaya sadece {count} davet kaldı!",
+    referralsUnlockNext: "Sonraki ödülü aç",
+    referralsGreatJob: "Harika iş! En büyük ödüle bir adım daha yaklaştınız!",
+    referralsAlmostThere: "Neredeyse orada! Devam edin!",
+    referralsRewardUnlocked: "Açıldı!",
+    referralsRewardLocked: "Kilitli",
+    referralsSubscribers: "abone",
+    referralsDiscount: "Sonraki abonelikte $5 indirim",
+    referralsFreeMonth: "1 aylık ücretsiz plan (Pro Plan)",
+    referralsGiftCard: "$15 hediye kartı (Amazon / App Store / Google Play)",
+    referralsWirelessPad: "Kablosuz şarj pedi",
+    referralsBluetoothHeadphones: "Küçük Bluetooth kulaklık",
+    referralsMiniDrone: "Mini Drone",
+    referralsMechanicalKeyboard: "Mekanik klavye veya oyun faresi",
+    referralsAirPods: "AirPods",
+    referralsAppleWatch: "Apple Watch",
+    referralsNewIphone: "Yeni iPhone",
+    referralsTitle: "Yönlendirme Programı",
+    referralsDescription: "Arkadaşlarını davet et ve harika ödüller kazan! Yönlendirme kodunu paylaş ve özel avantajların kilidini aç.",
+    referralsCreateReferralCode: "Yönlendirme Kodu Oluştur",
+    referralsGenerateUnique: "Arkadaşlarınla paylaşmak ve ödül kazanmaya başlamak için benzersiz bir yönlendirme kodu oluştur.",
+    referralsMyReferralCodes: "Yönlendirme Kodlarım",
+    referralsUseReferralCode: "Yönlendirme Kodu Kullan",
+    referralsHaveReferralCode: "Yönlendirme kodun var mı? Başlamak ve arkadaşının ödül kazanmasına yardım etmek için aşağıya gir.",
+    referralsRecentActivity: "Son Aktiviteler",
+    referralsTotalReferrals: "Toplam Yönlendirme",
+    referralsTotalRewards: "Toplam Ödül",
+    referralsPending: "Bekleyen",
+    referralsCreating: "Oluşturuluyor...",
+    referralsClaimReward: "Ödülü Talep Et",
+    referralsClaim: "Talep Et",
     
     // Contact Page
     contactHearFromYou: "sizden duymak",
@@ -5848,6 +6023,41 @@ export const translations: Record<Language, Translations> = {
     referralsEarnStep: "كسب",
     referralsEarnDesc: "احصل على مكافآت عند اشتراكهم.",
     referralsStep: "خطوة",
+
+    // Reward Ladder
+    referralsRewardLadder: "سلم المكافآت",
+    referralsRewardLadderDesc: "افتح مكافآت رائعة عند دعوة المزيد من الأصدقاء!",
+    referralsNextReward: "أنت على بعد {count} دعوة فقط من فتح مكافأتك التالية!",
+    referralsUnlockNext: "فتح المكافأة التالية",
+    referralsGreatJob: "عمل رائع! لقد اقتربت خطوة من أكبر مكافأة!",
+    referralsAlmostThere: "تقريباً هناك! استمر!",
+    referralsRewardUnlocked: "مفتوح!",
+    referralsRewardLocked: "مقفل",
+    referralsSubscribers: "مشترك",
+    referralsDiscount: "خصم $5 على الاشتراك التالي",
+    referralsFreeMonth: "شهر مجاني (الخطة الاحترافية)",
+    referralsGiftCard: "بطاقة هدايا بقيمة $15 (Amazon / App Store / Google Play)",
+    referralsWirelessPad: "منصة شحن لاسلكية",
+    referralsBluetoothHeadphones: "سماعات بلوتوث صغيرة",
+    referralsMiniDrone: "طائرة صغيرة بدون طيار",
+    referralsMechanicalKeyboard: "لوحة مفاتيح ميكانيكية أو ماوس ألعاب",
+    referralsAirPods: "AirPods",
+    referralsAppleWatch: "Apple Watch",
+    referralsNewIphone: "iPhone الجديد",
+    referralsTitle: "برنامج الإحالة",
+    referralsDescription: "ادع الأصدقاء واكسب مكافآت مذهلة! شارك كود الإحالة الخاص بك وافتح المزايا الحصرية.",
+    referralsCreateReferralCode: "إنشاء كود الإحالة",
+    referralsGenerateUnique: "قم بإنشاء كود إحالة فريد لمشاركته مع الأصدقاء وبدء كسب المكافآت.",
+    referralsMyReferralCodes: "أكواد الإحالة الخاصة بي",
+    referralsUseReferralCode: "استخدام كود الإحالة",
+    referralsHaveReferralCode: "هل لديك كود إحالة؟ أدخله أدناه للبدء ومساعدة صديقك في كسب المكافآت.",
+    referralsRecentActivity: "النشاط الأخير",
+    referralsTotalReferrals: "إجمالي الإحالات",
+    referralsTotalRewards: "إجمالي المكافآت",
+    referralsPending: "في الانتظار",
+    referralsCreating: "جاري الإنشاء...",
+    referralsClaimReward: "المطالبة بالمكافأة",
+    referralsClaim: "مطالبة",
     
     // Contact Page
     contactHearFromYou: "نسمع منك",
@@ -7099,6 +7309,41 @@ export const translations: Record<Language, Translations> = {
 	  referralsEarnDesc: "Verdienen Sie Belohnungen für jede erfolgreiche Empfehlung",
 	  referralsStep: "Schritt",
 
+	  // Reward Ladder
+	  referralsRewardLadder: "Belohnungsleiter",
+	  referralsRewardLadderDesc: "Schalten Sie erstaunliche Belohnungen frei, indem Sie mehr Freunde empfehlen!",
+	  referralsNextReward: "Sie sind nur {count} Empfehlungen davon entfernt, Ihre nächste Belohnung freizuschalten!",
+	  referralsUnlockNext: "Nächste Belohnung freischalten",
+	  referralsGreatJob: "Großartige Arbeit! Sie sind einen Schritt näher zur größten Belohnung gekommen!",
+	  referralsAlmostThere: "Fast geschafft! Weiter so!",
+	  referralsRewardUnlocked: "Freigeschaltet!",
+	  referralsRewardLocked: "Gesperrt",
+	  referralsSubscribers: "Abonnenten",
+	  referralsDiscount: "$5 Rabatt auf das nächste Abonnement",
+	  referralsFreeMonth: "1 Monat kostenloser Plan (Pro Plan)",
+	  referralsGiftCard: "$15 Geschenkkarte (Amazon / App Store / Google Play)",
+	  referralsWirelessPad: "Kabellose Ladestation",
+	  referralsBluetoothHeadphones: "Kleine Bluetooth-Kopfhörer",
+	  referralsMiniDrone: "Mini-Drohne",
+	  referralsMechanicalKeyboard: "Mechanische Tastatur oder Gaming-Maus",
+	  referralsAirPods: "AirPods",
+	  referralsAppleWatch: "Apple Watch",
+	  referralsNewIphone: "Das neue iPhone",
+	  referralsTitle: "Empfehlungsprogramm",
+	  referralsDescription: "Laden Sie Freunde ein und verdienen Sie tolle Belohnungen! Teilen Sie Ihren Empfehlungscode und schalten Sie exklusive Vorteile frei.",
+	  referralsCreateReferralCode: "Empfehlungscode erstellen",
+	  referralsGenerateUnique: "Generieren Sie einen einzigartigen Empfehlungscode, um ihn mit Freunden zu teilen und Belohnungen zu verdienen.",
+	  referralsMyReferralCodes: "Meine Empfehlungscodes",
+	  referralsUseReferralCode: "Empfehlungscode verwenden",
+	  referralsHaveReferralCode: "Haben Sie einen Empfehlungscode? Geben Sie ihn unten ein, um zu beginnen und Ihrem Freund beim Verdienen von Belohnungen zu helfen.",
+	  referralsRecentActivity: "Letzte Aktivitäten",
+	  referralsTotalReferrals: "Gesamte Empfehlungen",
+	  referralsTotalRewards: "Gesamte Belohnungen",
+	  referralsPending: "Ausstehend",
+	  referralsCreating: "Erstelle...",
+	  referralsClaimReward: "Belohnung beanspruchen",
+	  referralsClaim: "Beanspruchen",
+
 	  // Pricing Page
 	  pricingTransparentPricing: "Transparente Preise",
 	  pricingSimpleTransparent: "Einfache, transparente Preise",
@@ -8270,6 +8515,41 @@ export const translations: Record<Language, Translations> = {
 	  referralsEarnStep: "Étape 3 : Gagner",
 	  referralsEarnDesc: "Gagnez des récompenses pour chaque parrainage réussi",
 	  referralsStep: "Étape",
+
+	  // Reward Ladder
+	  referralsRewardLadder: "Échelle des Récompenses",
+	  referralsRewardLadderDesc: "Débloquez des récompenses incroyables en parrainant plus d'amis !",
+	  referralsNextReward: "Il ne vous reste que {count} parrainages pour débloquer votre prochaine récompense !",
+	  referralsUnlockNext: "Débloquer la prochaine récompense",
+	  referralsGreatJob: "Excellent travail ! Vous venez de faire un pas de plus vers la plus grande récompense !",
+	  referralsAlmostThere: "Presque là ! Continuez !",
+	  referralsRewardUnlocked: "Débloqué !",
+	  referralsRewardLocked: "Verrouillé",
+	  referralsSubscribers: "abonnés",
+	  referralsDiscount: "5$ de réduction sur le prochain abonnement",
+	  referralsFreeMonth: "1 mois de plan gratuit (Plan Pro)",
+	  referralsGiftCard: "Carte cadeau de 15$ (Amazon / App Store / Google Play)",
+	  referralsWirelessPad: "Chargeur sans fil",
+	  referralsBluetoothHeadphones: "Petits écouteurs Bluetooth",
+	  referralsMiniDrone: "Mini Drone",
+	  referralsMechanicalKeyboard: "Clavier mécanique ou souris de jeu",
+	  referralsAirPods: "AirPods",
+	  referralsAppleWatch: "Apple Watch",
+	  referralsNewIphone: "Le nouvel iPhone",
+	  referralsTitle: "Programme de parrainage",
+	  referralsDescription: "Invitez des amis et gagnez des récompenses incroyables ! Partagez votre code de parrainage et débloquez des avantages exclusifs.",
+	  referralsCreateReferralCode: "Créer un code de parrainage",
+	  referralsGenerateUnique: "Générez un code de parrainage unique à partager avec des amis et commencez à gagner des récompenses.",
+	  referralsMyReferralCodes: "Mes codes de parrainage",
+	  referralsUseReferralCode: "Utiliser un code de parrainage",
+	  referralsHaveReferralCode: "Vous avez un code de parrainage ? Entrez-le ci-dessous pour commencer et aider votre ami à gagner des récompenses.",
+	  referralsRecentActivity: "Activité récente",
+	  referralsTotalReferrals: "Total des parrainages",
+	  referralsTotalRewards: "Total des récompenses",
+	  referralsPending: "En attente",
+	  referralsCreating: "Création...",
+	  referralsClaimReward: "Réclamer la récompense",
+	  referralsClaim: "Réclamer",
 
 	  // Pricing Page
 	  pricingTransparentPricing: "Tarifs transparents",

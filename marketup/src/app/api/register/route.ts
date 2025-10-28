@@ -7,6 +7,7 @@ import { sendWelcomeEmail } from "@/lib/mailer";
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
+  referralCode: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -22,8 +23,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "invalid_input" }, { status: 400 });
     }
     
-    const { email, password } = parsed.data;
-    console.log('Validated data:', { email });
+    const { email, password, referralCode } = parsed.data;
+    console.log('Validated data:', { email, hasReferralCode: !!referralCode });
     
     // Test database connection
     console.log('Testing database connection...');
@@ -42,6 +43,81 @@ export async function POST(request: Request) {
     console.log('Creating user in database...');
     const user = await prisma.user.create({ data: { email, passwordHash } });
     console.log('User created successfully:', { id: user.id, email: user.email });
+
+    // Handle referral code if provided
+    if (referralCode) {
+      try {
+        console.log('Processing referral code:', referralCode);
+        
+        // Find the referral code
+        const referralCodeRecord = await prisma.referralCode.findUnique({
+          where: { code: referralCode.toUpperCase() },
+          include: { owner: true }
+        });
+
+        if (referralCodeRecord && referralCodeRecord.ownerId !== user.id) {
+          // Check daily cap
+          let canCreateReferral = true;
+          if (referralCodeRecord.dailyCap) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const todayReferrals = await prisma.referralEvent.count({
+              where: {
+                referralCodeId: referralCodeRecord.id,
+                createdAt: {
+                  gte: today,
+                  lt: tomorrow
+                }
+              }
+            });
+
+            if (todayReferrals >= referralCodeRecord.dailyCap) {
+              canCreateReferral = false;
+              console.log('Daily referral limit reached for this code');
+            }
+          }
+
+          // Check total cap
+          if (canCreateReferral && referralCodeRecord.maxRewardsTotal) {
+            const totalReferrals = await prisma.referralEvent.count({
+              where: {
+                referralCodeId: referralCodeRecord.id,
+                status: "APPROVED"
+              }
+            });
+
+            if (totalReferrals >= referralCodeRecord.maxRewardsTotal) {
+              canCreateReferral = false;
+              console.log('Total referral limit reached for this code');
+            }
+          }
+
+          if (canCreateReferral) {
+            // Create referral event with automatic approval
+            await prisma.referralEvent.create({
+              data: {
+                referrerId: referralCodeRecord.ownerId,
+                referredUserId: user.id,
+                referralCodeId: referralCodeRecord.id,
+                status: "APPROVED",
+                rewardGranted: 1
+              }
+            });
+            console.log('Referral event created and approved automatically');
+          } else {
+            console.log('Referral code limits exceeded');
+          }
+        } else {
+          console.log('Invalid referral code or self-referral');
+        }
+      } catch (error) {
+        console.error('Error processing referral code:', error);
+        // Don't fail registration if referral processing fails
+      }
+    }
     
     // Send welcome email
     try {

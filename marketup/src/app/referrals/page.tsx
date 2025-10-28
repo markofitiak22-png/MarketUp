@@ -1,38 +1,87 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Container from "@/components/ui/Container";
 import Section from "@/components/ui/Section";
-// import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import RewardLadder from "@/components/RewardLadder";
 import { useTranslations } from "@/hooks/useTranslations";
+
+interface ReferralData {
+  referralCodes: any[];
+  referralEvents: any[];
+  referredEvents: any[];
+  totalReferrals: number;
+  stats: {
+    totalReferrals: number;
+    totalRewards: number;
+    pendingReferrals: number;
+  };
+}
 
 export default function ReferralsPage() {
   const { translations } = useTranslations();
-  const [ownerId, setOwnerId] = useState("");
-  const [code, setCode] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [referralData, setReferralData] = useState<ReferralData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [redeemCode, setRedeemCode] = useState("");
   const [redeeming, setRedeeming] = useState(false);
   const [status, setStatus] = useState<"ok" | "error" | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
   const origin = useMemo(() => (typeof window !== "undefined" ? window.location.origin : ""), []);
+
+  // Fetch referral data on component mount
+  useEffect(() => {
+    const fetchReferralData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/referrals');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch referral data');
+        }
+
+        const data = await response.json();
+        setReferralData(data);
+      } catch (err) {
+        console.error('Error fetching referral data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReferralData();
+  }, []);
 
   async function createCode() {
     setStatus(null);
     setError(null);
-    if (!ownerId.trim()) { setError(translations.referralsProvideUserId); return; }
     setCreating(true);
     try {
       const res = await fetch("/api/referrals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "create_code", ownerId }),
+        body: JSON.stringify({}),
       });
       const data = await res.json();
-      if (res.ok) setCode(data.code);
-      else setError(data.error || translations.referralsInvalidCode);
+      if (res.ok) {
+        setStatus("ok");
+        // Refresh data
+        const refreshResponse = await fetch('/api/referrals');
+        if (refreshResponse.ok) {
+          const refreshData = await refreshResponse.json();
+          setReferralData(refreshData);
+        }
+        
+        // Trigger reward ladder refresh
+        window.dispatchEvent(new CustomEvent('referralDataUpdated'));
+      } else {
+        setError(data.error || "Failed to create referral code");
+        setStatus("error");
+      }
     } catch {
-      setError(translations.referralsNetworkError);
+      setError("Network error");
+      setStatus("error");
     } finally {
       setCreating(false);
     }
@@ -41,269 +90,216 @@ export default function ReferralsPage() {
   async function redeem() {
     setStatus(null);
     setError(null);
-    if (!redeemCode.trim()) { setError(translations.referralsEnterCodeToRedeem); return; }
+    if (!redeemCode.trim()) { 
+      setError("Please enter a referral code"); 
+      setStatus("error");
+      return; 
+    }
     setRedeeming(true);
     try {
-      const res = await fetch("/api/referrals", {
+      const res = await fetch("/api/referrals/use", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "redeem", code: redeemCode.trim() }),
+        body: JSON.stringify({ code: redeemCode }),
       });
       const data = await res.json();
-      setStatus(res.ok ? "ok" : "error");
-      if (!res.ok) setError(data.error || translations.referralsInvalidCode);
+      if (res.ok) {
+        setStatus("ok");
+        setRedeemCode("");
+        // Refresh data
+        const refreshResponse = await fetch('/api/referrals');
+        if (refreshResponse.ok) {
+          const refreshData = await refreshResponse.json();
+          setReferralData(refreshData);
+        }
+        
+        // Trigger reward ladder refresh
+        window.dispatchEvent(new CustomEvent('referralDataUpdated'));
+      } else {
+        setError(data.error || "Invalid referral code");
+        setStatus("error");
+      }
     } catch {
+      setError("Network error");
       setStatus("error");
-      setError(translations.referralsNetworkError);
     } finally {
       setRedeeming(false);
     }
   }
 
-  async function copyLink() {
-    if (!code) return;
+  async function copyLink(code: string) {
     const url = `${origin}/?ref=${code}`;
     try {
       await navigator.clipboard.writeText(url);
-    } catch {}
+      setStatus("ok");
+    } catch {
+      setError("Failed to copy link");
+      setStatus("error");
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-white/70">Loading referral data...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
-    
+    <div className="min-h-screen bg-background">
+      {/* Reward Ladder */}
+      <RewardLadder />
 
       <Container>
-
-      {/* Content */}
-      <Section>
-        <div className="relative overflow-hidden">
-          {/* Animated background */}
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          
-          <div className="grid lg:grid-cols-3 gap-10 relative z-10">
-            {/* Create code */}
-            <div className="lg:col-span-2">
-              <div className="glass-elevated rounded-3xl p-10 relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-500 border border-accent/10 hover:border-accent/30">
-                {/* Corner gradient decoration */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-3xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-3xl" />
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-2xl shadow-2xl group-hover:scale-110 transition-all duration-300">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gradient mb-2">{translations.referralsCreateCode}</h2>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                        <span className="text-sm text-foreground-muted font-medium">{translations.referralsGenerateLink}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid sm:grid-cols-[1fr_auto] gap-4 items-end mb-6">
-                    <div className="grid gap-3">
-                      <label className="text-sm font-medium text-foreground" htmlFor="owner">{translations.referralsYourUserId}</label>
-                      <input 
-                        id="owner" 
-                        placeholder={translations.referralsUserIdPlaceholder} 
-                        value={ownerId} 
-                        onChange={(e) => setOwnerId(e.target.value)}
-                        className="px-4 py-3 rounded-xl border border-accent/20 bg-surface-elevated/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
-                      />
-                    </div>
-                    <Button 
-                      onClick={createCode} 
-                      disabled={creating} 
-                      variant="primary" 
-                      className="px-8 py-3 rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300"
-                    >
-                      {creating ? translations.referralsGenerating : translations.referralsGenerate}
-                    </Button>
-                  </div>
-                  
-                  {code ? (
-                    <div className="glass-elevated rounded-2xl p-6 border border-accent/20">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
-                        <span className="text-sm font-medium text-success">{translations.referralsCodeReady}</span>
-                      </div>
-                      <div className="grid gap-4">
-                        <div>
-                          <div className="text-sm text-foreground-muted mb-2">{translations.referralsYourCode}</div>
-                          <div className="flex items-center gap-3">
-                            <code className="px-4 py-3 rounded-xl border border-accent/20 bg-surface-elevated/50 select-all font-mono text-lg font-bold text-accent">{code}</code>
-                            <Button 
-                              onClick={copyLink} 
-                              variant="outline"
-                              className="px-6 py-3 rounded-xl hover:scale-105 transition-all duration-300"
-                            >
-                              {translations.referralsCopyLink}
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="text-sm text-foreground-muted">
-                          {translations.referralsShareLink} <span className="font-mono text-accent">{origin ? `${origin}/?ref=${code}` : `/?ref=${code}`}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-                  
-                  {error ? (
-                    <div className="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
-                      <p className="text-sm text-red-500 font-medium">{error}</p>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            {/* Redeem */}
-            <div>
-              <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-500 border border-accent-2/10 hover:border-accent-2/30">
-                {/* Corner gradient decoration */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/20 to-transparent rounded-bl-3xl" />
-                <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-tr-3xl" />
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl shadow-2xl group-hover:scale-110 transition-all duration-300">
-                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-bold text-gradient mb-1">{translations.referralsRedeemCode}</h2>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-accent-2 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-foreground-muted font-medium">{translations.referralsEnterCode}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block" htmlFor="redeem">{translations.referralsCode}</label>
-                      <input 
-                        id="redeem" 
-                        placeholder={translations.referralsCodePlaceholder} 
-                        value={redeemCode} 
-                        onChange={(e) => setRedeemCode(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-accent-2/20 bg-surface-elevated/50 focus:border-accent-2/50 focus:ring-2 focus:ring-accent-2/20 transition-all duration-300"
-                      />
-                    </div>
-                    <Button 
-                      onClick={redeem} 
-                      disabled={redeeming} 
-                      className="w-full py-3 rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300"
-                    >
-                      {redeeming ? translations.referralsRedeeming : translations.referralsRedeem}
-                    </Button>
-                    
-                    {status === "ok" ? (
-                      <div className="p-4 rounded-xl bg-success/10 border border-success/20">
-                        <p className="text-sm text-success font-medium">{translations.referralsSuccess}</p>
-                      </div>
-                    ) : null}
-                    
-                    {status === "error" || error ? (
-                      <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
-                        <p className="text-sm text-red-500 font-medium">{error || translations.referralsInvalidCode}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* How it works */}
-      <Section size="sm">
-        <div className="relative overflow-hidden">
-          {/* Animated background */}
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          
-          <div className="relative z-10">
+        <Section className="py-20">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-                {translations.referralsHowReferralsWork}
-              </h2>
-              <p className="text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                Simple steps to <span className="text-accent-2 font-medium">{translations.referralsStartEarning}</span> with referrals
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+                {translations.referralsTitle}
+              </h1>
+              <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
+                {translations.referralsDescription}
               </p>
             </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { 
-                  t: translations.referralsGenerateStep, 
-                  d: translations.referralsGenerateDesc,
-                  icon: (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                  ),
-                  gradient: "from-accent to-accent-2"
-                },
-                { 
-                  t: translations.referralsShareStep, 
-                  d: translations.referralsShareDesc,
-                  icon: (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                    </svg>
-                  ),
-                  gradient: "from-accent-2 to-purple-500"
-                },
-                { 
-                  t: translations.referralsEarnStep, 
-                  d: translations.referralsEarnDesc,
-                  icon: (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                  ),
-                  gradient: "from-purple-500 to-pink-500"
-                },
-              ].map((s, i) => (
-                <div key={i} className="group glass-elevated rounded-3xl p-8 transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-2xl group-hover:shadow-accent/30 group-hover:border-accent/50 relative overflow-hidden border border-accent/10 hover:border-accent/30">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-3xl" />
-                  <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-3xl" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  {/* Floating decorative elements */}
-                  <div className="absolute top-4 right-4 w-3 h-3 bg-gradient-to-br from-accent/40 to-accent-2/40 rounded-full animate-pulse"></div>
-                  <div className="absolute bottom-4 left-4 w-2 h-2 bg-gradient-to-br from-accent-2/40 to-purple-500/40 rounded-full animate-pulse delay-500"></div>
-                  
-                  <div className="relative z-10">
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-2xl`}>
-                      {s.icon}
-                    </div>
-                    <div className="text-sm text-foreground-muted font-medium mb-3 group-hover:text-accent transition-colors duration-300">{s.t}</div>
-                    <div className="text-lg font-bold text-foreground group-hover:text-foreground transition-colors duration-300">{s.d}</div>
-                    
-                    {/* Status indicator */}
-                    <div className="flex items-center gap-2 mt-6">
-                      <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                      <span className="text-sm text-accent font-medium">{translations.referralsStep} {i + 1}</span>
-                    </div>
+
+            {/* Stats */}
+            {referralData && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-white mb-2">
+                    {referralData.stats.totalReferrals}
                   </div>
+                  <div className="text-white/70">{translations.referralsTotalReferrals}</div>
                 </div>
-              ))}
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-white mb-2">
+                    {referralData.stats.totalRewards}
+                  </div>
+                  <div className="text-white/70">{translations.referralsTotalRewards}</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-white mb-2">
+                    {referralData.stats.pendingReferrals}
+                  </div>
+                  <div className="text-white/70">{translations.referralsPending}</div>
+                </div>
+              </div>
+            )}
+
+            {/* Create Referral Code */}
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">{translations.referralsCreateReferralCode}</h2>
+              <p className="text-white/70 mb-6">
+                {translations.referralsGenerateUnique}
+              </p>
+              <Button
+                onClick={createCode}
+                disabled={creating}
+                className="bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl hover:shadow-accent/30 transition-all duration-300"
+              >
+                {creating ? translations.referralsCreating : translations.referralsCreateReferralCode}
+              </Button>
             </div>
+
+            {/* My Referral Codes */}
+            {referralData?.referralCodes && referralData.referralCodes.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 mb-8">
+                <h2 className="text-2xl font-bold text-white mb-6">{translations.referralsMyReferralCodes}</h2>
+                <div className="space-y-4">
+                  {referralData.referralCodes.map((codeData) => (
+                    <div key={codeData.id} className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center justify-between">
+                      <div>
+                        <div className="text-lg font-mono text-white">{codeData.code}</div>
+                        <div className="text-sm text-white/60">
+                          Created: {new Date(codeData.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => copyLink(codeData.code)}
+                        className="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
+                      >
+                        Copy Link
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Use Referral Code */}
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">{translations.referralsUseReferralCode}</h2>
+              <p className="text-white/70 mb-6">
+                {translations.referralsHaveReferralCode}
+              </p>
+              <div className="flex gap-4">
+                <input
+                  type="text"
+                  value={redeemCode}
+                  onChange={(e) => setRedeemCode(e.target.value.toUpperCase())}
+                  placeholder="Enter referral code"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                />
+                <Button
+                  onClick={redeem}
+                  disabled={redeeming || !redeemCode.trim()}
+                  className="bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl hover:shadow-accent/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {redeeming ? "Using..." : "Use Code"}
+                </Button>
+              </div>
+            </div>
+
+            {/* Status Messages */}
+            {status && (
+              <div className={`p-4 rounded-xl mb-6 ${
+                status === "ok" 
+                  ? "bg-green-500/20 border border-green-400/50 text-green-300" 
+                  : "bg-red-500/20 border border-red-400/50 text-red-300"
+              }`}>
+                {status === "ok" ? "Success!" : error}
+              </div>
+            )}
+
+            {/* Recent Activity */}
+            {referralData?.referralEvents && referralData.referralEvents.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8">
+                <h2 className="text-2xl font-bold text-white mb-6">{translations.referralsRecentActivity}</h2>
+                <div className="space-y-4">
+                  {referralData.referralEvents.slice(0, 5).map((event) => (
+                    <div key={event.id} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-white font-medium">
+                            {event.referredUser?.name || event.referredUser?.email || "Anonymous User"}
+                          </div>
+                          <div className="text-sm text-white/60">
+                            {new Date(event.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          event.status === "APPROVED" 
+                            ? "bg-green-500/20 text-green-300" 
+                            : event.status === "PENDING"
+                            ? "bg-yellow-500/20 text-yellow-300"
+                            : "bg-red-500/20 text-red-300"
+                        }`}>
+                          {event.status}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      </Section>
-    </Container>
-    </>
+        </Section>
+      </Container>
+    </div>
   );
 }
-
-

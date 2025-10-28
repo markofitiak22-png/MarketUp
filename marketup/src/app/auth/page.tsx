@@ -248,60 +248,67 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      
-      {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      {/* Enhanced Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40" />
+        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-accent-2/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+      </div>
       
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="mt-10 text-center">
-          <div className="container">
-            <div className="max-w-4xl mx-auto">
-              
-              {/* Main heading */}
-              <div className="space-y-8">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9]">
-                  {mode === "signin" ? "Welcome back" : "Create your account"}
-                </h1>
-                
-                <p className="text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-                  {mode === "signin" ? "Sign in to continue creating amazing videos" : "Join thousands of creators building with AI"}
-                </p>
-              </div>
+        <section className="pt-14 pb-20 px-4">
+          <div className="max-w-7xl mx-auto text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-glow border border-accent/20 text-foreground text-sm font-medium mb-8">
+              <div className="w-2 h-2 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
+              <span>MarketUp</span>
+              <div className="w-2 h-2 bg-gradient-to-r from-accent-2 to-purple-500 rounded-full animate-pulse" />
             </div>
+            
+            {/* Main heading */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] text-white mb-2">
+              {mode === "signin" ? "Welcome back" : "Create your account"}{" "}
+              <span className="text-white">
+                {mode === "signin" ? "to MarketUp" : "with MarketUp"}
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light ">
+              {mode === "signin" ? "Sign in to continue creating amazing videos" : "Join thousands of creators building with AI"}
+            </p>
           </div>
         </section>
 
         {/* Auth Form Section */}
-        <section className="section relative">
-          <div className="container">
-            <div className="max-w-md mx-auto">
-              {/* Auth Form */}
-              <div className={`glass-elevated rounded-3xl p-10 relative overflow-hidden transition-all duration-300 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
+        <section className="pb-20 px-4">
+          <div className="max-w-lg mx-auto">
+            {/* Auth Form */}
+            <div className={`bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-12 relative overflow-hidden shadow-2xl transition-all duration-300 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-3xl" />
-                <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-accent-2/10 to-transparent rounded-tr-3xl" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-3xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-3xl" />
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-r from-accent/5 to-accent-2/5 rounded-full blur-3xl" />
                 <div className="relative z-10">
                   {/* Tab Navigation */}
-                  <div className="relative mb-8 bg-surface-elevated rounded-xl p-1 border border-border/50 shadow-inner">
+                  <div className="relative mb-10 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10 shadow-inner">
                     <div className="relative flex">
                       <button
-                        className={`flex-1 py-3 px-4 text-sm font-bold rounded-lg transition-all duration-300 relative z-10 ${
+                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
                           mode === "signin" 
                             ? "text-white" 
-                            : "text-foreground-muted hover:text-foreground"
+                            : "text-white/70 hover:text-white"
                         }`}
                         onClick={() => handleModeChange("signin")}
                       >
                         Sign In
                       </button>
                       <button
-                        className={`flex-1 py-3 px-4 text-sm font-bold rounded-lg transition-all duration-300 relative z-10 ${
+                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
                           mode === "signup" 
                             ? "text-white" 
-                            : "text-foreground-muted hover:text-foreground"
+                            : "text-white/70 hover:text-white"
                         }`}
                         onClick={() => handleModeChange("signup")}
                       >
@@ -310,20 +317,20 @@ export default function AuthPage() {
                     </div>
                     {/* Animated Background Slider */}
                     <div 
-                      className={`absolute top-1 bottom-1 w-1/2 bg-gradient-to-r from-accent to-accent-2 rounded-lg shadow-lg transition-all duration-300 ${
-                        mode === "signin" ? "left-1" : "left-1/2"
+                      className={`absolute top-2 bottom-2 w-1/2 bg-gradient-to-r from-accent to-accent-2 rounded-xl shadow-lg transition-all duration-300 ${
+                        mode === "signin" ? "left-2" : "left-1/2"
                       }`}
                     />
                   </div>
 
                   {/* Social Sign In Buttons */}
-                  <div className="space-y-4 mb-6">
+                  <div className="space-y-4 mb-8">
                     {/* Google Sign In */}
                     <button 
                       onClick={google} 
-                      className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-surface border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-surface-elevated transition-all duration-200"
+                      className="w-full flex items-center justify-center gap-4 py-4 px-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-base font-semibold text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 group"
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24">
+                      <svg width="20" height="20" viewBox="0 0 24 24" className="group-hover:scale-110 transition-transform duration-300">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -335,9 +342,9 @@ export default function AuthPage() {
                     {/* Apple Sign In */}
                     <button 
                       onClick={apple} 
-                      className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-black text-white border border-gray-800 rounded-xl text-sm font-semibold hover:bg-gray-900 transition-all duration-200"
+                      className="w-full flex items-center justify-center gap-4 py-4 px-6 bg-black/20 backdrop-blur-sm text-white border border-white/20 rounded-2xl text-base font-semibold hover:bg-black/30 hover:border-white/30 transition-all duration-300 group"
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="group-hover:scale-110 transition-transform duration-300">
                         <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                       </svg>
                       Continue with Apple
@@ -345,30 +352,30 @@ export default function AuthPage() {
                   </div>
 
                   {/* Divider */}
-                  <div className="flex items-center my-6">
-                    <div className="flex-1 border-t border-border"></div>
-                    <span className="px-3 text-sm text-foreground-muted">or</span>
-                    <div className="flex-1 border-t border-border"></div>
+                  <div className="flex items-center my-8">
+                    <div className="flex-1 border-t border-white/20"></div>
+                    <span className="px-4 text-sm text-white/70 font-medium">or</span>
+                    <div className="flex-1 border-t border-white/20"></div>
                   </div>
 
                   {/* Authentication Method Selector */}
-                  <div className="relative mb-6 bg-surface-elevated rounded-xl p-1 border border-border/50 shadow-inner">
+                  <div className="relative mb-8 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10 shadow-inner">
                     <div className="relative flex">
                       <button
-                        className={`flex-1 py-3 px-4 text-sm font-bold rounded-lg transition-all duration-300 relative z-10 ${
+                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
                           authMethod === "email" 
                             ? "text-white" 
-                            : "text-foreground-muted hover:text-foreground"
+                            : "text-white/70 hover:text-white"
                         }`}
                         onClick={() => setAuthMethod("email")}
                       >
                         Email
                       </button>
                       <button
-                        className={`flex-1 py-3 px-4 text-sm font-bold rounded-lg transition-all duration-300 relative z-10 ${
+                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
                           authMethod === "phone" 
                             ? "text-white" 
-                            : "text-foreground-muted hover:text-foreground"
+                            : "text-white/70 hover:text-white"
                         }`}
                         onClick={() => setAuthMethod("phone")}
                       >
@@ -377,8 +384,8 @@ export default function AuthPage() {
                     </div>
                     {/* Animated Background Slider */}
                     <div 
-                      className={`absolute top-1 bottom-1 w-1/2 bg-gradient-to-r from-accent to-accent-2 rounded-lg shadow-lg transition-all duration-300 ${
-                        authMethod === "email" ? "left-1" : "left-1/2"
+                      className={`absolute top-2 bottom-2 w-1/2 bg-gradient-to-r from-accent to-accent-2 rounded-xl shadow-lg transition-all duration-300 ${
+                        authMethod === "email" ? "left-2" : "left-1/2"
                       }`}
                     />
                   </div>
@@ -387,8 +394,8 @@ export default function AuthPage() {
                   {authMethod === "email" && (
                     <form onSubmit={(e) => { e.preventDefault(); submitEmailPassword(); }} className="space-y-6" noValidate>
                     {/* Email Field */}
-                    <div className="space-y-4">
-                      <label className="text-base font-medium text-foreground">Email Address</label>
+                    <div className="space-y-3">
+                      <label className="text-base font-semibold text-white">Email Address</label>
                       <input
                         ref={emailRef}
                         type="email"
@@ -397,26 +404,26 @@ export default function AuthPage() {
                         onFocus={() => setEmailFocused(true)}
                         onBlur={() => setEmailFocused(false)}
                         placeholder="you@company.com"
-                        className={`w-full p-4 rounded-xl border transition-all duration-200 bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none ${
+                        className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
                           errors.email 
-                            ? 'border-error focus:border-error focus:ring-2 focus:ring-error/10' 
-                            : 'border-border hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/10'
+                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                            : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
                         }`}
                         required
                       />
                       {errors.email && (
-                        <p className="text-sm text-error">
+                        <p className="text-sm text-red-400 font-medium">
                           {errors.email}
                         </p>
                       )}
                     </div>
 
                     {/* Password Field */}
-                    <div className="space-y-4">
-                      <label className="text-base font-medium text-foreground">
+                    <div className="space-y-3">
+                      <label className="text-base font-semibold text-white">
                         Password
                         {mode === "signup" && (
-                          <span className="text-sm text-foreground-muted ml-2">(min. 8 characters)</span>
+                          <span className="text-sm text-white/70 ml-2 font-normal">(min. 8 characters)</span>
                         )}
                       </label>
                       <input
@@ -427,15 +434,15 @@ export default function AuthPage() {
                         onFocus={() => setPasswordFocused(true)}
                         onBlur={() => setPasswordFocused(false)}
                         placeholder="Enter your password"
-                        className={`w-full p-4 rounded-xl border transition-all duration-200 bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none ${
+                        className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
                           errors.password 
-                            ? 'border-error focus:border-error focus:ring-2 focus:ring-error/10' 
-                            : 'border-border hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/10'
+                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                            : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
                         }`}
                         required
                       />
                       {errors.password && (
-                        <p className="text-sm text-error">
+                        <p className="text-sm text-red-400 font-medium">
                           {errors.password}
                         </p>
                       )}
@@ -450,12 +457,12 @@ export default function AuthPage() {
                               type="checkbox" 
                               checked={rememberMe}
                               onChange={(e) => setRememberMe(e.target.checked)}
-                              className="w-4 h-4 rounded border-border text-accent focus:ring-accent focus:ring-2 opacity-0 absolute" 
+                              className="w-4 h-4 rounded border-white/20 text-accent focus:ring-accent focus:ring-2 opacity-0 absolute" 
                             />
                             <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 ${
                               rememberMe 
                                 ? 'bg-accent border-accent' 
-                                : 'border-border group-hover:border-accent/50'
+                                : 'border-white/20 group-hover:border-accent/50'
                             }`}>
                               {rememberMe && (
                                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -464,7 +471,7 @@ export default function AuthPage() {
                               )}
                             </div>
                           </div>
-                          <span className="text-sm text-foreground-muted group-hover:text-foreground transition-colors">Remember me</span>
+                          <span className="text-sm text-white/70 group-hover:text-white transition-colors">Remember me</span>
                         </label>
                         <a 
                           href="/password/reset" 
@@ -477,17 +484,17 @@ export default function AuthPage() {
 
                     {/* General Error Message */}
                     {errors.general && (
-                      <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-sm">
+                      <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                         {errors.general}
                       </div>
                     )}
 
                     {/* Submit Button */}
-                    <div className="flex gap-4 pt-4">
+                    <div className="flex gap-4 pt-6">
                       <button
                         type="submit"
                         disabled={loading}
-                        className="flex-1 btn-primary px-6 py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-5 font-bold rounded-2xl hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                       >
                         {loading ? "Please wait..." : (mode === "signin" ? "Sign In" : "Create Account")}
                       </button>
@@ -501,8 +508,8 @@ export default function AuthPage() {
                       {!phoneCodeSent ? (
                         <>
                           {/* Phone Number Input */}
-                          <div className="space-y-4">
-                            <label className="text-base font-medium text-foreground">Phone Number</label>
+                          <div className="space-y-3">
+                            <label className="text-base font-semibold text-white">Phone Number</label>
                             <input
                               type="tel"
                               value={phone}
@@ -510,15 +517,15 @@ export default function AuthPage() {
                               onFocus={() => setPhoneFocused(true)}
                               onBlur={() => setPhoneFocused(false)}
                               placeholder="+1 (555) 123-4567"
-                              className={`w-full p-4 rounded-xl border transition-all duration-200 bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none ${
+                              className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
                                 errors.phone 
-                                  ? 'border-error focus:border-error focus:ring-2 focus:ring-error/10' 
-                                  : 'border-border hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/10'
+                                  ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                                  : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
                               }`}
                               required
                             />
                             {errors.phone && (
-                              <p className="text-sm text-error">
+                              <p className="text-sm text-red-400 font-medium">
                                 {errors.phone}
                               </p>
                             )}
@@ -528,7 +535,7 @@ export default function AuthPage() {
                           <button
                             onClick={sendPhoneCode}
                             disabled={loading}
-                            className="w-full btn-primary px-6 py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-5 font-bold rounded-2xl hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                           >
                             {loading ? "Sending..." : "Send Verification Code"}
                           </button>
@@ -536,27 +543,27 @@ export default function AuthPage() {
                       ) : (
                         <>
                           {/* Verification Code Input */}
-                          <div className="space-y-4">
-                            <label className="text-base font-medium text-foreground">Verification Code</label>
+                          <div className="space-y-3">
+                            <label className="text-base font-semibold text-white">Verification Code</label>
                             <input
                               type="text"
                               value={phoneCode}
                               onChange={(e) => setPhoneCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                               placeholder="123456"
-                              className={`w-full p-4 rounded-xl border transition-all duration-200 bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none text-center text-2xl tracking-widest ${
+                              className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-center text-2xl tracking-widest ${
                                 errors.phoneCode 
-                                  ? 'border-error focus:border-error focus:ring-2 focus:ring-error/10' 
-                                  : 'border-border hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/10'
+                                  ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                                  : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
                               }`}
                               maxLength={6}
                               required
                             />
                             {errors.phoneCode && (
-                              <p className="text-sm text-error">
+                              <p className="text-sm text-red-400 font-medium">
                                 {errors.phoneCode}
                               </p>
                             )}
-                            <p className="text-sm text-foreground-muted text-center">
+                            <p className="text-sm text-white/70 text-center font-medium">
                               We sent a 6-digit code to {phone}
                             </p>
                           </div>
@@ -566,7 +573,7 @@ export default function AuthPage() {
                             <button
                               onClick={verifyPhoneCode}
                               disabled={loading}
-                              className="flex-1 btn-primary px-6 py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="flex-1 bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-5 font-bold rounded-2xl hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                             >
                               {loading ? "Verifying..." : "Verify Code"}
                             </button>
@@ -576,7 +583,7 @@ export default function AuthPage() {
                                 setPhoneCode("");
                                 setErrors({});
                               }}
-                              className="btn-outline px-6 py-3 font-semibold"
+                              className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-5 font-semibold rounded-2xl hover:bg-white/20 hover:border-white/30 transition-all duration-300"
                             >
                               Change Number
                             </button>
@@ -588,14 +595,14 @@ export default function AuthPage() {
 
                   {/* General Error Message */}
                   {errors.general && (
-                    <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-sm">
+                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                       {errors.general}
                     </div>
                   )}
 
                   {/* Terms and Privacy */}
                   <div className="mt-6 text-center">
-                    <p className="text-sm text-foreground-muted">
+                    <p className="text-sm text-white/70">
                       By continuing, you agree to our{" "}
                       <a href="/terms" className="text-accent hover:text-accent-hover transition-colors">Terms of Service</a>{" "}
                       and{" "}
@@ -605,7 +612,6 @@ export default function AuthPage() {
                 </div>
               </div>
             </div>
-          </div>
         </section>
       </div>
     </div>

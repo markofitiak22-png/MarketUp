@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 import { useTranslations } from "@/hooks/useTranslations";
 
@@ -9,7 +9,8 @@ interface AvatarStepProps {
   onNext: () => void;
 }
 
-const avatars = [
+// Fallback avatars if API fails
+const fallbackAvatars = [
   {
     id: 'sarah',
     name: 'Sarah',
@@ -57,7 +58,39 @@ const avatars = [
 export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) {
   const { translations } = useTranslations();
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar?.id || '');
+  const [avatars, setAvatars] = useState(fallbackAvatars);
+  const [loading, setLoading] = useState(true);
   // const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+
+  // Load avatars from API
+  useEffect(() => {
+    const fetchAvatars = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/avatars');
+        const data = await response.json();
+        
+        if (data.success && data.avatars) {
+          // Transform API avatars to our format
+          const transformedAvatars = data.avatars.map((avatar: any) => ({
+            id: avatar.id,
+            name: avatar.name,
+            image: avatar.image,
+            gender: avatar.gender,
+            description: `${avatar.name} - ${avatar.voice.name} voice`
+          }));
+          setAvatars(transformedAvatars);
+        }
+      } catch (error) {
+        console.error('Error fetching avatars:', error);
+        // Keep fallback avatars
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAvatars();
+  }, []);
 
   const handleAvatarSelect = (avatar: typeof avatars[0]) => {
     setSelectedAvatar(avatar.id);

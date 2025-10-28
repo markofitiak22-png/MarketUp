@@ -182,7 +182,7 @@ export default function RewardLadder() {
           </div>
 
           {/* Rewards positioned along the progress bar */}
-          <div className="relative mt-16 flex gap-8 overflow-x-auto pb-4 pt-4 pl-6 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="relative mt-16 flex gap-8 overflow-x-auto pb-20 pt-4 pl-6 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {rewards.map((reward, index) => {
               const isUnlocked = reward.unlocked;
               const isNext = reward.isNext;
@@ -191,13 +191,13 @@ export default function RewardLadder() {
                 <div
                   key={reward.id}
                   className="flex-shrink-0 relative z-10"
-                  style={{ width: '380px', height: '350px' }}
+                  style={{ width: '380px', height: '400px' }}
                 >
                   {/* Reward card */}
                   <div className={`
                     group relative w-full h-full transition-all duration-500 hover:scale-110 hover:-translate-y-3 z-20 pt-4
                     ${isUnlocked 
-                      ? 'animate-pulse' 
+                      ? 'opacity-100' 
                       : isNext 
                         ? 'opacity-100' 
                         : 'opacity-60'
@@ -294,9 +294,9 @@ export default function RewardLadder() {
                                     {isUnlocked && (
                                       <button
                                         onClick={() => claimReward(reward.id)}
-                                        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 hover:scale-105"
+                                        className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-orange-500/50 transition-all duration-300 hover:scale-110 hover:brightness-110 border-2 border-yellow-300/50 hover:border-yellow-200"
                                       >
-                                        {translations.referralsClaimReward}
+                                        🎉 {translations.referralsClaimReward} 🎉
                                       </button>
                                     )}
                                   </div>
@@ -324,7 +324,7 @@ export default function RewardLadder() {
                   className={`
                     group relative transition-all duration-500 hover:scale-105 hover:-translate-y-1 pt-4 h-80
                     ${isUnlocked 
-                      ? 'animate-pulse' 
+                      ? 'opacity-100' 
                       : isNext 
                         ? 'opacity-100' 
                         : 'opacity-60'
@@ -422,9 +422,9 @@ export default function RewardLadder() {
                       {isUnlocked && (
                         <button
                           onClick={() => claimReward(reward.id)}
-                          className="w-full mt-2 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg text-xs font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 hover:scale-105"
+                          className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white rounded-lg text-sm font-bold hover:shadow-xl hover:shadow-orange-500/50 transition-all duration-300 hover:scale-110 hover:brightness-110 border-2 border-yellow-300/50 hover:border-yellow-200"
                         >
-                          {translations.referralsClaim}
+                          🎉 {translations.referralsClaim} 🎉
                         </button>
                       )}
                     </div>

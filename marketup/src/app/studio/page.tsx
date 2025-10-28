@@ -76,7 +76,25 @@ export default function VideoCreationWizard() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const updateWizardData = useCallback((updates: Partial<WizardData>) => {
-    setWizardData(prev => ({ ...prev, ...updates }));
+    setWizardData(prev => {
+      // Only update if there are actual changes
+      const hasChanges = Object.keys(updates).some(key => {
+        const updateValue = updates[key as keyof WizardData];
+        const currentValue = prev[key as keyof WizardData];
+        
+        if (key === 'settings' && updateValue && typeof updateValue === 'object') {
+          return JSON.stringify(updateValue) !== JSON.stringify(currentValue);
+        }
+        
+        return updateValue !== currentValue;
+      });
+      
+      if (!hasChanges) {
+        return prev;
+      }
+      
+      return { ...prev, ...updates };
+    });
   }, []);
 
   const nextStep = useCallback(() => {

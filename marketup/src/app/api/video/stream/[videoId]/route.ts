@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
@@ -8,37 +9,41 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    
-    if (!session) {
+    if (!session || !(session as any).user || !(session as any).user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const resolvedParams = await params;
-    const { videoId } = resolvedParams;
+    const userId = (session as any).user.id;
+    const { videoId } = await params;
 
-    // In a real implementation, you would:
-    // 1. Verify the user owns this video
-    // 2. Get the video file from storage (S3, etc.)
-    // 3. Stream the file with proper headers
-    
-    // For now, return a mock video response
-    const mockVideoData = Buffer.from('mock video data');
-    
-    return new NextResponse(mockVideoData, {
-      status: 200,
-      headers: {
-        'Content-Type': 'video/mp4',
-        'Content-Length': mockVideoData.length.toString(),
-        'Content-Disposition': `attachment; filename="video_${videoId}.mp4"`,
-        'Cache-Control': 'private, max-age=3600',
-      },
+    // Get video from database
+    const video = await prisma.video.findFirst({
+      where: {
+        id: videoId,
+        userId: userId
+      }
     });
 
+    if (!video) {
+      return NextResponse.json({ error: "Video not found" }, { status: 404 });
+    }
+
+    if (video.status !== 'COMPLETED') {
+      return NextResponse.json({ error: "Video not ready" }, { status: 400 });
+    }
+
+    // Return the actual video URL from D-ID
+    if (!video.videoUrl) {
+      return NextResponse.json({ error: "Video URL not available" }, { status: 400 });
+    }
+    
+    // Redirect to the actual video URL
+    return NextResponse.redirect(video.videoUrl);
+
   } catch (error) {
-    console.error("Video stream error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Error streaming video:', error);
+    return NextResponse.json({ 
+      error: "Internal server error" 
+    }, { status: 500 });
   }
 }

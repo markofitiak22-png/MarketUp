@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 import { useTranslations } from "@/hooks/useTranslations";
 
@@ -15,28 +15,55 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
+
+  // Get video ID from session storage (set during generation)
+  useEffect(() => {
+    const storedVideoId = sessionStorage.getItem('currentVideoId');
+    if (storedVideoId) {
+      setVideoId(storedVideoId);
+      setVideoUrl(`/api/video/stream/${storedVideoId}`);
+    }
+  }, []);
 
   const handlePlay = () => {
     setIsPlaying(true);
-    // Simulate video playback
-    setTimeout(() => setIsPlaying(false), 3000);
   };
 
   const handleDownload = async () => {
+    if (!videoId) return;
+    
     setIsDownloading(true);
     setDownloadProgress(0);
     
-    // Simulate download progress
-    const interval = setInterval(() => {
-      setDownloadProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
+    try {
+      const response = await fetch(`/api/video/download/${videoId}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        // Create download link
+        const link = document.createElement('a');
+        link.href = data.downloadUrl;
+        link.download = data.filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        setDownloadProgress(100);
+        setTimeout(() => {
           setIsDownloading(false);
-          return 100;
-        }
-        return prev + 10;
-      });
-    }, 200);
+          setDownloadProgress(0);
+        }, 1000);
+      } else {
+        throw new Error(data.error || 'Download failed');
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Download failed. Please try again.');
+      setIsDownloading(false);
+      setDownloadProgress(0);
+    }
   };
 
   const handleRegenerate = () => {
@@ -64,38 +91,38 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
 
       {/* Video Preview */}
       <div className="glass-elevated rounded-2xl p-8">
-        <div className="aspect-video bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-xl overflow-hidden relative">
-          {/* Video Placeholder */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
-                {isPlaying ? (
+        <div className="aspect-video bg-black rounded-xl overflow-hidden relative">
+          {videoUrl ? (
+            <video
+              src={videoUrl}
+              controls
+              className="w-full h-full object-cover"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={() => setIsPlaying(false)}
+            >
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
                   <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                )}
-              </div>
-              <div className="text-foreground-muted">
-                {isPlaying ? translations.studioPlaying : translations.studioClickToPreview}
+                </div>
+                <div className="text-white/70">
+                  {translations.studioLoadingVideo || "Loading video..."}
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Play Button Overlay */}
-          {!isPlaying && (
-            <button
-              onClick={handlePlay}
-              className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
-            >
-              <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-accent ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-            </button>
           )}
+          
+          {/* Video Info Overlay */}
+          <div className="absolute bottom-4 left-4 right-4">
+            <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3">
+              <div className="text-white font-medium">{data.avatar?.name}</div>
+              <div className="text-white/70 text-sm">{data.language?.voice.name}</div>
+            </div>
+          </div>
         </div>
 
         {/* Video Info */}

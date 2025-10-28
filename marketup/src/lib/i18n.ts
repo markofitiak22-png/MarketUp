@@ -486,6 +486,7 @@ export interface Translations {
   studioVideoCreatedWithSettings: string;
   studioStartGeneration: string;
   studioGenerationTakes2To3Minutes: string;
+  studioLoadingVideo: string;
   
   // Preview Step
   studioYourVideoReady: string;
@@ -1620,6 +1621,7 @@ export const translations: Record<Language, Translations> = {
 	  studioVideoCreatedWithSettings: "Your video will be created with the settings above.",
 	  studioStartGeneration: "Start Generation",
 	  studioGenerationTakes2To3Minutes: "Generation typically takes 2-3 minutes",
+	  studioLoadingVideo: "Loading video...",
 
 	  // Preview Step
 	  studioYourVideoReady: "Your Video is Ready!",
@@ -2804,6 +2806,7 @@ export const translations: Record<Language, Translations> = {
     studioVideoCreatedWithSettings: "Din video kommer att skapas med inställningarna ovan.",
     studioStartGeneration: "Starta Generering",
     studioGenerationTakes2To3Minutes: "Generering tar vanligtvis 2-3 minuter",
+    studioLoadingVideo: "Laddar video...",
     
     // Preview Step
     studioYourVideoReady: "Din Video är Redo!",
@@ -3980,6 +3983,7 @@ export const translations: Record<Language, Translations> = {
     studioVideoCreatedWithSettings: "Ваше відео буде створено з налаштуваннями вище.",
     studioStartGeneration: "Почати Генерування",
     studioGenerationTakes2To3Minutes: "Генерування зазвичай займає 2-3 хвилини",
+    studioLoadingVideo: "Завантаження відео...",
     
     // Preview Step
     studioYourVideoReady: "Ваше Відео Готове!",
@@ -5156,6 +5160,7 @@ export const translations: Record<Language, Translations> = {
     studioVideoCreatedWithSettings: "Videonuz yukarıdaki ayarlarla oluşturulacak.",
     studioStartGeneration: "Oluşturmayı Başlat",
     studioGenerationTakes2To3Minutes: "Oluşturma genellikle 2-3 dakika sürer",
+    studioLoadingVideo: "Video yükleniyor...",
     
     // Preview Step
     studioYourVideoReady: "Videonuz Hazır!",
@@ -6333,6 +6338,7 @@ export const translations: Record<Language, Translations> = {
     studioVideoCreatedWithSettings: "سيتم إنشاء فيديوك بالإعدادات أعلاه.",
     studioStartGeneration: "بدء الإنشاء",
     studioGenerationTakes2To3Minutes: "الإنشاء يستغرق عادة 2-3 دقائق",
+    studioLoadingVideo: "جاري تحميل الفيديو...",
     
     // Preview Step
     studioYourVideoReady: "فيديوك جاهز!",
@@ -7231,6 +7237,7 @@ export const translations: Record<Language, Translations> = {
 	  studioVideoCreatedWithSettings: "Ihr Video wird mit den obigen Einstellungen erstellt.",
 	  studioStartGeneration: "Generierung starten",
 	  studioGenerationTakes2To3Minutes: "Generierung dauert normalerweise 2-3 Minuten",
+	  studioLoadingVideo: "Video wird geladen...",
 
 	  // Preview Step
 	  studioYourVideoReady: "Ihr Video ist bereit!",
@@ -8436,6 +8443,7 @@ export const translations: Record<Language, Translations> = {
 	  studioVideoCreatedWithSettings: "Votre vidéo sera créée avec les paramètres ci-dessus.",
 	  studioStartGeneration: "Démarrer la génération",
 	  studioGenerationTakes2To3Minutes: "La génération prend généralement 2-3 minutes",
+	  studioLoadingVideo: "Chargement de la vidéo...",
 
 	  // Preview Step
 	  studioYourVideoReady: "Votre vidéo est prête !",

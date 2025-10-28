@@ -84,6 +84,10 @@ export default function GenerationStep({
 
       // Start polling for status updates
       const { videoId } = result;
+      
+      // Store video ID in session storage for preview step
+      sessionStorage.setItem('currentVideoId', videoId);
+      
       const pollInterval = setInterval(async () => {
         try {
           const statusResponse = await fetch(`/api/video/generate?videoId=${videoId}`);

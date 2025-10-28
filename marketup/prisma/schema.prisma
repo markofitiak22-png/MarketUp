@@ -48,6 +48,7 @@ model User {
     referralEvents         ReferralEvent[] @relation("UserReferralEvents")
     referredEventsReceived ReferralEvent[] @relation("ReferredUserEvents")
     videoJobs              VideoJob[]
+    videos                 Video[]
 
     accounts Account[]
     sessions Session[]
@@ -275,4 +276,26 @@ model ScheduledPost {
     @@index([videoJobId])
     @@index([socialNetwork])
     @@index([scheduledDate])
+}
+
+/// Generated videos
+model Video {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    title       String
+    status      String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+    videoUrl    String?
+    completedAt DateTime?
+
+    /// Video generation settings
+    settings Json // avatar, language, background, text, quality, format
+
+    @@index([userId])
+    @@index([status])
+    @@index([createdAt])
 }

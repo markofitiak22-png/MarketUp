@@ -83,7 +83,7 @@ export default function TextStep({ data, onUpdate, onNext, onPrev }: TextStepPro
         }
       });
     }
-  }, [text, estimatedDuration, onUpdate, data.settings]);
+  }, [text, estimatedDuration]); // Removed onUpdate and data.settings from dependencies
 
   const handleTemplateSelect = (template: typeof templates[0]) => {
     setText(template.text);

@@ -1,5 +1,7 @@
 "use client";
 import { useMemo, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Container from "@/components/ui/Container";
 import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
@@ -19,6 +21,8 @@ interface ReferralData {
 }
 
 export default function ReferralsPage() {
+  const { data: session, status: sessionStatus } = useSession();
+  const router = useRouter();
   const { translations } = useTranslations();
   const [referralData, setReferralData] = useState<ReferralData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,8 +33,22 @@ export default function ReferralsPage() {
   const [creating, setCreating] = useState(false);
   const origin = useMemo(() => (typeof window !== "undefined" ? window.location.origin : ""), []);
 
+  // Check authentication status
+  useEffect(() => {
+    if (sessionStatus === "loading") return; // Still loading
+    
+    if (sessionStatus === "unauthenticated" || !session) {
+      // User is not authenticated, redirect to auth page
+      router.push("/auth");
+      return;
+    }
+  }, [session, sessionStatus, router]);
+
   // Fetch referral data on component mount
   useEffect(() => {
+    // Only fetch data if user is authenticated
+    if (!session || sessionStatus !== "authenticated") return;
+    
     const fetchReferralData = async () => {
       try {
         setLoading(true);
@@ -51,7 +69,7 @@ export default function ReferralsPage() {
     };
 
     fetchReferralData();
-  }, []);
+  }, [session, sessionStatus]);
 
   async function createCode() {
     setStatus(null);
@@ -136,6 +154,23 @@ export default function ReferralsPage() {
       setError("Failed to copy link");
       setStatus("error");
     }
+  }
+
+  // Show loading while checking authentication
+  if (sessionStatus === "loading") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-white/70">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated (this should not happen due to useEffect, but just in case)
+  if (!session) {
+    return null;
   }
 
   if (loading) {

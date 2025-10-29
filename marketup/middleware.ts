@@ -24,8 +24,8 @@ export async function middleware(request: NextRequest) {
   if (fingerprint) response.headers.set("x-fingerprint", fingerprint);
   if (clientIp) response.headers.set("x-client-ip", clientIp);
 
-  // Dashboard protection
-  if (pathname.startsWith("/dashboard")) {
+  // Dashboard and referrals protection
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/referrals")) {
     const token = await getToken({ 
       req: request,
       secret: process.env.NEXTAUTH_SECRET 

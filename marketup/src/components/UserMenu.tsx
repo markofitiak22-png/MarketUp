@@ -104,7 +104,10 @@ export default function UserMenu() {
             onClick={async () => {
               // Clear remember me on server
               try {
-                await fetch('/api/auth/logout', { method: 'POST' });
+                await fetch('/api/auth/logout', { 
+                  method: 'POST',
+                  credentials: "include"
+                });
               } catch (error) {
                 console.error('Failed to clear remember me:', error);
               }

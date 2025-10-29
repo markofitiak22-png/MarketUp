@@ -52,7 +52,9 @@ export default function ReferralsPage() {
     const fetchReferralData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/referrals');
+        const response = await fetch('/api/referrals', {
+          credentials: "include",
+        });
         
         if (!response.ok) {
           throw new Error('Failed to fetch referral data');
@@ -79,13 +81,16 @@ export default function ReferralsPage() {
       const res = await fetch("/api/referrals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({}),
       });
       const data = await res.json();
       if (res.ok) {
         setStatus("ok");
         // Refresh data
-        const refreshResponse = await fetch('/api/referrals');
+        const refreshResponse = await fetch('/api/referrals', {
+          credentials: "include",
+        });
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json();
           setReferralData(refreshData);
@@ -118,6 +123,7 @@ export default function ReferralsPage() {
       const res = await fetch("/api/referrals/use", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ code: redeemCode }),
       });
       const data = await res.json();
@@ -125,7 +131,9 @@ export default function ReferralsPage() {
         setStatus("ok");
         setRedeemCode("");
         // Refresh data
-        const refreshResponse = await fetch('/api/referrals');
+        const refreshResponse = await fetch('/api/referrals', {
+          credentials: "include",
+        });
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json();
           setReferralData(refreshData);

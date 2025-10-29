@@ -31,8 +31,13 @@ function CheckoutPageContent() {
   const searchParams = useSearchParams();
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const planId = searchParams.get('plan') || 'pro';
+  const rawPlanId = searchParams.get('plan') || 'pro';
   const billingPeriod = (searchParams.get('billing') as 'monthly' | 'yearly') || 'monthly';
+  
+  // Validate planId and provide fallback
+  const validPlanIds = Object.keys(plans);
+  const isValidPlanId = validPlanIds.includes(rawPlanId);
+  const planId = isValidPlanId ? rawPlanId : 'pro'; // Fallback to 'pro' if invalid
 
   useEffect(() => {
     if (!session) {
@@ -42,8 +47,37 @@ function CheckoutPageContent() {
 
   const plan = plans[planId as keyof typeof plans];
   const isYearly = billingPeriod === 'yearly';
-  const finalPrice = isYearly && plan.price > 0 ? Math.round(plan.price * 12 * 0.8) : plan.price;
-  const savings = isYearly && plan.price > 0 ? Math.round(plan.price * 12 * 0.2) : 0;
+  
+  // Debug logging
+  console.log('Checkout page - rawPlanId:', rawPlanId, 'planId:', planId, 'plan:', plan, 'available plans:', Object.keys(plans));
+  
+  // Warn if using fallback
+  if (!isValidPlanId) {
+    console.warn(`Invalid planId "${rawPlanId}" provided, falling back to "pro"`);
+  }
+  
+  // Handle case when plan is not found (should not happen with fallback, but just in case)
+  if (!plan) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">Plan Not Found</h1>
+          <p className="text-white/70 mb-6">
+            The selected plan could not be found. Redirecting to pricing...
+          </p>
+          <button
+            onClick={() => router.push('/pricing')}
+            className="bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent/80 transition-colors"
+          >
+            Back to Pricing
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  const finalPrice = isYearly && plan?.price > 0 ? Math.round(plan.price * 12 * 0.8) : (plan?.price || 0);
+  const savings = isYearly && plan?.price > 0 ? Math.round(plan.price * 12 * 0.2) : 0;
 
   const handleSuccess = () => {
     setIsSuccess(true);

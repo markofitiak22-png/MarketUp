@@ -56,6 +56,7 @@ model User {
     subscriptions   Subscription[]
     manualPayments  ManualPayment[]
     contactMessages ContactMessage[]
+    reviews         Review[]
 
     @@index([fingerprintHash])
     @@index([ipHash])
@@ -298,4 +299,48 @@ model Video {
     @@index([userId])
     @@index([status])
     @@index([createdAt])
+}
+
+/// Review status for moderation
+enum ReviewStatus {
+    PENDING
+    APPROVED
+    REJECTED
+    HIDDEN
+}
+
+/// User reviews and ratings
+model Review {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    /// Rating from 1 to 5 stars
+    rating Int
+
+    /// Review comment (optional but recommended)
+    comment String?
+
+    /// Review status for moderation
+    status ReviewStatus @default(PENDING)
+
+    /// Anti-abuse fields (hashed, never store raw PII)
+    ipHash          String?
+    userAgent       String?
+    fingerprintHash String?
+
+    /// Admin moderation
+    moderatedAt    DateTime?
+    moderatedBy    String? // admin user ID who moderated this review
+    moderationNote String?
+
+    @@index([userId])
+    @@index([status])
+    @@index([rating])
+    @@index([createdAt])
+    @@index([ipHash])
+    @@index([fingerprintHash])
 }

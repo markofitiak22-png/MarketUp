@@ -40,7 +40,9 @@ export default function OnboardingPage() {
     document.body.classList.add('onboarding-page');
     
     (async () => {
-      const res = await fetch("/api/profile");
+      const res = await fetch("/api/profile", {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         setCountry(data.country || "");

@@ -11,6 +11,7 @@ export default function UpgradeButton({ tier, className, children }: { tier: Tie
       await fetch("/api/subscriptions/upgrade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ tier }),
       });
       window.location.reload();

@@ -45,8 +45,10 @@ class DIDClient {
   }
 
   private getHeaders() {
+    // D-ID API uses Basic Auth with API key already in username:password format
+    const encodedAuth = Buffer.from(this.apiKey).toString('base64');
     return {
-      'Authorization': `Bearer ${this.apiKey}`,
+      'Authorization': `Basic ${encodedAuth}`,
       'Content-Type': 'application/json',
     };
   }
@@ -61,23 +63,52 @@ class DIDClient {
 
       console.log('D-ID API Key:', this.apiKey.substring(0, 20) + '...');
       console.log('D-ID Headers:', this.getHeaders());
+      console.log('D-ID Base URL:', this.baseURL);
+      console.log('D-ID Full URL:', `${this.baseURL}/presenters`);
 
       const response = await axios.get(`${this.baseURL}/presenters`, {
         headers: this.getHeaders(),
       });
 
-      return response.data.map((avatar: any) => ({
-        id: avatar.id,
-        name: avatar.name,
-        gender: avatar.gender,
-        language: avatar.language,
-        voice: {
-          id: avatar.voice?.id || 'default',
-          name: avatar.voice?.name || 'Default Voice',
-          gender: avatar.voice?.gender || avatar.gender,
-          language: avatar.voice?.language || avatar.language,
-        },
-      }));
+      // Handle different response formats
+      const data = response.data;
+      console.log('D-ID API Response:', JSON.stringify(data, null, 2));
+      
+      // If it's an array, map it directly
+      if (Array.isArray(data)) {
+        return data.map((avatar: any) => ({
+          id: avatar.id || avatar.presenter_id || 'unknown',
+          name: avatar.name || avatar.presenter_name || 'Unknown',
+          gender: avatar.gender || 'unknown',
+          language: avatar.language || 'en',
+          voice: {
+            id: avatar.voice?.id || 'default',
+            name: avatar.voice?.name || 'Default Voice',
+            gender: avatar.voice?.gender || avatar.gender || 'unknown',
+            language: avatar.voice?.language || avatar.language || 'en',
+          },
+        }));
+      }
+      
+      // If it's an object with a data property
+      if (data.data && Array.isArray(data.data)) {
+        return data.data.map((avatar: any) => ({
+          id: avatar.id || avatar.presenter_id || 'unknown',
+          name: avatar.name || avatar.presenter_name || 'Unknown',
+          gender: avatar.gender || 'unknown',
+          language: avatar.language || 'en',
+          voice: {
+            id: avatar.voice?.id || 'default',
+            name: avatar.voice?.name || 'Default Voice',
+            gender: avatar.voice?.gender || avatar.gender || 'unknown',
+            language: avatar.voice?.language || avatar.language || 'en',
+          },
+        }));
+      }
+      
+      // Fallback: return empty array
+      console.log('Unexpected response format from D-ID API');
+      return [];
     } catch (error: any) {
       console.error('Error fetching avatars:', error.response?.data || error.message);
       throw new Error('Failed to fetch avatars');

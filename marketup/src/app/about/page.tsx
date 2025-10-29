@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useTranslations } from "@/hooks/useTranslations";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 export default function AboutPage() {
   const { translations } = useTranslations();
@@ -374,6 +375,32 @@ export default function AboutPage() {
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent rounded-full animate-pulse"></div>
                   </span>
                 </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Reviews Section */}
+        <section className="section relative overflow-hidden">
+          {/* Enhanced Animated background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+          
+          <div className="relative z-10">
+            <div className="container px-4">
+              <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
+                    Reviews
+                  </h2>
+                  <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light">
+                    See what our users are saying about MarketUp
+                  </p>
+                </div>
+                
+                <ReviewsSection />
               </div>
             </div>
           </div>

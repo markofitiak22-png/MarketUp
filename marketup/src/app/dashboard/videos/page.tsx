@@ -41,7 +41,9 @@ export default function VideosPage() {
         ...(searchTerm && { search: searchTerm })
       });
 
-      const response = await fetch(`/api/dashboard/videos?${params}`);
+      const response = await fetch(`/api/dashboard/videos?${params}`, {
+        credentials: "include",
+      });
       const data = await response.json();
 
       if (data.success) {

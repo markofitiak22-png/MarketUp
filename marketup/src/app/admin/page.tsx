@@ -48,7 +48,9 @@ export default function AdminDashboard() {
       setLoading(true);
       setError(null);
       console.log('Fetching admin data...');
-      const response = await fetch('/api/admin/dashboard');
+      const response = await fetch('/api/admin/dashboard', {
+        credentials: "include",
+      });
       console.log('Admin API response status:', response.status);
       
       const data = await response.json();

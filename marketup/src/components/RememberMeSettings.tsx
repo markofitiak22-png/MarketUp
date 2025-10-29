@@ -16,7 +16,8 @@ export default function RememberMeSettings() {
     try {
       const response = await fetch('/api/auth/remember-me', {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: "include"
       });
       
       if (response.ok) {

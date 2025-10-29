@@ -15,6 +15,9 @@
 		"@paypal/checkout-server-sdk": "^1.0.3",
 		"@paypal/paypal-js": "^9.0.1",
 		"@prisma/client": "^6.17.1",
+		"@react-three/drei": "^10.7.6",
+		"@react-three/fiber": "^9.4.0",
+		"@types/three": "^0.180.0",
 		"axios": "^1.13.0",
 		"bcrypt": "^6.0.0",
 		"lucide-react": "^0.546.0",
@@ -25,6 +28,7 @@
 		"react-dom": "19.1.0",
 		"resend": "^6.2.0",
 		"stripe": "^19.1.0",
+		"three": "^0.180.0",
 		"zod": "^4.1.12"
 	},
 	"devDependencies": {

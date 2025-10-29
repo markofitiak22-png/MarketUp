@@ -48,7 +48,9 @@ export default function VideoModeration() {
           sortOrder
         });
         
-        const response = await fetch(`/api/admin/videos?${params}`);
+        const response = await fetch(`/api/admin/videos?${params}`, {
+          credentials: "include",
+        });
         const data = await response.json();
         
         if (data.success) {
@@ -73,6 +75,7 @@ export default function VideoModeration() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({
           videoId,
           action: 'approve'
@@ -102,6 +105,7 @@ export default function VideoModeration() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({
           videoId,
           action: 'reject',

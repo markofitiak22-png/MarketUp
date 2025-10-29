@@ -59,7 +59,9 @@ export default function UsersPage() {
         sortOrder
       });
 
-      const response = await fetch(`/api/admin/users?${params}`);
+      const response = await fetch(`/api/admin/users?${params}`, {
+        credentials: "include",
+      });
       console.log('Users API response status:', response.status);
       
       const data = await response.json();
@@ -118,6 +120,7 @@ export default function UsersPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({
           userId: editingUser.id,
           updates: editForm
@@ -172,6 +175,7 @@ export default function UsersPage() {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: "include",
           body: JSON.stringify({
             userIds: [userId]
           }),
@@ -207,6 +211,7 @@ export default function UsersPage() {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: "include",
           body: JSON.stringify({
             userIds: selectedUsers
           }),

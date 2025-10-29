@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 import { useTranslations } from "@/hooks/useTranslations";
+import Avatar3D from "@/components/3DAvatar";
 
 interface AvatarStepProps {
   data: WizardData;
@@ -58,7 +59,7 @@ const fallbackAvatars = [
 export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) {
   const { translations } = useTranslations();
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar?.id || '');
-  const [avatars, setAvatars] = useState(fallbackAvatars);
+  const [avatars, setAvatars] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   // const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
 
@@ -67,7 +68,9 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
     const fetchAvatars = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/avatars');
+        const response = await fetch('/api/avatars', {
+          credentials: "include",
+        });
         const data = await response.json();
         
         if (data.success && data.avatars) {
@@ -80,10 +83,14 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
             description: `${avatar.name} - ${avatar.voice.name} voice`
           }));
           setAvatars(transformedAvatars);
+        } else {
+          // If API fails, use fallback avatars
+          setAvatars(fallbackAvatars);
         }
       } catch (error) {
         console.error('Error fetching avatars:', error);
-        // Keep fallback avatars
+        // Use fallback avatars on error
+        setAvatars(fallbackAvatars);
       } finally {
         setLoading(false);
       }
@@ -127,7 +134,15 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
         <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <div className="w-8 h-8 sm:w-12 sm:h-12 border-4 border-accent/20 border-t-accent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-foreground-muted text-sm sm:text-base">Loading avatars...</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {avatars.map((avatar) => (
               <div
                 key={avatar.id}
@@ -140,11 +155,11 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
               >
                 <div className="relative">
                   <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20">
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-xl sm:text-2xl font-bold">
-                        {avatar.name.charAt(0)}
-                      </div>
-                    </div>
+                    <Avatar3D 
+                      modelUrl={avatar.image} 
+                      avatarId={avatar.id}
+                      className="w-full h-full"
+                    />
                   </div>
                   
                   {selectedAvatar === avatar.id && (
@@ -162,7 +177,8 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 

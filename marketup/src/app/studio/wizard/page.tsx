@@ -51,6 +51,7 @@ export default function WizardPage() {
       const res = await fetch("/api/video-jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           script,
           backgroundImageUrls: backgrounds,

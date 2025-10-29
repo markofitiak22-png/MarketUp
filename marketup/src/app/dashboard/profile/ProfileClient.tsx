@@ -9,9 +9,17 @@ interface ProfileClientProps {
     locale: string | null;
     country: string | null;
   };
+  userStats: {
+    videoCount: number;
+    videoJobsCount: number;
+    approvedReferrals: number;
+    totalReferrals: number;
+    profileCompletion: number;
+    memberSince: Date | null | undefined;
+  };
 }
 
-export default function ProfileClient({ initialData }: ProfileClientProps) {
+export default function ProfileClient({ initialData, userStats }: ProfileClientProps) {
   const { translations } = useTranslations();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -43,6 +51,7 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
       const response = await fetch("/api/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(dataToSend),
       });
 
@@ -340,22 +349,37 @@ export default function ProfileClient({ initialData }: ProfileClientProps) {
                   <div className="space-y-2 sm:space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.profileProfileCompletion}</span>
-                      <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">75%</span>
+                      <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">{userStats.profileCompletion}%</span>
                     </div>
                     <div className="w-full bg-surface rounded-full h-2 sm:h-3">
-                      <div className="bg-gradient-to-r from-accent to-accent-2 h-2 sm:h-3 rounded-full transition-all duration-500" style={{width: '75%'}}></div>
+                      <div className="bg-gradient-to-r from-accent to-accent-2 h-2 sm:h-3 rounded-full transition-all duration-500" style={{width: `${userStats.profileCompletion}%`}}></div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-3 sm:pt-4">
                     <div className="text-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent/5 to-accent-2/5">
-                      <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">0</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">{userStats.videoCount}</div>
                       <div className="text-xs sm:text-sm text-foreground-muted font-medium">{translations.profileVideos}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent-2/5 to-purple-500/5">
-                      <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent">0</div>
-                      <div className="text-xs sm:text-sm text-foreground-muted font-medium">{translations.profileProjects}</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent">{userStats.approvedReferrals}</div>
+                      <div className="text-xs sm:text-sm text-foreground-muted font-medium">Referrals</div>
                     </div>
                   </div>
+                  
+                  {/* Member since */}
+                  {userStats.memberSince && (
+                    <div className="pt-4 sm:pt-6 border-t border-border">
+                      <div className="text-center">
+                        <div className="text-sm sm:text-base text-foreground-muted mb-1">Member since</div>
+                        <div className="text-lg sm:text-xl font-bold text-foreground">
+                          {new Date(userStats.memberSince).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long' 
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

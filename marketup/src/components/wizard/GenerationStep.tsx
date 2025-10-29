@@ -64,6 +64,7 @@ export default function GenerationStep({
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({
           avatar: data.avatar?.name || 'default',
           language: data.language?.name || 'English',

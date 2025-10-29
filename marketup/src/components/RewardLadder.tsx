@@ -26,7 +26,9 @@ export default function RewardLadder() {
     const fetchRewardData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/referrals/rewards');
+        const response = await fetch('/api/referrals/rewards', {
+          credentials: "include",
+        });
         
         if (!response.ok) {
           throw new Error('Failed to fetch reward data');
@@ -121,6 +123,7 @@ export default function RewardLadder() {
       const response = await fetch('/api/referrals/rewards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: "include",
         body: JSON.stringify({ rewardId })
       });
 
@@ -128,7 +131,9 @@ export default function RewardLadder() {
         const data = await response.json();
         alert(data.message);
         // Refresh data
-        const refreshResponse = await fetch('/api/referrals/rewards');
+        const refreshResponse = await fetch('/api/referrals/rewards', {
+          credentials: "include",
+        });
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json();
           setCurrentReferrals(refreshData.totalReferrals);

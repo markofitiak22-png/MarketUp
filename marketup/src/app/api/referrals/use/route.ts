@@ -12,6 +12,7 @@ export async function GET() {
   });
 }
 
+
 // POST /api/referrals/use - Use a referral code
 export async function POST(request: NextRequest) {
   try {
@@ -23,25 +24,57 @@ export async function POST(request: NextRequest) {
     const userId = (session as any).user.id;
     const { code } = await request.json();
 
+    console.log('Raw code received:', code);
+    console.log('Code type:', typeof code);
+
     if (!code) {
       return NextResponse.json({ error: "Referral code is required" }, { status: 400 });
     }
 
+    // Extract referral code from URL if it's a full URL
+    let referralCode = code;
+    if (typeof code === 'string' && code.includes('?')) {
+      try {
+        // Normalize the URL by converting HTTP to http
+        const normalizedCode = code.replace(/^HTTP:/i, 'http:');
+        console.log('Normalized URL:', normalizedCode);
+        
+        const url = new URL(normalizedCode);
+        // Try both 'ref' and 'REF' parameter names (case insensitive)
+        const refParam = url.searchParams.get('ref') || url.searchParams.get('REF');
+        if (refParam) {
+          referralCode = refParam;
+          console.log('Extracted referral code from URL:', referralCode);
+        } else {
+          console.log('No ref parameter found in URL, using original code');
+          console.log('Available parameters:', Array.from(url.searchParams.keys()));
+        }
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.log('Failed to parse URL, using original code:', e.message);
+        } else {
+          console.log('Failed to parse URL, using original code: An unknown error occurred');
+        }
+      }
+    } else {
+      console.log('Code does not appear to be a URL, using as-is');
+    }
+
     // Find the referral code
-    console.log('Looking for referral code:', code.toUpperCase());
-    const referralCode = await prisma.referralCode.findUnique({
-      where: { code: code.toUpperCase() },
+    console.log('Looking for referral code:', referralCode.toUpperCase());
+    const referralCodeRecord = await prisma.referralCode.findUnique({
+      where: { code: referralCode.toUpperCase() },
       include: { owner: true }
     });
 
-    console.log('Found referral code:', referralCode);
+    console.log('Found referral code:', referralCodeRecord);
 
-    if (!referralCode) {
+    if (!referralCodeRecord) {
       return NextResponse.json({ error: "Invalid referral code" }, { status: 404 });
     }
 
     // Check if user is trying to use their own code
-    if (referralCode.ownerId === userId) {
+    if (referralCodeRecord.ownerId === userId) {
       return NextResponse.json({ error: "You cannot use your own referral code" }, { status: 400 });
     }
 
@@ -55,7 +88,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check daily cap
-    if (referralCode.dailyCap) {
+    if (referralCodeRecord.dailyCap) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const tomorrow = new Date(today);
@@ -63,7 +96,7 @@ export async function POST(request: NextRequest) {
 
       const todayReferrals = await prisma.referralEvent.count({
         where: {
-          referralCodeId: referralCode.id,
+          referralCodeId: referralCodeRecord.id,
           createdAt: {
             gte: today,
             lt: tomorrow
@@ -71,21 +104,21 @@ export async function POST(request: NextRequest) {
         }
       });
 
-      if (todayReferrals >= referralCode.dailyCap) {
+      if (todayReferrals >= referralCodeRecord.dailyCap) {
         return NextResponse.json({ error: "Daily referral limit reached for this code" }, { status: 429 });
       }
     }
 
     // Check total cap
-    if (referralCode.maxRewardsTotal) {
+    if (referralCodeRecord.maxRewardsTotal) {
       const totalReferrals = await prisma.referralEvent.count({
         where: {
-          referralCodeId: referralCode.id,
+          referralCodeId: referralCodeRecord.id,
           status: "APPROVED"
         }
       });
 
-      if (totalReferrals >= referralCode.maxRewardsTotal) {
+      if (totalReferrals >= referralCodeRecord.maxRewardsTotal) {
         return NextResponse.json({ error: "Referral code has reached its maximum usage limit" }, { status: 429 });
       }
     }
@@ -98,9 +131,9 @@ export async function POST(request: NextRequest) {
     // Create referral event with automatic approval
     const referralEvent = await prisma.referralEvent.create({
       data: {
-        referrerId: referralCode.ownerId,
+        referrerId: referralCodeRecord.ownerId,
         referredUserId: userId,
-        referralCodeId: referralCode.id,
+        referralCodeId: referralCodeRecord.id,
         referredIpHash: Buffer.from(ip).toString("base64"), // Simple hash for demo
         userAgent,
         status: "APPROVED",

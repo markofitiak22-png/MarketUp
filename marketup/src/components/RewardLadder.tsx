@@ -34,7 +34,7 @@ export default function RewardLadder() {
 
         const data = await response.json();
         
-        setCurrentReferrals(data.totalReferrals);
+        setCurrentReferrals(data.subscribers || data.totalReferrals);
         setRewards(data.rewards);
         setNextReward(data.nextReward);
         

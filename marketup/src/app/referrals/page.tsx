@@ -266,6 +266,41 @@ export default function ReferralsPage() {
               </div>
             )}
 
+            {/* Used Referral Codes */}
+            {referralData?.referredEvents && referralData.referredEvents.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 mb-8">
+                <h2 className="text-2xl font-bold text-white mb-6">Used Referral Codes</h2>
+                <div className="space-y-4">
+                  {referralData.referredEvents.map((event) => (
+                    <div key={event.id} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-white font-medium">
+                            Code: {event.referralCode?.code}
+                          </div>
+                          <div className="text-sm text-white/60">
+                            From: {event.referrer?.name || event.referrer?.email || "Anonymous User"}
+                          </div>
+                          <div className="text-sm text-white/60">
+                            Used: {new Date(event.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          event.status === "APPROVED" 
+                            ? "bg-green-500/20 text-green-300" 
+                            : event.status === "PENDING"
+                            ? "bg-yellow-500/20 text-yellow-300"
+                            : "bg-red-500/20 text-red-300"
+                        }`}>
+                          {event.status}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Recent Activity */}
             {referralData?.referralEvents && referralData.referralEvents.length > 0 && (
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8">

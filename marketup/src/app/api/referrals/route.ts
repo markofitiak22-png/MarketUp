@@ -65,7 +65,8 @@ export async function GET() {
       stats: {
         totalReferrals,
         totalRewards: referralEvents.reduce((sum, event) => sum + event.rewardGranted, 0),
-        pendingReferrals: referralEvents.filter(event => event.status === "PENDING").length
+        pendingReferrals: referralEvents.filter(event => event.status === "PENDING").length,
+        subscribers: totalReferrals // Add subscribers count
       }
     });
   } catch (error) {

@@ -13,7 +13,7 @@ export async function GET() {
 
     const userId = (session as any).user.id;
 
-    // Get user's approved referrals
+    // Get user's approved referrals (people who used this user's codes)
     const approvedReferrals = await prisma.referralEvent.findMany({
       where: {
         referrerId: userId,
@@ -49,10 +49,12 @@ export async function GET() {
 
     return NextResponse.json({
       totalReferrals,
+      subscribers: totalReferrals, // Same as totalReferrals for this user
       rewards,
       nextReward,
       stats: {
         totalReferrals,
+        subscribers: totalReferrals,
         unlockedRewards: rewards.filter(r => r.unlocked).length,
         nextRewardRequirement: nextReward?.requirement || 100
       }

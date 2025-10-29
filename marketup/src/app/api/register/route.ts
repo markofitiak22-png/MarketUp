@@ -7,6 +7,7 @@ import { sendWelcomeEmail } from "@/lib/mailer";
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  name: z.string().min(2).max(50),
   referralCode: z.string().optional().nullable(),
 });
 
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
       email: json.email, 
       hasPassword: !!json.password, 
       passwordLength: json.password?.length,
+      name: json.name,
       referralCode: json.referralCode,
       allKeys: Object.keys(json)
     });
@@ -32,8 +34,8 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
     
-    const { email, password, referralCode } = parsed.data;
-    console.log('Validated data:', { email, hasReferralCode: !!referralCode });
+    const { email, password, name, referralCode } = parsed.data;
+    console.log('Validated data:', { email, name, hasReferralCode: !!referralCode });
     
     // Test database connection
     console.log('Testing database connection...');
@@ -50,8 +52,8 @@ export async function POST(request: Request) {
     console.log('Password hashed successfully');
     
     console.log('Creating user in database...');
-    const user = await prisma.user.create({ data: { email, passwordHash } });
-    console.log('User created successfully:', { id: user.id, email: user.email });
+    const user = await prisma.user.create({ data: { email, passwordHash, name } });
+    console.log('User created successfully:', { id: user.id, email: user.email, name: user.name });
 
     // Handle referral code if provided
     if (referralCode && referralCode.trim() !== '') {

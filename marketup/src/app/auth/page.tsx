@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 interface FormErrors {
   email?: string;
   password?: string;
+  name?: string;
   phone?: string;
   phoneCode?: string;
   general?: string;
@@ -16,6 +17,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneCode, setPhoneCode] = useState("");
   // const [lang, setLang] = useState("en");
@@ -24,6 +26,7 @@ export default function AuthPage() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [nameFocused, setNameFocused] = useState(false);
   const [phoneFocused, setPhoneFocused] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [authMethod, setAuthMethod] = useState<"email" | "phone">("email");
@@ -32,6 +35,7 @@ export default function AuthPage() {
   
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
   // Load remembered data on component mount
   useEffect(() => {
@@ -65,6 +69,13 @@ export default function AuthPage() {
     if (!password) return "Password is required";
     if (password.length < 6) return "Password must be at least 6 characters";
     if (mode === "signup" && password.length < 8) return "Password must be at least 8 characters for security";
+    return null;
+  };
+
+  const validateName = (name: string) => {
+    if (!name) return "Name is required";
+    if (name.length < 2) return "Name must be at least 2 characters";
+    if (name.length > 50) return "Name must be less than 50 characters";
     return null;
   };
 
@@ -105,6 +116,16 @@ export default function AuthPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (name) {
+        const nameError = validateName(name);
+        setErrors(prev => ({ ...prev, name: nameError || undefined }));
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [name]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
       if (phone) {
         const phoneError = validatePhone(phone);
         setErrors(prev => ({ ...prev, phone: phoneError || undefined }));
@@ -141,20 +162,25 @@ export default function AuthPage() {
     // Validate all fields
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
+    const nameError = mode === "signup" ? validateName(name) : null;
     
-    if (emailError || passwordError) {
-      setErrors({ email: emailError || undefined, password: passwordError || undefined });
+    if (emailError || passwordError || nameError) {
+      setErrors({ 
+        email: emailError || undefined, 
+        password: passwordError || undefined,
+        name: nameError || undefined
+      });
       setLoading(false);
       return;
     }
 
     try {
       if (mode === "signup") {
-        console.log('Sending registration data:', { email, hasPassword: !!password, referralCode });
+        console.log('Sending registration data:', { email, hasPassword: !!password, name, referralCode });
         const res = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, referralCode }),
+          body: JSON.stringify({ email, password, name, referralCode }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Registration failed");
@@ -443,6 +469,33 @@ export default function AuthPage() {
                         </p>
                       )}
                     </div>
+
+                    {/* Name Field - Only for signup */}
+                    {mode === "signup" && (
+                      <div className="space-y-3">
+                        <label className="text-base font-semibold text-white">Full Name</label>
+                        <input
+                          ref={nameRef}
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          onFocus={() => setNameFocused(true)}
+                          onBlur={() => setNameFocused(false)}
+                          placeholder="Enter your full name"
+                          className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
+                            errors.name 
+                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                              : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
+                          }`}
+                          required
+                        />
+                        {errors.name && (
+                          <p className="text-sm text-red-400 font-medium">
+                            {errors.name}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
                     {/* Password Field */}
                     <div className="space-y-3">

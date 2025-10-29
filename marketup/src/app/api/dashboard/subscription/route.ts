@@ -110,7 +110,10 @@ export async function GET() {
           "API access",
           "Dedicated support",
           "Custom integrations",
-          "On-premise deployment"
+          "On-premise deployment",
+          "Video Performance Analytics",
+          "Cloud Library",
+          "Verified Partner Status"
         ],
         current: subscription?.tier === 'PREMIUM',
         popular: false

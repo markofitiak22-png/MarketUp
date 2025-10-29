@@ -386,6 +386,9 @@ export interface Translations {
   pricingCompanyInfo: string;
   pricingTemplateAccess: string;
   pricingMarketingSupport: string;
+  pricingVideoAnalytics: string;
+  pricingCloudLibrary: string;
+  pricingVerifiedPartner: string;
   pricingStartPremiumTrial: string;
   pricingCountryPricing: string;
   pricingJordan: string;
@@ -1453,6 +1456,9 @@ export const translations: Record<Language, Translations> = {
 	  pricingCompanyInfo: "Add company name, address, and contact info at the end of each video.",
 	  pricingTemplateAccess: "Access to template and AI libraries for automatic video enhancement.",
 	  pricingMarketingSupport: "Premium plan users will also be eligible for periodic marketing support giveaways, where selected videos will be promoted on the company's social media platforms.",
+	  pricingVideoAnalytics: "Advanced video performance analytics with detailed insights on engagement, views, and audience behavior.",
+	  pricingCloudLibrary: "Unlimited cloud storage for all your videos, templates, and assets with easy organization and sharing.",
+	  pricingVerifiedPartner: "Get verified partner status with exclusive access to premium features and priority support.",
 	  pricingMostPopular: "Most Popular",
 	  pricingGetStartedFree: "Get Started Free",
 	  pricingStartProTrial: "Start Pro Trial",
@@ -2643,6 +2649,9 @@ export const translations: Record<Language, Translations> = {
     pricingCompanyInfo: "Lägg till företagsnamn, adress och kontaktinformation i slutet av varje video.",
     pricingTemplateAccess: "Tillgång till mallar och AI-bibliotek för automatisk videoförbättring.",
     pricingMarketingSupport: "Premium plan-användare kommer också att vara berättigade till periodiska marknadsföringsstöd-giveaways, där utvalda videor kommer att marknadsföras på företagets sociala medieplattformar.",
+    pricingVideoAnalytics: "Avancerad videoprestandaanalys med detaljerade insikter om engagemang, visningar och publikbeteende.",
+    pricingCloudLibrary: "Obegränsat molnlagring för alla dina videor, mallar och tillgångar med enkel organisation och delning.",
+    pricingVerifiedPartner: "Få verifierad partnerstatus med exklusiv tillgång till premiumfunktioner och prioriterat stöd.",
     pricingStartPremiumTrial: "Starta Premium-prova",
     pricingJordan: "Jordanien",
     pricingSweden: "Sverige",
@@ -3819,6 +3828,9 @@ export const translations: Record<Language, Translations> = {
     pricingCompanyInfo: "Додайте назву компанії, адресу та контактну інформацію в кінці кожного відео.",
     pricingTemplateAccess: "Доступ до бібліотек шаблонів і AI для автоматичного покращення відео.",
     pricingMarketingSupport: "Користувачі преміум-плану також матимуть право на періодичні маркетингові розіграші підтримки, де вибрані відео будуть просуватися на платформах соціальних мереж компанії.",
+    pricingVideoAnalytics: "Розширена аналітика продуктивності відео з детальними інсайтами про залучення, перегляди та поведінку аудиторії.",
+    pricingCloudLibrary: "Необмежене хмарне сховище для всіх ваших відео, шаблонів та ресурсів з легкою організацією та обміном.",
+    pricingVerifiedPartner: "Отримайте статус верифікованого партнера з ексклюзивним доступом до преміум-функцій та пріоритетною підтримкою.",
     pricingStartPremiumTrial: "Почати пробну версію Premium",
     pricingJordan: "Йорданія",
     pricingSweden: "Швеція",
@@ -4998,6 +5010,9 @@ export const translations: Record<Language, Translations> = {
     pricingCompanyInfo: "Her videonun sonuna şirket adı, adresi ve iletişim bilgilerini ekleyin.",
     pricingTemplateAccess: "Otomatik video geliştirme için şablon ve AI kütüphanelerine erişim.",
     pricingMarketingSupport: "Premium plan kullanıcıları ayrıca seçilen videoların şirketin sosyal medya platformlarında tanıtılacağı periyodik pazarlama desteği çekilişlerine hak kazanacaktır.",
+    pricingVideoAnalytics: "Etkileşim, görüntüleme ve kitle davranışı hakkında detaylı içgörülerle gelişmiş video performans analitiği.",
+    pricingCloudLibrary: "Tüm videolarınız, şablonlarınız ve varlıklarınız için kolay organizasyon ve paylaşım ile sınırsız bulut depolama.",
+    pricingVerifiedPartner: "Premium özelliklere özel erişim ve öncelikli destek ile doğrulanmış partner statüsü alın.",
     pricingStartPremiumTrial: "Premium Denemeyi Başlat",
     pricingJordan: "Ürdün",
     pricingSweden: "İsveç",
@@ -6175,6 +6190,9 @@ export const translations: Record<Language, Translations> = {
     pricingCompanyInfo: "إضافة اسم الشركة والعنوان ومعلومات الاتصال في نهاية كل فيديو.",
     pricingTemplateAccess: "الوصول إلى مكتبات القوالب والذكاء الاصطناعي لتحسين الفيديو التلقائي.",
     pricingMarketingSupport: "سيكون مستخدمو الخطة المميزة مؤهلين أيضاً للحصول على هدايا دعم تسويقي دورية، حيث سيتم الترويج لمقاطع الفيديو المختارة على منصات التواصل الاجتماعي للشركة.",
+    pricingVideoAnalytics: "تحليلات متقدمة لأداء الفيديو مع رؤى مفصلة حول المشاركة والمشاهدات وسلوك الجمهور.",
+    pricingCloudLibrary: "تخزين سحابي غير محدود لجميع مقاطع الفيديو والقوالب والأصول مع تنظيم ومشاركة سهلة.",
+    pricingVerifiedPartner: "احصل على حالة الشريك المعتمد مع الوصول الحصري للميزات المميزة والدعم ذو الأولوية.",
     pricingStartPremiumTrial: "ابدأ تجربة Premium",
     pricingJordan: "الأردن",
     pricingSweden: "السويد",
@@ -7395,6 +7413,9 @@ export const translations: Record<Language, Translations> = {
 	  pricingCompanyInfo: "Fügen Sie Firmennamen, Adresse und Kontaktinformationen am Ende jedes Videos hinzu.",
 	  pricingTemplateAccess: "Zugriff auf Vorlagen- und KI-Bibliotheken zur automatischen Videoverbesserung.",
 	  pricingMarketingSupport: "Premium-Plan-Nutzer sind auch berechtigt für periodische Marketing-Support-Verlosungen, bei denen ausgewählte Videos auf den Social-Media-Plattformen des Unternehmens beworben werden.",
+	  pricingVideoAnalytics: "Erweiterte Video-Performance-Analysen mit detaillierten Einblicken in Engagement, Aufrufe und Publikumsverhalten.",
+	  pricingCloudLibrary: "Unbegrenzte Cloud-Speicherung für alle Ihre Videos, Vorlagen und Assets mit einfacher Organisation und Freigabe.",
+	  pricingVerifiedPartner: "Erhalten Sie den Status als verifizierter Partner mit exklusivem Zugang zu Premium-Funktionen und priorisierter Unterstützung.",
 	  pricingStartPremiumTrial: "Premium-Testversion starten",
 	  pricingJordan: "Jordanien",
 	  pricingSweden: "Schweden",
@@ -8631,6 +8652,9 @@ export const translations: Record<Language, Translations> = {
 	  pricingCompanyInfo: "Ajoutez le nom de l'entreprise, l'adresse et les informations de contact à la fin de chaque vidéo.",
 	  pricingTemplateAccess: "Accès aux bibliothèques de modèles et d'IA pour l'amélioration automatique des vidéos.",
 	  pricingMarketingSupport: "Les utilisateurs du plan Premium seront également éligibles aux tirages au sort de support marketing périodiques, où les vidéos sélectionnées seront promues sur les plateformes de médias sociaux de l'entreprise.",
+	  pricingVideoAnalytics: "Analyses avancées des performances vidéo avec des informations détaillées sur l'engagement, les vues et le comportement du public.",
+	  pricingCloudLibrary: "Stockage cloud illimité pour toutes vos vidéos, modèles et ressources avec organisation et partage faciles.",
+	  pricingVerifiedPartner: "Obtenez le statut de partenaire vérifié avec un accès exclusif aux fonctionnalités premium et un support prioritaire.",
 	  pricingStartPremiumTrial: "Commencer l'essai Premium",
 	  pricingJordan: "Jordanie",
 	  pricingSweden: "Suède",

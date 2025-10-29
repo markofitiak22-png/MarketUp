@@ -64,7 +64,10 @@ const getPlans = (translations: any) => [
       translations.pricingTeamSupport,
       translations.pricingCompanyInfo,
       translations.pricingTemplateAccess,
-      translations.pricingMarketingSupport
+      translations.pricingMarketingSupport,
+      translations.pricingVideoAnalytics,
+      translations.pricingCloudLibrary,
+      translations.pricingVerifiedPartner
     ],
     popular: false,
     cta: translations.pricingStartPremiumTrial,

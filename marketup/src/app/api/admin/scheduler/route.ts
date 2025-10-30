@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
       };
 
       // Generate thumbnail URL
-      const thumbnailUrl = video.thumbnailUrl || `https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=225&fit=crop&sig=${video.id}`;
+      const thumbnailUrl = video.thumbnailUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
 
       return {
         id: video.id,
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
       };
 
       // Generate thumbnail URL
-      const thumbnailUrl = video.thumbnailUrl || `https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=225&fit=crop&sig=${video.id}`;
+      const thumbnailUrl = video.thumbnailUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
 
       // Map database status to frontend status
       let frontendStatus: 'scheduled' | 'published' | 'failed' | 'cancelled';

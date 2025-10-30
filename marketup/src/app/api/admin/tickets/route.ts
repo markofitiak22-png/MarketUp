@@ -168,7 +168,7 @@ export async function GET(request: NextRequest) {
                                   subscriptionTier === 'PREMIUM' ? 'enterprise' : 'basic';
 
       // Generate avatar URL
-      const avatarUrl = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&sig=${ticket.user?.id || 'default'}`;
+      const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${ticket.user?.email || ticket.user?.id || 'default'}&backgroundColor=b6e3f4`;
 
       // Generate ticket ID
       const ticketId = `TKT-${ticket.createdAt.getFullYear()}-${ticket.id.slice(-6).toUpperCase()}`;

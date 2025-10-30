@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       };
 
       // Generate thumbnail URL (using a placeholder for now)
-      const thumbnailUrl = video.thumbnailUrl || `https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=225&fit=crop&sig=${video.id}`;
+      const thumbnailUrl = video.thumbnailUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
 
       return {
         id: video.id,
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
           id: video.user?.id || 'unknown',
           name: video.user?.name || 'Unknown User',
           email: video.user?.email || 'No email',
-          avatar: `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&sig=${video.user?.id || 'default'}`
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${video.user?.email || video.user?.id || 'default'}&backgroundColor=c0aede`
         },
         status: frontendStatus,
         category: 'Generated Video', // Default category

@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 import { useTranslations } from "@/hooks/useTranslations";
-import Avatar3D from "@/components/3DAvatar";
 
 interface AvatarStepProps {
   data: WizardData;
@@ -10,49 +9,89 @@ interface AvatarStepProps {
   onNext: () => void;
 }
 
-// Fallback avatars if API fails
+// Fallback avatars if API fails - Character AI & Anime style
 const fallbackAvatars = [
   {
-    id: 'sarah',
+    id: 'char-sarah',
     name: 'Sarah',
-    image: '/avatars/sarah.jpg',
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=b6e3f4',
     gender: 'female' as const,
+    personality: 'Professional',
     description: 'Professional business presenter'
   },
   {
-    id: 'michael',
+    id: 'char-michael',
     name: 'Michael',
-    image: '/avatars/michael.jpg',
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=c0aede',
     gender: 'male' as const,
+    personality: 'Confident',
     description: 'Confident corporate speaker'
   },
   {
-    id: 'emma',
+    id: 'char-emma',
     name: 'Emma',
-    image: '/avatars/emma.jpg',
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=ffd5dc',
     gender: 'female' as const,
+    personality: 'Friendly',
     description: 'Friendly marketing expert'
   },
   {
-    id: 'david',
+    id: 'char-david',
     name: 'David',
-    image: '/avatars/david.jpg',
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David&backgroundColor=d1d4f9',
     gender: 'male' as const,
+    personality: 'Tech-Savvy',
     description: 'Tech-savvy instructor'
   },
+  // Anime-style avatars
   {
-    id: 'lisa',
-    name: 'Lisa',
-    image: '/avatars/lisa.jpg',
+    id: 'anime-sakura',
+    name: 'Sakura',
+    image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sakura&backgroundColor=ffb3d9',
     gender: 'female' as const,
-    description: 'Creative content creator'
+    personality: 'Cheerful & Kawaii',
+    description: 'Adorable anime host with bubbly energy'
   },
   {
-    id: 'alex',
-    name: 'Alex',
-    image: '/avatars/alex.jpg',
+    id: 'anime-ryu',
+    name: 'Ryu',
+    image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ryu&backgroundColor=b8e6ff',
     gender: 'male' as const,
-    description: 'Dynamic sales presenter'
+    personality: 'Heroic',
+    description: 'Brave anime character with strong spirit'
+  },
+  {
+    id: 'anime-yuki',
+    name: 'Yuki',
+    image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Yuki&backgroundColor=e6d5ff',
+    gender: 'female' as const,
+    personality: 'Mysterious',
+    description: 'Graceful anime presenter with captivating charm'
+  },
+  // Creative avatars
+  {
+    id: 'creative-phoenix',
+    name: 'Phoenix',
+    image: 'https://api.dicebear.com/7.x/bottts/svg?seed=Phoenix&backgroundColor=ff6b35',
+    gender: 'neutral' as const,
+    personality: 'Legendary',
+    description: 'Mythical presenter rising from creative ashes'
+  },
+  {
+    id: 'creative-nova',
+    name: 'Nova',
+    image: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Nova&backgroundColor=00d9ff',
+    gender: 'neutral' as const,
+    personality: 'Futuristic',
+    description: 'AI-powered host from the digital future'
+  },
+  {
+    id: 'creative-pixel',
+    name: 'Pixel',
+    image: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Pixel&backgroundColor=fbbf24',
+    gender: 'neutral' as const,
+    personality: 'Nostalgic',
+    description: '8-bit gaming legend with retro charm'
   }
 ];
 
@@ -80,7 +119,8 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
             name: avatar.name,
             image: avatar.image,
             gender: avatar.gender,
-            description: `${avatar.name} - ${avatar.voice.name} voice`
+            personality: avatar.personality,
+            description: avatar.description || `${avatar.name} - ${avatar.voice.name} voice`
           }));
           setAvatars(transformedAvatars);
         } else {
@@ -154,11 +194,11 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 onClick={() => handleAvatarSelect(avatar)}
               >
                 <div className="relative">
-                  <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20">
-                    <Avatar3D 
-                      modelUrl={avatar.image} 
-                      avatarId={avatar.id}
-                      className="w-full h-full"
+                  <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gradient-to-br from-accent/10 to-accent-2/10 flex items-center justify-center">
+                    <img 
+                      src={avatar.image} 
+                      alt={avatar.name}
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   
@@ -172,7 +212,10 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 </div>
                 
                 <div className="text-center">
-                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2">{avatar.name}</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1">{avatar.name}</h3>
+                  {avatar.personality && (
+                    <p className="text-xs font-medium text-accent mb-1">{avatar.personality}</p>
+                  )}
                   <p className="text-xs sm:text-sm text-foreground-muted">{avatar.description}</p>
                 </div>
               </div>
@@ -183,29 +226,34 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
       </div>
 
       {/* Preview Section */}
-      {selectedAvatar && (
+      {selectedAvatar && data.avatar && (
         <div className="max-w-2xl mx-auto px-4">
           <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
             
             <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">{translations.studioPreview}</h3>
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-4">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
-                  <div className="w-18 h-18 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
-                    {data.avatar?.name.charAt(0)}
-                  </div>
+                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-br from-accent/10 to-accent-2/10 flex items-center justify-center shadow-xl">
+                  <img 
+                    src={data.avatar.image} 
+                    alt={data.avatar.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
-                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
               </div>
+              <div className="text-center">
+                <p className="text-lg sm:text-xl font-bold text-foreground mb-1">{data.avatar.name}</p>
+                <p className="text-sm sm:text-base text-foreground-muted">
+                  {translations.studioWillPresentVideo}
+                </p>
+              </div>
             </div>
-            <p className="text-center text-foreground-muted mt-3 sm:mt-4 text-base sm:text-lg">
-              <span className="font-semibold text-accent">{data.avatar?.name}</span> {translations.studioWillPresentVideo}
-            </p>
           </div>
         </div>
       )}

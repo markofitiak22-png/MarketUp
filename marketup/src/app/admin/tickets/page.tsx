@@ -207,7 +207,7 @@ export default function TicketSystem() {
         ? { 
             ...ticket, 
             assignedTo: "admin_001",
-            assignedAdmin: { name: adminName, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" },
+            assignedAdmin: { name: adminName, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${adminName}&backgroundColor=b6e3f4` },
             updatedAt: new Date().toISOString()
           } 
         : ticket

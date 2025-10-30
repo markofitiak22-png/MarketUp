@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
       const invoiceNumber = `INV-${payment.createdAt.getFullYear()}-${payment.id.slice(-6).toUpperCase()}`;
 
       // Generate avatar URL
-      const avatarUrl = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&sig=${payment.user?.id || 'default'}`;
+      const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${payment.user?.email || payment.user?.id || 'default'}&backgroundColor=ffd5dc`;
 
       return {
         id: payment.id,

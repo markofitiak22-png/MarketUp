@@ -11,19 +11,19 @@ export async function GET() {
     }
 
     try {
-      // Try to get avatars from Ready Player Me
+      // Try to get avatars from Character AI style service
       const avatars = await avatarService.getAvatars();
       
-      console.log('Ready Player Me avatars loaded:', avatars.length);
+      console.log('Character AI avatars loaded:', avatars.length);
       
       return NextResponse.json({
         success: true,
         avatars: avatars
       });
-    } catch (rpmError) {
-      console.log('Ready Player Me failed, using fallback avatars:', rpmError);
+    } catch (error) {
+      console.log('Avatar service failed, using fallback avatars:', error);
       
-      // Fallback to high-quality professional photos
+      // Fallback to Character AI style avatars
       const fallbackAvatars = avatarService.getFallbackAvatars();
       
       return NextResponse.json({

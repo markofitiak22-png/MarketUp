@@ -255,17 +255,19 @@ export default function RewardLadder() {
                       </div>
 
                       {/* Requirement */}
-                      <div className="text-center mb-6">
-                        <div className={`
-                          text-3xl font-bold
-                          ${isUnlocked ? 'text-green-300' : isNext ? 'text-blue-300' : 'text-white/50'}
-                        `}>
-                          {reward.requirement}
+                      {(isUnlocked || isNext) && (
+                        <div className="text-center mb-6">
+                          <div className={`
+                            text-3xl font-bold
+                            ${isUnlocked ? 'text-green-300' : isNext ? 'text-blue-300' : 'text-white/50'}
+                          `}>
+                            {reward.requirement}
+                          </div>
+                          <div className="text-base text-white/60 font-medium">
+                            {translations.referralsSubscribers}
+                          </div>
                         </div>
-                        <div className="text-base text-white/60 font-medium">
-                          {translations.referralsSubscribers}
-                        </div>
-                      </div>
+                      )}
 
                       {/* Reward description */}
                       <div className={`
@@ -383,17 +385,19 @@ export default function RewardLadder() {
                     </div>
 
                     {/* Requirement */}
-                    <div className="text-center mb-3">
-                      <div className={`
-                        text-2xl font-bold
-                        ${isUnlocked ? 'text-green-300' : isNext ? 'text-blue-300' : 'text-white/50'}
-                      `}>
-                        {reward.requirement}
+                    {(isUnlocked || isNext) && (
+                      <div className="text-center mb-3">
+                        <div className={`
+                          text-2xl font-bold
+                          ${isUnlocked ? 'text-green-300' : isNext ? 'text-blue-300' : 'text-white/50'}
+                        `}>
+                          {reward.requirement}
+                        </div>
+                        <div className="text-sm text-white/60 font-medium">
+                          {translations.referralsSubscribers}
+                        </div>
                       </div>
-                      <div className="text-sm text-white/60 font-medium">
-                        {translations.referralsSubscribers}
-                      </div>
-                    </div>
+                    )}
 
                     {/* Reward description */}
                     <div className={`

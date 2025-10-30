@@ -17,7 +17,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=b6e3f4',
     gender: 'female' as const,
     personality: 'Professional',
-    description: 'Professional business presenter'
+    description: 'Professional business presenter',
+    voice: { id: 'en-US-AriaNeural', name: 'Aria', gender: 'female' as const, language: 'English' }
   },
   {
     id: 'char-michael',
@@ -25,7 +26,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=c0aede',
     gender: 'male' as const,
     personality: 'Confident',
-    description: 'Confident corporate speaker'
+    description: 'Confident corporate speaker',
+    voice: { id: 'en-US-GuyNeural', name: 'Guy', gender: 'male' as const, language: 'English' }
   },
   {
     id: 'char-emma',
@@ -33,7 +35,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=ffd5dc',
     gender: 'female' as const,
     personality: 'Friendly',
-    description: 'Friendly marketing expert'
+    description: 'Friendly marketing expert',
+    voice: { id: 'en-US-JennyNeural', name: 'Jenny', gender: 'female' as const, language: 'English' }
   },
   {
     id: 'char-david',
@@ -41,7 +44,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David&backgroundColor=d1d4f9',
     gender: 'male' as const,
     personality: 'Tech-Savvy',
-    description: 'Tech-savvy instructor'
+    description: 'Tech-savvy instructor',
+    voice: { id: 'en-US-DavisNeural', name: 'Davis', gender: 'male' as const, language: 'English' }
   },
   // Anime-style avatars
   {
@@ -50,7 +54,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sakura&backgroundColor=ffb3d9',
     gender: 'female' as const,
     personality: 'Cheerful & Kawaii',
-    description: 'Adorable anime host with bubbly energy'
+    description: 'Adorable anime host with bubbly energy',
+    voice: { id: 'en-US-AriaNeural', name: 'Aria', gender: 'female' as const, language: 'English' }
   },
   {
     id: 'anime-ryu',
@@ -58,7 +63,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ryu&backgroundColor=b8e6ff',
     gender: 'male' as const,
     personality: 'Heroic',
-    description: 'Brave anime character with strong spirit'
+    description: 'Brave anime character with strong spirit',
+    voice: { id: 'en-US-GuyNeural', name: 'Guy', gender: 'male' as const, language: 'English' }
   },
   {
     id: 'anime-yuki',
@@ -66,7 +72,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Yuki&backgroundColor=e6d5ff',
     gender: 'female' as const,
     personality: 'Mysterious',
-    description: 'Graceful anime presenter with captivating charm'
+    description: 'Graceful anime presenter with captivating charm',
+    voice: { id: 'en-US-JennyNeural', name: 'Jenny', gender: 'female' as const, language: 'English' }
   },
   // Creative avatars
   {
@@ -75,7 +82,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/bottts/svg?seed=Phoenix&backgroundColor=ff6b35',
     gender: 'neutral' as const,
     personality: 'Legendary',
-    description: 'Mythical presenter rising from creative ashes'
+    description: 'Mythical presenter rising from creative ashes',
+    voice: { id: 'en-US-AriaNeural', name: 'Aria', gender: 'female' as const, language: 'English' }
   },
   {
     id: 'creative-nova',
@@ -83,7 +91,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Nova&backgroundColor=00d9ff',
     gender: 'neutral' as const,
     personality: 'Futuristic',
-    description: 'AI-powered host from the digital future'
+    description: 'AI-powered host from the digital future',
+    voice: { id: 'en-US-JennyNeural', name: 'Jenny', gender: 'female' as const, language: 'English' }
   },
   {
     id: 'creative-pixel',
@@ -91,7 +100,8 @@ const fallbackAvatars = [
     image: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Pixel&backgroundColor=fbbf24',
     gender: 'neutral' as const,
     personality: 'Nostalgic',
-    description: '8-bit gaming legend with retro charm'
+    description: '8-bit gaming legend with retro charm',
+    voice: { id: 'en-US-DavisNeural', name: 'Davis', gender: 'male' as const, language: 'English' }
   }
 ];
 
@@ -100,7 +110,7 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar?.id || '');
   const [avatars, setAvatars] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
 
   // Load avatars from API
   useEffect(() => {
@@ -120,7 +130,8 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
             image: avatar.image,
             gender: avatar.gender,
             personality: avatar.personality,
-            description: avatar.description || `${avatar.name} - ${avatar.voice.name} voice`
+            description: avatar.description || `${avatar.name} - ${avatar.voice.name} voice`,
+            voice: avatar.voice
           }));
           setAvatars(transformedAvatars);
         } else {
@@ -139,6 +150,29 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
     fetchAvatars();
   }, []);
 
+  // Load voices for Web Speech API
+  useEffect(() => {
+    // Preload voices
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const loadVoices = () => {
+        speechSynthesis.getVoices();
+      };
+      
+      loadVoices();
+      
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   const handleAvatarSelect = (avatar: typeof avatars[0]) => {
     setSelectedAvatar(avatar.id);
     onUpdate({
@@ -146,9 +180,63 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
         id: avatar.id,
         name: avatar.name,
         image: avatar.image,
-        gender: avatar.gender
+        gender: avatar.gender,
+        voice: avatar.voice
       }
     });
+  };
+
+  const playVoicePreview = () => {
+    if (!data.avatar?.voice || isPlayingVoice) return;
+
+    setIsPlayingVoice(true);
+
+    // Use Web Speech API
+    const utterance = new SpeechSynthesisUtterance(
+      `Hello! I'm ${data.avatar.name}. I'll be your video presenter today. Let me bring your content to life with my voice.`
+    );
+
+    // Configure voice based on gender
+    const voices = speechSynthesis.getVoices();
+    
+    // Try to find a matching voice
+    const preferredVoice = voices.find(voice => {
+      if (data.avatar.gender === 'female') {
+        return voice.name.toLowerCase().includes('female') || 
+               voice.name.toLowerCase().includes('woman') ||
+               voice.name.toLowerCase().includes('samantha') ||
+               voice.name.toLowerCase().includes('victoria');
+      } else if (data.avatar.gender === 'male') {
+        return voice.name.toLowerCase().includes('male') || 
+               voice.name.toLowerCase().includes('man') ||
+               voice.name.toLowerCase().includes('daniel') ||
+               voice.name.toLowerCase().includes('alex');
+      }
+      return true;
+    });
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    utterance.rate = 1.0;
+    utterance.pitch = data.avatar.gender === 'female' ? 1.1 : 0.9;
+    utterance.volume = 1.0;
+
+    utterance.onend = () => {
+      setIsPlayingVoice(false);
+    };
+
+    utterance.onerror = () => {
+      setIsPlayingVoice(false);
+    };
+
+    speechSynthesis.speak(utterance);
+  };
+
+  const stopVoicePreview = () => {
+    speechSynthesis.cancel();
+    setIsPlayingVoice(false);
   };
 
   const handleNext = () => {
@@ -247,11 +335,44 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                   </svg>
                 </div>
               </div>
-              <div className="text-center">
-                <p className="text-lg sm:text-xl font-bold text-foreground mb-1">{data.avatar.name}</p>
-                <p className="text-sm sm:text-base text-foreground-muted">
-                  {translations.studioWillPresentVideo}
-                </p>
+              <div className="text-center space-y-4 w-full">
+                <div>
+                  <p className="text-lg sm:text-xl font-bold text-foreground mb-1">{data.avatar.name}</p>
+                  {data.avatar.voice && (
+                    <p className="text-xs sm:text-sm text-accent-2 font-medium mb-2">
+                      Voice: {data.avatar.voice.name}
+                    </p>
+                  )}
+                  <p className="text-sm sm:text-base text-foreground-muted">
+                    {translations.studioWillPresentVideo}
+                  </p>
+                </div>
+                
+                {/* Voice Preview Button */}
+                <button
+                  onClick={isPlayingVoice ? stopVoicePreview : playVoicePreview}
+                  className={`w-full max-w-xs mx-auto flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    isPlayingVoice 
+                      ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : 'bg-gradient-to-r from-accent to-accent-2 hover:from-accent-2 hover:to-accent text-white shadow-lg hover:shadow-xl'
+                  }`}
+                >
+                  {isPlayingVoice ? (
+                    <>
+                      <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
+                      </svg>
+                      <span>Stop Voice</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      </svg>
+                      <span>Listen to Voice</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>

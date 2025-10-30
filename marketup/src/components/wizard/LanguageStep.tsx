@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 import { useTranslations } from "@/hooks/useTranslations";
 
@@ -142,10 +142,86 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
     }
   };
 
-  const playVoicePreview = (voiceId: string) => {
+  // Load voices for Web Speech API
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const loadVoices = () => {
+        speechSynthesis.getVoices();
+      };
+      
+      loadVoices();
+      
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const playVoicePreview = (voiceId: string, voiceName: string, gender: string) => {
+    if (playingVoice === voiceId) {
+      // Stop if already playing
+      speechSynthesis.cancel();
+      setPlayingVoice(null);
+      return;
+    }
+
+    // Stop any current playback
+    speechSynthesis.cancel();
     setPlayingVoice(voiceId);
-    // Simulate audio playback
-    setTimeout(() => setPlayingVoice(null), 2000);
+
+    // Create sample text based on language
+    const language = languages.find(l => l.code === selectedLanguage);
+    const sampleTexts: Record<string, string> = {
+      'en': `Hi! I'm ${voiceName}. Let me help you create amazing content with my voice.`,
+      'ar': `مرحباً! أنا ${voiceName}. دعني أساعدك في إنشاء محتوى رائع بصوتي.`,
+      'sv': `Hej! Jag är ${voiceName}. Låt mig hjälpa dig att skapa fantastiskt innehåll med min röst.`,
+      'tr': `Merhaba! Ben ${voiceName}. Sesimle harika içerik oluşturmanıza yardımcı olayım.`,
+      'de': `Hallo! Ich bin ${voiceName}. Lass mich dir helfen, großartige Inhalte mit meiner Stimme zu erstellen.`,
+      'fr': `Bonjour! Je suis ${voiceName}. Laissez-moi vous aider à créer un contenu incroyable avec ma voix.`
+    };
+
+    const text = sampleTexts[selectedLanguage] || sampleTexts['en'];
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Try to find a voice that matches the language and gender
+    const voices = speechSynthesis.getVoices();
+    const languageCode = selectedLanguage === 'en' ? 'en-US' : selectedLanguage;
+    
+    const preferredVoice = voices.find(voice => {
+      const matchesLanguage = voice.lang.startsWith(languageCode) || voice.lang.startsWith(selectedLanguage);
+      const matchesGender = gender === 'female' 
+        ? voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman')
+        : voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('man');
+      return matchesLanguage && matchesGender;
+    }) || voices.find(voice => voice.lang.startsWith(languageCode) || voice.lang.startsWith(selectedLanguage));
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+      utterance.lang = preferredVoice.lang;
+    } else {
+      utterance.lang = languageCode;
+    }
+
+    utterance.rate = 1.0;
+    utterance.pitch = gender === 'female' ? 1.1 : 0.9;
+    utterance.volume = 1.0;
+
+    utterance.onend = () => {
+      setPlayingVoice(null);
+    };
+
+    utterance.onerror = () => {
+      setPlayingVoice(null);
+    };
+
+    speechSynthesis.speak(utterance);
   };
 
   // Get filtered voices based on selected language and tone
@@ -273,20 +349,25 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      playVoicePreview(voice.id);
+                      playVoicePreview(voice.id, voice.name, voice.gender);
                     }}
-                    disabled={playingVoice === voice.id}
-                    className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-surface-elevated hover:bg-surface transition-colors disabled:opacity-50"
+                    className={`w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl font-medium transition-all ${
+                      playingVoice === voice.id
+                        ? 'bg-red-500 text-white hover:bg-red-600'
+                        : 'bg-gradient-to-r from-accent-2 to-purple-500 text-white hover:from-purple-500 hover:to-accent-2 shadow-md hover:shadow-lg'
+                    }`}
                   >
                     {playingVoice === voice.id ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-accent-2 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-sm font-medium">{translations.studioPlaying}</span>
+                        <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-sm font-medium">Stop</span>
                       </>
                     ) : (
                       <>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                         </svg>
                         <span className="text-sm font-medium">{translations.studioPreview}</span>
                       </>
@@ -306,16 +387,45 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
             
             <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioSelectedVoice}</h3>
-            <div className="flex items-center justify-center gap-6">
-              <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${getVoiceColor(data.language.voice.name)} flex items-center justify-center shadow-lg`}>
-                <span className="text-white text-3xl font-bold">
-                  {data.language.voice.name.charAt(0)}
-                </span>
+            <div className="flex flex-col items-center justify-center gap-6">
+              <div className="flex items-center justify-center gap-6">
+                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${getVoiceColor(data.language.voice.name)} flex items-center justify-center shadow-lg`}>
+                  <span className="text-white text-3xl font-bold">
+                    {data.language.voice.name.charAt(0)}
+                  </span>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-bold text-foreground">{data.language.voice.name}</div>
+                  <div className="text-lg text-foreground-muted">{data.language.name}</div>
+                  <div className="text-sm text-accent-2 font-medium capitalize mt-1">{data.language.voice.tone}</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-xl font-bold text-foreground">{data.language.voice.name}</div>
-                <div className="text-lg text-foreground-muted">{data.language.name}</div>
-              </div>
+              
+              {/* Voice Preview Button */}
+              <button
+                onClick={() => playVoicePreview(data.language!.voice.id, data.language!.voice.name, data.language!.voice.gender)}
+                className={`w-full max-w-xs flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  playingVoice === data.language.voice.id
+                    ? 'bg-red-500 hover:bg-red-600 text-white' 
+                    : 'bg-gradient-to-r from-accent to-accent-2 hover:from-accent-2 hover:to-accent text-white shadow-lg hover:shadow-xl'
+                }`}
+              >
+                {playingVoice === data.language.voice.id ? (
+                  <>
+                    <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
+                    </svg>
+                    <span>Stop Voice</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <span>Listen to Voice</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

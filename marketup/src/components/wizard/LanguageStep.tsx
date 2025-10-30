@@ -23,23 +23,34 @@ const languages = [
     ]
   },
   {
-    code: 'es',
-    name: 'Spanish',
-    flag: '🇪🇸',
+    code: 'ar',
+    name: 'Arabic',
+    flag: '🇸🇦',
     voices: [
-      { id: 'maria_es', name: 'María', gender: 'female' as const, accent: 'Castilian', tone: 'professional' as const },
-      { id: 'carlos_es', name: 'Carlos', gender: 'male' as const, accent: 'Castilian', tone: 'energetic' as const },
-      { id: 'ana_es', name: 'Ana', gender: 'female' as const, accent: 'Mexican', tone: 'calm' as const },
-      { id: 'jose_es', name: 'José', gender: 'male' as const, accent: 'Mexican', tone: 'expressive' as const }
+      { id: 'fatima_ar', name: 'Fatima', gender: 'female' as const, accent: 'Standard', tone: 'professional' as const },
+      { id: 'omar_ar', name: 'Omar', gender: 'male' as const, accent: 'Standard', tone: 'energetic' as const },
+      { id: 'layla_ar', name: 'Layla', gender: 'female' as const, accent: 'Gulf', tone: 'calm' as const },
+      { id: 'hassan_ar', name: 'Hassan', gender: 'male' as const, accent: 'Standard', tone: 'expressive' as const }
     ]
   },
   {
-    code: 'fr',
-    name: 'French',
-    flag: '🇫🇷',
+    code: 'sv',
+    name: 'Swedish',
+    flag: '🇸🇪',
     voices: [
-      { id: 'marie_fr', name: 'Marie', gender: 'female' as const, accent: 'Parisian', tone: 'professional' as const },
-      { id: 'pierre_fr', name: 'Pierre', gender: 'male' as const, accent: 'Parisian', tone: 'energetic' as const }
+      { id: 'emma_sv', name: 'Emma', gender: 'female' as const, accent: 'Standard', tone: 'professional' as const },
+      { id: 'erik_sv', name: 'Erik', gender: 'male' as const, accent: 'Standard', tone: 'energetic' as const },
+      { id: 'sofia_sv', name: 'Sofia', gender: 'female' as const, accent: 'Standard', tone: 'calm' as const }
+    ]
+  },
+  {
+    code: 'tr',
+    name: 'Turkish',
+    flag: '🇹🇷',
+    voices: [
+      { id: 'ayse_tr', name: 'Ayşe', gender: 'female' as const, accent: 'Standard', tone: 'professional' as const },
+      { id: 'mehmet_tr', name: 'Mehmet', gender: 'male' as const, accent: 'Standard', tone: 'energetic' as const },
+      { id: 'zeynep_tr', name: 'Zeynep', gender: 'female' as const, accent: 'Istanbul', tone: 'calm' as const }
     ]
   },
   {
@@ -52,21 +63,12 @@ const languages = [
     ]
   },
   {
-    code: 'it',
-    name: 'Italian',
-    flag: '🇮🇹',
+    code: 'fr',
+    name: 'French',
+    flag: '🇫🇷',
     voices: [
-      { id: 'giulia_it', name: 'Giulia', gender: 'female' as const, accent: 'Standard', tone: 'expressive' as const },
-      { id: 'marco_it', name: 'Marco', gender: 'male' as const, accent: 'Standard', tone: 'energetic' as const }
-    ]
-  },
-  {
-    code: 'pt',
-    name: 'Portuguese',
-    flag: '🇵🇹',
-    voices: [
-      { id: 'sofia_pt', name: 'Sofia', gender: 'female' as const, accent: 'European', tone: 'calm' as const },
-      { id: 'joao_pt', name: 'João', gender: 'male' as const, accent: 'European', tone: 'professional' as const }
+      { id: 'marie_fr', name: 'Marie', gender: 'female' as const, accent: 'Parisian', tone: 'professional' as const },
+      { id: 'pierre_fr', name: 'Pierre', gender: 'male' as const, accent: 'Parisian', tone: 'energetic' as const }
     ]
   }
 ];
@@ -78,6 +80,30 @@ const getToneFilters = (translations: any) => [
   { id: 'calm', name: translations.studioCalm, icon: '🌊' },
   { id: 'expressive', name: translations.studioExpressive, icon: '🎭' }
 ];
+
+// Generate gradient color for voice avatars based on name
+const getVoiceColor = (name: string) => {
+  const colors: Record<string, string> = {
+    'Sarah': 'from-pink-400 to-rose-500',
+    'Michael': 'from-blue-400 to-indigo-500',
+    'Emma': 'from-purple-400 to-pink-500',
+    'David': 'from-cyan-400 to-blue-500',
+    'Fatima': 'from-amber-400 to-orange-500',
+    'Omar': 'from-emerald-400 to-green-500',
+    'Layla': 'from-violet-400 to-purple-500',
+    'Hassan': 'from-teal-400 to-cyan-500',
+    'Erik': 'from-sky-400 to-blue-500',
+    'Sofia': 'from-rose-400 to-pink-500',
+    'Ayşe': 'from-fuchsia-400 to-purple-500',
+    'Mehmet': 'from-indigo-400 to-blue-500',
+    'Zeynep': 'from-pink-400 to-rose-500',
+    'Anna': 'from-orange-400 to-red-500',
+    'Klaus': 'from-slate-400 to-gray-500',
+    'Marie': 'from-rose-400 to-pink-500',
+    'Pierre': 'from-blue-400 to-indigo-500'
+  };
+  return colors[name] || 'from-gray-400 to-gray-500';
+};
 
 export default function LanguageStep({ data, onUpdate, onNext, onPrev }: LanguageStepProps) {
   const { translations } = useTranslations();
@@ -223,9 +249,9 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent-2/20 to-purple-500/20 flex items-center justify-center">
-                        <span className="text-2xl">
-                          {voice.gender === 'female' ? '👩' : '👨'}
+                      <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getVoiceColor(voice.name)} flex items-center justify-center shadow-lg`}>
+                        <span className="text-white text-xl font-bold">
+                          {voice.name.charAt(0)}
                         </span>
                       </div>
                       <div>
@@ -281,9 +307,9 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
             
             <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{translations.studioSelectedVoice}</h3>
             <div className="flex items-center justify-center gap-6">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center">
-                <span className="text-3xl">
-                  {data.language.voice.gender === 'female' ? '👩' : '👨'}
+              <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${getVoiceColor(data.language.voice.name)} flex items-center justify-center shadow-lg`}>
+                <span className="text-white text-3xl font-bold">
+                  {data.language.voice.name.charAt(0)}
                 </span>
               </div>
               <div className="text-center">

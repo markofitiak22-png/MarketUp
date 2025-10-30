@@ -189,11 +189,12 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   const playVoicePreview = () => {
     if (!data.avatar?.voice || isPlayingVoice) return;
 
+    const avatar = data.avatar; // Store avatar in local variable after null check
     setIsPlayingVoice(true);
 
     // Use Web Speech API
     const utterance = new SpeechSynthesisUtterance(
-      `Hello! I'm ${data.avatar.name}. I'll be your video presenter today. Let me bring your content to life with my voice.`
+      `Hello! I'm ${avatar.name}. I'll be your video presenter today. Let me bring your content to life with my voice.`
     );
 
     // Configure voice based on gender
@@ -201,12 +202,12 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
     
     // Try to find a matching voice
     const preferredVoice = voices.find(voice => {
-      if (data.avatar.gender === 'female') {
+      if (avatar.gender === 'female') {
         return voice.name.toLowerCase().includes('female') || 
                voice.name.toLowerCase().includes('woman') ||
                voice.name.toLowerCase().includes('samantha') ||
                voice.name.toLowerCase().includes('victoria');
-      } else if (data.avatar.gender === 'male') {
+      } else if (avatar.gender === 'male') {
         return voice.name.toLowerCase().includes('male') || 
                voice.name.toLowerCase().includes('man') ||
                voice.name.toLowerCase().includes('daniel') ||
@@ -220,7 +221,7 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
     }
 
     utterance.rate = 1.0;
-    utterance.pitch = data.avatar.gender === 'female' ? 1.1 : 0.9;
+    utterance.pitch = avatar.gender === 'female' ? 1.1 : 0.9;
     utterance.volume = 1.0;
 
     utterance.onend = () => {

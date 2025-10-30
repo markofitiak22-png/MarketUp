@@ -17,7 +17,13 @@ export interface WizardData {
     id: string;
     name: string;
     image: string;
-    gender: 'male' | 'female';
+    gender: 'male' | 'female' | 'neutral';
+    voice: {
+      id: string;
+      name: string;
+      gender: 'male' | 'female' | 'neutral';
+      language: string;
+    };
   } | null;
   language: {
     code: string;

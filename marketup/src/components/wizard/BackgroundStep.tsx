@@ -97,7 +97,7 @@ const backgrounds = [
   {
     id: 'futuristic-space',
     name: 'Futuristic Space',
-    image: 'https://images.pexels.com/photos/7135057/pexels-photo-7135057.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80',
     type: 'image' as const,
     category: 'Creative',
     description: 'Modern futuristic architectural space'
@@ -198,12 +198,15 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
             }`}
             onClick={() => handleBackgroundSelect(background)}
           >
-            <div className="aspect-video relative overflow-hidden">
+            <div className="aspect-video relative overflow-hidden bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
               <img 
                 src={background.image} 
                 alt={background.name}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
               />
               
               {/* Overlay gradient */}
@@ -278,11 +281,14 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
           <div className="space-y-4">
             {/* Main Preview */}
             <div className="relative">
-              <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl relative">
+              <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl relative bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
                 <img 
                   src={selectedBgs.length > 0 ? selectedBgs[previewIndex]?.image : ''} 
                   alt={selectedBgs.length > 0 ? selectedBgs[previewIndex]?.name : ''}
                   className="w-full h-full object-cover transition-all duration-500"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
                 
                 {/* Navigation Arrows */}
@@ -357,7 +363,7 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
                     className="relative flex-shrink-0 cursor-pointer"
                     onClick={() => setPreviewIndex(index)}
                   >
-                    <div className={`w-32 h-20 rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
+                    <div className={`w-32 h-20 rounded-lg overflow-hidden border-2 transition-all hover:scale-105 bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100 ${
                       previewIndex === index 
                         ? 'border-accent ring-2 ring-accent/50 scale-105' 
                         : 'border-accent/30 hover:border-accent'
@@ -366,6 +372,9 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
                         src={bg?.image} 
                         alt={bg?.name}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
                       />
                     </div>
                     <div className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg transition-all ${

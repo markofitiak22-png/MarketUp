@@ -20,6 +20,10 @@ export default function RewardLadder() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Celebration toast notification
+  const [showToast, setShowToast] = useState(false);
+  const [toastReward, setToastReward] = useState<Reward | null>(null);
 
   // Fetch real data from API
   useEffect(() => {
@@ -43,6 +47,21 @@ export default function RewardLadder() {
         const unlocked = data.rewards
           .filter((reward: Reward) => reward.unlocked)
           .map((reward: Reward) => reward.id);
+        
+        // Check for new unlocked rewards
+        const newlyUnlocked = unlocked.filter(id => !unlockedRewards.includes(id));
+        if (newlyUnlocked.length > 0) {
+          const newReward = data.rewards
+            .filter((r: Reward) => newlyUnlocked.includes(r.id))
+            .sort((a: Reward, b: Reward) => b.requirement - a.requirement)[0];
+          
+          if (newReward) {
+            setToastReward(newReward);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 6000);
+          }
+        }
+        
         setUnlockedRewards(unlocked);
         
       } catch (err) {
@@ -129,7 +148,15 @@ export default function RewardLadder() {
 
       if (response.ok) {
         const data = await response.json();
-        alert(data.message);
+        
+        // Show toast instead of alert
+        const claimedReward = rewards.find(r => r.id === rewardId);
+        if (claimedReward) {
+          setToastReward(claimedReward);
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 6000);
+        }
+        
         // Refresh data
         const refreshResponse = await fetch('/api/referrals/rewards', {
           credentials: "include",
@@ -468,6 +495,177 @@ export default function RewardLadder() {
             </div>
           </div>
         </div>
+
+        {/* Celebration Toast Notification */}
+        {showToast && toastReward && (
+          <div className="fixed top-24 right-4 z-50 animate-slide-in-right">
+            <div className="relative overflow-hidden max-w-md">
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-gradient-x"></div>
+              
+              {/* Main toast card */}
+              <div className="relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-yellow-400/30">
+                {/* Confetti decorations */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+                  {[...Array(15)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-2 h-2 rounded-full animate-confetti-fall"
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        animationDelay: `${Math.random() * 2}s`,
+                        backgroundColor: ['#fbbf24', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'][Math.floor(Math.random() * 5)]
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Trophy icon with animation */}
+                <div className="flex items-start gap-4 mb-3">
+                  <div className="flex-shrink-0 animate-bounce-slow">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-3xl animate-wiggle-slow">
+                      🏆
+                    </div>
+                  </div>
+
+                  <div className="flex-1 pt-1">
+                    {/* Congratulations */}
+                    <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                      <span className="animate-wave">🎉</span>
+                      Congratulations!
+                      <span className="animate-wave" style={{ animationDelay: '0.2s' }}>🎉</span>
+                    </h3>
+                    
+                    {/* Main message */}
+                    <p className="text-base font-semibold bg-gradient-to-r from-yellow-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent leading-relaxed">
+                      Great job! You've just moved one step closer to the biggest reward!
+                    </p>
+                  </div>
+                </div>
+
+                {/* Unlocked reward info */}
+                <div className="flex items-center gap-3 p-3 bg-white/10 rounded-xl border border-white/20 mt-4">
+                  <span className="text-3xl">{toastReward.icon}</span>
+                  <div className="flex-1">
+                    <div className="text-sm text-green-300 font-semibold">Unlocked</div>
+                    <div className="text-white font-bold">{toastReward.reward}</div>
+                  </div>
+                  <div className="text-2xl font-bold text-yellow-400">
+                    {toastReward.requirement}
+                  </div>
+                </div>
+
+                {/* Progress bar animation */}
+                <div className="mt-3 h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-progress-fill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Custom animations */}
+        <style jsx>{`
+          @keyframes slide-in-right {
+            from {
+              transform: translateX(400px);
+              opacity: 0;
+            }
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+
+          @keyframes confetti-fall {
+            0% {
+              transform: translateY(-20px) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(200px) rotate(720deg);
+              opacity: 0;
+            }
+          }
+
+          @keyframes bounce-slow {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+
+          @keyframes wiggle-slow {
+            0%, 100% {
+              transform: rotate(-5deg);
+            }
+            50% {
+              transform: rotate(5deg);
+            }
+          }
+
+          @keyframes wave {
+            0%, 100% {
+              transform: rotate(0deg);
+            }
+            25% {
+              transform: rotate(20deg);
+            }
+            75% {
+              transform: rotate(-20deg);
+            }
+          }
+
+          @keyframes gradient-x {
+            0%, 100% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+          }
+
+          @keyframes progress-fill {
+            from {
+              width: 0%;
+            }
+            to {
+              width: 100%;
+            }
+          }
+
+          .animate-slide-in-right {
+            animation: slide-in-right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          }
+
+          .animate-confetti-fall {
+            animation: confetti-fall 3s ease-in forwards;
+          }
+
+          .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+          }
+
+          .animate-wiggle-slow {
+            animation: wiggle-slow 1s ease-in-out infinite;
+          }
+
+          .animate-wave {
+            animation: wave 0.6s ease-in-out;
+            display: inline-block;
+          }
+
+          .animate-gradient-x {
+            background-size: 200% 200%;
+            animation: gradient-x 3s ease infinite;
+          }
+
+          .animate-progress-fill {
+            animation: progress-fill 6s linear;
+          }
+        `}</style>
     </div>
   );
 }

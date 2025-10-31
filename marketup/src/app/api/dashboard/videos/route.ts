@@ -29,15 +29,12 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { script: { contains: search, mode: 'insensitive' } }
-      ];
+      where.title = { contains: search, mode: 'insensitive' };
     }
 
-    // Get videos with pagination
+    // Get videos with pagination from Video table
     const [videos, total] = await Promise.all([
-      prisma.videoJob.findMany({
+      prisma.video.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         skip,
@@ -47,40 +44,39 @@ export async function GET(request: NextRequest) {
           title: true,
           status: true,
           createdAt: true,
-          duration: true,
-          thumbnailUrl: true,
-          views: true,
-          downloads: true,
           videoUrl: true,
-          quality: true,
-          format: true,
-          fileSize: true,
-          resolution: true
+          completedAt: true,
+          settings: true
         }
       }),
-      prisma.videoJob.count({ where })
+      prisma.video.count({ where })
     ]);
 
     // Format videos for frontend
-    const formattedVideos = videos.map(video => ({
-      id: video.id,
-      title: video.title || `Video ${video.id.slice(-8)}`,
-      status: video.status === 'COMPLETED' ? 'Completed' : 
-              video.status === 'PROCESSING' ? 'Processing' : 
-              video.status === 'QUEUED' ? 'Queued' : 'Failed',
-      createdAt: video.createdAt.toISOString().split('T')[0],
-      duration: video.duration ? `${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}` : '0:00',
-      thumbnail: video.thumbnailUrl ? '🎥' : '📹',
-      views: video.views,
-      downloads: video.downloads,
-      videoUrl: video.videoUrl,
-      metadata: {
-        quality: video.quality,
-        format: video.format,
-        fileSize: video.fileSize,
-        resolution: video.resolution
-      }
-    }));
+    const formattedVideos = videos.map(video => {
+      const settings = video.settings as any || {};
+      const duration = settings.duration || 30;
+      
+      return {
+        id: video.id,
+        title: video.title || `Video ${video.id.slice(-8)}`,
+        status: video.status === 'COMPLETED' ? 'Completed' : 
+                video.status === 'PROCESSING' ? 'Processing' : 
+                video.status === 'PENDING' ? 'Queued' : 'Failed',
+        createdAt: video.createdAt.toISOString().split('T')[0],
+        duration: `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`,
+        thumbnail: '🎥',
+        views: 0,
+        downloads: 0,
+        videoUrl: video.videoUrl,
+        metadata: {
+          quality: settings.quality || 'HD',
+          format: settings.format || 'MP4',
+          fileSize: null,
+          resolution: null
+        }
+      };
+    });
 
     return NextResponse.json({
       success: true,

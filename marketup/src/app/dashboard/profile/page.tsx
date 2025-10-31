@@ -31,11 +31,6 @@ export default async function ProfilePage() {
     where: { userId: userId }
   });
 
-  // Get video jobs count
-  const videoJobsCount = await prisma.videoJob.count({
-    where: { userId: userId }
-  });
-
   // Get referral statistics
   const referralStats = await prisma.referralEvent.findMany({
     where: { referrerId: userId },
@@ -56,7 +51,6 @@ export default async function ProfilePage() {
 
   const userStats = {
     videoCount,
-    videoJobsCount,
     approvedReferrals,
     totalReferrals,
     profileCompletion,

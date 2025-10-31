@@ -11,7 +11,6 @@ interface ProfileClientProps {
   };
   userStats: {
     videoCount: number;
-    videoJobsCount: number;
     approvedReferrals: number;
     totalReferrals: number;
     profileCompletion: number;

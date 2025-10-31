@@ -27,8 +27,8 @@ export async function GET() {
     thisMonth.setDate(1);
     thisMonth.setHours(0, 0, 0, 0);
 
-    const [videosThisMonth, totalVideos, storageUsed] = await Promise.all([
-      prisma.videoJob.count({
+    const [videosThisMonth, totalVideos] = await Promise.all([
+      prisma.video.count({
         where: {
           userId,
           createdAt: {
@@ -36,18 +36,13 @@ export async function GET() {
           }
         }
       }),
-      prisma.videoJob.count({
+      prisma.video.count({
         where: { userId }
-      }),
-      prisma.videoJob.aggregate({
-        where: { userId },
-        _sum: { fileSize: true }
       })
     ]);
 
-    // Calculate storage in GB
-    const storageUsedGB = storageUsed._sum.fileSize ? 
-      Math.round((storageUsed._sum.fileSize / (1024 * 1024 * 1024)) * 100) / 100 : 0;
+    // Mock storage calculation (since we don't store fileSize)
+    const storageUsedGB = totalVideos * 0.05; // Assume ~50MB per video
 
     // Mock bandwidth calculation (in real app, this would be tracked)
     const bandwidthUsed = Math.round(videosThisMonth * 0.5 * 100) / 100; // 0.5GB per video
@@ -56,13 +51,11 @@ export async function GET() {
     const currentPeriod = subscription ? {
       start: subscription.currentPeriodStart.toISOString().split('T')[0],
       end: subscription.currentPeriodEnd.toISOString().split('T')[0],
-      amount: subscription.tier === 'BASIC' ? 9.00 : 
-              subscription.tier === 'STANDARD' ? 29.00 : 
-              subscription.tier === 'PREMIUM' ? 99.00 : 0.00,
+      amount: subscription.tier === 'STANDARD' ? 42.00 : 
+              subscription.tier === 'PREMIUM' ? 59.00 : 0.00,
       status: subscription.status.toLowerCase(),
-      planName: subscription.tier === 'BASIC' ? 'Basic Plan' :
-                subscription.tier === 'STANDARD' ? 'Pro Plan' :
-                subscription.tier === 'PREMIUM' ? 'Enterprise Plan' : 'Free Plan'
+      planName: subscription.tier === 'STANDARD' ? 'Pro Plan' :
+                subscription.tier === 'PREMIUM' ? 'Premium Plan' : 'Free Plan'
     } : {
       start: new Date().toISOString().split('T')[0],
       end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -78,10 +71,11 @@ export async function GET() {
       bandwidth: bandwidthUsed,
       totalVideos,
       storageLimit: !subscription ? 1 : 
-                   subscription.tier === 'BASIC' ? 5 : 
-                   subscription.tier === 'STANDARD' ? 10 : 50, // GB
-      videoLimit: !subscription ? 3 : 
-                 subscription.tier === 'BASIC' ? 10 : 'unlimited'
+                   subscription.tier === 'STANDARD' ? 10 : 
+                   subscription.tier === 'PREMIUM' ? 50 : 1, // GB
+      videoLimit: !subscription ? 1 : 
+                 subscription.tier === 'STANDARD' ? 4 : 
+                 subscription.tier === 'PREMIUM' ? 7 : 1
     };
 
     // Mock payment method (in real app, this would come from payment provider)

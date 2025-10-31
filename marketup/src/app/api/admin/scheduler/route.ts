@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get approved videos (only completed videos can be scheduled)
-    const approvedVideos = await prisma.videoJob.findMany({
+    const approvedVideos = await prisma.video.findMany({
       where: {
         status: 'COMPLETED'
       },
@@ -87,6 +87,9 @@ export async function GET(request: NextRequest) {
 
     // Transform approved videos to match frontend interface
     const transformedVideos = approvedVideos.map(video => {
+      // Parse settings JSON
+      const settings = video.settings as any || {};
+      
       // Format duration from seconds to MM:SS
       const formatDuration = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -94,14 +97,17 @@ export async function GET(request: NextRequest) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
       };
 
+      // Get duration from settings or use default
+      const duration = settings.duration || 30;
+
       // Generate thumbnail URL
-      const thumbnailUrl = video.thumbnailUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
+      const thumbnailUrl = `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
 
       return {
         id: video.id,
         title: video.title || 'Untitled Video',
         thumbnail: thumbnailUrl,
-        duration: video.duration ? formatDuration(video.duration) : '0:00',
+        duration: formatDuration(duration),
         status: 'approved' as const,
         category: 'Generated Video',
         tags: ['ai-generated', 'video']

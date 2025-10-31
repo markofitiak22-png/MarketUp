@@ -23,34 +23,26 @@ export async function GET(request: NextRequest) {
     });
 
     // Get video statistics
-    const [totalVideos, completedVideos, processingVideos, totalViews, totalDownloads] = await Promise.all([
-      prisma.videoJob.count({
+    const [totalVideos, completedVideos, processingVideos] = await Promise.all([
+      prisma.video.count({
         where: { userId }
       }),
-      prisma.videoJob.count({
+      prisma.video.count({
         where: { 
           userId,
           status: 'COMPLETED'
         }
       }),
-      prisma.videoJob.count({
+      prisma.video.count({
         where: { 
           userId,
           status: 'PROCESSING'
         }
-      }),
-      prisma.videoJob.aggregate({
-        where: { userId },
-        _sum: { views: true }
-      }),
-      prisma.videoJob.aggregate({
-        where: { userId },
-        _sum: { downloads: true }
       })
     ]);
 
     // Get recent videos (last 5)
-    const recentVideos = await prisma.videoJob.findMany({
+    const recentVideos = await prisma.video.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 5,
@@ -59,27 +51,19 @@ export async function GET(request: NextRequest) {
         title: true,
         status: true,
         createdAt: true,
-        thumbnailUrl: true,
-        views: true,
-        downloads: true
+        videoUrl: true
       }
     });
 
-    // Calculate storage used (mock calculation based on file sizes)
-    const storageUsed = await prisma.videoJob.aggregate({
-      where: { userId },
-      _sum: { fileSize: true }
-    });
-
-    const storageUsedGB = storageUsed._sum.fileSize ? 
-      Math.round((storageUsed._sum.fileSize / (1024 * 1024 * 1024)) * 100) / 100 : 0;
+    // Mock storage calculation (since we don't store fileSize)
+    const storageUsedGB = totalVideos * 0.05; // Assume ~50MB per video
 
     // Get videos created this month
     const thisMonth = new Date();
     thisMonth.setDate(1);
     thisMonth.setHours(0, 0, 0, 0);
 
-    const videosThisMonth = await prisma.videoJob.count({
+    const videosThisMonth = await prisma.video.count({
       where: {
         userId,
         createdAt: {
@@ -94,11 +78,11 @@ export async function GET(request: NextRequest) {
       title: video.title || `Video ${video.id.slice(-8)}`,
       status: video.status === 'COMPLETED' ? 'Completed' : 
               video.status === 'PROCESSING' ? 'Processing' : 
-              video.status === 'QUEUED' ? 'Queued' : 'Failed',
+              video.status === 'PENDING' ? 'Queued' : 'Failed',
       createdAt: getTimeAgo(video.createdAt),
-      thumbnail: video.thumbnailUrl ? '🎥' : '📹',
-      views: video.views,
-      downloads: video.downloads
+      thumbnail: video.videoUrl ? '🎥' : '📹',
+      views: 0,
+      downloads: 0
     }));
 
     return NextResponse.json({
@@ -108,8 +92,8 @@ export async function GET(request: NextRequest) {
           totalVideos,
           completedVideos,
           processingVideos,
-          totalViews: totalViews._sum.views || 0,
-          totalDownloads: totalDownloads._sum.downloads || 0,
+          totalViews: 0,
+          totalDownloads: 0,
           videosThisMonth,
           storageUsed: storageUsedGB,
           storageLimit: 10, // 10GB limit

@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     ] = await Promise.all([
       // Total counts
       prisma.user.count(),
-      prisma.videoJob.count(),
+      prisma.video.count(),
       prisma.user.count({
         where: {
           createdAt: {
@@ -73,10 +73,10 @@ export async function GET(request: NextRequest) {
           } 
         }
       }),
-      prisma.videoJob.count({
+      prisma.video.count({
         where: { createdAt: { gte: thisMonth } }
       }),
-      prisma.videoJob.count({
+      prisma.video.count({
         where: { 
           createdAt: { 
             gte: lastMonth,
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
           createdAt: true
         }
       }),
-      prisma.videoJob.findMany({
+      prisma.video.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
         select: {
@@ -132,9 +132,6 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Calculate revenue (mock calculation)
-    const basicSubscriptions = await prisma.subscription.count({
-      where: { status: 'ACTIVE', tier: 'BASIC' }
-    });
     const standardSubscriptions = await prisma.subscription.count({
       where: { status: 'ACTIVE', tier: 'STANDARD' }
     });
@@ -142,7 +139,7 @@ export async function GET(request: NextRequest) {
       where: { status: 'ACTIVE', tier: 'PREMIUM' }
     });
 
-    const totalRevenue = (basicSubscriptions * 9) + (standardSubscriptions * 29) + (premiumSubscriptions * 99);
+    const totalRevenue = (standardSubscriptions * 42) + (premiumSubscriptions * 59);
     const revenueThisMonthValue = (usersThisMonth * 0.1 * 29); // Mock calculation
     const revenueLastMonthValue = (usersLastMonth * 0.1 * 29); // Mock calculation
 
@@ -155,7 +152,6 @@ export async function GET(request: NextRequest) {
       usersLastMonth,
       videosThisMonth,
       videosLastMonth,
-      basicSubscriptions,
       standardSubscriptions,
       premiumSubscriptions,
       totalRevenue

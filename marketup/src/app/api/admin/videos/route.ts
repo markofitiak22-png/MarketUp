@@ -30,7 +30,6 @@ export async function GET(request: NextRequest) {
     if (search) {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
         { user: { name: { contains: search, mode: 'insensitive' } } }
       ];
     }
@@ -39,7 +38,7 @@ export async function GET(request: NextRequest) {
     if (status !== 'all') {
       switch (status) {
         case 'pending':
-          where.status = 'QUEUED';
+          where.status = { in: ['PENDING', 'PROCESSING'] };
           break;
         case 'approved':
           where.status = 'COMPLETED';
@@ -63,7 +62,7 @@ export async function GET(request: NextRequest) {
 
     // Get videos with related data
     const [videos, totalCount] = await Promise.all([
-      prisma.videoJob.findMany({
+      prisma.video.findMany({
         where,
         include: {
           user: {
@@ -80,15 +79,18 @@ export async function GET(request: NextRequest) {
         skip: (page - 1) * limit,
         take: limit
       }),
-      prisma.videoJob.count({ where })
+      prisma.video.count({ where })
     ]);
 
     // Transform videos data to match frontend interface
     const transformedVideos = videos.map(video => {
+      // Parse settings JSON
+      const settings = video.settings as any || {};
+      
       // Map database status to frontend status
       let frontendStatus: 'pending' | 'approved' | 'rejected';
       switch (video.status) {
-        case 'QUEUED':
+        case 'PENDING':
         case 'PROCESSING':
           frontendStatus = 'pending';
           break;
@@ -109,15 +111,18 @@ export async function GET(request: NextRequest) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
       };
 
+      // Get duration from settings or use default
+      const duration = settings.duration || 30;
+
       // Generate thumbnail URL (using a placeholder for now)
-      const thumbnailUrl = video.thumbnailUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
+      const thumbnailUrl = `https://api.dicebear.com/7.x/shapes/svg?seed=${video.id}&backgroundColor=gradient`;
 
       return {
         id: video.id,
         title: video.title || 'Untitled Video',
-        description: video.description || 'No description provided',
+        description: settings.text || 'No description provided',
         thumbnail: thumbnailUrl,
-        duration: video.duration ? formatDuration(video.duration) : '0:00',
+        duration: formatDuration(duration),
         uploadDate: video.createdAt.toISOString(),
         uploader: {
           id: video.user?.id || 'unknown',
@@ -128,9 +133,9 @@ export async function GET(request: NextRequest) {
         status: frontendStatus,
         category: 'Generated Video', // Default category
         tags: ['ai-generated', 'video'], // Default tags
-        views: video.views || 0,
-        likes: Math.floor((video.views || 0) * 0.1), // Estimate likes as 10% of views
-        flags: Math.floor(Math.random() * 3), // Random flags for demo
+        views: 0,
+        likes: 0,
+        flags: 0,
         reason: video.status === 'FAILED' ? 'Processing failed' : undefined
       };
     });
@@ -145,8 +150,7 @@ export async function GET(request: NextRequest) {
     if (search) {
       filteredVideos = filteredVideos.filter(video => 
         video.title.toLowerCase().includes(search.toLowerCase()) ||
-        video.uploader.name.toLowerCase().includes(search.toLowerCase()) ||
-        video.description.toLowerCase().includes(search.toLowerCase())
+        video.uploader.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
@@ -205,7 +209,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update video status
-    const updatedVideo = await prisma.videoJob.update({
+    const updatedVideo = await prisma.video.update({
       where: { id: videoId },
       data: {
         status: newStatus

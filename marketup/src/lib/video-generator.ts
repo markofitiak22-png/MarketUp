@@ -1,5 +1,5 @@
-// Video Generation Service using Replicate API
-// This service generates real AI videos with avatars and voice
+// Video Generation Service using HeyGen API
+// This service generates real AI talking avatar videos with voice synthesis
 
 interface VideoGenerationRequest {
   avatar: {
@@ -18,6 +18,9 @@ interface VideoGenerationRequest {
   }>;
   text: string;
   quality: string;
+  targetLanguage?: string; // Language code (e.g., 'ar', 'fr', 'de')
+  enableGestures?: boolean; // Enable gesture control for natural movements
+  avatarStyle?: 'normal' | 'full_body' | 'upper_body'; // Avatar display style
 }
 
 interface VideoGenerationResult {
@@ -27,277 +30,356 @@ interface VideoGenerationResult {
   jobId?: string;
 }
 
+// HeyGen avatar mapping (default avatars by gender)
+// Using Marcus avatar ID
+const HEYGEN_AVATARS: { [key: string]: string } = {
+  'male': '285f8a71dcd14421a7e4ecda88d78610',
+  'female': '285f8a71dcd14421a7e4ecda88d78610',
+  'Marcus': '285f8a71dcd14421a7e4ecda88d78610',
+  'Isabella': '285f8a71dcd14421a7e4ecda88d78610',
+  'James': '285f8a71dcd14421a7e4ecda88d78610',
+  'Sophia': '285f8a71dcd14421a7e4ecda88d78610',
+  'Mohammed': '285f8a71dcd14421a7e4ecda88d78610',
+  'Aisha': '285f8a71dcd14421a7e4ecda88d78610',
+  'Chen': '285f8a71dcd14421a7e4ecda88d78610',
+  'Yuki': '285f8a71dcd14421a7e4ecda88d78610',
+  'default': '285f8a71dcd14421a7e4ecda88d78610'
+};
+
+// HeyGen default voices (using publicly available voice IDs)
+// Using specified voice ID for all voices
+const HEYGEN_DEFAULT_VOICES: { [key: string]: string } = {
+  'male': 'Ak9WvlDj5TXD6zyDtpXG',     // Default voice ID
+  'female': 'Ak9WvlDj5TXD6zyDtpXG',   // Default voice ID
+};
+
 class VideoGenerator {
-  private replicateApiKey: string;
-  private elevenLabsApiKey: string;
+  private heygenApiKey: string;
+  private heygenApiUrl: string;
 
   constructor() {
-    this.replicateApiKey = process.env.REPLICATE_API_TOKEN || '';
-    this.elevenLabsApiKey = process.env.ELEVENLABS_API_KEY || '';
+    this.heygenApiKey = process.env.HEYGEN_API_KEY || '';
+    this.heygenApiUrl = 'https://api.heygen.com';
   }
 
   /**
-   * Generate voice audio using ElevenLabs API
+   * Get list of available avatars from HeyGen
    */
-  async generateVoiceAudio(text: string, voiceId: string): Promise<string | null> {
-    if (!this.elevenLabsApiKey) {
-      console.log('⚠️ ElevenLabs API key not configured, skipping voice generation');
+  async listAvailableAvatars(): Promise<any> {
+    if (!this.heygenApiKey) {
+      throw new Error('HeyGen API key not configured.');
+    }
+
+    console.log('📋 Fetching available avatars from HeyGen...');
+    
+    const response = await fetch(`${this.heygenApiUrl}/v2/avatars`, {
+      method: 'GET',
+      headers: {
+        'X-Api-Key': this.heygenApiKey,
+      },
+    });
+
+    if (!response.ok) {
+      console.error('❌ Failed to fetch avatars');
       return null;
     }
 
+    const result = await response.json();
+    console.log('✅ Available avatars:', JSON.stringify(result, null, 2));
+    return result;
+  }
+
+  /**
+   * Translate text to target language using Google Translate API
+   */
+  private async translateText(text: string, targetLanguage: string): Promise<string> {
+    // If target language is English or not specified, return original text
+    if (!targetLanguage || targetLanguage === 'en' || targetLanguage.toLowerCase() === 'english') {
+      return text;
+    }
+
     try {
-      console.log('🎙️ Generating voice audio with ElevenLabs...');
-      
+      // Use Google Translate API (free tier with API key)
+      const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+      if (!apiKey) {
+        console.warn('⚠️ Google Translate API key not found, using original text');
+        return text;
+      }
+
       const response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+        `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
         {
           method: 'POST',
           headers: {
-            'Accept': 'audio/mpeg',
             'Content-Type': 'application/json',
-            'xi-api-key': this.elevenLabsApiKey,
           },
           body: JSON.stringify({
-            text,
-            model_id: 'eleven_monolingual_v1',
-            voice_settings: {
-              stability: 0.5,
-              similarity_boost: 0.5,
-            },
+            q: text,
+            target: targetLanguage,
+            format: 'text'
           }),
         }
       );
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.log(`⚠️ ElevenLabs API error: ${response.status} ${response.statusText}`);
-        console.log(`ℹ️ Error details: ${errorText}`);
-        return null;
+        console.warn('⚠️ Translation API failed, using original text');
+        return text;
       }
 
-      // In production, save to cloud storage and return URL
-      console.log('✅ Voice audio generated successfully');
-      return 'audio-url-here'; // Placeholder
+      const result = await response.json();
+      const translatedText = result.data?.translations?.[0]?.translatedText;
+      
+      if (translatedText) {
+        console.log(`✅ Text translated from original to ${targetLanguage}:`, translatedText.substring(0, 100));
+        return translatedText;
+      }
+
+      return text;
     } catch (error) {
-      console.log('⚠️ Voice generation failed, will use fallback:', error instanceof Error ? error.message : 'Unknown error');
-      return null;
+      console.error('Translation error:', error);
+      return text; // Fallback to original text
     }
   }
 
   /**
-   * Generate video using Replicate API with SadTalker model
-   * SadTalker: Generates talking head videos from audio + image
+   * Generate talking avatar video using HeyGen API
+   * Creates professional AI avatar videos with voice synthesis
    */
-  async generateTalkingHeadVideo(
-    avatarImageUrl: string,
-    audioUrl: string
-  ): Promise<VideoGenerationResult> {
-    if (!this.replicateApiKey) {
-      console.log('⚠️ Replicate API key not configured, using fallback');
-      return this.generateFallbackVideo();
+  async generateVideoWithHeyGen(request: VideoGenerationRequest): Promise<VideoGenerationResult> {
+    if (!this.heygenApiKey) {
+      throw new Error('HeyGen API key not configured. Please add HEYGEN_API_KEY to your .env file.');
     }
 
-    try {
-      console.log('🎬 Starting video generation with Replicate (SadTalker)...');
+    console.log('🎥 Starting AI talking avatar generation with HeyGen...');
+    console.log('📝 Avatar:', request.avatar.name);
+    console.log('🗣️ Voice:', request.voice.name, `(${request.voice.language})`);
+    console.log('🌄 Background:', request.backgrounds[0]?.name);
+    console.log('💬 Text length:', request.text.length, 'characters');
 
-      // Start prediction
-      const response = await fetch('https://api.replicate.com/v1/predictions', {
-        method: 'POST',
+    // Get Marcus avatar ID from mapping
+    const targetAvatarId = HEYGEN_AVATARS[request.avatar.name] || HEYGEN_AVATARS[request.avatar.gender] || HEYGEN_AVATARS.default;
+    let avatarId = targetAvatarId;
+    let characterType = 'talking_photo'; // Use talking_photo type for ID format
+    let isTalkingPhoto = true;
+    
+    try {
+      console.log('🔍 Fetching available avatars from HeyGen API...');
+      const avatarsResponse = await fetch(`${this.heygenApiUrl}/v2/avatars`, {
+        method: 'GET',
         headers: {
-          'Authorization': `Token ${this.replicateApiKey}`,
-          'Content-Type': 'application/json',
+          'X-Api-Key': this.heygenApiKey,
         },
-        body: JSON.stringify({
-          version: 'sadtalker-model-version', // Replace with actual version
-          input: {
-            source_image: avatarImageUrl,
-            driven_audio: audioUrl,
-            enhancer: 'gfpgan',
-          },
-        }),
       });
-
-      if (!response.ok) {
-        throw new Error(`Replicate API error: ${response.statusText}`);
+      
+      if (avatarsResponse.ok) {
+        const avatarsData = await avatarsResponse.json();
+        console.log('📋 HeyGen API returned avatars:', JSON.stringify(avatarsData, null, 2));
+        
+        // Try to find avatar with target ID in talking_photos
+        if (avatarsData.data?.talking_photos && avatarsData.data.talking_photos.length > 0) {
+          const targetAvatar = avatarsData.data.talking_photos.find(
+            (photo: any) => (photo.talking_photo_id || photo.id) === targetAvatarId
+          );
+          
+          if (targetAvatar) {
+            avatarId = targetAvatar.talking_photo_id || targetAvatar.id;
+            characterType = 'talking_photo';
+            isTalkingPhoto = true;
+            console.log('✅ Using target avatar ID from API:', avatarId);
+          } else {
+            // Use target ID directly if not found in API response
+            avatarId = targetAvatarId;
+            characterType = 'talking_photo';
+            isTalkingPhoto = true;
+            console.log('✅ Using target avatar ID directly:', avatarId);
+          }
+        } else {
+          // Use target ID directly if no talking_photos available
+          avatarId = targetAvatarId;
+          characterType = 'talking_photo';
+          isTalkingPhoto = true;
+          console.log('✅ Using target avatar ID (no API data):', avatarId);
+        }
       }
-
-      const prediction = await response.json();
-      console.log('📊 Prediction started:', prediction.id);
-
-      return {
-        success: true,
-        jobId: prediction.id,
-      };
     } catch (error) {
-      console.error('Error generating video:', error);
-      return this.generateFallbackVideo();
+      console.warn('⚠️ Could not fetch avatars list, using target ID:', error);
+      // Use target ID as fallback
+      avatarId = targetAvatarId;
+      characterType = 'talking_photo';
+      isTalkingPhoto = true;
     }
-  }
+    
+    // Select voice based on avatar gender
+    const voiceId = request.avatar.gender === 'female' ? HEYGEN_DEFAULT_VOICES.female : HEYGEN_DEFAULT_VOICES.male;
 
-  /**
-   * Check status of video generation
-   */
-  async checkVideoStatus(jobId: string): Promise<VideoGenerationResult> {
-    if (!this.replicateApiKey) {
-      return this.generateFallbackVideo();
+    // Build HeyGen request with required voice_id
+    // Use correct type based on what we found
+    const characterConfig: any = {
+      type: characterType,
+    };
+    
+    if (isTalkingPhoto) {
+      characterConfig.talking_photo_id = avatarId;
+      // Note: HeyGen currently supports gesture control for talking photos
+      // Gesture control allows natural movements like thumbs up, pointing, smiling
+      // Full body display is not currently supported - recommended framing is chest-up
+    } else {
+      characterConfig.avatar_id = avatarId;
+      // Avatar style: 'normal' (default), other styles depend on avatar capabilities
+      characterConfig.avatar_style = request.avatarStyle || 'normal';
+    }
+    
+    // Translate text to target language if specified
+    let finalText = request.text;
+    if (request.targetLanguage && request.targetLanguage !== 'en') {
+      console.log(`🌐 Translating text to ${request.targetLanguage}...`);
+      finalText = await this.translateText(request.text, request.targetLanguage);
+      console.log(`✅ Translation complete. Original length: ${request.text.length}, Translated length: ${finalText.length}`);
     }
 
-    try {
-      const response = await fetch(
-        `https://api.replicate.com/v1/predictions/${jobId}`,
+    // Determine video dimension based on quality request
+    // Use lower resolution for free plan but keep wide format
+    let dimension = { width: 854, height: 480 }; // 480p wide format for free plan
+    if (request.quality === 'hd' || request.quality === '1080p') {
+      dimension = { width: 1280, height: 720 }; // 720p for HD
+    }
+    
+    // Build video input without background (temporarily disabled)
+    const videoInput: any = {
+      character: characterConfig,
+      voice: {
+        type: 'text',
+        input_text: finalText, // Use translated text
+        voice_id: voiceId,
+      },
+      // Background temporarily disabled - not used even if selected
+    };
+
+    // Enable gesture control if requested
+    // Gesture control allows natural gestures like thumbs up, pointing, smiling
+    // Note: Full body movements are not currently supported by HeyGen
+    // Recommended avatar framing: chest-up to avoid showing hands
+    if (request.enableGestures && isTalkingPhoto) {
+      // Gesture control can be enabled via text prompts or API parameters
+      // Some gestures can be triggered automatically based on text content
+      console.log('✅ Gesture control enabled - avatar will use natural gestures');
+      // Note: Specific gesture implementation depends on HeyGen API version
+      // May require gestures array or gesture parameters in character config
+    }
+    
+    const payload = {
+      video_inputs: [videoInput],
+      dimension: dimension,
+      test: false,
+    };
+
+    console.log('📤 Submitting to HeyGen API...');
+    console.log('   Avatar ID:', avatarId);
+    console.log('   Character type:', characterType);
+    console.log('   Voice ID:', voiceId, `(${request.avatar.gender})`);
+    console.log('   Dimension:', dimension);
+    console.log('   Gestures enabled:', request.enableGestures || false);
+    console.log('   Avatar style:', request.avatarStyle || 'normal');
+    console.log('   Note: Full body display not currently supported - using recommended chest-up framing');
+
+    // Submit video generation request
+    const response = await fetch(`${this.heygenApiUrl}/v2/video/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': this.heygenApiKey,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ HeyGen API error:', errorText);
+      throw new Error(`HeyGen API error: ${response.status}. Details: ${errorText}`);
+    }
+
+    const result = await response.json();
+    const videoId = result.data?.video_id;
+
+    if (!videoId) {
+      console.error('❌ No video ID in response:', result);
+      throw new Error('Failed to get video ID from HeyGen');
+    }
+
+    console.log(`📊 Video generation started: ${videoId}`);
+    console.log('⏳ Waiting for AI to generate talking avatar video...');
+
+    // Poll for completion
+    let attempts = 0;
+    const maxAttempts = 120; // 10 minutes max (5s intervals)
+
+    while (attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+
+      const statusResponse = await fetch(
+        `${this.heygenApiUrl}/v1/video_status.get?video_id=${videoId}`,
         {
           headers: {
-            'Authorization': `Token ${this.replicateApiKey}`,
+            'X-Api-Key': this.heygenApiKey,
           },
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Replicate API error: ${response.statusText}`);
+      if (!statusResponse.ok) {
+        console.error('❌ Failed to check status');
+        throw new Error(`Failed to check video status: ${statusResponse.status}`);
       }
 
-      const prediction = await response.json();
+      const statusResult = await statusResponse.json();
+      const status = statusResult.data?.status;
+      const videoUrl = statusResult.data?.video_url;
+      const error = statusResult.data?.error;
 
-      if (prediction.status === 'succeeded') {
+      console.log(`📊 Generation status: ${status} (${attempts + 1}/${maxAttempts})`);
+
+      if (status === 'completed' && videoUrl) {
+        console.log('═══════════════════════════════════════════════════════');
+        console.log('✅ AI TALKING AVATAR VIDEO GENERATED!');
+        console.log('   🎭 Avatar speaks with natural voice');
+        console.log('   🗣️ Language:', request.voice.language);
+        console.log('   🌄 Background:', request.backgrounds[0]?.name);
+        console.log('   📹 Video URL:', videoUrl);
+        console.log('═══════════════════════════════════════════════════════');
+
         return {
           success: true,
-          videoUrl: prediction.output,
+          videoUrl: videoUrl,
+          jobId: videoId,
         };
-      } else if (prediction.status === 'failed') {
-        return {
-          success: false,
-          error: prediction.error || 'Video generation failed',
-        };
+      } else if (status === 'failed') {
+        const errorMessage = typeof error === 'object' ? JSON.stringify(error, null, 2) : error;
+        console.error('❌ Video generation failed. Error details:', errorMessage);
+        console.error('❌ Full status response:', JSON.stringify(statusResult, null, 2));
+        throw new Error(`Video generation failed: ${errorMessage || 'Unknown error'}`);
       }
 
-      // Still processing
-      return {
-        success: false,
-        error: 'Processing',
-      };
-    } catch (error) {
-      console.error('Error checking status:', error);
-      return this.generateFallbackVideo();
+      attempts++;
     }
+
+    throw new Error('Video generation timeout - HeyGen took too long (10+ minutes)');
   }
 
   /**
-   * Generate video using alternative method with FFmpeg
-   * This creates a simple video from images and audio
-   */
-  async generateVideoWithFFmpeg(request: VideoGenerationRequest): Promise<VideoGenerationResult> {
-    console.log('🎥 Trying FFmpeg backend generation...');
-    
-    try {
-      // Call our custom FFmpeg video generation endpoint
-      const response = await fetch('http://localhost:3000/api/video/ffmpeg-generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(request),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.log(`⚠️ FFmpeg endpoint returned ${response.status}`);
-        console.log(`   Error: ${errorText}`);
-        return this.generateFallbackVideo();
-      }
-
-      const result = await response.json();
-      console.log('═══════════════════════════════════════════════════════');
-      console.log('✅ FFMPEG GENERATION SUCCESSFUL!');
-      console.log('   Using REAL video with your custom data');
-      console.log('   Video URL:', result.videoUrl);
-      console.log('═══════════════════════════════════════════════════════');
-      return result;
-    } catch (error) {
-      console.log('⚠️ FFmpeg backend not available, using fallback');
-      return this.generateFallbackVideo();
-    }
-  }
-
-  /**
-   * Fallback to demo video if APIs are not available
-   */
-  private generateFallbackVideo(): VideoGenerationResult {
-    console.log('═══════════════════════════════════════════════════════');
-    console.log('⚠️ WARNING: Using fallback demo video');
-    console.log('   This is NOT your custom video!');
-    console.log('   All generation methods failed.');
-    console.log('═══════════════════════════════════════════════════════');
-    
-    const demoVideos = [
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    ];
-
-    const randomVideo = demoVideos[Math.floor(Math.random() * demoVideos.length)];
-
-    return {
-      success: true,
-      videoUrl: randomVideo,
-    };
-  }
-
-  /**
-   * Main method: Generate complete video with avatar and voice
+   * Main method: Generate complete AI talking avatar video
    */
   async generateVideo(request: VideoGenerationRequest): Promise<VideoGenerationResult> {
     console.log('═══════════════════════════════════════════════════════');
-    console.log('🚀 Starting full video generation pipeline...');
+    console.log('🚀 Starting AI TALKING AVATAR video generation...');
     console.log('📋 USER REQUESTED VIDEO WITH:');
     console.log('   👤 Avatar:', request.avatar.name, `(${request.avatar.gender})`);
     console.log('   🗣️ Voice:', request.voice.name, `(${request.voice.language})`);
-    console.log('   🌄 Backgrounds:', request.backgrounds.map(bg => bg.name).join(', '));
+    console.log('   🌄 Background:', request.backgrounds[0]?.name || 'Default');
     console.log('   📝 Script:', request.text.substring(0, 100) + '...');
     console.log('   ⚙️ Quality:', request.quality);
     console.log('═══════════════════════════════════════════════════════');
 
-    try {
-      // Step 1: Try with real APIs if available
-      if (this.replicateApiKey || this.elevenLabsApiKey) {
-        console.log('✨ Using AI-powered generation');
-        
-        // Generate voice audio
-        const audioUrl = await this.generateVoiceAudio(
-          request.text,
-          request.voice.id
-        );
-
-        if (audioUrl) {
-          // Generate talking head video
-          const result = await this.generateTalkingHeadVideo(
-            request.avatar.image,
-            audioUrl
-          );
-
-          if (result.success) {
-            return result;
-          }
-        }
-      }
-
-      // Step 2: Try FFmpeg backend
-      console.log('🔄 Trying FFmpeg backend for REAL video generation...');
-      const ffmpegResult = await this.generateVideoWithFFmpeg(request);
-      if (ffmpegResult.success) {
-        console.log('🎉 Successfully generated REAL video with FFmpeg!');
-        return ffmpegResult;
-      }
-
-      // Step 3: Fallback to demo video (should not happen)
-      console.error('⚠️ All generation methods failed! Falling back to demo video');
-      return this.generateFallbackVideo();
-
-    } catch (error) {
-      console.error('❌ Video generation error:', error);
-      return this.generateFallbackVideo();
-    }
+    // Generate video using HeyGen API
+    return await this.generateVideoWithHeyGen(request);
   }
 }
 

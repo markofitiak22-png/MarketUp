@@ -37,6 +37,7 @@
 		"@eslint/eslintrc": "^3",
 		"@tailwindcss/postcss": "^4",
 		"@types/bcrypt": "^6.0.0",
+		"@types/fluent-ffmpeg": "^2.1.28",
 		"@types/node": "^20",
 		"@types/paypal__checkout-server-sdk": "^1.0.8",
 		"@types/react": "^19",

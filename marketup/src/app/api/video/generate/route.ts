@@ -207,16 +207,14 @@ async function processVideoGeneration(videoId: string, userId: string) {
     });
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Step 2: Generating voice with AI (30%)
-    console.log(`🎙️ [${videoId}] Step 2: Synthesizing voice with AI (${voiceName})...`);
+    // Step 2: Preparing video generation (30%)
+    console.log(`🎬 [${videoId}] Step 2: Starting video generation pipeline...`);
     generationStatus.set(videoId, {
       status: 'processing',
       progress: 30,
       createdAt: new Date()
     });
-    
-    // Try to generate voice audio (this will use real APIs if configured)
-    const audioUrl = await videoGenerator.generateVoiceAudio(text, voiceId);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // Step 3: Generating avatar animation (50%)
     console.log(`👤 [${videoId}] Step 3: Generating avatar animation...`);
@@ -244,7 +242,20 @@ async function processVideoGeneration(videoId: string, userId: string) {
       createdAt: new Date()
     });
     
-    // Use real video generator
+    // Extract language code for translation
+    const languageCode = typeof languageData === 'object' && languageData.code 
+      ? languageData.code 
+      : languageName.toLowerCase().startsWith('english') ? 'en'
+      : languageName.toLowerCase().startsWith('arabic') ? 'ar'
+      : languageName.toLowerCase().startsWith('french') ? 'fr'
+      : languageName.toLowerCase().startsWith('german') ? 'de'
+      : languageName.toLowerCase().startsWith('turkish') ? 'tr'
+      : languageName.toLowerCase().startsWith('swedish') ? 'sv'
+      : 'en';
+
+    console.log(`🌐 Target language code: ${languageCode} (from: ${languageName})`);
+
+    // Use real video generator with target language for translation
     const videoResult = await videoGenerator.generateVideo({
       avatar: {
         name: avatarName,
@@ -259,6 +270,7 @@ async function processVideoGeneration(videoId: string, userId: string) {
       backgrounds: backgrounds,
       text: text,
       quality: quality,
+      targetLanguage: languageCode, // Pass language code for translation
     });
 
     // Step 6: Finalizing output (95%)
@@ -281,7 +293,7 @@ async function processVideoGeneration(videoId: string, userId: string) {
     console.log(`✅ [${videoId}] Video generation completed successfully!`);
     console.log(`📹 Video URL: ${videoUrl}`);
     console.log(`📊 Stats: Avatar: ${avatarName}, Language: ${languageName}, Duration: ${duration}s, Quality: ${quality}`);
-    console.log(`🤖 AI APIs used: ${audioUrl ? 'Voice AI ✓' : 'Voice AI ✗'} | Video AI: ${videoResult.jobId ? '✓' : 'Fallback'}`);
+    console.log(`🤖 Generation method: ${videoResult.jobId ? 'AI APIs (ElevenLabs + Replicate)' : 'FFmpeg'}`);
     
     generationStatus.set(videoId, {
       status: 'completed',

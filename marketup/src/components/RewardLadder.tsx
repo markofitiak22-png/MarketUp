@@ -49,7 +49,7 @@ export default function RewardLadder() {
           .map((reward: Reward) => reward.id);
         
         // Check for new unlocked rewards
-        const newlyUnlocked = unlocked.filter(id => !unlockedRewards.includes(id));
+        const newlyUnlocked = unlocked.filter((id: number) => !unlockedRewards.includes(id));
         if (newlyUnlocked.length > 0) {
           const newReward = data.rewards
             .filter((r: Reward) => newlyUnlocked.includes(r.id))

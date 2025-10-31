@@ -9,99 +9,16 @@ interface AvatarStepProps {
   onNext: () => void;
 }
 
-// Fallback avatars if API fails - Character AI & Anime style
+// Fallback avatars if API fails - Only Marcus (HeyGen compatible)
 const fallbackAvatars = [
   {
-    id: 'char-sarah',
-    name: 'Sarah',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=b6e3f4',
-    gender: 'female' as const,
-    personality: 'Professional',
-    description: 'Professional business presenter',
-    voice: { id: 'en-US-AriaNeural', name: 'Aria', gender: 'female' as const, language: 'English' }
-  },
-  {
-    id: 'char-michael',
-    name: 'Michael',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=c0aede',
+    id: 'char-marcus',
+    name: 'Marcus',
+    image: '/avatars/Marcus.png',
     gender: 'male' as const,
-    personality: 'Confident',
-    description: 'Confident corporate speaker',
-    voice: { id: 'en-US-GuyNeural', name: 'Guy', gender: 'male' as const, language: 'English' }
-  },
-  {
-    id: 'char-emma',
-    name: 'Emma',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=ffd5dc',
-    gender: 'female' as const,
-    personality: 'Friendly',
-    description: 'Friendly marketing expert',
-    voice: { id: 'en-US-JennyNeural', name: 'Jenny', gender: 'female' as const, language: 'English' }
-  },
-  {
-    id: 'char-david',
-    name: 'David',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David&backgroundColor=d1d4f9',
-    gender: 'male' as const,
-    personality: 'Tech-Savvy',
-    description: 'Tech-savvy instructor',
-    voice: { id: 'en-US-DavisNeural', name: 'Davis', gender: 'male' as const, language: 'English' }
-  },
-  // Anime-style avatars
-  {
-    id: 'anime-sakura',
-    name: 'Sakura',
-    image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sakura&backgroundColor=ffb3d9',
-    gender: 'female' as const,
-    personality: 'Cheerful & Kawaii',
-    description: 'Adorable anime host with bubbly energy',
-    voice: { id: 'en-US-AriaNeural', name: 'Aria', gender: 'female' as const, language: 'English' }
-  },
-  {
-    id: 'anime-ryu',
-    name: 'Ryu',
-    image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ryu&backgroundColor=b8e6ff',
-    gender: 'male' as const,
-    personality: 'Heroic',
-    description: 'Brave anime character with strong spirit',
-    voice: { id: 'en-US-GuyNeural', name: 'Guy', gender: 'male' as const, language: 'English' }
-  },
-  {
-    id: 'anime-yuki',
-    name: 'Yuki',
-    image: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Yuki&backgroundColor=e6d5ff',
-    gender: 'female' as const,
-    personality: 'Mysterious',
-    description: 'Graceful anime presenter with captivating charm',
-    voice: { id: 'en-US-JennyNeural', name: 'Jenny', gender: 'female' as const, language: 'English' }
-  },
-  // Creative avatars
-  {
-    id: 'creative-phoenix',
-    name: 'Phoenix',
-    image: 'https://api.dicebear.com/7.x/bottts/svg?seed=Phoenix&backgroundColor=ff6b35',
-    gender: 'neutral' as const,
-    personality: 'Legendary',
-    description: 'Mythical presenter rising from creative ashes',
-    voice: { id: 'en-US-AriaNeural', name: 'Aria', gender: 'female' as const, language: 'English' }
-  },
-  {
-    id: 'creative-nova',
-    name: 'Nova',
-    image: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Nova&backgroundColor=00d9ff',
-    gender: 'neutral' as const,
-    personality: 'Futuristic',
-    description: 'AI-powered host from the digital future',
-    voice: { id: 'en-US-JennyNeural', name: 'Jenny', gender: 'female' as const, language: 'English' }
-  },
-  {
-    id: 'creative-pixel',
-    name: 'Pixel',
-    image: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Pixel&backgroundColor=fbbf24',
-    gender: 'neutral' as const,
-    personality: 'Nostalgic',
-    description: '8-bit gaming legend with retro charm',
-    voice: { id: 'en-US-DavisNeural', name: 'Davis', gender: 'male' as const, language: 'English' }
+    personality: 'Confident & Charismatic',
+    description: 'A cheerful Man in a professional kitchen',
+    voice: { id: 'Ak9WvlDj5TXD6zyDtpXG', name: 'Marcus Voice', gender: 'male' as const, language: 'English' }
   }
 ];
 
@@ -111,18 +28,31 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   const [avatars, setAvatars] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
-  // Load avatars from API
+  // Load avatars - show fallback immediately, then update from API
   useEffect(() => {
+    // Show fallback avatars immediately for fast loading
+    setAvatars(fallbackAvatars);
+    setLoading(false);
+    
+    // Then fetch from API in background and update if successful
     const fetchAvatars = async () => {
       try {
-        setLoading(true);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        
         const response = await fetch('/api/avatars', {
           credentials: "include",
+          signal: controller.signal,
         });
+        
+        clearTimeout(timeoutId);
+        
         const data = await response.json();
         
-        if (data.success && data.avatars) {
+        if (data.success && data.avatars && data.avatars.length > 0) {
           // Transform API avatars to our format
           const transformedAvatars = data.avatars.map((avatar: any) => ({
             id: avatar.id,
@@ -133,45 +63,33 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
             description: avatar.description || `${avatar.name} - ${avatar.voice.name} voice`,
             voice: avatar.voice
           }));
-          setAvatars(transformedAvatars);
-        } else {
-          // If API fails, use fallback avatars
-          setAvatars(fallbackAvatars);
+          
+          // Only update if we got valid avatars with images
+          if (transformedAvatars[0]?.image) {
+            setAvatars(transformedAvatars);
+          }
         }
       } catch (error) {
-        console.error('Error fetching avatars:', error);
-        // Use fallback avatars on error
-        setAvatars(fallbackAvatars);
-      } finally {
-        setLoading(false);
+        // Silently fail - we already have fallback avatars showing
+        if (error.name !== 'AbortError') {
+          console.log('Avatar API fetch failed, using fallback:', error);
+        }
       }
     };
 
+    // Fetch in background after initial render
     fetchAvatars();
   }, []);
 
-  // Load voices for Web Speech API
+  // Cleanup audio on unmount
   useEffect(() => {
-    // Preload voices
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      const loadVoices = () => {
-        speechSynthesis.getVoices();
-      };
-      
-      loadVoices();
-      
-      if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = loadVoices;
-      }
-    }
-
-    // Cleanup on unmount
     return () => {
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        speechSynthesis.cancel();
+      if (audioElement) {
+        audioElement.pause();
+        audioElement.currentTime = 0;
       }
     };
-  }, []);
+  }, [audioElement]);
 
   const handleAvatarSelect = (avatar: typeof avatars[0]) => {
     setSelectedAvatar(avatar.id);
@@ -186,57 +104,74 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
     });
   };
 
-  const playVoicePreview = () => {
-    if (!data.avatar?.voice || isPlayingVoice) return;
+  const playVoicePreview = async () => {
+    if (!data.avatar?.voice || isPlayingVoice || isGeneratingPreview) return;
 
-    const avatar = data.avatar; // Store avatar in local variable after null check
-    setIsPlayingVoice(true);
-
-    // Use Web Speech API
-    const utterance = new SpeechSynthesisUtterance(
-      `Hello! I'm ${avatar.name}. I'll be your video presenter today. Let me bring your content to life with my voice.`
-    );
-
-    // Configure voice based on gender
-    const voices = speechSynthesis.getVoices();
+    const avatar = data.avatar;
+    const voiceId = avatar.voice.id; // HeyGen voice ID: Ak9WvlDj5TXD6zyDtpXG
+    const avatarId = avatar.id; // Avatar ID: 285f8a71dcd14421a7e4ecda88d78610
     
-    // Try to find a matching voice
-    const preferredVoice = voices.find(voice => {
-      if (avatar.gender === 'female') {
-        return voice.name.toLowerCase().includes('female') || 
-               voice.name.toLowerCase().includes('woman') ||
-               voice.name.toLowerCase().includes('samantha') ||
-               voice.name.toLowerCase().includes('victoria');
-      } else if (avatar.gender === 'male') {
-        return voice.name.toLowerCase().includes('male') || 
-               voice.name.toLowerCase().includes('man') ||
-               voice.name.toLowerCase().includes('daniel') ||
-               voice.name.toLowerCase().includes('alex');
+    setIsGeneratingPreview(true);
+
+    try {
+      console.log('🎤 Generating voice preview with HeyGen API...');
+      console.log('   Voice ID:', voiceId);
+      console.log('   Avatar ID:', avatarId);
+
+      // Generate preview using HeyGen API
+      const response = await fetch('/api/voice/preview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          voiceId: voiceId,
+          avatarId: avatarId,
+          text: `Hello! I'm ${avatar.name}. I'll be your video presenter today. Let me bring your content to life with my voice.`
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Failed to generate preview');
       }
-      return true;
-    });
 
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
+      // Play the audio/video from HeyGen
+      const audio = new Audio(result.audioUrl);
+      setAudioElement(audio);
+      
+      audio.onended = () => {
+        setIsPlayingVoice(false);
+        setAudioElement(null);
+      };
+
+      audio.onerror = () => {
+        console.error('Error playing preview audio');
+        setIsPlayingVoice(false);
+        setAudioElement(null);
+      };
+
+      setIsGeneratingPreview(false);
+      setIsPlayingVoice(true);
+      await audio.play();
+      console.log('✅ Playing HeyGen voice preview:', result.audioUrl);
+
+    } catch (error: any) {
+      console.error('Error generating voice preview:', error);
+      alert('Failed to generate voice preview. Please try again.');
+      setIsGeneratingPreview(false);
+      setIsPlayingVoice(false);
     }
-
-    utterance.rate = 1.0;
-    utterance.pitch = avatar.gender === 'female' ? 1.1 : 0.9;
-    utterance.volume = 1.0;
-
-    utterance.onend = () => {
-      setIsPlayingVoice(false);
-    };
-
-    utterance.onerror = () => {
-      setIsPlayingVoice(false);
-    };
-
-    speechSynthesis.speak(utterance);
   };
 
   const stopVoicePreview = () => {
-    speechSynthesis.cancel();
+    if (audioElement) {
+      audioElement.pause();
+      audioElement.currentTime = 0;
+      setAudioElement(null);
+    }
     setIsPlayingVoice(false);
   };
 
@@ -352,13 +287,21 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 {/* Voice Preview Button */}
                 <button
                   onClick={isPlayingVoice ? stopVoicePreview : playVoicePreview}
+                  disabled={isGeneratingPreview}
                   className={`w-full max-w-xs mx-auto flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     isPlayingVoice 
                       ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : isGeneratingPreview
+                      ? 'bg-gray-500 text-white cursor-wait'
                       : 'bg-gradient-to-r from-accent to-accent-2 hover:from-accent-2 hover:to-accent text-white shadow-lg hover:shadow-xl'
                   }`}
                 >
-                  {isPlayingVoice ? (
+                  {isGeneratingPreview ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Generating Preview...</span>
+                    </>
+                  ) : isPlayingVoice ? (
                     <>
                       <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />

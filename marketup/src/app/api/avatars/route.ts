@@ -10,31 +10,49 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Use local avatar image and HeyGen ID for video generation
+    // Use local avatar images and HeyGen IDs for video generation
     const marcusId = '285f8a71dcd14421a7e4ecda88d78610'; // Marcus avatar ID for HeyGen
+    const bobId = '8fb979fae61f487297620072ff19e6b5'; // Bob avatar ID for HeyGen
 
-    // Create avatar object with local image
-    const avatar = {
-      id: marcusId,
-      name: 'Marcus',
-      image: '/avatars/Marcus.png', // Use local image file
-      gender: 'male' as const,
-      language: 'en',
-      personality: 'Confident & Charismatic',
-      description: 'A cheerful Man in a professional kitchen',
-      voice: {
-        id: 'Ak9WvlDj5TXD6zyDtpXG', // HeyGen voice ID from video-generator
-        name: 'Marcus Voice',
+    // Create avatars with local images
+    const avatars = [
+      {
+        id: marcusId,
+        name: 'Marcus',
+        image: '/avatars/Marcus.png', // Use local image file
         gender: 'male' as const,
-        language: 'English'
+        language: 'en',
+        personality: 'Confident & Charismatic',
+        description: 'A cheerful Man in a professional kitchen',
+        voice: {
+          id: 'Ak9WvlDj5TXD6zyDtpXG', // HeyGen voice ID
+          name: 'Marcus Voice',
+          gender: 'male' as const,
+          language: 'English'
+        }
+      },
+      {
+        id: bobId,
+        name: 'Bob',
+        image: '/avatars/Bob.png',
+        gender: 'male' as const,
+        language: 'en',
+        personality: 'Professional & Friendly',
+        description: 'A professional presenter',
+        voice: {
+          id: '2yPUSv5lTtXwpjGQBuZO', // HeyGen voice ID
+          name: 'Bob Voice',
+          gender: 'male' as const,
+          language: 'English'
+        }
       }
-    };
+    ];
 
-    console.log('✅ Marcus avatar loaded with ID:', marcusId);
+    console.log('✅ Avatars loaded:', avatars.length);
     
     return NextResponse.json({
       success: true,
-      avatars: [avatar]
+      avatars: avatars
     });
   } catch (error) {
     console.error('Error fetching avatars:', error);

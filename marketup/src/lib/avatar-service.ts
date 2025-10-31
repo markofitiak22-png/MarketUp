@@ -22,15 +22,14 @@ class AvatarService {
     // HeyGen compatible avatar service
   }
 
-  // Get available avatars - only Marcus (HeyGen compatible)
+  // Get available avatars - Marcus and Bob (HeyGen compatible)
   async getAvatars(): Promise<Avatar[]> {
     try {
-      console.log('Loading Marcus avatar (HeyGen compatible)...');
+      console.log('Loading avatars (HeyGen compatible)...');
       
-      // Only Marcus avatar available (HeyGen compatible)
       const avatars: Avatar[] = [
         {
-          id: 'char-ai-marcus-002',
+          id: '285f8a71dcd14421a7e4ecda88d78610', // Marcus HeyGen ID
           name: 'Marcus',
           image: '/avatars/Marcus.png',
           gender: 'male',
@@ -38,15 +37,30 @@ class AvatarService {
           personality: 'Confident & Charismatic',
           description: 'A cheerful Man in a professional kitchen',
           voice: {
-            id: 'Ak9WvlDj5TXD6zyDtpXG', // HeyGen voice ID from video-generator
+            id: 'Ak9WvlDj5TXD6zyDtpXG', // HeyGen voice ID
             name: 'Marcus Voice',
+            gender: 'male',
+            language: 'English'
+          }
+        },
+        {
+          id: '8fb979fae61f487297620072ff19e6b5', // Bob HeyGen ID
+          name: 'Bob',
+          image: '/avatars/Bob.png',
+          gender: 'male',
+          language: 'en',
+          personality: 'Professional & Friendly',
+          description: 'A professional presenter',
+          voice: {
+            id: '2yPUSv5lTtXwpjGQBuZO', // HeyGen voice ID
+            name: 'Bob Voice',
             gender: 'male',
             language: 'English'
           }
         }
       ];
 
-      console.log('Marcus avatar loaded (HeyGen compatible):', avatars.length);
+      console.log('Avatars loaded (HeyGen compatible):', avatars.length);
       return avatars;
     } catch (error: any) {
       console.error('Error loading avatars:', error.message);
@@ -54,11 +68,11 @@ class AvatarService {
     }
   }
 
-  // Get fallback avatars - only Marcus (HeyGen compatible)
+  // Get fallback avatars - Marcus and Bob (HeyGen compatible)
   getFallbackAvatars(): Avatar[] {
     return [
       {
-        id: 'char-fallback-marcus-001',
+        id: '285f8a71dcd14421a7e4ecda88d78610', // Marcus HeyGen ID
         name: 'Marcus',
         image: '/avatars/Marcus.png',
         gender: 'male',
@@ -66,8 +80,23 @@ class AvatarService {
         personality: 'Confident & Charismatic',
         description: 'A cheerful Man in a professional kitchen',
         voice: {
-          id: 'Ak9WvlDj5TXD6zyDtpXG', // HeyGen voice ID from video-generator
+          id: 'Ak9WvlDj5TXD6zyDtpXG', // HeyGen voice ID
           name: 'Marcus Voice',
+          gender: 'male',
+          language: 'English'
+        }
+      },
+      {
+        id: '8fb979fae61f487297620072ff19e6b5', // Bob HeyGen ID
+        name: 'Bob',
+        image: '/avatars/Bob.png',
+        gender: 'male',
+        language: 'en',
+        personality: 'Professional & Friendly',
+        description: 'A professional presenter',
+        voice: {
+          id: '2yPUSv5lTtXwpjGQBuZO', // HeyGen voice ID
+          name: 'Bob Voice',
           gender: 'male',
           language: 'English'
         }

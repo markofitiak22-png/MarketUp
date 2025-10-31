@@ -9,16 +9,25 @@ interface AvatarStepProps {
   onNext: () => void;
 }
 
-// Fallback avatars if API fails - Only Marcus (HeyGen compatible)
+// Fallback avatars if API fails - Marcus and Bob (HeyGen compatible)
 const fallbackAvatars = [
   {
-    id: 'char-marcus',
+    id: '285f8a71dcd14421a7e4ecda88d78610', // Marcus HeyGen ID
     name: 'Marcus',
     image: '/avatars/Marcus.png',
     gender: 'male' as const,
     personality: 'Confident & Charismatic',
     description: 'A cheerful Man in a professional kitchen',
     voice: { id: 'Ak9WvlDj5TXD6zyDtpXG', name: 'Marcus Voice', gender: 'male' as const, language: 'English' }
+  },
+  {
+    id: '8fb979fae61f487297620072ff19e6b5', // Bob HeyGen ID
+    name: 'Bob',
+    image: '/avatars/Bob.png',
+    gender: 'male' as const,
+    personality: 'Professional & Friendly',
+    description: 'A professional presenter',
+    voice: { id: '2yPUSv5lTtXwpjGQBuZO', name: 'Bob Voice', gender: 'male' as const, language: 'English' }
   }
 ];
 

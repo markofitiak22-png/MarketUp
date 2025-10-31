@@ -30,27 +30,28 @@ interface VideoGenerationResult {
   jobId?: string;
 }
 
-// HeyGen avatar mapping (default avatars by gender)
-// Using Marcus avatar ID
+// HeyGen avatar mapping
 const HEYGEN_AVATARS: { [key: string]: string } = {
-  'male': '285f8a71dcd14421a7e4ecda88d78610',
+  'male': '285f8a71dcd14421a7e4ecda88d78610', // Marcus (default male)
   'female': '285f8a71dcd14421a7e4ecda88d78610',
   'Marcus': '285f8a71dcd14421a7e4ecda88d78610',
-  'Isabella': '285f8a71dcd14421a7e4ecda88d78610',
-  'James': '285f8a71dcd14421a7e4ecda88d78610',
-  'Sophia': '285f8a71dcd14421a7e4ecda88d78610',
-  'Mohammed': '285f8a71dcd14421a7e4ecda88d78610',
-  'Aisha': '285f8a71dcd14421a7e4ecda88d78610',
-  'Chen': '285f8a71dcd14421a7e4ecda88d78610',
-  'Yuki': '285f8a71dcd14421a7e4ecda88d78610',
+  'Bob': '8fb979fae61f487297620072ff19e6b5',
   'default': '285f8a71dcd14421a7e4ecda88d78610'
 };
 
-// HeyGen default voices (using publicly available voice IDs)
-// Using specified voice ID for all voices
+// HeyGen voice mapping
+const HEYGEN_VOICES: { [key: string]: string } = {
+  'Marcus': 'Ak9WvlDj5TXD6zyDtpXG',
+  'Bob': '2yPUSv5lTtXwpjGQBuZO',
+  'male': 'Ak9WvlDj5TXD6zyDtpXG',     // Marcus voice (default)
+  'female': 'Ak9WvlDj5TXD6zyDtpXG',
+  'default': 'Ak9WvlDj5TXD6zyDtpXG'
+};
+
+// HeyGen default voices (deprecated - use HEYGEN_VOICES instead)
 const HEYGEN_DEFAULT_VOICES: { [key: string]: string } = {
-  'male': 'Ak9WvlDj5TXD6zyDtpXG',     // Default voice ID
-  'female': 'Ak9WvlDj5TXD6zyDtpXG',   // Default voice ID
+  'male': 'Ak9WvlDj5TXD6zyDtpXG',     // Marcus voice
+  'female': 'Ak9WvlDj5TXD6zyDtpXG',
 };
 
 class VideoGenerator {
@@ -209,8 +210,10 @@ class VideoGenerator {
       isTalkingPhoto = true;
     }
     
-    // Select voice based on avatar gender
-    const voiceId = request.avatar.gender === 'female' ? HEYGEN_DEFAULT_VOICES.female : HEYGEN_DEFAULT_VOICES.male;
+    // Select voice based on avatar name or gender
+    let voiceId = HEYGEN_VOICES[request.avatar.name] || 
+                  HEYGEN_VOICES[request.avatar.gender] || 
+                  HEYGEN_VOICES.default;
 
     // Build HeyGen request with required voice_id
     // Use correct type based on what we found

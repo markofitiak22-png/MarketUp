@@ -42,41 +42,45 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(true);
   const [isUpgrading, setIsUpgrading] = useState(false);
 
-  // Function to get translated plan features
+  // Function to get translated plan features (matching pricing page)
   const getTranslatedFeatures = (planName: string) => {
     switch (planName) {
       case "Free":
         return [
-          translations.planFeature3VideosPerMonth,
-          translations.planFeatureStandardQuality,
-          translations.planFeatureBasicTemplates,
-          translations.planFeatureCommunitySupport
-        ];
-      case "Basic":
-        return [
-          translations.planFeature10VideosPerMonth,
-          translations.planFeatureHDQuality,
-          translations.planFeatureCustomBranding,
-          translations.planFeatureEmailSupport,
-          translations.planFeatureBasicAnalytics
+          translations.pricing1VideoPerMonth || "1 video per month",
+          translations.pricingStandardQuality || "Standard quality",
+          translations.pricingNoSubtitles || "No subtitles",
+          translations.pricingLimitedAvatars || "Limited avatars",
+          translations.pricingNoSocialPublishing || "No social publishing",
+          translations.pricingDefaultBackgrounds || "Default backgrounds",
+          translations.pricingAdditionalSupport || "Additional support"
         ];
       case "Pro":
         return [
-          translations.planFeatureUnlimitedVideos,
-          translations.planFeatureHDQuality,
-          translations.planFeatureCustomBranding,
-          translations.planFeaturePrioritySupport,
-          translations.planFeatureAdvancedAnalytics,
-          translations.planFeatureAPIAccess
+          translations.pricing4VideosPerMonth || "4 videos per month",
+          translations.pricingHDQuality || "HD quality",
+          translations.pricingSubtitlesIncluded || "Subtitles included",
+          translations.pricingExtendedAvatars || "Extended avatars",
+          translations.pricingSocialPublishing || "Social publishing",
+          translations.pricing2BackgroundImages || "2 background images",
+          translations.pricingTeamSupport || "Team support",
+          translations.pricingCompanyInfo || "Company info"
         ];
-      case "Enterprise":
+      case "Premium":
         return [
-          translations.planFeatureEverythingInPro,
-          translations.planFeatureWhiteLabelSolution,
-          translations.planFeatureAPIAccess,
-          translations.planFeatureDedicatedSupport,
-          translations.planFeatureCustomIntegrations,
-          translations.planFeatureOnPremiseDeployment
+          translations.pricing7VideosPerMonth || "7 videos per month",
+          translations.pricing4KQuality || "4K quality",
+          translations.pricingSubtitlesIncluded || "Subtitles included",
+          translations.pricingFullAvatars || "Full avatars",
+          translations.pricingSocialPublishing || "Social publishing",
+          translations.pricing4BackgroundImages || "4 background images",
+          translations.pricingTeamSupport || "Team support",
+          translations.pricingCompanyInfo || "Company info",
+          translations.pricingTemplateAccess || "Template access",
+          translations.pricingMarketingSupport || "Marketing support",
+          translations.pricingVideoAnalytics || "Video analytics",
+          translations.pricingCloudLibrary || "Cloud library",
+          translations.pricingVerifiedPartner || "Verified partner"
         ];
       default:
         return [];
@@ -99,7 +103,7 @@ export default function SubscriptionPage() {
             name: "Free",
             tier: "FREE",
             price: 0,
-            period: "month",
+            period: "forever",
             features: getTranslatedFeatures("Free"),
             nextBilling: null,
             status: "active",
@@ -110,43 +114,34 @@ export default function SubscriptionPage() {
               name: "Free",
               tier: "FREE",
               price: 0,
-              period: "month",
+              period: "forever",
               features: getTranslatedFeatures("Free"),
               current: true,
               popular: false
             },
             {
-              name: "Basic",
-              tier: "BASIC",
-              price: 9,
-              period: "month",
-              features: getTranslatedFeatures("Basic"),
-              current: false,
-              popular: false
-            },
-            {
               name: "Pro",
               tier: "STANDARD",
-              price: 29,
+              price: 42,
               period: "month",
               features: getTranslatedFeatures("Pro"),
               current: false,
               popular: true
             },
             {
-              name: "Enterprise",
+              name: "Premium",
               tier: "PREMIUM",
-              price: 99,
+              price: 59,
               period: "month",
-              features: getTranslatedFeatures("Enterprise"),
+              features: getTranslatedFeatures("Premium"),
               current: false,
               popular: false
             }
           ],
           usage: {
-            videosThisMonth: 2,
-            totalVideos: 5,
-            limit: 3
+            videosThisMonth: 0,
+            totalVideos: 0,
+            limit: 1
           },
           billingHistory: []
         });
@@ -159,7 +154,7 @@ export default function SubscriptionPage() {
           name: "Free",
           tier: "FREE",
           price: 0,
-          period: "month",
+          period: "forever",
           features: getTranslatedFeatures("Free"),
           nextBilling: null,
           status: "active",
@@ -170,43 +165,34 @@ export default function SubscriptionPage() {
             name: "Free",
             tier: "FREE",
             price: 0,
-            period: "month",
+            period: "forever",
             features: getTranslatedFeatures("Free"),
             current: true,
             popular: false
           },
           {
-            name: "Basic",
-            tier: "BASIC",
-            price: 9,
-            period: "month",
-            features: getTranslatedFeatures("Basic"),
-            current: false,
-            popular: false
-          },
-          {
             name: "Pro",
             tier: "STANDARD",
-            price: 29,
+            price: 42,
             period: "month",
             features: getTranslatedFeatures("Pro"),
             current: false,
             popular: true
           },
           {
-            name: "Enterprise",
+            name: "Premium",
             tier: "PREMIUM",
-            price: 99,
+            price: 59,
             period: "month",
-            features: getTranslatedFeatures("Enterprise"),
+            features: getTranslatedFeatures("Premium"),
             current: false,
             popular: false
           }
         ],
         usage: {
-          videosThisMonth: 2,
-          totalVideos: 5,
-          limit: 3
+          videosThisMonth: 0,
+          totalVideos: 0,
+          limit: 1
         },
         billingHistory: []
       });
@@ -329,13 +315,12 @@ export default function SubscriptionPage() {
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform">
                       {subscriptionData?.currentPlan?.tier === 'FREE' ? '🆓' :
-                        subscriptionData?.currentPlan?.tier === 'BASIC' ? '⭐' :
-                        subscriptionData?.currentPlan?.tier === 'STANDARD' ? '💎' : '🏢'}
+                        subscriptionData?.currentPlan?.tier === 'STANDARD' ? '💎' : '👑'}
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-foreground mb-1">{subscriptionData?.currentPlan?.name}</h3>
                       <p className="text-base text-foreground-muted">
-                        {subscriptionData?.currentPlan?.price === 0 ? 'Free' : `$${subscriptionData?.currentPlan?.price}/${subscriptionData?.currentPlan?.period}`}
+                        {subscriptionData?.currentPlan?.price === 0 ? 'Free forever' : `$${subscriptionData?.currentPlan?.price}/${subscriptionData?.currentPlan?.period}`}
                       </p>
                     </div>
                   </div>
@@ -428,7 +413,7 @@ export default function SubscriptionPage() {
               <p className="text-sm sm:text-base text-foreground-muted max-w-2xl mx-auto leading-relaxed">{translations.subscriptionChoosePlanBestFits}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {subscriptionData?.availablePlans?.map((plan, index) => (
                 <div
                   key={index}
@@ -455,8 +440,17 @@ export default function SubscriptionPage() {
                   <div className="text-center mb-4 sm:mb-6">
                     <h3 className="text-lg font-bold text-foreground mb-3">{plan.name}</h3>
                     <div className="mb-4">
-                      <span className="text-2xl sm:text-3xl font-bold text-foreground">${plan.price}</span>
-                      <span className="text-sm text-foreground-muted">/{plan.period}</span>
+                      {plan.price === 0 ? (
+                        <>
+                          <span className="text-2xl sm:text-3xl font-bold text-foreground">Free</span>
+                          <span className="text-sm text-foreground-muted"> forever</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-2xl sm:text-3xl font-bold text-foreground">${plan.price}</span>
+                          <span className="text-sm text-foreground-muted">/{plan.period}</span>
+                        </>
+                      )}
                     </div>
                   </div>
 

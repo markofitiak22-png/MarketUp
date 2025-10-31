@@ -42,78 +42,72 @@ export async function GET() {
     });
 
     // Get billing history (mock data for now)
-    const billingHistory = [
+    const billingHistory = subscription ? [
       {
         id: 'inv_001',
-        date: subscription?.currentPeriodStart?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
-        description: `${subscription?.tier || 'Free'} Plan - ${subscription?.tier === 'BASIC' ? 'Monthly' : subscription?.tier === 'STANDARD' ? 'Monthly' : subscription?.tier === 'PREMIUM' ? 'Monthly' : 'Free'}`,
-        amount: subscription?.tier === 'BASIC' ? '$9.00' : subscription?.tier === 'STANDARD' ? '$29.00' : subscription?.tier === 'PREMIUM' ? '$99.00' : '$0.00',
+        date: subscription.currentPeriodStart?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+        description: `${subscription.tier === 'STANDARD' ? 'Pro' : subscription.tier === 'PREMIUM' ? 'Premium' : 'Free'} Plan - Monthly`,
+        amount: subscription.tier === 'STANDARD' ? '$42.00' : subscription.tier === 'PREMIUM' ? '$59.00' : '$0.00',
         status: 'Paid'
       }
-    ];
+    ] : [];
 
-    // Define available plans
+    // Define available plans (matching pricing page)
     const availablePlans = [
       {
         name: "Free",
         tier: "FREE",
         price: 0,
-        period: "month",
+        period: "forever",
         features: [
-          "3 videos per month",
+          "1 video per month",
           "Standard quality",
-          "Basic templates",
-          "Community support"
+          "No subtitles",
+          "Limited avatars",
+          "No social publishing",
+          "Default backgrounds",
+          "Additional support"
         ],
         current: !subscription,
         popular: false
       },
       {
-        name: "Basic",
-        tier: "BASIC",
-        price: 9,
-        period: "month",
-        features: [
-          "10 videos per month",
-          "HD quality",
-          "Custom branding",
-          "Email support",
-          "Basic analytics"
-        ],
-        current: subscription?.tier === 'BASIC',
-        popular: false
-      },
-      {
         name: "Pro",
         tier: "STANDARD",
-        price: 29,
+        price: 42,
         period: "month",
         features: [
-          "Unlimited videos",
+          "4 videos per month",
           "HD quality",
-          "Custom branding",
-          "Priority support",
-          "Advanced analytics",
-          "API access"
+          "Subtitles included",
+          "Extended avatars",
+          "Social publishing",
+          "2 background images",
+          "Team support",
+          "Company info"
         ],
         current: subscription?.tier === 'STANDARD',
         popular: true
       },
       {
-        name: "Enterprise",
+        name: "Premium",
         tier: "PREMIUM",
-        price: 99,
+        price: 59,
         period: "month",
         features: [
-          "Everything in Pro",
-          "White-label solution",
-          "API access",
-          "Dedicated support",
-          "Custom integrations",
-          "On-premise deployment",
-          "Video Performance Analytics",
-          "Cloud Library",
-          "Verified Partner Status"
+          "7 videos per month",
+          "4K quality",
+          "Subtitles included",
+          "Full avatars",
+          "Social publishing",
+          "4 background images",
+          "Team support",
+          "Company info",
+          "Template access",
+          "Marketing support",
+          "Video analytics",
+          "Cloud library",
+          "Verified partner"
         ],
         current: subscription?.tier === 'PREMIUM',
         popular: false
@@ -149,9 +143,9 @@ export async function GET() {
         usage: {
           videosThisMonth,
           totalVideos,
-          limit: currentPlan.tier === 'FREE' ? 3 : 
-                 currentPlan.tier === 'BASIC' ? 10 : 
-                 'unlimited'
+          limit: currentPlan.tier === 'FREE' ? 1 : 
+                 currentPlan.tier === 'STANDARD' ? 4 : 
+                 currentPlan.tier === 'PREMIUM' ? 7 : 1
         },
         billingHistory
       }

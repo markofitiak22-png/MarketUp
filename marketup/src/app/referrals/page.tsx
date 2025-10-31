@@ -7,7 +7,6 @@ import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import RewardLadder from "@/components/RewardLadder";
 import { useTranslations } from "@/hooks/useTranslations";
-
 interface ReferralData {
   referralCodes: any[];
   referralEvents: any[];

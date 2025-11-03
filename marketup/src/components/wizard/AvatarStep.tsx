@@ -101,6 +101,14 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   }, [audioElement]);
 
   const handleAvatarSelect = (avatar: typeof avatars[0]) => {
+    // Stop any currently playing voice preview when switching avatars
+    if (audioElement) {
+      audioElement.pause();
+      audioElement.currentTime = 0;
+      setAudioElement(null);
+    }
+    setIsPlayingVoice(false);
+    
     setSelectedAvatar(avatar.id);
     onUpdate({
       avatar: {

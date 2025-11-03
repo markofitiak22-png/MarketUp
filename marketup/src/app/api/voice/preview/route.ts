@@ -189,6 +189,98 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "voiceId and avatarId are required" }, { status: 400 });
     }
 
+    // Marcus/Markus uses a specific preview file
+    const MARCUS_AVATAR_ID = '285f8a71dcd14421a7e4ecda88d78610';
+    const MARCUS_VOICE_ID = 'Ak9WvlDj5TXD6zyDtpXG';
+    const MARCUS_PREVIEW_FILE = 'preview_ae0e03ac53b03461f8a93887c2c617d4.mp4';
+    
+    if (avatarId === MARCUS_AVATAR_ID && voiceId === MARCUS_VOICE_ID) {
+      const marcusPreviewUrl = `/voice-previews/${MARCUS_PREVIEW_FILE}`;
+      
+      // Verify file exists locally
+      if (!isVercel) {
+        const fileExists = await checkFileExists(marcusPreviewUrl);
+        if (!fileExists) {
+          console.error('⚠️ Marcus preview file not found:', marcusPreviewUrl);
+        }
+      }
+      
+      // Ensure it's saved in database for consistency
+      await prisma.voicePreview.upsert({
+        where: {
+          voiceId_avatarId: {
+            voiceId: voiceId,
+            avatarId: avatarId
+          }
+        },
+        create: {
+          voiceId: voiceId,
+          avatarId: avatarId,
+          previewUrl: marcusPreviewUrl,
+          previewText: text || "Hello! I'm Marcus. I'll be your video presenter today. Let me bring your content to life with my voice."
+        },
+        update: {
+          previewUrl: marcusPreviewUrl,
+          previewText: text || "Hello! I'm Marcus. I'll be your video presenter today. Let me bring your content to life with my voice.",
+          updatedAt: new Date()
+        }
+      });
+      
+      console.log('✅ Using predefined Marcus preview:', marcusPreviewUrl);
+      return NextResponse.json({
+        success: true,
+        audioUrl: marcusPreviewUrl,
+        videoUrl: marcusPreviewUrl,
+        cached: true
+      });
+    }
+
+    // Bob uses a specific preview file
+    const BOB_AVATAR_ID = '8fb979fae61f487297620072ff19e6b5';
+    const BOB_VOICE_ID = '2yPUSv5lTtXwpjGQBuZO';
+    const BOB_PREVIEW_FILE = 'preview_12eaa678a955d685be5d4734eb5fa094.mp4';
+    
+    if (avatarId === BOB_AVATAR_ID && voiceId === BOB_VOICE_ID) {
+      const bobPreviewUrl = `/voice-previews/${BOB_PREVIEW_FILE}`;
+      
+      // Verify file exists locally
+      if (!isVercel) {
+        const fileExists = await checkFileExists(bobPreviewUrl);
+        if (!fileExists) {
+          console.error('⚠️ Bob preview file not found:', bobPreviewUrl);
+        }
+      }
+      
+      // Ensure it's saved in database for consistency
+      await prisma.voicePreview.upsert({
+        where: {
+          voiceId_avatarId: {
+            voiceId: voiceId,
+            avatarId: avatarId
+          }
+        },
+        create: {
+          voiceId: voiceId,
+          avatarId: avatarId,
+          previewUrl: bobPreviewUrl,
+          previewText: text || "Hello! I'm Bob. I'll be your video presenter today. Let me bring your content to life with my voice."
+        },
+        update: {
+          previewUrl: bobPreviewUrl,
+          previewText: text || "Hello! I'm Bob. I'll be your video presenter today. Let me bring your content to life with my voice.",
+          updatedAt: new Date()
+        }
+      });
+      
+      console.log('✅ Using predefined Bob preview:', bobPreviewUrl);
+      return NextResponse.json({
+        success: true,
+        audioUrl: bobPreviewUrl,
+        videoUrl: bobPreviewUrl,
+        cached: true
+      });
+    }
+
     // Check database for existing preview
     const existingPreview = await prisma.voicePreview.findUnique({
       where: {

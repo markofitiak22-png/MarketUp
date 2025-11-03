@@ -261,7 +261,9 @@ async function processVideoGeneration(videoId: string, userId: string) {
       backgrounds: backgroundsWithCategory,
       text: text,
       quality: quality,
-      targetLanguage: languageCode, // Pass language code for translation
+      // Pass language code for reference (not for translation)
+      // HeyGen will use voice_id to determine the output language based on selected language
+      targetLanguage: languageCode, // Keep for logging/reference, but won't trigger translation
       onProgress: (progress: number) => {
         // Update progress in real-time during HeyGen generation
         // Ensure progress is always increasing and reasonable

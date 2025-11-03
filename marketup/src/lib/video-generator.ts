@@ -184,7 +184,7 @@ class VideoGenerator {
   }
 
   /**
-   * Translate text to target language using Google Translate API
+   * Translate text to target language using free translation APIs (no API key required)
    */
   private async translateText(text: string, targetLanguage: string): Promise<string> {
     // If target language is English or not specified, return original text
@@ -193,45 +193,160 @@ class VideoGenerator {
     }
 
     try {
-      // Use Google Translate API (free tier with API key)
-      const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
-      if (!apiKey) {
-        console.warn('⚠️ Google Translate API key not found, using original text');
-        return text;
+      // Method 1: Try MyMemory Translation API (completely free, no API key needed)
+      const translated = await this.translateWithMyMemory(text, targetLanguage);
+      if (translated && translated !== text) {
+        return translated;
       }
 
+      // Method 2: Try Libretranslate public instance (no API key)
+      const translated2 = await this.translateWithLibreTranslate(text, targetLanguage);
+      if (translated2 && translated2 !== text) {
+        return translated2;
+      }
+
+      // Method 3: Try simple public translator
+      const translated3 = await this.translateWithSimpleAPI(text, targetLanguage);
+      if (translated3 && translated3 !== text) {
+        return translated3;
+      }
+
+      console.warn('⚠️ All translation methods failed, using original text');
+      return text;
+    } catch (error) {
+      console.error('Translation error:', error);
+      return text; // Fallback to original text
+    }
+  }
+
+  /**
+   * MyMemory Translation API - completely free, no API key
+   */
+  private async translateWithMyMemory(text: string, targetLanguage: string): Promise<string> {
+    try {
+      const languageMap: { [key: string]: string } = {
+        'ar': 'ar', // Arabic
+        'fr': 'fr', // French
+        'de': 'de', // German
+        'tr': 'tr', // Turkish
+        'sv': 'sv', // Swedish
+      };
+
+      const targetLangCode = languageMap[targetLanguage] || targetLanguage;
+      
+      // MyMemory API - free, no API key needed (limit: 10000 chars per day)
       const response = await fetch(
-        `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            q: text,
-            target: targetLanguage,
-            format: 'text'
-          }),
-        }
+        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLangCode}`
       );
 
       if (!response.ok) {
-        console.warn('⚠️ Translation API failed, using original text');
         return text;
       }
 
       const result = await response.json();
-      const translatedText = result.data?.translations?.[0]?.translatedText;
+      const translatedText = result.responseData?.translatedText;
       
-      if (translatedText) {
-        console.log(`✅ Text translated from original to ${targetLanguage}:`, translatedText.substring(0, 100));
+      if (translatedText && translatedText !== text && !translatedText.includes('MYMEMORY')) {
+        console.log(`✅ Translated to ${targetLanguage} via MyMemory`);
         return translatedText;
       }
 
       return text;
     } catch (error) {
-      console.error('Translation error:', error);
-      return text; // Fallback to original text
+      return text;
+    }
+  }
+
+  /**
+   * LibreTranslate public instance - no API key
+   */
+  private async translateWithLibreTranslate(text: string, targetLanguage: string): Promise<string> {
+    try {
+      const languageMap: { [key: string]: string } = {
+        'ar': 'ar',
+        'fr': 'fr',
+        'de': 'de',
+        'tr': 'tr',
+        'sv': 'sv',
+      };
+
+      const targetLangCode = languageMap[targetLanguage] || targetLanguage;
+      
+      // Try public LibreTranslate instance
+      const response = await fetch('https://libretranslate.de/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          q: text,
+          source: 'en',
+          target: targetLangCode,
+          format: 'text'
+        }),
+      });
+
+      if (!response.ok) {
+        return text;
+      }
+
+      const result = await response.json();
+      const translatedText = result.translatedText;
+      
+      if (translatedText && translatedText !== text) {
+        console.log(`✅ Translated to ${targetLanguage} via LibreTranslate`);
+        return translatedText;
+      }
+
+      return text;
+    } catch (error) {
+      return text;
+    }
+  }
+
+  /**
+   * Simple translator API - backup method
+   */
+  private async translateWithSimpleAPI(text: string, targetLanguage: string): Promise<string> {
+    try {
+      const languageMap: { [key: string]: string } = {
+        'ar': 'ar',
+        'fr': 'fr',
+        'de': 'de',
+        'tr': 'tr',
+        'sv': 'sv',
+      };
+
+      const targetLangCode = languageMap[targetLanguage] || targetLanguage;
+      
+      // Try translate.argosopentech.com (public LibreTranslate instance)
+      const response = await fetch('https://translate.argosopentech.com/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          q: text,
+          source: 'en',
+          target: targetLangCode,
+        }),
+      });
+
+      if (!response.ok) {
+        return text;
+      }
+
+      const result = await response.json();
+      const translatedText = result.translatedText;
+      
+      if (translatedText && translatedText !== text) {
+        console.log(`✅ Translated to ${targetLanguage} via ArgosTranslate`);
+        return translatedText;
+      }
+
+      return text;
+    } catch (error) {
+      return text;
     }
   }
 
@@ -303,8 +418,10 @@ class VideoGenerator {
       isTalkingPhoto = true;
     }
     
-    // Select voice based on avatar name or gender
-    let voiceId = HEYGEN_VOICES[request.avatar.name] || 
+    // Select voice based on language first, then avatar name or gender
+    // Use voice from request.voice if available (it should contain the correct voice_id for selected language)
+    let voiceId = request.voice.id || 
+                  HEYGEN_VOICES[request.avatar.name] || 
                   HEYGEN_VOICES[request.avatar.gender] || 
                   HEYGEN_VOICES.default;
 
@@ -325,12 +442,19 @@ class VideoGenerator {
       characterConfig.avatar_style = request.avatarStyle || 'normal';
     }
     
-    // Translate text to target language if specified
+    // Translate text to target language if specified (using alternative to Google Translator)
+    // HeyGen needs the text to be in the target language for proper pronunciation
     let finalText = request.text;
+    
     if (request.targetLanguage && request.targetLanguage !== 'en') {
-      console.log(`🌐 Translating text to ${request.targetLanguage}...`);
+      console.log(`🌐 Translating text to ${request.targetLanguage} using alternative translation service...`);
+      console.log(`   Voice ID: ${voiceId}`);
       finalText = await this.translateText(request.text, request.targetLanguage);
       console.log(`✅ Translation complete. Original length: ${request.text.length}, Translated length: ${finalText.length}`);
+      console.log(`   Translated preview: ${finalText.substring(0, 100)}...`);
+    } else {
+      console.log(`🌐 Language: English (no translation needed)`);
+      console.log(`   Voice ID: ${voiceId}`);
     }
 
     // Determine video dimension based on quality request
@@ -345,7 +469,7 @@ class VideoGenerator {
       character: characterConfig,
       voice: {
         type: 'text',
-        input_text: finalText, // Use translated text
+        input_text: finalText, // Use original text - HeyGen will synthesize in the language of voice_id
         voice_id: voiceId,
       },
     };

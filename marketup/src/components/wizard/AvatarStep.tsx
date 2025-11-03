@@ -117,17 +117,18 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
     if (!data.avatar?.voice || isPlayingVoice || isGeneratingPreview) return;
 
     const avatar = data.avatar;
-    const voiceId = avatar.voice.id; // HeyGen voice ID: Ak9WvlDj5TXD6zyDtpXG
-    const avatarId = avatar.id; // Avatar ID: 285f8a71dcd14421a7e4ecda88d78610
+    const voiceId = avatar.voice.id; // HeyGen voice ID
+    const avatarId = avatar.id; // Avatar ID
     
     setIsGeneratingPreview(true);
 
     try {
-      console.log('🎤 Generating voice preview with HeyGen API...');
+      console.log('🎤 Getting voice preview (will use cache if available)...');
       console.log('   Voice ID:', voiceId);
       console.log('   Avatar ID:', avatarId);
 
-      // Generate preview using HeyGen API
+      // Generate or get cached preview using HeyGen API
+      // API will return cached URL if preview already exists locally
       const response = await fetch('/api/voice/preview', {
         method: 'POST',
         headers: {
@@ -147,7 +148,7 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
         throw new Error(result.error || 'Failed to generate preview');
       }
 
-      // Play the audio/video from HeyGen
+      // Play the audio/video (from local cache or newly generated)
       const audio = new Audio(result.audioUrl);
       setAudioElement(audio);
       
@@ -165,7 +166,12 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
       setIsGeneratingPreview(false);
       setIsPlayingVoice(true);
       await audio.play();
-      console.log('✅ Playing HeyGen voice preview:', result.audioUrl);
+      
+      if (result.cached) {
+        console.log('✅ Playing cached voice preview:', result.audioUrl);
+      } else {
+        console.log('✅ Playing newly generated voice preview:', result.audioUrl);
+      }
 
     } catch (error: any) {
       console.error('Error generating voice preview:', error);

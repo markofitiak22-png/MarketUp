@@ -344,3 +344,26 @@ model Review {
     @@index([ipHash])
     @@index([fingerprintHash])
 }
+
+/// Voice previews cache - stores local file paths for avatar voice combinations
+model VoicePreview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    /// HeyGen voice ID
+    voiceId String
+
+    /// HeyGen avatar ID
+    avatarId String
+
+    /// Local file path (e.g., /voice-previews/preview_abc123.mp3)
+    previewUrl String
+
+    /// Preview text used (for reference)
+    previewText String?
+
+    @@unique([voiceId, avatarId])
+    @@index([voiceId])
+    @@index([avatarId])
+}

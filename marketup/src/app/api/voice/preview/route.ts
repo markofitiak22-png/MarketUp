@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
-
-// In-memory cache for preview URLs (in production, use Redis or database)
-const previewCache = new Map<string, string>();
 
 // Generate cache key from voiceId and avatarId
 function getCacheKey(voiceId: string, avatarId: string): string {
@@ -103,7 +101,27 @@ async function generateVideoPreview(
       await fs.writeFile(filePath, Buffer.from(videoBuffer));
       
       const publicUrl = `/voice-previews/${filename}`;
-      previewCache.set(cacheKey, publicUrl);
+      
+      // Save to database
+      await prisma.voicePreview.upsert({
+        where: {
+          voiceId_avatarId: {
+            voiceId: voiceId,
+            avatarId: avatarId
+          }
+        },
+        create: {
+          voiceId: voiceId,
+          avatarId: avatarId,
+          previewUrl: publicUrl,
+          previewText: previewText
+        },
+        update: {
+          previewUrl: publicUrl,
+          previewText: previewText,
+          updatedAt: new Date()
+        }
+      });
       
       return NextResponse.json({
         success: true,
@@ -135,25 +153,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "voiceId and avatarId are required" }, { status: 400 });
     }
 
-    // Check cache first
-    const cacheKey = getCacheKey(voiceId, avatarId);
-    const cachedUrl = previewCache.get(cacheKey);
-    
-    if (cachedUrl) {
+    // Check database for existing preview
+    const existingPreview = await prisma.voicePreview.findUnique({
+      where: {
+        voiceId_avatarId: {
+          voiceId: voiceId,
+          avatarId: avatarId
+        }
+      }
+    });
+
+    if (existingPreview) {
       // Verify file still exists
       try {
-        const filePath = path.join(process.cwd(), 'public', cachedUrl.replace(/^\//, ''));
+        const filePath = path.join(process.cwd(), 'public', existingPreview.previewUrl.replace(/^\//, ''));
         await fs.access(filePath);
-        console.log('✅ Using cached preview:', cachedUrl);
+        console.log('✅ Using preview from database:', existingPreview.previewUrl);
         return NextResponse.json({
           success: true,
-          audioUrl: cachedUrl,
-          videoUrl: cachedUrl,
+          audioUrl: existingPreview.previewUrl,
+          videoUrl: existingPreview.previewUrl,
           cached: true
         });
       } catch (error) {
-        // File doesn't exist, remove from cache
-        previewCache.delete(cacheKey);
+        // File doesn't exist, delete from database
+        await prisma.voicePreview.delete({
+          where: { id: existingPreview.id }
+        });
+        console.log('⚠️ Preview file not found, regenerating...');
       }
     }
 
@@ -162,6 +189,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "HeyGen API key not configured" }, { status: 500 });
     }
 
+    // Generate cache key for filename
+    const cacheKey = getCacheKey(voiceId, avatarId);
+    
     // Generate short audio preview using HeyGen Voice API (faster than full video)
     const previewText = text || "Hello! I'm Marcus. I'll be your video presenter today. Let me bring your content to life with my voice.";
     
@@ -221,16 +251,34 @@ export async function POST(request: NextRequest) {
     const filename = `preview_${hash}.mp3`; // Voice API returns MP3
     const filePath = path.join(previewDir, filename);
     
-    // Save file
+    // Save file locally
     await fs.writeFile(filePath, Buffer.from(audioBuffer));
     
     // Create public URL
     const publicUrl = `/voice-previews/${filename}`;
     
-    // Cache the URL
-    previewCache.set(cacheKey, publicUrl);
+    // Save to database
+    await prisma.voicePreview.upsert({
+      where: {
+        voiceId_avatarId: {
+          voiceId: voiceId,
+          avatarId: avatarId
+        }
+      },
+      create: {
+        voiceId: voiceId,
+        avatarId: avatarId,
+        previewUrl: publicUrl,
+        previewText: previewText
+      },
+      update: {
+        previewUrl: publicUrl,
+        previewText: previewText,
+        updatedAt: new Date()
+      }
+    });
     
-    console.log('✅ Preview saved locally:', publicUrl);
+    console.log('✅ Preview saved locally and in database:', publicUrl);
     
     return NextResponse.json({
       success: true,

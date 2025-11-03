@@ -64,7 +64,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
         voice: {
           id: avatarVoice.id,
           name: avatarVoice.name,
-          gender: avatarVoice.gender,
+          gender: avatarVoice.gender === 'neutral' ? 'male' : avatarVoice.gender, // Convert 'neutral' to 'male'
           accent: 'neutral',
           tone: 'professional' as const
         }
@@ -86,7 +86,7 @@ export default function LanguageStep({ data, onUpdate, onNext, onPrev }: Languag
           {translations.studioSelectLanguage}
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-          {translations.studioChooseLanguage}
+          {translations.studioChooseLanguageVoice}
         </p>
       </div>
 

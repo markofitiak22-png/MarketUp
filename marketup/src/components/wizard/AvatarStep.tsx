@@ -78,9 +78,9 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
             setAvatars(transformedAvatars);
           }
         }
-      } catch (error) {
+      } catch (error: unknown) {
         // Silently fail - we already have fallback avatars showing
-        if (error.name !== 'AbortError') {
+        if (error instanceof Error && error.name !== 'AbortError') {
           console.log('Avatar API fetch failed, using fallback:', error);
         }
       }

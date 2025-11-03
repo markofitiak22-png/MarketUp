@@ -237,6 +237,7 @@ export default function BackgroundStep({ data, onUpdate, onNext, onPrev }: Backg
                   {background.category}
                 </span>
               </div>
+              
             </div>
             
             <div className="p-4 bg-surface/50 backdrop-blur-sm">

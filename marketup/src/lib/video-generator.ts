@@ -15,12 +15,14 @@ interface VideoGenerationRequest {
   backgrounds: Array<{
     image: string;
     name: string;
+    category?: string;
   }>;
   text: string;
   quality: string;
   targetLanguage?: string; // Language code (e.g., 'ar', 'fr', 'de')
   enableGestures?: boolean; // Enable gesture control for natural movements
   avatarStyle?: 'normal' | 'full_body' | 'upper_body'; // Avatar display style
+  onProgress?: (progress: number) => void; // Callback for progress updates
 }
 
 interface VideoGenerationResult {
@@ -88,6 +90,97 @@ class VideoGenerator {
     const result = await response.json();
     console.log('✅ Available avatars:', JSON.stringify(result, null, 2));
     return result;
+  }
+
+  /**
+   * Generate background image URL based on theme/category using Replicate
+   */
+  private async generateBackgroundForTheme(category: string): Promise<string | null> {
+    try {
+      const replicateApiToken = process.env.REPLICATE_API_TOKEN;
+      if (!replicateApiToken) {
+        console.warn('⚠️ REPLICATE_API_TOKEN not set, skipping background generation');
+        return null;
+      }
+
+      // Map category to prompt
+      const categoryPrompts: { [key: string]: string } = {
+        'Professional': 'modern professional office environment, sleek corporate interior, business meeting room, clean modern workspace, city view backdrop, minimalist office design',
+        'Casual': 'cozy comfortable space, warm home office, casual coffee shop atmosphere, relaxed modern interior, comfortable seating area, friendly welcoming environment',
+        'Creative': 'artistic creative studio space, colorful modern interior, innovative design environment, vibrant creative workspace, artistic backdrop, modern futuristic space'
+      };
+
+      const basePrompt = categoryPrompts[category] || categoryPrompts['Professional'];
+      const prompt = `${basePrompt}, wide angle view, 16:9 aspect ratio, high resolution, cinematic lighting, professional photography style`;
+      const negativePrompt = "people, faces, text, logos, watermarks, low quality, blurry, distorted";
+      const modelVersion = "39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b";
+
+      // Generate background via Replicate API
+      const response = await fetch('https://api.replicate.com/v1/predictions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${replicateApiToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          version: modelVersion,
+          input: {
+            prompt,
+            negative_prompt: negativePrompt,
+            width: 1920,
+            height: 1080,
+            num_outputs: 1,
+            guidance_scale: 7.5,
+            num_inference_steps: 25,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        console.warn(`⚠️ Replicate API error (${response.status}), proceeding without background`);
+        return null;
+      }
+
+      const prediction = await response.json();
+      
+      if (!prediction.id) {
+        return null;
+      }
+
+      // Poll for completion (with shorter timeout for background generation)
+      let result = prediction;
+      let pollAttempts = 0;
+      const maxPollAttempts = 30; // 30 seconds max for background
+      
+      while ((result.status === 'starting' || result.status === 'processing') && pollAttempts < maxPollAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        pollAttempts++;
+        
+        const statusResponse = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+          headers: {
+            'Authorization': `Token ${replicateApiToken}`,
+          },
+        });
+        
+        if (!statusResponse.ok) {
+          break;
+        }
+        
+        result = await statusResponse.json();
+        
+        if (result.status === 'succeeded' && result.output && result.output[0]) {
+          console.log(`✅ Generated background for ${category} theme`);
+          return result.output[0];
+        }
+      }
+
+      // If timeout or failed, proceed without background
+      console.warn(`⚠️ Background generation timeout/failed for ${category}, proceeding without background`);
+      return null;
+    } catch (error) {
+      console.warn('⚠️ Error generating background for theme, proceeding without:', error);
+      return null;
+    }
   }
 
   /**
@@ -247,7 +340,7 @@ class VideoGenerator {
       dimension = { width: 1280, height: 720 }; // 720p for HD
     }
     
-    // Build video input without background (temporarily disabled)
+    // Build video input with background support
     const videoInput: any = {
       character: characterConfig,
       voice: {
@@ -255,8 +348,44 @@ class VideoGenerator {
         input_text: finalText, // Use translated text
         voice_id: voiceId,
       },
-      // Background temporarily disabled - not used even if selected
     };
+
+    // Generate background based on selected category/theme instead of using image URL
+    if (request.backgrounds && request.backgrounds.length > 0) {
+      const selectedBg = request.backgrounds[0];
+      const backgroundCategory = selectedBg.category || 'Professional';
+      
+      console.log('🎨 Background info:', {
+        hasBackgrounds: !!request.backgrounds,
+        backgroundsCount: request.backgrounds.length,
+        firstBg: selectedBg,
+        category: backgroundCategory,
+        hasCategory: !!selectedBg.category
+      });
+      
+      // Generate background image on-the-fly based on category theme
+      // This will create a background that matches the selected atmosphere
+      try {
+        console.log(`🎨 Generating background for category: ${backgroundCategory}`);
+        const backgroundImageUrl = await this.generateBackgroundForTheme(backgroundCategory);
+        
+        if (backgroundImageUrl) {
+          videoInput.background = {
+            type: 'image',
+            url: backgroundImageUrl
+          };
+          console.log('🌄 Using generated background for theme:', backgroundCategory);
+          console.log('   Background URL:', backgroundImageUrl);
+        } else {
+          console.warn('⚠️ Background generation returned null, no background will be used');
+        }
+      } catch (error) {
+        console.warn('⚠️ Failed to generate background, proceeding without background:', error);
+        // Continue without background if generation fails
+      }
+    } else {
+      console.log('⚠️ No backgrounds provided in request');
+    }
 
     // Enable gesture control if requested
     // Gesture control allows natural gestures like thumbs up, pointing, smiling
@@ -281,9 +410,11 @@ class VideoGenerator {
     console.log('   Character type:', characterType);
     console.log('   Voice ID:', voiceId, `(${request.avatar.gender})`);
     console.log('   Dimension:', dimension);
+    console.log('   Background:', request.backgrounds && request.backgrounds.length > 0 
+      ? `${request.backgrounds[0].name} (${request.backgrounds.length} total)` 
+      : 'None');
     console.log('   Gestures enabled:', request.enableGestures || false);
     console.log('   Avatar style:', request.avatarStyle || 'normal');
-    console.log('   Note: Full body display not currently supported - using recommended chest-up framing');
 
     // Submit video generation request
     const response = await fetch(`${this.heygenApiUrl}/v2/video/generate`, {
@@ -315,6 +446,24 @@ class VideoGenerator {
     // Poll for completion
     let attempts = 0;
     const maxAttempts = 120; // 10 minutes max (5s intervals)
+    
+    // Progress calculation - ultra aggressive to reach high percentages very fast:
+    // - 0-20%: Preparation and request sent
+    // - 20-75%: Actual video generation (very fast progression)
+    // - 75-85%: Processing completion in HeyGen
+    // - 85-100%: Finalization (handled by route.ts)
+    const progressStart = 20; // Start of actual generation
+    const progressEnd = 75; // End of generation, before completion
+    const progressRange = progressEnd - progressStart;
+    
+    // Track previous progress to ensure it always increases
+    let previousProgress = progressStart;
+
+    // Notify progress: Request sent (20%)
+    if (request.onProgress) {
+      request.onProgress(20);
+    }
+    previousProgress = 20;
 
     while (attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 5000));
@@ -338,9 +487,69 @@ class VideoGenerator {
       const videoUrl = statusResult.data?.video_url;
       const error = statusResult.data?.error;
 
-      console.log(`📊 Generation status: ${status} (${attempts + 1}/${maxAttempts})`);
+      // Calculate realistic progress based on attempts
+      // Most videos complete around attempt 15-25, so we map progress accordingly
+      let currentProgress = progressStart;
+      
+      if (attempts > 0) {
+        // Method 1: Ultra aggressive linear progress - guaranteed very fast increase
+        // At least 3.5% per attempt for extremely fast progression
+        const linearProgress = progressStart + (attempts * 3.5);
+        
+        // Method 2: Extremely aggressive curved progress based on attempt ratio
+        const attemptProgress = Math.min(attempts / maxAttempts, 1);
+        // Use an extremely fast curve (0.2) to reach higher percentages very quickly
+        const curvedProgress = progressStart + (progressRange * Math.pow(attemptProgress, 0.2));
+        
+        // Method 3: Ultra accelerated time-based progress
+        // Extremely fast progression through all stages
+        let acceleratedProgress = progressStart;
+        if (attempts <= 6) {
+          // First 6 attempts: very fast (20-55%)
+          acceleratedProgress = progressStart + (attempts * 5.8);
+        } else if (attempts <= 12) {
+          // Next 6 attempts: fast (55-70%)
+          acceleratedProgress = 55 + ((attempts - 6) * 2.5);
+        } else {
+          // After 12 attempts: accelerate to reach 75%
+          acceleratedProgress = 70 + Math.min((attempts - 12) * 2.5, 5);
+        }
+        
+        // Method 4: Hybrid approach - mix of time-based and attempt-based
+        // If we're early in the process, be very aggressive
+        const hybridProgress = attempts <= 10 
+          ? progressStart + (attempts * 5.5) // 20-75% in first 10 attempts
+          : progressStart + (10 * 5.5) + ((attempts - 10) * 2); // Then slower
+        
+        // Take the maximum of all methods to ensure fastest possible progress
+        currentProgress = Math.max(linearProgress, curvedProgress, acceleratedProgress, hybridProgress);
+        
+        // Ensure progress is always increasing - never goes backwards
+        // Always increase by at least 3% from previous value for extremely fast progression
+        currentProgress = Math.max(currentProgress, previousProgress + 3.0);
+        
+        // Cap at 75% until actually completed
+        currentProgress = Math.min(currentProgress, 75);
+        
+        // Store for next iteration
+        previousProgress = currentProgress;
+      }
+      
+      // Update progress callback - always ensure it's called with increasing value
+      const roundedProgress = Math.round(currentProgress);
+      if (request.onProgress) {
+        request.onProgress(roundedProgress);
+      }
+
+      console.log(`📊 Generation status: ${status} (attempt ${attempts + 1}/${maxAttempts}, progress: ${roundedProgress}%)`);
 
       if (status === 'completed' && videoUrl) {
+        // Notify progress: Video generation completed (75%)
+        // Route will handle finalization from 75% to 100% with gradual steps
+        if (request.onProgress) {
+          request.onProgress(75);
+        }
+
         console.log('═══════════════════════════════════════════════════════');
         console.log('✅ AI TALKING AVATAR VIDEO GENERATED!');
         console.log('   🎭 Avatar speaks with natural voice');

@@ -178,7 +178,23 @@ async function processVideoGeneration(videoId: string, userId: string) {
     const voiceId = voiceData.id || 'default';
     const voiceName = voiceData.name || 'default';
     
-    const backgrounds = settings.backgrounds || (settings.background ? [{ image: settings.background }] : []);
+    const backgrounds = settings.backgrounds || (settings.background ? [{ image: settings.background, name: '', category: 'Professional' }] : []);
+    
+    // Ensure all backgrounds have category field
+    const backgroundsWithCategory = backgrounds.map((bg: any) => ({
+      image: bg.image || '',
+      name: bg.name || '',
+      category: bg.category || 'Professional'
+    }));
+    
+    console.log('📋 Backgrounds extracted from settings:', {
+      count: backgroundsWithCategory.length,
+      backgrounds: backgroundsWithCategory.map((bg: any) => ({
+        name: bg.name,
+        category: bg.category,
+        hasImage: !!bg.image
+      }))
+    });
     const text = settings.text || '';
     const quality = settings.quality || 'hd';
     const duration = settings.duration || 30;
@@ -198,49 +214,23 @@ async function processVideoGeneration(videoId: string, userId: string) {
       data: { status: 'PROCESSING' }
     });
 
-    // Step 1: Preparing assets (10%)
+    // Step 1: Preparing assets (3%)
     console.log(`📦 [${videoId}] Step 1: Preparing assets...`);
     generationStatus.set(videoId, {
       status: 'processing',
-      progress: 10,
+      progress: 3,
       createdAt: new Date()
     });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Step 2: Preparing video generation (30%)
-    console.log(`🎬 [${videoId}] Step 2: Starting video generation pipeline...`);
+    // Step 2: Preparing request to HeyGen (5%)
+    console.log(`🎬 [${videoId}] Step 2: Preparing request to HeyGen...`);
     generationStatus.set(videoId, {
       status: 'processing',
-      progress: 30,
+      progress: 5,
       createdAt: new Date()
     });
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Step 3: Generating avatar animation (50%)
-    console.log(`👤 [${videoId}] Step 3: Generating avatar animation...`);
-    generationStatus.set(videoId, {
-      status: 'processing',
-      progress: 50,
-      createdAt: new Date()
-    });
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Step 4: Processing backgrounds (70%)
-    console.log(`🖼️ [${videoId}] Step 4: Processing ${backgrounds.length} background(s)...`);
-    generationStatus.set(videoId, {
-      status: 'processing',
-      progress: 70,
-      createdAt: new Date()
-    });
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Step 5: Compositing video with AI (85%)
-    console.log(`🎨 [${videoId}] Step 5: Compositing video layers...`);
-    generationStatus.set(videoId, {
-      status: 'processing',
-      progress: 85,
-      createdAt: new Date()
-    });
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Extract language code for translation
     const languageCode = typeof languageData === 'object' && languageData.code 
@@ -256,6 +246,7 @@ async function processVideoGeneration(videoId: string, userId: string) {
     console.log(`🌐 Target language code: ${languageCode} (from: ${languageName})`);
 
     // Use real video generator with target language for translation
+    // Pass progress callback to update status during HeyGen polling
     const videoResult = await videoGenerator.generateVideo({
       avatar: {
         name: avatarName,
@@ -267,21 +258,28 @@ async function processVideoGeneration(videoId: string, userId: string) {
         name: voiceName,
         language: languageName,
       },
-      backgrounds: backgrounds,
+      backgrounds: backgroundsWithCategory,
       text: text,
       quality: quality,
       targetLanguage: languageCode, // Pass language code for translation
+      onProgress: (progress: number) => {
+        // Update progress in real-time during HeyGen generation
+        // Ensure progress is always increasing and reasonable
+        // Allow progress to reach 75% during generation, then finalization takes over
+        // Don't clamp too strictly - allow up to 85% if needed before finalization
+        const currentProgress = Math.max(20, Math.min(85, progress)); // Clamp between 20-85%
+        generationStatus.set(videoId, {
+          status: 'processing',
+          progress: currentProgress,
+          createdAt: new Date()
+        });
+        console.log(`📊 Progress update: ${currentProgress}%`);
+      }
     });
 
-    // Step 6: Finalizing output (95%)
+    // Step 6: Processing completed, finalizing output (75-100%)
     console.log(`✨ [${videoId}] Step 6: Finalizing output (${quality.toUpperCase()})...`);
-    generationStatus.set(videoId, {
-      status: 'processing',
-      progress: 95,
-      createdAt: new Date()
-    });
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
+    
     // Check if video generation was successful
     if (!videoResult.success || !videoResult.videoUrl) {
       throw new Error(videoResult.error || 'Video generation failed');
@@ -289,18 +287,93 @@ async function processVideoGeneration(videoId: string, userId: string) {
 
     const videoUrl = videoResult.videoUrl;
 
-    // Complete!
-    console.log(`✅ [${videoId}] Video generation completed successfully!`);
-    console.log(`📹 Video URL: ${videoUrl}`);
-    console.log(`📊 Stats: Avatar: ${avatarName}, Language: ${languageName}, Duration: ${duration}s, Quality: ${quality}`);
-    console.log(`🤖 Generation method: ${videoResult.jobId ? 'AI APIs (ElevenLabs + Replicate)' : 'FFmpeg'}`);
+    // Get current progress and ensure we start from at least 75%
+    const currentStatus = generationStatus.get(videoId);
+    const startProgress = Math.max(75, currentStatus?.progress || 75);
     
+    // Gradual progress update during finalization - smooth progression from current progress to 98%
+    // More steps and longer delays for better visual progress
+    console.log(`📈 Starting finalization from ${startProgress}% to 100%`);
+    
+    // Step 1: Video received from HeyGen (start from current or 77%)
+    const step1Progress = Math.max(startProgress + 1, 77);
     generationStatus.set(videoId, {
-      status: 'completed',
-      progress: 100,
-      videoUrl,
+      status: 'processing',
+      progress: step1Progress,
       createdAt: new Date()
     });
+    console.log(`📊 Progress: ${step1Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Step 2: Processing video data (ensure we're progressing)
+    const step2Progress = Math.max(step1Progress + 1, 79);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step2Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step2Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Step 3: Validating video format (ensure we're progressing)
+    const step3Progress = Math.max(step2Progress + 1, 81);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step3Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step3Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Step 4: Preparing metadata (ensure we're progressing)
+    const step4Progress = Math.max(step3Progress + 1, 83);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step4Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step4Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Step 5: Optimizing video (ensure we're progressing past 85%)
+    const step5Progress = Math.max(step4Progress + 1, 86);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step5Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step5Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 250));
+
+    // Step 6: Final validation (ensure we're progressing)
+    const step6Progress = Math.max(step5Progress + 1, 88);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step6Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step6Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 250));
+
+    // Step 7: Preparing for database save (ensure we're progressing)
+    const step7Progress = Math.max(step6Progress + 1, 90);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step7Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step7Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 250));
+
+    // Step 8: Saving to database (ensure we're progressing)
+    const step8Progress = Math.max(step7Progress + 1, 92);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step8Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step8Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 250));
 
     // Update database
     await prisma.video.update({
@@ -310,6 +383,50 @@ async function processVideoGeneration(videoId: string, userId: string) {
         videoUrl,
         completedAt: new Date()
       }
+    });
+
+    // Step 9: Database updated (ensure we're progressing)
+    const step9Progress = Math.max(step8Progress + 1, 94);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step9Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step9Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Step 10: Finalizing (ensure we're progressing)
+    const step10Progress = Math.max(step9Progress + 1, 96);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step10Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step10Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Step 11: Almost done (ensure we're progressing to 98%)
+    const step11Progress = Math.max(step10Progress + 1, 98);
+    generationStatus.set(videoId, {
+      status: 'processing',
+      progress: step11Progress,
+      createdAt: new Date()
+    });
+    console.log(`📊 Progress: ${step11Progress}%`);
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Complete! (100%)
+    console.log(`✅ [${videoId}] Video generation completed successfully!`);
+    console.log(`📹 Video URL: ${videoUrl}`);
+    console.log(`📊 Stats: Avatar: ${avatarName}, Language: ${languageName}, Duration: ${duration}s, Quality: ${quality}`);
+    console.log(`🤖 Generation method: ${videoResult.jobId ? 'AI APIs (ElevenLabs + Replicate)' : 'FFmpeg'}`);
+    
+    // Set final status to 100%
+    generationStatus.set(videoId, {
+      status: 'completed',
+      progress: 100,
+      videoUrl,
+      createdAt: new Date()
     });
 
     console.log(`🎉 Video ${videoId} is ready for preview!`);

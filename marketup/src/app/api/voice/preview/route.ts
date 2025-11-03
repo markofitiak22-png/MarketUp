@@ -2,13 +2,54 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { put } from "@vercel/blob";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 
+// Check if we're on Vercel (read-only file system)
+const isVercel = !!process.env.VERCEL;
+
 // Generate cache key from voiceId and avatarId
 function getCacheKey(voiceId: string, avatarId: string): string {
   return `${voiceId}_${avatarId}`;
+}
+
+// Save preview file (local or Vercel Blob Storage)
+async function savePreviewFile(buffer: Buffer, filename: string): Promise<string> {
+  if (isVercel) {
+    // On Vercel: use Blob Storage (filename can include path like "voice-previews/preview_xxx.mp3")
+    const blob = await put(filename, buffer, {
+      access: 'public',
+      addRandomSuffix: false,
+    });
+    return blob.url;
+  } else {
+    // Local: save to public directory (extract just filename from path)
+    const previewDir = path.join(process.cwd(), 'public', 'voice-previews');
+    await fs.mkdir(previewDir, { recursive: true });
+    const justFilename = filename.includes('/') ? filename.split('/').pop()! : filename;
+    const filePath = path.join(previewDir, justFilename);
+    await fs.writeFile(filePath, buffer);
+    return `/voice-previews/${justFilename}`;
+  }
+}
+
+// Check if file exists (only for local storage)
+async function checkFileExists(fileUrl: string): Promise<boolean> {
+  if (isVercel) {
+    // On Vercel: assume URL from Blob Storage is always accessible
+    return fileUrl.startsWith('https://');
+  } else {
+    // Local: check file system
+    try {
+      const filePath = path.join(process.cwd(), 'public', fileUrl.replace(/^\//, ''));
+      await fs.access(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
 
 // Fallback: Generate preview using full video (slower but more reliable)
@@ -91,16 +132,11 @@ async function generateVideoPreview(
       }
 
       const videoBuffer = await videoResponse.arrayBuffer();
-      const previewDir = path.join(process.cwd(), 'public', 'voice-previews');
-      await fs.mkdir(previewDir, { recursive: true });
       
       const hash = crypto.createHash('md5').update(cacheKey).digest('hex');
-      const filename = `preview_${hash}.mp4`;
-      const filePath = path.join(previewDir, filename);
+      const filename = `voice-previews/preview_${hash}.mp4`;
       
-      await fs.writeFile(filePath, Buffer.from(videoBuffer));
-      
-      const publicUrl = `/voice-previews/${filename}`;
+      const publicUrl = await savePreviewFile(Buffer.from(videoBuffer), filename);
       
       // Save to database
       await prisma.voicePreview.upsert({
@@ -164,10 +200,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingPreview) {
-      // Verify file still exists
-      try {
-        const filePath = path.join(process.cwd(), 'public', existingPreview.previewUrl.replace(/^\//, ''));
-        await fs.access(filePath);
+      // Verify file still exists (only check on local, Blob Storage URLs are always accessible)
+      const fileExists = await checkFileExists(existingPreview.previewUrl);
+      if (fileExists) {
         console.log('✅ Using preview from database:', existingPreview.previewUrl);
         return NextResponse.json({
           success: true,
@@ -175,7 +210,7 @@ export async function POST(request: NextRequest) {
           videoUrl: existingPreview.previewUrl,
           cached: true
         });
-      } catch (error) {
+      } else {
         // File doesn't exist, delete from database
         await prisma.voicePreview.delete({
           where: { id: existingPreview.id }
@@ -242,20 +277,12 @@ export async function POST(request: NextRequest) {
 
     const audioBuffer = await audioResponse.arrayBuffer();
     
-    // Create preview directory
-    const previewDir = path.join(process.cwd(), 'public', 'voice-previews');
-    await fs.mkdir(previewDir, { recursive: true });
-    
     // Generate filename from voiceId and avatarId
     const hash = crypto.createHash('md5').update(cacheKey).digest('hex');
-    const filename = `preview_${hash}.mp3`; // Voice API returns MP3
-    const filePath = path.join(previewDir, filename);
+    const filename = `voice-previews/preview_${hash}.mp3`; // Voice API returns MP3
     
-    // Save file locally
-    await fs.writeFile(filePath, Buffer.from(audioBuffer));
-    
-    // Create public URL
-    const publicUrl = `/voice-previews/${filename}`;
+    // Save file (local or Vercel Blob Storage)
+    const publicUrl = await savePreviewFile(Buffer.from(audioBuffer), filename);
     
     // Save to database
     await prisma.voicePreview.upsert({
@@ -278,7 +305,7 @@ export async function POST(request: NextRequest) {
       }
     });
     
-    console.log('✅ Preview saved locally and in database:', publicUrl);
+    console.log('✅ Preview saved:', publicUrl, isVercel ? '(Vercel Blob Storage)' : '(local file)');
     
     return NextResponse.json({
       success: true,

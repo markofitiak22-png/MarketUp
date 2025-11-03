@@ -6,9 +6,23 @@ import { useTranslations } from "@/hooks/useTranslations";
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const [buttonRect, setButtonRect] = useState<DOMRect | null>(null);
+  const [isInsideMobileMenu, setIsInsideMobileMenu] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { translations } = useTranslations();
+  
+  // Check if UserMenu is inside mobile menu
+  useEffect(() => {
+    if (ref.current) {
+      const checkMobileMenu = () => {
+        setIsInsideMobileMenu(ref.current?.closest('.mobile-menu-content') !== null);
+      };
+      checkMobileMenu();
+      // Recheck on resize/scroll
+      window.addEventListener('resize', checkMobileMenu);
+      return () => window.removeEventListener('resize', checkMobileMenu);
+    }
+  }, []);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -21,10 +35,75 @@ export default function UserMenu() {
 
   useEffect(() => {
     if (open && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setButtonRect(rect);
+      const updatePosition = () => {
+        if (buttonRef.current) {
+          const rect = buttonRef.current.getBoundingClientRect();
+          setButtonRect(rect);
+        }
+      };
+      
+      updatePosition();
+      
+      // Update position on window resize or orientation change
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('orientationchange', updatePosition);
+      
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('orientationchange', updatePosition);
+      };
     }
   }, [open]);
+
+  // Calculate dropdown position - opens directly below the button, shifted left
+  const getDropdownPosition = () => {
+    // If inside mobile menu, use absolute positioning (part of scrollable content)
+    if (isInsideMobileMenu) {
+      return {
+        position: 'absolute' as const,
+        top: '100%',
+        left: '0',
+        marginTop: '8px',
+        width: '100%',
+        zIndex: 10
+      };
+    }
+
+    // Desktop: fixed positioning
+    if (!buttonRect) {
+      return { 
+        position: 'fixed' as const,
+        top: '80px', 
+        left: '16px',
+        zIndex: 9999
+      };
+    }
+
+    const dropdownWidth = 224; // w-56 = 14rem = 224px
+    const viewportWidth = window.innerWidth;
+    const padding = 16; // Minimum padding from edges
+
+    // Position directly below the button
+    let top = buttonRect.bottom + 8;
+    let left = padding;
+    
+    if (viewportWidth >= 640) {
+      // Desktop: position to the left of button
+      left = Math.max(padding, buttonRect.left - (dropdownWidth - buttonRect.width) / 2);
+    }
+
+    // Ensure dropdown stays within viewport
+    if (left + dropdownWidth > viewportWidth - padding) {
+      left = viewportWidth - dropdownWidth - padding;
+    }
+    
+    return { 
+      position: 'fixed' as const,
+      top: `${top}px`, 
+      left: `${left}px`,
+      zIndex: 9999
+    };
+  };
 
   return (
     <div className="relative" ref={ref}>
@@ -41,11 +120,9 @@ export default function UserMenu() {
       {open ? (
         <div
           role="menu"
-          className="fixed w-56 rounded-xl glass p-2 shadow-xl"
+          className="w-56 rounded-xl glass p-2 shadow-xl"
           style={{ 
-            zIndex: 9999,
-            top: buttonRect ? `${buttonRect.bottom + 8}px` : '80px',
-            right: buttonRect ? `${window.innerWidth - buttonRect.right}px` : '16px'
+            ...getDropdownPosition()
           }}
         >
           <div className="px-2 py-1.5 text-xs uppercase tracking-wide text-[var(--muted)]">{translations.account}</div>

@@ -197,7 +197,7 @@ export default function Header() {
             </div>
 
             {/* Mobile navigation */}
-            <nav className="flex-1 p-6 overflow-y-auto bg-background">
+            <nav className="flex-1 p-6 overflow-y-auto overscroll-contain bg-background">
               <div className="space-y-2">
                 {currentLinks.map((link) => {
                   const isActive =

@@ -85,7 +85,7 @@ export default function Header() {
       <div className="container flex items-center justify-between px-4 sm:px-6" style={{ minHeight: 72 }}>
         {/* Brand */}
         <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight">
-          <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg">
+          <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
             <Image 
               src="/favicon-32x32.png" 
               alt="MarketUp Logo" 
@@ -172,7 +172,7 @@ export default function Header() {
             {/* Mobile menu header */}
             <div className="flex items-center justify-between p-6 border-b border-[var(--border)] bg-background flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-accent to-accent-2">
+                <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-accent to-accent-2 logo-blue-glow">
                   <Image 
                     src="/favicon-32x32.png" 
                     alt="MarketUp Logo" 

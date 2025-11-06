@@ -3,25 +3,24 @@ import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
+import PaymentModal from "@/components/payment/PaymentModal";
 
 const plans = {
-  free: {
-    name: 'Free',
-    price: 0,
-    description: 'Perfect for getting started',
-    features: ['3 videos per month', 'Standard quality', 'Basic support']
-  },
   pro: {
     name: 'Pro',
-    price: 29,
-    description: 'Best for professionals',
-    features: ['50 videos per month', 'HD quality', 'Priority support', 'No watermark']
-  },
-  enterprise: {
-    name: 'Enterprise',
-    price: 99,
-    description: 'For teams and organizations',
-    features: ['Unlimited videos', '4K quality', 'Dedicated support', 'Custom branding']
+    price: 42,
+    description: 'Ideal for business',
+    features: [
+      '4 videos per month',
+      'HD quality',
+      'Subtitles included',
+      'Extended avatars',
+      'Social publishing',
+      '2 background images',
+      'Team support',
+      'Company info'
+    ]
   }
 };
 
@@ -29,41 +28,46 @@ function CheckoutPageContent() {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { translations } = useTranslations();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const rawPlanId = searchParams.get('plan') || 'pro';
-  const billingPeriod = (searchParams.get('billing') as 'monthly' | 'yearly') || 'monthly';
+  const successParam = searchParams.get('success');
+  const canceledParam = searchParams.get('canceled');
   
-  // Validate planId and provide fallback
-  const validPlanIds = Object.keys(plans);
-  const isValidPlanId = validPlanIds.includes(rawPlanId);
-  const planId = isValidPlanId ? rawPlanId : 'pro'; // Fallback to 'pro' if invalid
+  // Only pro plan is available
+  const planId = rawPlanId === 'pro' ? 'pro' : 'pro';
 
   useEffect(() => {
     if (!session) {
-      router.push('/auth?redirect=/checkout');
+      router.push('/auth?redirect=/checkout?plan=pro');
     }
   }, [session, router]);
 
+  useEffect(() => {
+    if (successParam === 'true') {
+      setIsSuccess(true);
+      setTimeout(() => {
+        router.push('/dashboard?success=true');
+      }, 3000);
+    }
+    if (canceledParam === 'true') {
+      setError('Payment was canceled. Please try again.');
+    }
+  }, [successParam, canceledParam, router]);
+
   const plan = plans[planId as keyof typeof plans];
-  const isYearly = billingPeriod === 'yearly';
   
-  // Debug logging
-  console.log('Checkout page - rawPlanId:', rawPlanId, 'planId:', planId, 'plan:', plan, 'available plans:', Object.keys(plans));
-  
-  // Warn if using fallback
-  if (!isValidPlanId) {
-    console.warn(`Invalid planId "${rawPlanId}" provided, falling back to "pro"`);
-  }
-  
-  // Handle case when plan is not found (should not happen with fallback, but just in case)
+  // Handle case when plan is not found
   if (!plan) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">Plan Not Found</h1>
           <p className="text-white/70 mb-6">
-            The selected plan could not be found. Redirecting to pricing...
+            Only Pro plan is available. Redirecting to pricing...
           </p>
           <button
             onClick={() => router.push('/pricing')}
@@ -75,16 +79,17 @@ function CheckoutPageContent() {
       </div>
     );
   }
-  
-  const finalPrice = isYearly && plan?.price > 0 ? Math.round(plan.price * 12 * 0.8) : (plan?.price || 0);
-  const savings = isYearly && plan?.price > 0 ? Math.round(plan.price * 12 * 0.2) : 0;
 
-  const handleSuccess = () => {
+  const handlePaymentSuccess = () => {
     setIsSuccess(true);
-    // Redirect to dashboard after 3 seconds
+    setError(null);
     setTimeout(() => {
       router.push('/dashboard?success=true');
-    }, 3000);
+    }, 2000);
+  };
+
+  const handlePaymentError = (errorMessage: string) => {
+    setError(errorMessage);
   };
 
   if (!session) {
@@ -122,122 +127,170 @@ function CheckoutPageContent() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-surface border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Complete Your Purchase</h1>
-              <p className="text-foreground-muted">Payment processing temporarily unavailable</p>
-            </div>
-            <Link href="/pricing" className="btn-outline">
-              Back to Pricing
-            </Link>
-          </div>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <Link href="/pricing" className="inline-flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors mb-4">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Pricing
+          </Link>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Checkout</h1>
+          <p className="text-foreground-muted">Review your order and complete payment</p>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Order Summary */}
-          <div className="space-y-6">
-            <div className="glass-elevated rounded-2xl p-6">
-              <h2 className="text-xl font-bold text-foreground mb-4">Order Summary</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Order Summary */}
+            <div className="glass-elevated rounded-xl p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Order Summary</h2>
               
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-xl flex items-center justify-center">
-                    <span className="text-xl">🎬</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground">{plan.name} Plan</h3>
-                    <p className="text-sm text-foreground-muted">{plan.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-foreground">
-                      ${finalPrice}
-                      <span className="text-sm text-foreground-muted">/{isYearly ? 'year' : 'month'}</span>
-                    </div>
-                    {savings > 0 && (
-                      <div className="text-sm text-success">Save ${savings}/year</div>
-                    )}
+              {/* Plan Info */}
+              <div className="flex items-start gap-4 mb-6 pb-6 border-b border-border">
+                <div className="w-12 h-12 bg-gradient-to-br from-accent to-accent-2 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-foreground mb-1">{plan.name} Plan</h3>
+                  <p className="text-sm text-foreground-muted mb-3">{plan.description}</p>
+                  <div className="text-2xl font-bold text-foreground">
+                    ${plan.price}
+                    <span className="text-base text-foreground-muted font-normal">/month</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-2">
+              {/* Features */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-foreground mb-3">What&apos;s included:</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {plan.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20">
+                    <div key={index} className="flex items-center gap-2 text-sm text-foreground">
+                      <svg className="w-4 h-4 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-foreground-muted">{feature}</span>
+                      {feature}
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="border-t border-border pt-4 mt-6">
-                <div className="flex justify-between items-center text-lg font-semibold text-foreground">
-                  <span>Total</span>
-                  <span>${finalPrice}/{isYearly ? 'year' : 'month'}</span>
-                </div>
-                {savings > 0 && (
-                  <div className="text-sm text-success text-right">
-                    You save ${savings} with yearly billing
+              {/* Total */}
+              <div className="pt-4 border-t border-border">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-foreground">Total</span>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-foreground">
+                      ${plan.price}
+                      <span className="text-sm text-foreground-muted font-normal">/month</span>
+                    </div>
+                    <p className="text-xs text-foreground-muted mt-1">Billed monthly</p>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 
-            {/* Coming Soon Message */}
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold text-foreground mb-4">Payment Processing</h3>
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            {/* Payment Section */}
+            <div className="glass rounded-xl p-6">
+              <h3 className="text-lg font-bold text-foreground mb-4">Payment</h3>
+              {error && (
+                <div className="mb-4 p-3 bg-error/10 border border-error/20 rounded-lg">
+                  <p className="text-error text-sm">{error}</p>
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2">Payment Processing Coming Soon</h4>
-                <p className="text-foreground-muted mb-6">
-                  We&apos;re setting up secure payment processing. Contact us for early access.
-                </p>
-                <button
-                  onClick={handleSuccess}
-                  className="btn-primary"
-                >
-                  Continue with Demo Access
-                </button>
-              </div>
+              )}
+              <button
+                onClick={() => setShowPaymentModal(true)}
+                className="btn-primary w-full py-3 text-base font-semibold"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                  Proceed to Payment
+                </span>
+              </button>
+              <p className="text-xs text-foreground-muted mt-3 text-center">
+                Complete payment and upload receipt for verification
+              </p>
             </div>
           </div>
 
-          {/* Contact Information */}
+          {/* Sidebar */}
           <div className="space-y-6">
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold text-foreground mb-4">Contact Us</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            {/* Security Info */}
+            <div className="glass rounded-xl p-6">
+              <h3 className="text-base font-bold text-foreground mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Secure Payment
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <a href="mailto:support@marketup.com" className="text-foreground hover:text-accent transition-colors">
-                    support@marketup.com
-                  </a>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">SSL Encrypted</p>
+                    <p className="text-xs text-foreground-muted">256-bit SSL encryption</p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                <div className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <a href="/contact" className="text-foreground hover:text-accent transition-colors">
-                    Contact Form
-                  </a>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">PCI Compliant</p>
+                    <p className="text-xs text-foreground-muted">We never store payment info</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Cancel Anytime</p>
+                    <p className="text-xs text-foreground-muted">No long-term commitments</p>
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Support */}
+            <div className="glass rounded-xl p-6">
+              <h3 className="text-base font-bold text-foreground mb-2 flex items-center gap-2">
+                <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Need Help?
+              </h3>
+              <p className="text-sm text-foreground-muted mb-4">
+                Our support team is here to help with any questions.
+              </p>
+              <Link href="/contact" className="btn-outline w-full text-center text-sm">
+                Contact Support
+              </Link>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => {
+          setShowPaymentModal(false);
+          setError(null);
+        }}
+        planName={plan.name}
+        planPrice={plan.price}
+        onSuccess={handlePaymentSuccess}
+        onError={handlePaymentError}
+      />
     </div>
   );
 }

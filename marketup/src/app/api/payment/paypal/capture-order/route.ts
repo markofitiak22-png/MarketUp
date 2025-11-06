@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,13 +45,57 @@ export async function POST(request: NextRequest) {
     const captureData = await paypalResponse.json();
 
     if (captureData.status === 'COMPLETED') {
-      // Update user subscription in database
-      console.log(`User ${(session as any).user?.id || (session as any).user?.email} subscribed to ${planId} plan (${billingPeriod}) via PayPal`);
-      
-      // Here you would typically:
-      // 1. Update user subscription in your database
-      // 2. Send confirmation email
-      // 3. Log the transaction
+      // Get user from session
+      const user = await prisma.user.findUnique({
+        where: { 
+          email: (session as any).user?.email || undefined,
+          id: (session as any).user?.id || undefined,
+        },
+      });
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "User not found" },
+          { status: 404 }
+        );
+      }
+
+      // Map planId to tier (pro -> STANDARD)
+      const tierMap: Record<string, "BASIC" | "STANDARD" | "PREMIUM"> = {
+        'pro': 'STANDARD',
+        'premium': 'PREMIUM',
+        'free': 'BASIC',
+      };
+
+      const tier = tierMap[planId] || 'STANDARD';
+
+      // Cancel existing active subscriptions
+      await prisma.subscription.updateMany({
+        where: { 
+          userId: user.id, 
+          status: "ACTIVE" 
+        },
+        data: { 
+          status: "CANCELED", 
+          cancelAtPeriodEnd: true 
+        },
+      });
+
+      // Create new subscription
+      const now = new Date();
+      const end = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30); // 30 days
+
+      await prisma.subscription.create({
+        data: {
+          userId: user.id,
+          tier: tier,
+          status: "ACTIVE",
+          currentPeriodStart: now,
+          currentPeriodEnd: end,
+        },
+      });
+
+      console.log(`User ${user.email} subscribed to ${planId} plan (${billingPeriod}) via PayPal`);
       
       return NextResponse.json({
         success: true,
@@ -74,7 +119,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function getPayPalAccessToken(): Promise<string> {
-  const response = await fetch(`${process.env.PAYPAL_BASE_URL}/v1/oauth2/token`, {
+  const baseUrl = process.env.PAYPAL_BASE_URL || 'https://api.sandbox.paypal.com';
+  const response = await fetch(`${baseUrl}/v1/oauth2/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

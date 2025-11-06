@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create PayPal order
-    const paypalResponse = await fetch(`${process.env.PAYPAL_BASE_URL}/v2/checkout/orders`, {
+    const baseUrl = process.env.PAYPAL_BASE_URL || 'https://api.sandbox.paypal.com';
+    const paypalResponse = await fetch(`${baseUrl}/v2/checkout/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +76,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function getPayPalAccessToken(): Promise<string> {
-  const response = await fetch(`${process.env.PAYPAL_BASE_URL}/v1/oauth2/token`, {
+  const baseUrl = process.env.PAYPAL_BASE_URL || 'https://api.sandbox.paypal.com';
+  const response = await fetch(`${baseUrl}/v1/oauth2/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

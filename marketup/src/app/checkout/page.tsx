@@ -48,10 +48,12 @@ function CheckoutPageContent() {
 
   useEffect(() => {
     if (successParam === 'true') {
+      // Check if payment was successful via webhook
+      // The webhook will create the subscription automatically
       setIsSuccess(true);
       setTimeout(() => {
         router.push('/dashboard?success=true');
-      }, 3000);
+      }, 2000);
     }
     if (canceledParam === 'true') {
       setError('Payment was canceled. Please try again.');

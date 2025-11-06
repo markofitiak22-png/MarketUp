@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
 
     // Handle the event
     switch (event.type) {
+      case "checkout.session.completed":
+        await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
+        break;
+      
       case "payment_intent.succeeded":
         await handlePaymentSuccess(event.data.object as Stripe.PaymentIntent);
         break;
@@ -83,6 +87,59 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
   
   // Send confirmation email
   // await sendSubscriptionConfirmationEmail(userId, planId);
+}
+
+async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  const { prisma } = await import("@/lib/prisma");
+  
+  try {
+    const { userId, planId, tier } = session.metadata || {};
+    
+    if (!userId || !tier) {
+      console.error("Missing metadata in checkout session");
+      return;
+    }
+
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      console.error("User not found:", userId);
+      return;
+    }
+
+    // Cancel existing active subscriptions
+    await prisma.subscription.updateMany({
+      where: { 
+        userId: user.id, 
+        status: "ACTIVE" 
+      },
+      data: { 
+        status: "CANCELED", 
+        cancelAtPeriodEnd: true 
+      },
+    });
+
+    // Create new subscription
+    const now = new Date();
+    const end = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30); // 30 days
+
+    await prisma.subscription.create({
+      data: {
+        userId: user.id,
+        tier: tier as "BASIC" | "STANDARD" | "PREMIUM",
+        status: "ACTIVE",
+        currentPeriodStart: now,
+        currentPeriodEnd: end,
+      },
+    });
+
+    console.log(`User ${user.email} subscribed to ${planId} plan via Stripe`);
+  } catch (error) {
+    console.error("Error handling checkout session completed:", error);
+  }
 }
 
 async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {

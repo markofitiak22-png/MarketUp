@@ -11,10 +11,30 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
 export async function POST(request: NextRequest) {
   try {
     // Check Stripe key
-    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === "") {
-      console.error("STRIPE_SECRET_KEY is not configured");
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeKey || stripeKey === "" || stripeKey.includes("placeholder") || stripeKey.includes("your_")) {
+      console.error("STRIPE_SECRET_KEY is not configured or is a placeholder");
       return NextResponse.json(
-        { error: "Payment system not configured" },
+        { 
+          error: "Payment system not configured. Please set a valid STRIPE_SECRET_KEY in your .env file.",
+          details: process.env.NODE_ENV === 'development' 
+            ? "Get your Stripe API key from https://dashboard.stripe.com/apikeys"
+            : undefined
+        },
+        { status: 500 }
+      );
+    }
+
+    // Validate key format
+    if (!stripeKey.startsWith('sk_test_') && !stripeKey.startsWith('sk_live_')) {
+      console.error("STRIPE_SECRET_KEY has invalid format");
+      return NextResponse.json(
+        { 
+          error: "Invalid Stripe API key format. Key must start with 'sk_test_' or 'sk_live_'",
+          details: process.env.NODE_ENV === 'development' 
+            ? "Get your Stripe API key from https://dashboard.stripe.com/apikeys"
+            : undefined
+        },
         { status: 500 }
       );
     }
@@ -26,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { planId, amount } = body;
+    const { planId, amount, paymentMethod } = body;
 
     if (!planId || !amount) {
       return NextResponse.json(
@@ -76,6 +96,18 @@ export async function POST(request: NextRequest) {
     // Get base URL
     const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
+    // Determine payment method types based on selected method
+    let paymentMethodTypes: Stripe.Checkout.SessionCreateParams.PaymentMethodType[] = ['card'];
+    
+    if (paymentMethod === 'apple_pay') {
+      paymentMethodTypes = ['card']; // Apple Pay is handled through card payment
+    } else if (paymentMethod === 'klarna') {
+      paymentMethodTypes = ['klarna'];
+    } else if (paymentMethod === 'swish') {
+      // Swish is Sweden-specific, will be handled separately if needed
+      paymentMethodTypes = ['card'];
+    }
+
     // Create Stripe Checkout Session (one-time payment for monthly subscription)
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -99,8 +131,15 @@ export async function POST(request: NextRequest) {
         userId: user.id,
         planId: planId,
         tier: tier,
+        paymentMethod: paymentMethod || 'stripe_card',
       },
-      payment_method_types: ['card'],
+      payment_method_types: paymentMethodTypes,
+      // Enable payment method options
+      payment_method_options: {
+        card: {
+          request_three_d_secure: 'automatic',
+        },
+      },
     });
 
     if (!checkoutSession.url) {
@@ -120,6 +159,19 @@ export async function POST(request: NextRequest) {
       code: error.code,
       stack: error.stack,
     });
+    
+    // Handle specific Stripe authentication errors
+    if (error.type === 'StripeAuthenticationError' || error.message?.includes('Invalid API Key')) {
+      return NextResponse.json(
+        { 
+          error: "Invalid Stripe API key. Please check your STRIPE_SECRET_KEY in .env file.",
+          details: process.env.NODE_ENV === 'development' 
+            ? "Get your Stripe API key from https://dashboard.stripe.com/apikeys. Make sure it starts with 'sk_test_' for testing."
+            : undefined
+        },
+        { status: 500 }
+      );
+    }
     
     // Return more detailed error in development
     const errorMessage = process.env.NODE_ENV === 'development' 

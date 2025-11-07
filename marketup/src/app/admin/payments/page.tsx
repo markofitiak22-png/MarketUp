@@ -14,7 +14,7 @@ interface Transaction {
   amount: number;
   currency: string;
   status: "pending" | "completed" | "failed" | "refunded" | "cancelled";
-  paymentMethod: "credit_card" | "paypal" | "stripe" | "bank_transfer" | "crypto";
+  paymentMethod: "credit_card" | "paypal" | "stripe" | "bank_transfer" | "crypto" | "syriatel_cash" | "zain_cash" | "iban_transfer";
   transactionType: "subscription" | "one_time" | "refund" | "upgrade";
   description: string;
   createdAt: string;
@@ -22,11 +22,13 @@ interface Transaction {
   failureReason?: string;
   subscriptionId?: string;
   invoiceNumber: string;
+  receiptUrl?: string;
   metadata?: {
     planName?: string;
     billingCycle?: string;
     discountCode?: string;
     taxAmount?: number;
+    receiptUrl?: string;
   };
 }
 
@@ -236,13 +238,17 @@ export default function PaymentManagement() {
   const getPaymentMethodIcon = (method: string) => {
     switch (method) {
       case "credit_card":
+      case "stripe":
         return "💳";
       case "paypal":
         return "🅿️";
-      case "stripe":
-        return "💳";
       case "bank_transfer":
+      case "iban_transfer":
         return "🏦";
+      case "syriatel_cash":
+        return "📲";
+      case "zain_cash":
+        return "💼";
       case "crypto":
         return "₿";
       default:
@@ -648,6 +654,37 @@ export default function PaymentManagement() {
                     </div>
                   </div>
                 </div>
+
+                {/* Receipt */}
+                {(selectedTransaction.receiptUrl || selectedTransaction.metadata?.receiptUrl) && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">Payment Receipt</h3>
+                    <div className="glass-elevated rounded-2xl p-6">
+                      <a
+                        href={selectedTransaction.receiptUrl || selectedTransaction.metadata?.receiptUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        {(selectedTransaction.receiptUrl || selectedTransaction.metadata?.receiptUrl)?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                          <img
+                            src={selectedTransaction.receiptUrl || selectedTransaction.metadata?.receiptUrl}
+                            alt="Payment receipt"
+                            className="max-w-full h-auto rounded-lg border border-border cursor-pointer hover:opacity-80 transition-opacity"
+                          />
+                        ) : (
+                          <div className="p-8 bg-surface rounded-lg border border-border text-center hover:bg-surface-elevated transition-colors">
+                            <svg className="w-16 h-16 mx-auto mb-4 text-foreground-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <p className="text-lg font-bold text-foreground mb-2">View Receipt</p>
+                            <p className="text-sm text-foreground-muted">Click to open receipt file</p>
+                          </div>
+                        )}
+                      </a>
+                    </div>
+                  </div>
+                )}
 
                 {/* Metadata */}
                 {selectedTransaction.metadata && (

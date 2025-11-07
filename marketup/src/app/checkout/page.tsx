@@ -47,18 +47,56 @@ function CheckoutPageContent() {
   }, [session, router]);
 
   useEffect(() => {
+    const handlePaymentSuccess = async () => {
+      const paymentMethod = searchParams.get('payment_method');
+      // PayPal returns token in URL after approval
+      const token = searchParams.get('token');
+      
+      // Handle PayPal payment
+      if (paymentMethod === 'paypal' && token) {
+        try {
+          const response = await fetch('/api/payments/paypal/capture', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              orderId: token, // token is the orderId
+              planId: planId,
+            }),
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            setIsSuccess(true);
+            setTimeout(() => {
+              router.push('/dashboard?success=true');
+            }, 2000);
+          } else {
+            setError(data.error || 'Payment processing failed');
+          }
+        } catch (error: any) {
+          console.error('PayPal capture error:', error);
+          setError('Failed to process payment. Please contact support.');
+        }
+      } else if (successParam === 'true' && paymentMethod !== 'paypal') {
+        // Stripe or other payment methods
+        // Check if payment was successful via webhook
+        // The webhook will create the subscription automatically
+        setIsSuccess(true);
+        setTimeout(() => {
+          router.push('/dashboard?success=true');
+        }, 2000);
+      }
+    };
+
     if (successParam === 'true') {
-      // Check if payment was successful via webhook
-      // The webhook will create the subscription automatically
-      setIsSuccess(true);
-      setTimeout(() => {
-        router.push('/dashboard?success=true');
-      }, 2000);
+      handlePaymentSuccess();
     }
+    
     if (canceledParam === 'true') {
       setError('Payment was canceled. Please try again.');
     }
-  }, [successParam, canceledParam, router]);
+  }, [successParam, canceledParam, router, searchParams, planId]);
 
   const plan = plans[planId as keyof typeof plans];
   

@@ -129,6 +129,16 @@ export async function GET(request: NextRequest) {
       // Generate avatar URL
       const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${payment.user?.email || payment.user?.id || 'default'}&backgroundColor=ffd5dc`;
 
+      // Parse payment method from note
+      let paymentMethod: string = 'bank_transfer';
+      if (payment.note?.includes('syriatel_cash')) {
+        paymentMethod = 'syriatel_cash';
+      } else if (payment.note?.includes('zain_cash')) {
+        paymentMethod = 'zain_cash';
+      } else if (payment.note?.includes('iban_transfer')) {
+        paymentMethod = 'iban_transfer';
+      }
+
       return {
         id: payment.id,
         userId: payment.userId,
@@ -140,16 +150,18 @@ export async function GET(request: NextRequest) {
         amount: amount,
         currency: payment.currency,
         status: frontendStatus,
-        paymentMethod: 'bank_transfer', // Manual payments are typically bank transfers
+        paymentMethod: paymentMethod,
         transactionType: 'one_time', // Manual payments are typically one-time
         description: payment.note || 'Manual Payment',
         createdAt: payment.createdAt.toISOString(),
         processedAt: payment.status === 'APPROVED' ? payment.createdAt.toISOString() : undefined,
         failureReason: payment.status === 'REJECTED' ? 'Payment rejected' : undefined,
         invoiceNumber: invoiceNumber,
+        receiptUrl: payment.receiptUrl || undefined,
         metadata: {
           planName: 'Manual Payment',
-          billingCycle: 'one-time'
+          billingCycle: 'one-time',
+          receiptUrl: payment.receiptUrl || undefined
         }
       };
     });
@@ -222,6 +234,16 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
 
+    // Get payment with user info
+    const payment = await prisma.manualPayment.findUnique({
+      where: { id: paymentId },
+      include: { user: true }
+    });
+
+    if (!payment) {
+      return NextResponse.json({ error: "Payment not found" }, { status: 404 });
+    }
+
     // Update payment status
     const updatedPayment = await prisma.manualPayment.update({
       where: { id: paymentId },
@@ -230,9 +252,54 @@ export async function PUT(request: NextRequest) {
       }
     });
 
+    // If payment is approved, activate user subscription
+    if (newStatus === 'APPROVED') {
+      // Parse plan info from payment note
+      const note = payment.note || '';
+      const planMatch = note.match(/Plan: (\w+)/i);
+      const planId = planMatch ? planMatch[1].toLowerCase() : 'pro';
+      
+      // Map planId to tier
+      const tierMap: Record<string, "BASIC" | "STANDARD" | "PREMIUM"> = {
+        'pro': 'STANDARD',
+        'premium': 'PREMIUM',
+        'free': 'BASIC',
+      };
+      const tier = tierMap[planId] || 'STANDARD';
+
+      // Cancel existing active subscriptions
+      await prisma.subscription.updateMany({
+        where: { 
+          userId: payment.userId, 
+          status: "ACTIVE" 
+        },
+        data: { 
+          status: "CANCELED", 
+          cancelAtPeriodEnd: true 
+        },
+      });
+
+      // Create new subscription
+      const now = new Date();
+      const end = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30); // 30 days
+
+      await prisma.subscription.create({
+        data: {
+          userId: payment.userId,
+          tier: tier,
+          status: "ACTIVE",
+          currentPeriodStart: now,
+          currentPeriodEnd: end,
+        },
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      data: updatedPayment
+      data: updatedPayment,
+      message: newStatus === 'APPROVED' 
+        ? "Payment approved and subscription activated"
+        : "Payment rejected"
     });
 
   } catch (error) {

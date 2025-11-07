@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useMemo } from "react";
 import { PaymentMethod, PaymentMethodInfo, getAvailablePaymentMethods } from "@/lib/payment-methods";
 
 interface PaymentMethodSelectorProps {
@@ -13,7 +13,10 @@ export default function PaymentMethodSelector({
   onSelectMethod,
   userCountry,
 }: PaymentMethodSelectorProps) {
-  const availableMethods = getAvailablePaymentMethods(userCountry);
+  // Мемоізуємо список методів, щоб він не змінювався при зміні країни
+  const availableMethods = useMemo(() => {
+    return getAvailablePaymentMethods(userCountry);
+  }, [userCountry]);
 
   return (
     <div className="space-y-3">

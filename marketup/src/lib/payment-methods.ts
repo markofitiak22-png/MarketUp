@@ -89,47 +89,9 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
 
 // Визначення доступних методів на основі країни
 export function getAvailablePaymentMethods(country?: string | null): PaymentMethodInfo[] {
-  // Якщо країна не вказана, показуємо всі методи
-  if (!country) {
-    return Object.values(PAYMENT_METHODS);
-  }
-
-  // Для країн Близького Сходу показуємо всі методи + локальні
-  const middleEastCountries = ['SY', 'JO', 'LB', 'IQ', 'SA', 'AE', 'KW', 'QA', 'BH', 'OM', 'YE'];
-  const isMiddleEast = middleEastCountries.includes(country.toUpperCase());
-
-  // Для Європи та Швеції - показуємо європейські методи
-  const europeanCountries = ['SE', 'NO', 'DK', 'FI', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'PL', 'CZ', 'IE', 'PT', 'GR', 'GB'];
-  const isEuropean = europeanCountries.includes(country.toUpperCase());
-
-  // Для Туреччини - IBAN + всі інші
-  const isTurkey = country.toUpperCase() === 'TR';
-
-  // Фільтруємо методи
-  return Object.values(PAYMENT_METHODS).filter(method => {
-    // Завжди показуємо основні міжнародні методи
-    if (['stripe_card', 'paypal', 'apple_pay'].includes(method.id)) {
-      return true;
-    }
-
-    // Для Близького Сходу - показуємо локальні методи
-    if (isMiddleEast && ['syriatel_cash', 'zain_cash'].includes(method.id)) {
-      return true;
-    }
-
-    // Для Європи - показуємо європейські методи
-    if (isEuropean && ['klarna', 'swish'].includes(method.id)) {
-      return true;
-    }
-
-    // Для Туреччини - показуємо IBAN
-    if (isTurkey && method.id === 'iban_transfer') {
-      return true;
-    }
-
-    // Для інших країн - показуємо тільки основні міжнародні
-    return false;
-  });
+  // Завжди показуємо всі методи оплати для всіх користувачів
+  // (згідно з вимогами - всі методи мають бути видимі для підтримки професійного вигляду)
+  return Object.values(PAYMENT_METHODS);
 }
 
 // Отримання інформації про метод оплати

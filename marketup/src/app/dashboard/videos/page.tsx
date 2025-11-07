@@ -36,7 +36,7 @@ export default function VideosPage() {
       setLoading(true);
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10',
+        limit: '12',
         ...(filter !== 'all' && { status: filter }),
         ...(searchTerm && { search: searchTerm })
       });

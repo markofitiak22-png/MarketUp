@@ -59,6 +59,19 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
+  // Refresh data when success parameter is present
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      // Wait a bit for webhook to process, then refresh
+      setTimeout(() => {
+        fetchDashboardData();
+        // Remove success parameter from URL
+        window.history.replaceState({}, '', '/dashboard');
+      }, 2000);
+    }
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen relative overflow-hidden">
@@ -144,13 +157,16 @@ export default function DashboardPage() {
                     <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">{translations.dashboardCurrentPlan}</h3>
                   </div>
                   <p className="text-xl sm:text-2xl lg:text-2xl font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent mb-1 sm:mb-2">
-                    {dashboardData?.subscription?.tier || translations.dashboardFreePlan}
+                    {dashboardData?.subscription?.tier === 'STANDARD' ? 'Pro' :
+                     dashboardData?.subscription?.tier === 'PREMIUM' ? 'Premium' :
+                     dashboardData?.subscription?.tier === 'BASIC' ? 'Basic' :
+                     translations.dashboardFreePlan}
                   </p>
                   <p className="text-xs sm:text-sm text-foreground-muted">
-                    {dashboardData?.subscription ? 
-                      `$29/month` : 
-                      translations.dashboardUpgradeToPro
-                    }
+                    {dashboardData?.subscription?.tier === 'STANDARD' ? '$42/month' :
+                     dashboardData?.subscription?.tier === 'PREMIUM' ? '$59/month' :
+                     dashboardData?.subscription?.tier === 'BASIC' ? 'Free' :
+                     translations.dashboardUpgradeToPro}
                   </p>
                 </div>
               </div>

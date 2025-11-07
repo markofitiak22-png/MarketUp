@@ -86,35 +86,41 @@ export async function GET() {
       brand: "visa"
     } : null;
 
-    // Mock invoices (in real app, this would come from payment provider)
-    const invoices = subscription ? [
-      {
-        id: `INV-${Date.now().toString().slice(-6)}`,
-        date: subscription.currentPeriodStart.toISOString().split('T')[0],
-        amount: currentPeriod.amount,
-        status: "Paid",
-        description: `${currentPeriod.planName} - Monthly`,
-        downloadUrl: `/api/billing/invoice/${Date.now().toString().slice(-6)}`
-      }
-    ] : [];
+    // Get actual payments from database
+    const payments = await prisma.manualPayment.findMany({
+      where: {
+        userId,
+        status: 'APPROVED'
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 12 // Last 12 months
+    });
 
-    // Add more historical invoices if user has been subscribed longer
-    if (subscription) {
-      const monthsAgo = Math.floor((Date.now() - subscription.createdAt.getTime()) / (1000 * 60 * 60 * 24 * 30));
-      for (let i = 1; i <= Math.min(monthsAgo, 3); i++) {
-        const invoiceDate = new Date(subscription.createdAt);
-        invoiceDate.setMonth(invoiceDate.getMonth() + i);
-        
-        invoices.push({
-          id: `INV-${(Date.now() - i * 30 * 24 * 60 * 60 * 1000).toString().slice(-6)}`,
-          date: invoiceDate.toISOString().split('T')[0],
-          amount: currentPeriod.amount,
-          status: "Paid",
-          description: `${currentPeriod.planName} - Monthly`,
-          downloadUrl: `/api/billing/invoice/${(Date.now() - i * 30 * 24 * 60 * 60 * 1000).toString().slice(-6)}`
-        });
+    // Generate invoices from actual payments
+    const invoices = payments.map((payment) => {
+      const invoiceDate = payment.createdAt.toISOString().split('T')[0];
+      const invoiceNumber = `INV-${payment.createdAt.getFullYear()}-${payment.id.slice(-6).toUpperCase()}`;
+      
+      // Extract plan name from payment note
+      let planName = 'Pro Plan';
+      if (payment.note?.includes('Plan:')) {
+        const planMatch = payment.note.match(/Plan: (\w+)/i);
+        if (planMatch) {
+          const planId = planMatch[1].toLowerCase();
+          planName = planId === 'pro' ? 'Pro Plan' : 
+                     planId === 'premium' ? 'Premium Plan' : 'Free Plan';
+        }
       }
-    }
+
+      return {
+        id: invoiceNumber,
+        date: invoiceDate,
+        amount: payment.amountCents / 100,
+        status: "Paid",
+        description: `${planName} - Monthly`,
+        downloadUrl: `/api/billing/invoice/${payment.id}`
+      };
+    });
 
     return NextResponse.json({
       success: true,

@@ -41,16 +41,40 @@ export async function GET() {
       where: { userId }
     });
 
-    // Get billing history (mock data for now)
-    const billingHistory = subscription ? [
-      {
-        id: 'inv_001',
-        date: subscription.currentPeriodStart?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
-        description: `${subscription.tier === 'STANDARD' ? 'Pro' : subscription.tier === 'PREMIUM' ? 'Premium' : 'Free'} Plan - Monthly`,
-        amount: subscription.tier === 'STANDARD' ? '$42.00' : subscription.tier === 'PREMIUM' ? '$59.00' : '$0.00',
-        status: 'Paid'
+    // Get billing history from actual payments
+    const payments = await prisma.manualPayment.findMany({
+      where: {
+        userId,
+        status: 'APPROVED'
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 12 // Last 12 months
+    });
+
+    const billingHistory = payments.map((payment) => {
+      const invoiceDate = payment.createdAt.toISOString().split('T')[0];
+      const invoiceNumber = `INV-${payment.createdAt.getFullYear()}-${payment.id.slice(-6).toUpperCase()}`;
+      
+      // Extract plan name from payment note
+      let planName = 'Pro';
+      if (payment.note?.includes('Plan:')) {
+        const planMatch = payment.note.match(/Plan: (\w+)/i);
+        if (planMatch) {
+          const planId = planMatch[1].toLowerCase();
+          planName = planId === 'pro' ? 'Pro' : 
+                     planId === 'premium' ? 'Premium' : 'Free';
+        }
       }
-    ] : [];
+
+      return {
+        id: invoiceNumber,
+        date: invoiceDate,
+        description: `${planName} Plan - Monthly`,
+        amount: `$${(payment.amountCents / 100).toFixed(2)}`,
+        status: 'Paid',
+        downloadUrl: `/api/billing/invoice/${payment.id}`
+      };
+    });
 
     // Define available plans (matching pricing page)
     const availablePlans = [

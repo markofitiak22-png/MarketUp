@@ -273,9 +273,23 @@ export default function BillingPage() {
                         {invoice.status}
                       </span>
                       <button 
-                        className="text-accent hover:text-accent-hover text-xl font-bold hover:scale-105 transition-all duration-300"
-                        onClick={() => window.open(invoice.downloadUrl, '_blank')}
+                        className="px-6 py-3 rounded-xl bg-accent/10 hover:bg-accent/20 text-accent hover:text-accent-hover text-lg font-bold hover:scale-105 transition-all duration-300 border border-accent/20 flex items-center gap-2"
+                        onClick={() => {
+                          // Open invoice in new tab for download/print
+                          const newWindow = window.open(invoice.downloadUrl, '_blank');
+                          if (newWindow) {
+                            newWindow.onload = () => {
+                              // Auto-trigger print dialog after a short delay
+                              setTimeout(() => {
+                                newWindow.print();
+                              }, 500);
+                            };
+                          }
+                        }}
                       >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
                         {translations.billingDownload}
                       </button>
                     </div>

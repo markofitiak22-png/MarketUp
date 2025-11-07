@@ -131,7 +131,18 @@ export async function GET(request: NextRequest) {
 
       // Parse payment method from note
       let paymentMethod: string = 'bank_transfer';
-      if (payment.note?.includes('syriatel_cash')) {
+      if (payment.note?.includes('Stripe payment')) {
+        // Extract payment method from Stripe payment note
+        if (payment.note.includes('stripe_card') || payment.note.includes('card')) {
+          paymentMethod = 'stripe';
+        } else if (payment.note.includes('apple_pay')) {
+          paymentMethod = 'apple_pay';
+        } else if (payment.note.includes('klarna')) {
+          paymentMethod = 'klarna';
+        } else {
+          paymentMethod = 'stripe';
+        }
+      } else if (payment.note?.includes('syriatel_cash')) {
         paymentMethod = 'syriatel_cash';
       } else if (payment.note?.includes('zain_cash')) {
         paymentMethod = 'zain_cash';
@@ -159,7 +170,11 @@ export async function GET(request: NextRequest) {
         invoiceNumber: invoiceNumber,
         receiptUrl: payment.receiptUrl || undefined,
         metadata: {
-          planName: 'Manual Payment',
+          planName: payment.note?.includes('Plan:') 
+            ? payment.note.match(/Plan: (\w+)/i)?.[1] || 'Pro'
+            : payment.note?.includes('Stripe payment') 
+              ? (payment.note.match(/Plan: (\w+)/i)?.[1] || 'Pro')
+              : 'Manual Payment',
           billingCycle: 'one-time',
           receiptUrl: payment.receiptUrl || undefined
         }

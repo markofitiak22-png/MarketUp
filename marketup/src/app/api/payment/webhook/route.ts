@@ -6,30 +6,48 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder"
   apiVersion: "2025-09-30.clover",
 });
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("🔔 Webhook received");
+    
+    // Check webhook secret
+    if (!webhookSecret || webhookSecret === "" || webhookSecret.includes("placeholder")) {
+      console.error("❌ STRIPE_WEBHOOK_SECRET is not configured");
+      return NextResponse.json(
+        { error: "Webhook secret not configured" },
+        { status: 500 }
+      );
+    }
+
     const body = await request.text();
     const headersList = await headers();
     const signature = headersList.get("stripe-signature");
 
     if (!signature) {
+      console.error("❌ No signature in webhook request");
       return NextResponse.json({ error: "No signature" }, { status: 400 });
     }
+
+    console.log("✅ Signature found, verifying...");
 
     let event: Stripe.Event;
 
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      console.log("✅ Webhook signature verified");
+      console.log("📦 Event type:", event.type);
+      console.log("📦 Event ID:", event.id);
     } catch (err) {
-      console.error("Webhook signature verification failed:", err);
+      console.error("❌ Webhook signature verification failed:", err);
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
     // Handle the event
     switch (event.type) {
       case "checkout.session.completed":
+        console.log("🔄 Processing checkout.session.completed event");
         await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
       
@@ -93,12 +111,18 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   const { prisma } = await import("@/lib/prisma");
   
   try {
-    const { userId, planId, tier } = session.metadata || {};
+    console.log("🔔 Webhook: checkout.session.completed received");
+    console.log("Session ID:", session.id);
+    console.log("Session metadata:", session.metadata);
+    
+    const { userId, planId, tier, paymentMethod } = session.metadata || {};
     
     if (!userId || !tier) {
-      console.error("Missing metadata in checkout session");
+      console.error("❌ Missing metadata in checkout session:", { userId, tier, metadata: session.metadata });
       return;
     }
+
+    console.log("✅ Metadata found:", { userId, planId, tier, paymentMethod });
 
     // Find user
     const user = await prisma.user.findUnique({
@@ -106,12 +130,33 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     });
 
     if (!user) {
-      console.error("User not found:", userId);
+      console.error("❌ User not found:", userId);
       return;
     }
 
+    console.log("✅ User found:", user.email);
+
+    // Get payment amount from session
+    const amountTotal = session.amount_total || 0; // Amount in cents
+    const currency = session.currency?.toUpperCase() || 'USD';
+
+    console.log("💰 Payment amount:", amountTotal / 100, currency);
+
+    // Create payment record for admin panel
+    const paymentRecord = await prisma.manualPayment.create({
+      data: {
+        userId: user.id,
+        amountCents: amountTotal,
+        currency: currency,
+        status: 'APPROVED', // Stripe payments are automatically approved
+        note: `Stripe payment - ${paymentMethod || 'card'}\nPlan: ${planId || 'pro'}\nSession ID: ${session.id}`,
+      },
+    });
+
+    console.log("✅ Payment record created:", paymentRecord.id);
+
     // Cancel existing active subscriptions
-    await prisma.subscription.updateMany({
+    const canceledCount = await prisma.subscription.updateMany({
       where: { 
         userId: user.id, 
         status: "ACTIVE" 
@@ -122,11 +167,13 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       },
     });
 
+    console.log(`✅ Canceled ${canceledCount.count} existing subscriptions`);
+
     // Create new subscription
     const now = new Date();
     const end = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30); // 30 days
 
-    await prisma.subscription.create({
+    const newSubscription = await prisma.subscription.create({
       data: {
         userId: user.id,
         tier: tier as "BASIC" | "STANDARD" | "PREMIUM",
@@ -136,9 +183,19 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       },
     });
 
-    console.log(`User ${user.email} subscribed to ${planId} plan via Stripe`);
+    console.log(`✅ Subscription created:`, {
+      id: newSubscription.id,
+      tier: newSubscription.tier,
+      status: newSubscription.status,
+      userId: newSubscription.userId
+    });
+    console.log(`✅ User ${user.email} subscribed to ${planId} plan via Stripe`);
   } catch (error) {
-    console.error("Error handling checkout session completed:", error);
+    console.error("❌ Error handling checkout session completed:", error);
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
   }
 }
 

@@ -79,13 +79,49 @@ function CheckoutPageContent() {
           setError('Failed to process payment. Please contact support.');
         }
       } else if (successParam === 'true' && paymentMethod !== 'paypal') {
-        // Stripe or other payment methods
-        // Check if payment was successful via webhook
-        // The webhook will create the subscription automatically
-        setIsSuccess(true);
-        setTimeout(() => {
-          router.push('/dashboard?success=true');
-        }, 2000);
+        // Stripe payment - verify session and create subscription
+        const sessionId = searchParams.get('session_id');
+        
+        if (sessionId) {
+          try {
+            console.log('Verifying Stripe session:', sessionId);
+            const response = await fetch('/api/payments/stripe/verify-session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ sessionId }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+              console.log('✅ Subscription created:', data.subscription);
+              setIsSuccess(true);
+              setTimeout(() => {
+                router.push('/dashboard?success=true');
+              }, 2000);
+            } else {
+              console.error('Failed to create subscription:', data.error);
+              // Still show success, webhook might create it later
+              setIsSuccess(true);
+              setTimeout(() => {
+                router.push('/dashboard?success=true');
+              }, 2000);
+            }
+          } catch (error: any) {
+            console.error('Session verification error:', error);
+            // Still show success, webhook might create it later
+            setIsSuccess(true);
+            setTimeout(() => {
+              router.push('/dashboard?success=true');
+            }, 2000);
+          }
+        } else {
+          // No session_id, just wait for webhook
+          setIsSuccess(true);
+          setTimeout(() => {
+            router.push('/dashboard?success=true');
+          }, 2000);
+        }
       }
     };
 

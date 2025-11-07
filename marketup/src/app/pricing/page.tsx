@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useTranslations } from "@/hooks/useTranslations";
 
@@ -106,11 +107,57 @@ const getCountryPricing = (translations: any) => {
 export default function PricingPage() {
   const { translations } = useTranslations();
   const router = useRouter();
+  const { data: session } = useSession();
+  const [userSubscription, setUserSubscription] = useState<{ tier: string; status: string } | null>(null);
+  const [loading, setLoading] = useState(true);
   
   const plans = getPlans(translations);
   const countryPricing = getCountryPricing(translations);
 
+  // Fetch user subscription
+  useEffect(() => {
+    if (session) {
+      fetch('/api/dashboard/overview', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data.subscription) {
+            setUserSubscription({
+              tier: data.data.subscription.tier,
+              status: data.data.subscription.status
+            });
+          }
+        })
+        .catch(() => {
+          // Ignore errors
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, [session]);
+
+  // Map plan IDs to subscription tiers
+  const planTierMap: Record<string, string> = {
+    'free': 'BASIC',
+    'pro': 'STANDARD',
+    'premium': 'PREMIUM'
+  };
+
+  const isPlanActive = (planId: string) => {
+    if (!userSubscription) return false;
+    const tier = planTierMap[planId];
+    return userSubscription.tier === tier && userSubscription.status === 'ACTIVE';
+  };
+
   const handlePlanSelect = (planId: string) => {
+    // Check if user already has this plan
+    if (isPlanActive(planId)) {
+      alert('You already have an active subscription to this plan. Please visit your dashboard to manage your subscription.');
+      return;
+    }
+
     // Only pro plan is available for payment
     if (planId === 'pro') {
       router.push(`/checkout?plan=${planId}`);
@@ -220,12 +267,26 @@ export default function PricingPage() {
                       ))}
                     </div>
 
+                    {/* Current Plan Badge */}
+                    {isPlanActive(plan.id) && (
+                      <div className="mb-4 px-4 py-2 rounded-lg bg-success/20 border border-success/30 text-center">
+                        <span className="text-sm font-bold text-success flex items-center justify-center gap-2">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          Current Plan
+                        </span>
+                      </div>
+                    )}
+
                     {/* CTA Button */}
                     <button
                       onClick={() => handlePlanSelect(plan.id)}
-                      disabled={plan.id !== 'pro'}
+                      disabled={plan.id !== 'pro' || isPlanActive(plan.id)}
                       className={`group relative w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base md:text-lg transition-all duration-300 overflow-hidden ${
-                        plan.id === 'pro'
+                        isPlanActive(plan.id)
+                          ? 'bg-success/20 text-success border-2 border-success/30 cursor-not-allowed opacity-75'
+                          : plan.id === 'pro'
                           ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-1 cursor-pointer'
                           : plan.id === 'free'
                           ? 'bg-white/10 text-white border-2 border-white/20 hover:border-white/40 hover:bg-white/20 cursor-pointer'
@@ -233,19 +294,25 @@ export default function PricingPage() {
                       } ${plan.id !== 'pro' && plan.id !== 'free' ? 'disabled:opacity-50' : ''}`}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
-                        {plan.id === 'pro' ? plan.cta : plan.id === 'free' ? plan.cta : 'Coming Soon'}
-                        {plan.id === 'pro' && (
+                        {isPlanActive(plan.id) 
+                          ? 'Current Plan' 
+                          : plan.id === 'pro' 
+                          ? plan.cta 
+                          : plan.id === 'free' 
+                          ? plan.cta 
+                          : 'Coming Soon'}
+                        {plan.id === 'pro' && !isPlanActive(plan.id) && (
                           <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
                         )}
-                        {plan.id === 'free' && (
+                        {plan.id === 'free' && !isPlanActive(plan.id) && (
                           <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
                         )}
                       </span>
-                      {plan.popular && plan.id === 'pro' && (
+                      {plan.popular && plan.id === 'pro' && !isPlanActive(plan.id) && (
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       )}
                     </button>

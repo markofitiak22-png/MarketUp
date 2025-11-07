@@ -1,5 +1,6 @@
 "use client";
 import { useTranslations } from "@/hooks/useTranslations";
+import { useEffect, useRef, useState } from "react";
 
 interface HomeClientProps {
   session: any;
@@ -7,6 +8,57 @@ interface HomeClientProps {
 
 export default function HomeClient({ session }: HomeClientProps) {
   const { translations } = useTranslations();
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+
+    const setupObservers = () => {
+      const sectionKeys = ["how-it-works", "preview", "pricing"];
+      
+      sectionKeys.forEach((key) => {
+        const element = sectionRefs.current[key];
+        if (!element) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                setVisibleSections((prev) => new Set(prev).add(key));
+              } else {
+                // Remove from visible sections when scrolling up
+                setVisibleSections((prev) => {
+                  const next = new Set(prev);
+                  next.delete(key);
+                  return next;
+                });
+              }
+            });
+          },
+          {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px",
+          }
+        );
+
+        observer.observe(element);
+        observers.push(observer);
+      });
+    };
+
+    // Setup observers after a small delay to ensure refs are set
+    const timeoutId = setTimeout(setupObservers, 200);
+
+    return () => {
+      clearTimeout(timeoutId);
+      observers.forEach((observer) => observer.disconnect());
+    };
+  }, []);
+
+  const setSectionRef = (key: string) => (el: HTMLElement | null) => {
+    sectionRefs.current[key] = el;
+  };
 
   return (
     <>
@@ -100,7 +152,14 @@ export default function HomeClient({ session }: HomeClientProps) {
 
       <div className="container max-w-full overflow-hidden">
         {/* How it works Section */}
-        <section className="section relative overflow-hidden w-full max-w-full">
+        <section 
+          ref={setSectionRef("how-it-works")}
+          className={`section relative overflow-hidden w-full max-w-full transition-all duration-1000 ${
+            visibleSections.has("how-it-works")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
         {/* Enhanced Animated background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
@@ -111,7 +170,11 @@ export default function HomeClient({ session }: HomeClientProps) {
         
         
         <div className="relative z-10">
-          <div className="text-center mb-16 sm:mb-20 lg:mb-24">
+          <div className={`text-center mb-16 sm:mb-20 lg:mb-24 transition-all duration-700 ${
+            visibleSections.has("how-it-works")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight">
               {translations.howItWorks}
             </h2>
@@ -123,7 +186,11 @@ export default function HomeClient({ session }: HomeClientProps) {
           <div className="max-w-4xl mx-auto space-y-8 sm:space-y-8 lg:space-y-6">
             {/* Step 01 - Left */}
             <div className="flex justify-start">
-              <div className="group">
+              <div className={`group transition-all duration-700 delay-100 ${
+                visibleSections.has("how-it-works")
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-10"
+              }`}>
                 <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -145,7 +212,11 @@ export default function HomeClient({ session }: HomeClientProps) {
 
             {/* Step 02 - Right */}
             <div className="flex justify-end -mt-4 sm:-mt-16 lg:-mt-24">
-              <div className="group">
+              <div className={`group transition-all duration-700 delay-200 ${
+                visibleSections.has("how-it-works")
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10"
+              }`}>
                 <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -167,7 +238,11 @@ export default function HomeClient({ session }: HomeClientProps) {
 
             {/* Step 03 - Left */}
             <div className="flex justify-start -mt-2 sm:-mt-12 lg:-mt-20">
-              <div className="group">
+              <div className={`group transition-all duration-700 delay-300 ${
+                visibleSections.has("how-it-works")
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-10"
+              }`}>
                 <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -189,7 +264,11 @@ export default function HomeClient({ session }: HomeClientProps) {
 
             {/* Step 04 - Right */}
             <div className="flex justify-end -mt-2 sm:-mt-12 lg:-mt-20">
-              <div className="group">
+              <div className={`group transition-all duration-700 delay-400 ${
+                visibleSections.has("how-it-works")
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10"
+              }`}>
                 <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -213,7 +292,14 @@ export default function HomeClient({ session }: HomeClientProps) {
       </section>
 
       {/* Preview Section */}
-      <section className="section relative overflow-hidden w-full max-w-full">
+      <section 
+        ref={setSectionRef("preview")}
+        className={`section relative overflow-hidden w-full max-w-full transition-all duration-1000 ${
+          visibleSections.has("preview")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         {/* Enhanced Background elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
@@ -224,7 +310,11 @@ export default function HomeClient({ session }: HomeClientProps) {
         
         
         <div className="relative z-10">
-          <div className="text-center mb-24">
+          <div className={`text-center mb-24 transition-all duration-700 delay-100 ${
+            visibleSections.has("preview")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
               {translations.seeItInAction}
             </h2>
@@ -235,8 +325,12 @@ export default function HomeClient({ session }: HomeClientProps) {
           
           <div className="max-w-7xl mx-auto">
             {/* Interactive Demo Showcase */}
-            <div className="relative mb-16">
-              <div className="glass-elevated rounded-3xl p-8 animate-scale-in shadow-2xl shadow-accent/10 group relative overflow-hidden">
+            <div className={`relative mb-16 transition-all duration-700 delay-200 ${
+              visibleSections.has("preview")
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-95"
+            }`}>
+              <div className="glass-elevated rounded-3xl p-8 shadow-2xl shadow-accent/10 group relative overflow-hidden">
                 {/* Enhanced video container effects */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-3xl"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-accent-2/10 to-transparent rounded-tr-3xl"></div>
@@ -261,7 +355,11 @@ export default function HomeClient({ session }: HomeClientProps) {
                   
                   {/* Feature Highlights */}
                   <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
-                    <div className="text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-2/10 border border-accent/20">
+                    <div className={`text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-2/10 border border-accent/20 transition-all duration-700 delay-300 ${
+                      visibleSections.has("preview")
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-10"
+                    }`}>
                       <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent-2 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -271,7 +369,11 @@ export default function HomeClient({ session }: HomeClientProps) {
                       <p className="text-sm text-foreground-muted">{translations.lightningFastDesc}</p>
                     </div>
                     
-                    <div className="text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent-2/10 to-purple-500/10 border border-accent-2/20">
+                    <div className={`text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent-2/10 to-purple-500/10 border border-accent-2/20 transition-all duration-700 delay-400 ${
+                      visibleSections.has("preview")
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-10"
+                    }`}>
                       <div className="w-16 h-16 bg-gradient-to-br from-accent-2 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -281,7 +383,11 @@ export default function HomeClient({ session }: HomeClientProps) {
                       <p className="text-sm text-foreground-muted">{translations.hdQualityDesc}</p>
                     </div>
                     
-                    <div className="text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+                    <div className={`text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 transition-all duration-700 delay-500 ${
+                      visibleSections.has("preview")
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-10"
+                    }`}>
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -301,21 +407,36 @@ export default function HomeClient({ session }: HomeClientProps) {
       </section>
 
       {/* Pricing Teaser Section */}
-      <section className="section relative overflow-hidden w-full max-w-full">
+      <section 
+        ref={setSectionRef("pricing")}
+        className={`section relative overflow-hidden w-full max-w-full transition-all duration-1000 ${
+          visibleSections.has("pricing")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="absolute inset-0  from-accent/8 via-accent-2/5 to-purple-500/5 rounded-3xl" />
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-accent/5 to-transparent" />
         
         <div className="relative z-10 text-center">
-         
+          <div className={`transition-all duration-700 delay-100 ${
+            visibleSections.has("pricing")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-white leading-tight">
+              {translations.simplePricing}
+            </h2>
+            <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
+              {translations.pricingSubtitle}
+            </p>
+          </div>
           
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-white leading-tight">
-            {translations.simplePricing}
-          </h2>
-          <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
-            {translations.pricingSubtitle}
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-700 delay-200 ${
+            visibleSections.has("pricing")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <a href="/pricing" className="group relative bg-white text-black text-accent px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-white/25 transition-all duration-300 hover:-translate-y-1">
               <span className="flex items-center gap-3">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

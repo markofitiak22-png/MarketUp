@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/useTranslations";
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, Line, LineChart } from "recharts";
 
 interface DashboardMetrics {
   totalUsers: number;
@@ -253,23 +254,89 @@ export default function AdminDashboard() {
 
           {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
-            {/* Revenue Chart */}
+            {/* Video Activity Chart */}
             <div className="glass-elevated rounded-2xl p-4 sm:p-6 lg:p-8 xl:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
               <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
-                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">{translations.adminRevenueTrend}</h3>
+                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">Video Activity</h3>
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-accent rounded-full"></div>
-                  <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.adminRevenue}</span>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-warning rounded-full"></div>
+                  <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">Videos Created</span>
                 </div>
               </div>
-              <div className="h-60 sm:h-70 lg:h-80 flex items-center justify-center">
-                <div className="text-center">
-                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground-muted mb-4 sm:mb-6">
-                    <path d="M3 3v18h18"/>
-                    <path d="M18.5 8.5l-3 3-2-2-4 4"/>
-                  </svg>
-                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminChartVisualizationComingSoon}</p>
-                </div>
+              <div className="h-60 sm:h-70 lg:h-80 w-full">
+                {loading ? (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="animate-spin w-10 h-10 border-4 border-accent border-t-transparent rounded-full"></div>
+                  </div>
+                ) : adminData?.charts?.videos ? (
+                  (() => {
+                    const chartData = adminData.charts.videos.labels?.map((label: string, index: number) => ({
+                      name: label,
+                      videos: adminData.charts.videos.data?.[index] || 0
+                    })) || [];
+                    
+                    if (!chartData || chartData.length === 0) {
+                      return (
+                        <div className="h-full flex items-center justify-center">
+                          <div className="text-center">
+                            <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">No data available</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    return (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart
+                          data={chartData}
+                          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="#a1a1aa"
+                            style={{ fontSize: '12px' }}
+                            tick={{ fill: '#a1a1aa' }}
+                          />
+                          <YAxis 
+                            stroke="#a1a1aa"
+                            style={{ fontSize: '12px' }}
+                            tick={{ fill: '#a1a1aa' }}
+                            allowDecimals={false}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: 'rgba(18, 19, 21, 0.95)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '8px',
+                              color: '#e6e7ea'
+                            }}
+                            labelStyle={{ color: '#e6e7ea', marginBottom: '4px' }}
+                            formatter={(value: any) => [value, 'Videos']}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="videos"
+                            stroke="#f59e0b"
+                            strokeWidth={3}
+                            dot={{ fill: '#f59e0b', r: 5, strokeWidth: 2, stroke: '#fff' }}
+                            activeDot={{ r: 7, stroke: '#f59e0b', strokeWidth: 2 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    );
+                  })()
+                ) : (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="text-center">
+                      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground-muted mb-4 sm:mb-6">
+                        <polygon points="23 7 16 12 23 17 23 7"/>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                      </svg>
+                      <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminChartVisualizationComingSoon}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -282,16 +349,93 @@ export default function AdminDashboard() {
                   <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.adminActiveUsers}</span>
                 </div>
               </div>
-              <div className="h-60 sm:h-70 lg:h-80 flex items-center justify-center">
-                <div className="text-center">
-                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground-muted mb-4 sm:mb-6">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                  <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminChartVisualizationComingSoon}</p>
-                </div>
+              <div className="h-60 sm:h-70 lg:h-80 w-full">
+                {loading ? (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="animate-spin w-10 h-10 border-4 border-accent border-t-transparent rounded-full"></div>
+                  </div>
+                ) : adminData?.charts?.users ? (
+                  (() => {
+                    const chartData = adminData.charts.users.labels?.map((label: string, index: number) => ({
+                      name: label,
+                      users: adminData.charts.users.data?.[index] || 0
+                    })) || [];
+                    
+                    // Ensure we have valid data
+                    if (!chartData || chartData.length === 0) {
+                      return (
+                        <div className="h-full flex items-center justify-center">
+                          <div className="text-center">
+                            <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">No data available</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    const gradientId = `colorUsers-${Date.now()}`;
+                    
+                    return (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                          data={chartData}
+                          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                        >
+                          <defs>
+                            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="#a1a1aa"
+                            style={{ fontSize: '12px' }}
+                            tick={{ fill: '#a1a1aa' }}
+                          />
+                          <YAxis 
+                            stroke="#a1a1aa"
+                            style={{ fontSize: '12px' }}
+                            tick={{ fill: '#a1a1aa' }}
+                            allowDecimals={false}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: 'rgba(18, 19, 21, 0.95)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '8px',
+                              color: '#e6e7ea'
+                            }}
+                            labelStyle={{ color: '#e6e7ea', marginBottom: '4px' }}
+                            formatter={(value: any) => [value, 'Users']}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="users"
+                            stroke="#10b981"
+                            strokeWidth={2.5}
+                            fillOpacity={1}
+                            fill={`url(#${gradientId})`}
+                            dot={{ fill: '#10b981', r: 4 }}
+                            activeDot={{ r: 6 }}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    );
+                  })()
+                ) : (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="text-center">
+                      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground-muted mb-4 sm:mb-6">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                      </svg>
+                      <p className="text-sm sm:text-base lg:text-xl text-foreground-muted">{translations.adminChartVisualizationComingSoon}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

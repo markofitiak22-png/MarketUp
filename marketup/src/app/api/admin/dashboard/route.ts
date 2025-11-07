@@ -162,6 +162,58 @@ export async function GET(request: NextRequest) {
     const videoGrowth = videosLastMonth > 0 ? ((videosThisMonth - videosLastMonth) / videosLastMonth) * 100 : 0;
     const revenueGrowth = revenueLastMonthValue > 0 ? ((revenueThisMonthValue - revenueLastMonthValue) / revenueLastMonthValue) * 100 : 0;
 
+    // Get user activity data for last 7 days
+    const userActivityData = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      
+      const dayUsers = await prisma.user.count({
+        where: {
+          createdAt: {
+            gte: date,
+            lt: nextDate
+          }
+        }
+      });
+      
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      userActivityData.push({
+        date: dayName,
+        users: dayUsers
+      });
+    }
+
+    // Get video activity data for last 7 days
+    const videoActivityData = [];
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      
+      const dayVideos = await prisma.video.count({
+        where: {
+          createdAt: {
+            gte: date,
+            lt: nextDate
+          }
+        }
+      });
+      
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      videoActivityData.push({
+        date: dayName,
+        videos: dayVideos
+      });
+    }
+
     // Format recent activity
     const activity = [
       ...recentUsers.map(user => ({
@@ -195,13 +247,13 @@ export async function GET(request: NextRequest) {
         },
         recentActivity: activity,
         charts: {
-          revenue: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            data: [12000, 15000, 18000, 22000, 25000, totalRevenue / 6]
+          videos: {
+            labels: videoActivityData.map(d => d.date),
+            data: videoActivityData.map(d => d.videos)
           },
           users: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            data: [200, 350, 500, 750, 1000, totalUsers / 6]
+            labels: userActivityData.map(d => d.date),
+            data: userActivityData.map(d => d.users)
           }
         }
       }

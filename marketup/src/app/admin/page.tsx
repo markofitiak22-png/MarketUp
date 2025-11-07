@@ -26,7 +26,7 @@ interface AdminData {
   metrics: DashboardMetrics;
   recentActivity: RecentActivity[];
   charts: {
-    revenue: {
+    videos: {
       labels: string[];
       data: number[];
     };

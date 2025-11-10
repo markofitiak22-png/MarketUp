@@ -27,7 +27,6 @@ export default function HomeClient({ session }: HomeClientProps) {
               if (entry.isIntersecting) {
                 setVisibleSections((prev) => new Set(prev).add(key));
               } else {
-                // Remove from visible sections when scrolling up
                 setVisibleSections((prev) => {
                   const next = new Set(prev);
                   next.delete(key);
@@ -47,7 +46,6 @@ export default function HomeClient({ session }: HomeClientProps) {
       });
     };
 
-    // Setup observers after a small delay to ensure refs are set
     const timeoutId = setTimeout(setupObservers, 200);
 
     return () => {
@@ -61,229 +59,228 @@ export default function HomeClient({ session }: HomeClientProps) {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#0b0b0b]">
       {/* Hero Section */}
-      <section className="min-h-[70vh] sm:min-h-[80vh] lg:h-[60vh] flex items-center relative overflow-hidden w-full max-w-full">
-        {/* Full-width background image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-accent-2/6 to-accent/8" />
+      <section className="min-h-[85vh] flex items-center relative overflow-hidden w-full">
+        {/* Background image - KEEPING AS IS */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-purple-600/8 to-pink-500/10" />
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0b]/95 via-[#0b0b0b]/85 to-transparent" />
         
-        {/* Content overlaid on the background */}
-        <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10 max-w-full overflow-hidden">
-          <div className="max-w-6xl mx-auto">
-            <div className="space-y-6 sm:space-y-8 lg:pr-96 max-w-full">
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-20 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+        
+        {/* Content */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 max-w-7xl mx-auto py-20">
+          <div className="max-w-3xl space-y-8">
+            {/* Main heading */}
+            <div className="space-y-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight text-white">
+                {translations.heroTitle}
+              </h1>
+              
+              <p className="text-lg sm:text-xl md:text-2xl text-white/80 max-w-2xl leading-relaxed">
+                {translations.heroSubtitle}
+              </p>
+            </div>
             
-              
-              {/* Main heading */}
-              <div className="space-y-4 sm:space-y-6">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[0.95]">
-                  {translations.heroTitle}
-                </h1>
-                
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-2xl leading-relaxed font-light">
-                  {translations.heroSubtitle}
-                </p>
-              </div>
-              
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                {session ? (
-                  <a href="/onboarding" className="group relative btn-primary btn-lg px-6 sm:px-8 lg:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold overflow-hidden">
-                    <span className="relative z-10 flex items-center justify-center gap-3">
-                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      {translations.getStarted}
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </a>
-                ) : (
-                  <a href="/auth" className="group relative btn-primary btn-lg px-10 py-5 text-lg font-bold overflow-hidden">
-                    <span className="relative z-10 flex items-center gap-3">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      {translations.getStarted}
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </a>
-                )}
-                <a href="/pricing" className="group btn-outline btn-lg px-10 py-5 text-lg font-semibold hover:bg-accent/5 transition-all duration-300">
-                  <span className="flex items-center gap-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {session ? (
+                <a 
+                  href="/onboarding" 
+                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-indigo-500/30 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-3">
+                    <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    {translations.seePricing}
+                    {translations.getStarted}
                   </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
-              </div>
+              ) : (
+                <a 
+                  href="/auth" 
+                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-indigo-500/30 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-3">
+                    <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    {translations.getStarted}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </a>
+              )}
+              <a 
+                href="/pricing" 
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+              >
+                <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+                {translations.seePricing}
+              </a>
+            </div>
 
-              {/* Trust indicators */}
-              <div className="flex flex-col sm:flex-row items-start gap-8 pt-8">
-                <div className="flex items-center gap-2 text-sm text-foreground-muted">
-                  <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>{translations.noCreditCard}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-foreground-muted">
-                  <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>{translations.fiveMinuteSetup}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-foreground-muted">
-                  <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>{translations.hdQuality}</span>
-                </div>
+            {/* Trust indicators */}
+            <div className="flex flex-wrap items-center gap-6 pt-4">
+              <div className="flex items-center gap-2 text-sm text-white/70">
+                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>{translations.noCreditCard}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-white/70">
+                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>{translations.fiveMinuteSetup}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-white/70">
+                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>{translations.hdQuality}</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="container max-w-full overflow-hidden">
-        {/* How it works Section */}
-        <section 
-          ref={setSectionRef("how-it-works")}
-          className={`section relative overflow-hidden w-full max-w-full transition-all duration-1000 ${
-            visibleSections.has("how-it-works")
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-10"
-          }`}
-        >
-        {/* Enhanced Animated background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000 overflow-hidden"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500 overflow-hidden"></div>
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700 overflow-hidden"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300 overflow-hidden"></div>
+      {/* How it works Section */}
+      <section 
+        ref={setSectionRef("how-it-works")}
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden transition-all duration-1000 ${
+          visibleSections.has("how-it-works")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0b0b0b] via-[#0b0b0b] to-[#0b0b0b]" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
         
-        
-        <div className="relative z-10">
-          <div className={`text-center mb-16 sm:mb-20 lg:mb-24 transition-all duration-700 ${
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className={`text-center mb-16 transition-all duration-700 ${
             visibleSections.has("how-it-works")
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-5"
           }`}>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
               {translations.howItWorks}
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light px-4">
+            <p className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed">
               {translations.howItWorksSubtitle}
             </p>
           </div>
           
-          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-8 lg:space-y-6">
-            {/* Step 01 - Left */}
-            <div className="flex justify-start">
-              <div className={`group transition-all duration-700 delay-100 ${
-                visibleSections.has("how-it-works")
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-10"
-              }`}>
-                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                        01
-                      </div>
-                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {/* Step 01 */}
+            <div className={`group transition-all duration-700 delay-100 ${
+              visibleSections.has("how-it-works")
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-10"
+            }`}>
+              <div className="relative h-full p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl hover:border-indigo-500/50 hover:bg-gradient-to-br hover:from-slate-800/70 hover:to-slate-900/70 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-1 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-2xl group-hover:from-indigo-500/20 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/5 group-hover:to-transparent transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 group-hover:shadow-indigo-500/50 transition-all duration-300">
+                      01
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.step1Title}</h3>
-                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                      {translations.step1Description}
-                    </p>
+                    <div className="flex-1 h-px bg-gradient-to-r from-indigo-500/50 to-transparent group-hover:from-indigo-500/70 transition-all duration-300" />
                   </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-indigo-300 transition-colors duration-300">{translations.step1Title}</h3>
+                  <p className="text-white/70 leading-relaxed group-hover:text-white/80 transition-colors duration-300">
+                    {translations.step1Description}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Step 02 - Right */}
-            <div className="flex justify-end -mt-4 sm:-mt-16 lg:-mt-24">
-              <div className={`group transition-all duration-700 delay-200 ${
-                visibleSections.has("how-it-works")
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-10"
-              }`}>
-                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                        02
-                      </div>
-                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
+            {/* Step 02 */}
+            <div className={`group transition-all duration-700 delay-200 ${
+              visibleSections.has("how-it-works")
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-10"
+            }`}>
+              <div className="relative h-full p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl hover:border-purple-500/50 hover:bg-gradient-to-br hover:from-slate-800/70 hover:to-slate-900/70 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-1 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-transparent rounded-bl-2xl group-hover:from-purple-500/20 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-purple-500/0 group-hover:from-purple-500/5 group-hover:to-transparent transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600 to-purple-500 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 group-hover:shadow-purple-500/50 transition-all duration-300">
+                      02
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.step2Title}</h3>
-                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                      {translations.step2Description}
-                    </p>
+                    <div className="flex-1 h-px bg-gradient-to-r from-purple-500/50 to-transparent group-hover:from-purple-500/70 transition-all duration-300" />
                   </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-purple-300 transition-colors duration-300">{translations.step2Title}</h3>
+                  <p className="text-white/70 leading-relaxed group-hover:text-white/80 transition-colors duration-300">
+                    {translations.step2Description}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Step 03 - Left */}
-            <div className="flex justify-start -mt-2 sm:-mt-12 lg:-mt-20">
-              <div className={`group transition-all duration-700 delay-300 ${
-                visibleSections.has("how-it-works")
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-10"
-              }`}>
-                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent/20 group-hover:border-accent/40 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                        03
-                      </div>
-                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent to-transparent rounded-full" />
+            {/* Step 03 */}
+            <div className={`group transition-all duration-700 delay-300 ${
+              visibleSections.has("how-it-works")
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-10"
+            }`}>
+              <div className="relative h-full p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl hover:border-indigo-500/50 hover:bg-gradient-to-br hover:from-slate-800/70 hover:to-slate-900/70 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-1 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-2xl group-hover:from-indigo-500/20 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/5 group-hover:to-transparent transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 group-hover:shadow-indigo-500/50 transition-all duration-300">
+                      03
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.step3Title}</h3>
-                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                      {translations.step3Description}
-                    </p>
+                    <div className="flex-1 h-px bg-gradient-to-r from-indigo-500/50 to-transparent group-hover:from-indigo-500/70 transition-all duration-300" />
                   </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-indigo-300 transition-colors duration-300">{translations.step3Title}</h3>
+                  <p className="text-white/70 leading-relaxed group-hover:text-white/80 transition-colors duration-300">
+                    {translations.step3Description}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Step 04 - Right */}
-            <div className="flex justify-end -mt-2 sm:-mt-12 lg:-mt-20">
-              <div className={`group transition-all duration-700 delay-400 ${
-                visibleSections.has("how-it-works")
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-10"
-              }`}>
-                <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-[420px] h-auto sm:h-[360px] transition-all duration-700 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-accent-2/20 group-hover:border-accent-2/40 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-3xl" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-2/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-accent-2 to-purple-500 flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-xl group-hover:scale-110 transition-transform duration-300">
-                        04
-                      </div>
-                      <div className="w-8 sm:w-12 h-1 bg-gradient-to-r from-accent-2 to-transparent rounded-full" />
+            {/* Step 04 */}
+            <div className={`group transition-all duration-700 delay-400 ${
+              visibleSections.has("how-it-works")
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-10"
+            }`}>
+              <div className="relative h-full p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl hover:border-purple-500/50 hover:bg-gradient-to-br hover:from-slate-800/70 hover:to-slate-900/70 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-1 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-transparent rounded-bl-2xl group-hover:from-purple-500/20 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-purple-500/0 group-hover:from-purple-500/5 group-hover:to-transparent transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600 to-purple-500 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 group-hover:shadow-purple-500/50 transition-all duration-300">
+                      04
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">{translations.step4Title}</h3>
-                    <p className="text-foreground-muted leading-relaxed text-base sm:text-lg lg:text-xl">
-                      {translations.step4Description}
-                    </p>
+                    <div className="flex-1 h-px bg-gradient-to-r from-purple-500/50 to-transparent group-hover:from-purple-500/70 transition-all duration-300" />
                   </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-purple-300 transition-colors duration-300">{translations.step4Title}</h3>
+                  <p className="text-white/70 leading-relaxed group-hover:text-white/80 transition-colors duration-300">
+                    {translations.step4Description}
+                  </p>
                 </div>
               </div>
             </div>
@@ -294,114 +291,103 @@ export default function HomeClient({ session }: HomeClientProps) {
       {/* Preview Section */}
       <section 
         ref={setSectionRef("preview")}
-        className={`section relative overflow-hidden w-full max-w-full transition-all duration-1000 ${
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden transition-all duration-1000 ${
           visibleSections.has("preview")
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        {/* Enhanced Background elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50" />
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse overflow-hidden"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000 overflow-hidden"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500 overflow-hidden"></div>
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl animate-pulse delay-700 overflow-hidden"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse delay-300 overflow-hidden"></div>
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0b0b0b] via-[#0b0b0b] to-[#0b0b0b]" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
         
-        
-        <div className="relative z-10">
-          <div className={`text-center mb-24 transition-all duration-700 delay-100 ${
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className={`text-center mb-16 transition-all duration-700 ${
             visibleSections.has("preview")
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-5"
           }`}>
-            <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
               {translations.seeItInAction}
             </h2>
-            <p className="text-2xl md:text-3xl text-foreground-muted max-w-4xl mx-auto leading-relaxed font-light">
+            <p className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed">
               {translations.previewSubtitle}
             </p>
           </div>
           
-          <div className="max-w-7xl mx-auto">
-            {/* Interactive Demo Showcase */}
-            <div className={`relative mb-16 transition-all duration-700 delay-200 ${
-              visibleSections.has("preview")
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-95"
-            }`}>
-              <div className="glass-elevated rounded-3xl p-8 shadow-2xl shadow-accent/10 group relative overflow-hidden">
-                {/* Enhanced video container effects */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-accent-2/10 to-transparent rounded-tr-3xl"></div>
-                
-                <div className="relative z-10">
-                  {/* Demo Preview Interface */}
-                  <div className="bg-black rounded-2xl aspect-video relative overflow-hidden">
-                    {/* Video Player Placeholder */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-                        <div className="text-center text-white">
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-2 sm:mb-4 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-2xl flex items-center justify-center">
-                            <svg className="w-8 h-8 sm:w-10 sm:h-10 text-accent" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z"/>
-                            </svg>
-                          </div>
-                          <h3 className="text-sm sm:text-lg font-bold mb-1">AI Avatar Video</h3>
-                          <p className="text-xs sm:text-sm opacity-75">Premium Quality Demo</p>
-                        </div>
+          <div className={`transition-all duration-700 delay-200 ${
+            visibleSections.has("preview")
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95"
+          }`}>
+            <div className="group relative p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:border-slate-600/50 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-2xl group-hover:from-indigo-500/20 transition-all duration-300" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-500/10 to-transparent rounded-tr-2xl group-hover:from-purple-500/20 transition-all duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-indigo-500/5 group-hover:via-purple-500/5 group-hover:to-pink-500/5 transition-all duration-500" />
+              
+              <div className="relative z-10">
+                {/* Video Preview */}
+                <div className="bg-black rounded-xl aspect-video relative overflow-hidden mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center">
+                        <svg className="w-10 h-10 text-indigo-400" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold mb-1">AI Avatar Video</h3>
+                      <p className="text-sm opacity-75">Premium Quality Demo</p>
                     </div>
-                    
+                  </div>
+                </div>
+                
+                {/* Feature Highlights */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className={`group/feature text-center p-6 rounded-xl bg-gradient-to-br from-indigo-500/10 to-indigo-500/5 border border-indigo-500/20 hover:border-indigo-500/40 hover:bg-gradient-to-br hover:from-indigo-500/15 hover:to-indigo-500/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/20 delay-300 ${
+                    visibleSections.has("preview")
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-10"
+                  }`}>
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover/feature:scale-110 group-hover/feature:shadow-lg group-hover/feature:shadow-indigo-500/50 transition-all duration-300">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-lg font-bold text-white mb-2 group-hover/feature:text-indigo-300 transition-colors duration-300">{translations.lightningFast}</h4>
+                    <p className="text-sm text-white/70 group-hover/feature:text-white/80 transition-colors duration-300">{translations.lightningFastDesc}</p>
                   </div>
                   
-                  {/* Feature Highlights */}
-                  <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
-                    <div className={`text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-2/10 border border-accent/20 transition-all duration-700 delay-300 ${
-                      visibleSections.has("preview")
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-10"
-                    }`}>
-                      <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent-2 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-bold text-foreground mb-2">{translations.lightningFast}</h4>
-                      <p className="text-sm text-foreground-muted">{translations.lightningFastDesc}</p>
+                  <div className={`group/feature text-center p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 hover:border-purple-500/40 hover:bg-gradient-to-br hover:from-purple-500/15 hover:to-purple-500/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 delay-400 ${
+                    visibleSections.has("preview")
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-10"
+                  }`}>
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover/feature:scale-110 group-hover/feature:shadow-lg group-hover/feature:shadow-purple-500/50 transition-all duration-300">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
-                    
-                    <div className={`text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-accent-2/10 to-purple-500/10 border border-accent-2/20 transition-all duration-700 delay-400 ${
-                      visibleSections.has("preview")
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-10"
-                    }`}>
-                      <div className="w-16 h-16 bg-gradient-to-br from-accent-2 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-bold text-foreground mb-2">{translations.hdQualityTitle}</h4>
-                      <p className="text-sm text-foreground-muted">{translations.hdQualityDesc}</p>
+                    <h4 className="text-lg font-bold text-white mb-2 group-hover/feature:text-purple-300 transition-colors duration-300">{translations.hdQualityTitle}</h4>
+                    <p className="text-sm text-white/70 group-hover/feature:text-white/80 transition-colors duration-300">{translations.hdQualityDesc}</p>
+                  </div>
+                  
+                  <div className={`group/feature text-center p-6 rounded-xl bg-gradient-to-br from-pink-500/10 to-pink-500/5 border border-pink-500/20 hover:border-pink-500/40 hover:bg-gradient-to-br hover:from-pink-500/15 hover:to-pink-500/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-pink-500/20 delay-500 ${
+                    visibleSections.has("preview")
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-10"
+                  }`}>
+                    <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover/feature:scale-110 group-hover/feature:shadow-lg group-hover/feature:shadow-pink-500/50 transition-all duration-300">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                      </svg>
                     </div>
-                    
-                    <div className={`text-center p-6 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 transition-all duration-700 delay-500 ${
-                      visibleSections.has("preview")
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-10"
-                    }`}>
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-bold text-foreground mb-2">{translations.autoPublishing}</h4>
-                      <p className="text-sm text-foreground-muted">{translations.autoPublishingDesc}</p>
-                    </div>
+                    <h4 className="text-lg font-bold text-white mb-2 group-hover/feature:text-pink-300 transition-colors duration-300">{translations.autoPublishing}</h4>
+                    <p className="text-sm text-white/70 group-hover/feature:text-white/80 transition-colors duration-300">{translations.autoPublishingDesc}</p>
                   </div>
                 </div>
               </div>
             </div>
-            
-            
           </div>
         </div>
       </section>
@@ -409,65 +395,78 @@ export default function HomeClient({ session }: HomeClientProps) {
       {/* Pricing Teaser Section */}
       <section 
         ref={setSectionRef("pricing")}
-        className={`section relative overflow-hidden w-full max-w-full transition-all duration-1000 ${
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden transition-all duration-1000 ${
           visibleSections.has("pricing")
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="absolute inset-0  from-accent/8 via-accent-2/5 to-purple-500/5 rounded-3xl" />
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-accent/5 to-transparent" />
+        {/* Background with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-purple-600/10 to-pink-500/10" />
+        <div className="absolute inset-0 bg-[#0b0b0b]" />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent" />
         
-        <div className="relative z-10 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className={`transition-all duration-700 delay-100 ${
             visibleSections.has("pricing")
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-5"
           }`}>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-white leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
               {translations.simplePricing}
             </h2>
-            <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
+            <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-12 leading-relaxed">
               {translations.pricingSubtitle}
             </p>
           </div>
           
-          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-700 delay-200 ${
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-700 delay-200 ${
             visibleSections.has("pricing")
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-5"
           }`}>
-            <a href="/pricing" className="group relative bg-white text-black text-accent px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-white/25 transition-all duration-300 hover:-translate-y-1">
-              <span className="flex items-center gap-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a 
+              href="/pricing" 
+              className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl hover:shadow-2xl hover:shadow-white/30 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                 </svg>
                 {translations.seePricingButton}
               </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
             {session ? (
-              <a href="/studio" className="group bg-white/10 border border-white/20 text-white px-10 py-5 rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300">
-                <span className="flex items-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <a 
+                href="/studio" 
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   {translations.startNow}
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 to-white/0 group-hover:from-white/10 group-hover:to-white/5 transition-all duration-300" />
               </a>
             ) : (
-              <a href="/auth" className="group bg-white/10 border border-white/20 text-white px-10 py-5 rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300">
-                <span className="flex items-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <a 
+                href="/auth" 
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   {translations.startNow}
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 to-white/0 group-hover:from-white/10 group-hover:to-white/5 transition-all duration-300" />
               </a>
             )}
           </div>
         </div>
       </section>
-      </div>
-    </>
+    </div>
   );
 }

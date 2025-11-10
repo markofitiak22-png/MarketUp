@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
 interface FormErrors {
   email?: string;
@@ -20,7 +22,6 @@ export default function AuthPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneCode, setPhoneCode] = useState("");
-  // const [lang, setLang] = useState("en");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAnimating, setIsAnimating] = useState(false);
@@ -37,7 +38,6 @@ export default function AuthPage() {
   const passwordRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
-  // Load remembered data on component mount
   useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberedEmail');
     const isRemembered = localStorage.getItem('rememberMe') === 'true';
@@ -47,17 +47,13 @@ export default function AuthPage() {
       setRememberMe(true);
     }
 
-    // Check for referral code in URL
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
-    console.log('Referral code from URL:', refCode);
     if (refCode) {
       setReferralCode(refCode);
-      console.log('Referral code set:', refCode);
     }
   }, []);
 
-  // Real-time validation
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) return "Email is required";
@@ -93,7 +89,6 @@ export default function AuthPage() {
     return null;
   };
 
-  // Debounced validation
   useEffect(() => {
     const timer = setTimeout(() => {
       if (email) {
@@ -159,7 +154,6 @@ export default function AuthPage() {
     setLoading(true);
     setErrors({});
     
-    // Validate all fields
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const nameError = mode === "signup" ? validateName(name) : null;
@@ -176,7 +170,6 @@ export default function AuthPage() {
 
     try {
       if (mode === "signup") {
-        console.log('Sending registration data:', { email, hasPassword: !!password, name, referralCode });
         const res = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -194,7 +187,6 @@ export default function AuthPage() {
       });
       
       if (result?.error) {
-        // Provide user-friendly error messages
         let errorMessage = "An error occurred. Please try again.";
         if (result.error === "CredentialsSignin") {
           errorMessage = "Invalid email or password. Please check your credentials and try again.";
@@ -205,7 +197,6 @@ export default function AuthPage() {
         }
         setErrors({ general: errorMessage });
       } else {
-        // Store remember me preference in localStorage
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true');
           localStorage.setItem('rememberedEmail', email);
@@ -214,7 +205,6 @@ export default function AuthPage() {
           localStorage.removeItem('rememberedEmail');
         }
         
-        // Success animation before redirect
         setTimeout(() => {
           router.push("/");
         }, 500);
@@ -231,7 +221,6 @@ export default function AuthPage() {
   }
 
   async function apple() {
-    // Apple Sign In implementation
     console.log("Apple Sign In - Coming soon");
   }
 
@@ -247,7 +236,6 @@ export default function AuthPage() {
     }
 
     try {
-      // Simulate sending SMS code
       await new Promise(resolve => setTimeout(resolve, 1000));
       setPhoneCodeSent(true);
     } catch (e: any) {
@@ -269,7 +257,6 @@ export default function AuthPage() {
     }
 
     try {
-      // Simulate phone verification
       await new Promise(resolve => setTimeout(resolve, 1000));
       router.push("/");
     } catch (e: any) {
@@ -279,422 +266,451 @@ export default function AuthPage() {
     }
   }
 
-  // function continueAsGuest() {
-  //   router.push("/");
-  // }
-
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Enhanced Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40" />
-        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-accent-2/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
-      </div>
-      
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <section className="pt-14 pb-20 px-4">
-          <div className="max-w-7xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-glow border border-accent/20 text-foreground text-sm font-medium mb-8">
-              <div className="w-2 h-2 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-              <span>MarketUp</span>
-              <div className="w-2 h-2 bg-gradient-to-r from-accent-2 to-purple-500 rounded-full animate-pulse" />
-            </div>
-            
-            {/* Main heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] text-white mb-2">
-              {mode === "signin" ? "Welcome back" : "Create your account"}{" "}
-              <span className="text-white">
-                {mode === "signin" ? "to MarketUp" : "with MarketUp"}
+    <div className="min-h-screen flex">
+      {/* Left Side - Visual/Branding */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+        
+        <div className="relative z-10 flex flex-col justify-between p-12 text-white">
+          <div>
+            <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight mb-8">
+              <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
+                <Image 
+                  src="/favicon-32x32.png" 
+                  alt="MarketUp Logo" 
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-gradient bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                MarketUp
               </span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light ">
-              {mode === "signin" ? "Sign in to continue creating amazing videos" : "Join thousands of creators building with AI"}
-            </p>
+            </Link>
           </div>
-        </section>
+          
+          <div className="space-y-6">
+            <h1 className="text-5xl font-bold leading-tight">
+              {mode === "signin" ? "Welcome Back" : "Start Your Journey"}
+            </h1>
+            <p className="text-xl text-white/90 leading-relaxed">
+              {mode === "signin" 
+                ? "Continue creating amazing AI-powered videos with your personalized avatar."
+                : "Join thousands of creators building engaging content with AI technology."}
+            </p>
+            <div className="flex flex-wrap gap-3 pt-4">
+              <div className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                <span className="text-sm font-medium">✨ AI-Powered</span>
+              </div>
+              <div className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                <span className="text-sm font-medium">🚀 Fast Creation</span>
+              </div>
+              <div className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                <span className="text-sm font-medium">🎨 Customizable</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-sm text-white/70">
+            © 2026 MarketUp. All rights reserved.
+          </div>
+        </div>
+      </div>
 
-        {/* Auth Form Section */}
-        <section className="pb-20 px-4">
-          <div className="max-w-lg mx-auto">
-            {/* Auth Form */}
-            <div className={`bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-12 relative overflow-hidden shadow-2xl transition-all duration-300 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-bl-3xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-accent-2/20 to-transparent rounded-tr-3xl" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-r from-accent/5 to-accent-2/5 rounded-full blur-3xl" />
-                <div className="relative z-10">
-                  {/* Tab Navigation */}
-                  <div className="relative mb-10 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10 shadow-inner">
-                    <div className="relative flex">
-                      <button
-                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
-                          mode === "signin" 
-                            ? "text-white" 
-                            : "text-white/70 hover:text-white"
-                        }`}
-                        onClick={() => handleModeChange("signin")}
-                      >
-                        Sign In
-                      </button>
-                      <button
-                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
-                          mode === "signup" 
-                            ? "text-white" 
-                            : "text-white/70 hover:text-white"
-                        }`}
-                        onClick={() => handleModeChange("signup")}
-                      >
-                        Sign Up
-                      </button>
-                    </div>
-                    {/* Animated Background Slider */}
-                    <div 
-                      className={`absolute top-2 bottom-2 w-1/2 bg-gradient-to-r from-accent to-accent-2 rounded-xl shadow-lg transition-all duration-300 ${
-                        mode === "signin" ? "left-2" : "left-1/2"
-                      }`}
-                    />
-                  </div>
+      {/* Right Side - Auth Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
+          <Link href="/" className="lg:hidden group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight mb-8">
+            <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
+              <Image 
+                src="/favicon-32x32.png" 
+                alt="MarketUp Logo" 
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <span className="text-gradient bg-gradient-to-r from-slate-900 to-slate-700 dark:from-foreground dark:to-foreground-muted bg-clip-text text-transparent">
+              MarketUp
+            </span>
+          </Link>
 
-                  {/* Social Sign In Buttons */}
-                  <div className="space-y-4 mb-8">
-                    {/* Google Sign In */}
-                    <button 
-                      onClick={google} 
-                      className="w-full flex items-center justify-center gap-4 py-4 px-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-base font-semibold text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 group"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" className="group-hover:scale-110 transition-transform duration-300">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                      </svg>
-                      Continue with Google
-                    </button>
+          {/* Mode Toggle */}
+          <div className="mb-8">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <button
+                onClick={() => handleModeChange("signin")}
+                className={`relative flex-1 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                  mode === "signin"
+                    ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-md"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+                }`}
+              >
+                <svg 
+                  className={`w-4 h-4 transition-all duration-300 ${mode === "signin" ? "text-indigo-600 dark:text-indigo-400" : ""}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span>Sign In</span>
+                {mode === "signin" && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full" />
+                )}
+              </button>
+              
+              <button
+                onClick={() => handleModeChange("signup")}
+                className={`relative flex-1 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                  mode === "signup"
+                    ? "bg-white dark:bg-slate-700 text-purple-600 dark:text-purple-400 shadow-md"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+                }`}
+              >
+                <svg 
+                  className={`w-4 h-4 transition-all duration-300 ${mode === "signup" ? "text-purple-600 dark:text-purple-400" : ""}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <span>Sign Up</span>
+                {mode === "signup" && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-purple-600 dark:bg-purple-400 rounded-full" />
+                )}
+              </button>
+            </div>
+          </div>
 
-                    {/* Apple Sign In */}
-                    <button 
-                      onClick={apple} 
-                      className="w-full flex items-center justify-center gap-4 py-4 px-6 bg-black/20 backdrop-blur-sm text-white border border-white/20 rounded-2xl text-base font-semibold hover:bg-black/30 hover:border-white/30 transition-all duration-300 group"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="group-hover:scale-110 transition-transform duration-300">
-                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-                      </svg>
-                      Continue with Apple
-                    </button>
-                  </div>
+          {/* Social Buttons */}
+          <div className="space-y-3 mb-6">
+            <button
+              onClick={google}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
+            </button>
+            <button
+              onClick={apple}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-black dark:bg-white text-white dark:text-black border border-black dark:border-white rounded-xl font-medium hover:bg-slate-900 dark:hover:bg-slate-100 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              Continue with Apple
+            </button>
+          </div>
 
-                  {/* Divider */}
-                  <div className="flex items-center my-8">
-                    <div className="flex-1 border-t border-white/20"></div>
-                    <span className="px-4 text-sm text-white/70 font-medium">or</span>
-                    <div className="flex-1 border-t border-white/20"></div>
-                  </div>
+          {/* Divider */}
+          <div className="flex items-center my-6">
+            <div className="flex-1 border-t border-slate-300 dark:border-slate-700"></div>
+            <span className="px-4 text-sm text-slate-500 dark:text-slate-400 font-medium">or</span>
+            <div className="flex-1 border-t border-slate-300 dark:border-slate-700"></div>
+          </div>
 
-                  {/* Authentication Method Selector */}
-                  <div className="relative mb-8 bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10 shadow-inner">
-                    <div className="relative flex">
-                      <button
-                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
-                          authMethod === "email" 
-                            ? "text-white" 
-                            : "text-white/70 hover:text-white"
-                        }`}
-                        onClick={() => setAuthMethod("email")}
-                      >
-                        Email
-                      </button>
-                      <button
-                        className={`flex-1 py-4 px-6 text-base font-semibold rounded-xl transition-all duration-300 relative z-10 ${
-                          authMethod === "phone" 
-                            ? "text-white" 
-                            : "text-white/70 hover:text-white"
-                        }`}
-                        onClick={() => setAuthMethod("phone")}
-                      >
-                        Phone
-                      </button>
-                    </div>
-                    {/* Animated Background Slider */}
-                    <div 
-                      className={`absolute top-2 bottom-2 w-1/2 bg-gradient-to-r from-accent to-accent-2 rounded-xl shadow-lg transition-all duration-300 ${
-                        authMethod === "email" ? "left-2" : "left-1/2"
-                      }`}
-                    />
-                  </div>
+          {/* Auth Method Toggle */}
+          <div className="mb-6">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <button
+                onClick={() => setAuthMethod("email")}
+                className={`relative flex-1 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                  authMethod === "email"
+                    ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-md"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+                }`}
+              >
+                <svg 
+                  className={`w-4 h-4 transition-all duration-300 ${authMethod === "email" ? "text-indigo-600 dark:text-indigo-400" : ""}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>Email</span>
+                {authMethod === "email" && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full" />
+                )}
+              </button>
+              
+              <button
+                onClick={() => setAuthMethod("phone")}
+                className={`relative flex-1 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                  authMethod === "phone"
+                    ? "bg-white dark:bg-slate-700 text-purple-600 dark:text-purple-400 shadow-md"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+                }`}
+              >
+                <svg 
+                  className={`w-4 h-4 transition-all duration-300 ${authMethod === "phone" ? "text-purple-600 dark:text-purple-400" : ""}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span>Phone</span>
+                {authMethod === "phone" && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-purple-600 dark:bg-purple-400 rounded-full" />
+                )}
+              </button>
+            </div>
+          </div>
 
-                  {/* Referral Code Display */}
-                  {referralCode && (
-                    <div className="mb-6 p-4 bg-gradient-to-r from-accent/20 to-accent-2/20 border border-accent/30 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-accent to-accent-2 rounded-full flex items-center justify-center">
-                          <span className="text-white text-sm font-bold">🎁</span>
-                        </div>
-                        <div>
-                          <div className="text-white font-semibold">Referral Code Applied!</div>
-                          <div className="text-white/70 text-sm">You'll help your friend earn rewards</div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Email/Password Form */}
-                  {authMethod === "email" && (
-                    <form onSubmit={(e) => { e.preventDefault(); submitEmailPassword(); }} className="space-y-6" noValidate>
-                    {/* Email Field */}
-                    <div className="space-y-3">
-                      <label className="text-base font-semibold text-white">Email Address</label>
-                      <input
-                        ref={emailRef}
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onFocus={() => setEmailFocused(true)}
-                        onBlur={() => setEmailFocused(false)}
-                        placeholder="you@company.com"
-                        className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
-                          errors.email 
-                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                            : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
-                        }`}
-                        required
-                      />
-                      {errors.email && (
-                        <p className="text-sm text-red-400 font-medium">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Name Field - Only for signup */}
-                    {mode === "signup" && (
-                      <div className="space-y-3">
-                        <label className="text-base font-semibold text-white">Full Name</label>
-                        <input
-                          ref={nameRef}
-                          type="text"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          onFocus={() => setNameFocused(true)}
-                          onBlur={() => setNameFocused(false)}
-                          placeholder="Enter your full name"
-                          className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
-                            errors.name 
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                              : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
-                          }`}
-                          required
-                        />
-                        {errors.name && (
-                          <p className="text-sm text-red-400 font-medium">
-                            {errors.name}
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Password Field */}
-                    <div className="space-y-3">
-                      <label className="text-base font-semibold text-white">
-                        Password
-                        {mode === "signup" && (
-                          <span className="text-sm text-white/70 ml-2 font-normal">(min. 8 characters)</span>
-                        )}
-                      </label>
-                      <input
-                        ref={passwordRef}
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setPasswordFocused(true)}
-                        onBlur={() => setPasswordFocused(false)}
-                        placeholder="Enter your password"
-                        className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
-                          errors.password 
-                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                            : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
-                        }`}
-                        required
-                      />
-                      {errors.password && (
-                        <p className="text-sm text-red-400 font-medium">
-                          {errors.password}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Remember Me & Forgot Password */}
-                    {mode === "signin" && (
-                      <div className="flex items-center justify-between">
-                        <label className="flex items-center space-x-2 cursor-pointer group">
-                          <div className="relative">
-                            <input 
-                              type="checkbox" 
-                              checked={rememberMe}
-                              onChange={(e) => setRememberMe(e.target.checked)}
-                              className="w-4 h-4 rounded border-white/20 text-accent focus:ring-accent focus:ring-2 opacity-0 absolute" 
-                            />
-                            <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 ${
-                              rememberMe 
-                                ? 'bg-accent border-accent' 
-                                : 'border-white/20 group-hover:border-accent/50'
-                            }`}>
-                              {rememberMe && (
-                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-sm text-white/70 group-hover:text-white transition-colors">Remember me</span>
-                        </label>
-                        <a 
-                          href="/password/reset" 
-                          className="text-sm text-accent hover:text-accent-hover transition-colors"
-                        >
-                          Forgot password?
-                        </a>
-                      </div>
-                    )}
-
-                    {/* General Error Message */}
-                    {errors.general && (
-                      <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                        {errors.general}
-                      </div>
-                    )}
-
-                    {/* Submit Button */}
-                    <div className="flex gap-4 pt-6">
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="flex-1 bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-5 font-bold rounded-2xl hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-                      >
-                        {loading ? "Please wait..." : (mode === "signin" ? "Sign In" : "Create Account")}
-                      </button>
-                    </div>
-                  </form>
-                  )}
-
-                  {/* Phone Authentication Form */}
-                  {authMethod === "phone" && (
-                    <div className="space-y-6">
-                      {!phoneCodeSent ? (
-                        <>
-                          {/* Phone Number Input */}
-                          <div className="space-y-3">
-                            <label className="text-base font-semibold text-white">Phone Number</label>
-                            <input
-                              type="tel"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
-                              onFocus={() => setPhoneFocused(true)}
-                              onBlur={() => setPhoneFocused(false)}
-                              placeholder="+1 (555) 123-4567"
-                              className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-base ${
-                                errors.phone 
-                                  ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                                  : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
-                              }`}
-                              required
-                            />
-                            {errors.phone && (
-                              <p className="text-sm text-red-400 font-medium">
-                                {errors.phone}
-                              </p>
-                            )}
-                          </div>
-
-                          {/* Send Code Button */}
-                          <button
-                            onClick={sendPhoneCode}
-                            disabled={loading}
-                            className="w-full bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-5 font-bold rounded-2xl hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-                          >
-                            {loading ? "Sending..." : "Send Verification Code"}
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          {/* Verification Code Input */}
-                          <div className="space-y-3">
-                            <label className="text-base font-semibold text-white">Verification Code</label>
-                            <input
-                              type="text"
-                              value={phoneCode}
-                              onChange={(e) => setPhoneCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                              placeholder="123456"
-                              className={`w-full p-5 rounded-2xl border transition-all duration-300 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none text-center text-2xl tracking-widest ${
-                                errors.phoneCode 
-                                  ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                                  : 'border-white/20 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20'
-                              }`}
-                              maxLength={6}
-                              required
-                            />
-                            {errors.phoneCode && (
-                              <p className="text-sm text-red-400 font-medium">
-                                {errors.phoneCode}
-                              </p>
-                            )}
-                            <p className="text-sm text-white/70 text-center font-medium">
-                              We sent a 6-digit code to {phone}
-                            </p>
-                          </div>
-
-                          {/* Verify Code Button */}
-                          <div className="flex gap-4">
-                            <button
-                              onClick={verifyPhoneCode}
-                              disabled={loading}
-                              className="flex-1 bg-gradient-to-r from-accent to-accent-2 text-white px-8 py-5 font-bold rounded-2xl hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-                            >
-                              {loading ? "Verifying..." : "Verify Code"}
-                            </button>
-                            <button
-                              onClick={() => {
-                                setPhoneCodeSent(false);
-                                setPhoneCode("");
-                                setErrors({});
-                              }}
-                              className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-5 font-semibold rounded-2xl hover:bg-white/20 hover:border-white/30 transition-all duration-300"
-                            >
-                              Change Number
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
-
-                  {/* General Error Message */}
-                  {errors.general && (
-                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                      {errors.general}
-                    </div>
-                  )}
-
-                  {/* Terms and Privacy */}
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-white/70">
-                      By continuing, you agree to our{" "}
-                      <a href="/terms" className="text-accent hover:text-accent-hover transition-colors">Terms of Service</a>{" "}
-                      and{" "}
-                      <a href="/privacy" className="text-accent hover:text-accent-hover transition-colors">Privacy Policy</a>
-                    </p>
-                  </div>
+          {/* Referral Code Banner */}
+          {referralCode && (
+            <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm">🎁</span>
+                </div>
+                <div>
+                  <div className="text-slate-900 dark:text-white font-semibold text-sm">Referral Code Applied!</div>
+                  <div className="text-slate-600 dark:text-slate-400 text-xs">You'll help your friend earn rewards</div>
                 </div>
               </div>
             </div>
-        </section>
+          )}
+
+          {/* Email/Password Form */}
+          {authMethod === "email" && (
+            <form onSubmit={(e) => { e.preventDefault(); submitEmailPassword(); }} className="space-y-5" noValidate>
+              {mode === "signup" && (
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    ref={nameRef}
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onFocus={() => setNameFocused(true)}
+                    onBlur={() => setNameFocused(false)}
+                    placeholder="John Doe"
+                    className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none ${
+                      errors.name 
+                        ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                        : 'border-slate-300 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+                    }`}
+                    required
+                  />
+                  {errors.name && (
+                    <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                  Email Address
+                </label>
+                <input
+                  ref={emailRef}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  placeholder="you@company.com"
+                  className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none ${
+                    errors.email 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                      : 'border-slate-300 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+                  }`}
+                  required
+                />
+                {errors.email && (
+                  <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                  Password
+                  {mode === "signup" && (
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">(min. 8 characters)</span>
+                  )}
+                </label>
+                <input
+                  ref={passwordRef}
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setPasswordFocused(true)}
+                  onBlur={() => setPasswordFocused(false)}
+                  placeholder="Enter your password"
+                  className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none ${
+                    errors.password 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                      : 'border-slate-300 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+                  }`}
+                  required
+                />
+                {errors.password && (
+                  <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              {mode === "signin" && (
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 focus:ring-2" 
+                    />
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Remember me</span>
+                  </label>
+                  <a 
+                    href="/password/reset" 
+                    className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+              )}
+
+              {errors.general && (
+                <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
+                  {errors.general}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3.5 font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              >
+                {loading ? "Please wait..." : (mode === "signin" ? "Sign In" : "Create Account")}
+              </button>
+            </form>
+          )}
+
+          {/* Phone Authentication Form */}
+          {authMethod === "phone" && (
+            <div className="space-y-5">
+              {!phoneCodeSent ? (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      onFocus={() => setPhoneFocused(true)}
+                      onBlur={() => setPhoneFocused(false)}
+                      placeholder="+1 (555) 123-4567"
+                      className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none ${
+                        errors.phone 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          : 'border-slate-300 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+                      }`}
+                      required
+                    />
+                    {errors.phone && (
+                      <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={sendPhoneCode}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3.5 font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    {loading ? "Sending..." : "Send Verification Code"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                      Verification Code
+                    </label>
+                    <input
+                      type="text"
+                      value={phoneCode}
+                      onChange={(e) => setPhoneCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      placeholder="123456"
+                      className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none text-center text-2xl tracking-widest font-mono ${
+                        errors.phoneCode 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          : 'border-slate-300 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+                      }`}
+                      maxLength={6}
+                      required
+                    />
+                    {errors.phoneCode && (
+                      <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+                        {errors.phoneCode}
+                      </p>
+                    )}
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 text-center">
+                      We sent a 6-digit code to {phone}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={verifyPhoneCode}
+                      disabled={loading}
+                      className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3.5 font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {loading ? "Verifying..." : "Verify Code"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPhoneCodeSent(false);
+                        setPhoneCode("");
+                        setErrors({});
+                      }}
+                      className="px-6 py-3.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-750 transition-all duration-200"
+                    >
+                      Change
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Terms and Privacy */}
+          <div className="mt-8 text-center">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              By continuing, you agree to our{" "}
+              <a href="/terms" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">Terms of Service</a>{" "}
+              and{" "}
+              <a href="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">Privacy Policy</a>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-

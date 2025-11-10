@@ -88,11 +88,11 @@ export default function LanguageButton() {
         <button
           ref={buttonRef}
           disabled
-          className="flex items-center gap-1 px-1.5 py-1 rounded-md border border-[var(--border)] bg-[var(--surface)] opacity-50"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#121315] opacity-50"
           aria-label="Loading language"
         >
-          <div className="w-3 h-3 border border-accent/30 border-t-accent rounded-full animate-spin"></div>
-          <span className="text-xs font-medium text-foreground hidden xl:inline">
+          <div className="w-3 h-3 border-2 border-indigo-600 border-t-indigo-400 rounded-full animate-spin"></div>
+          <span className="text-xs font-medium text-[#a1a1aa] hidden xl:inline">
             ...
           </span>
         </button>
@@ -105,15 +105,15 @@ export default function LanguageButton() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-accent/5 transition-colors duration-200 min-w-[120px]"
+        className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#121315] hover:bg-[#1a1b1e] transition-all duration-200 min-w-[120px]"
         aria-label="Select language"
       >
         <span className="text-base">{selectedLang.flag}</span>
-        <span className="text-sm font-medium text-foreground flex-1 text-left">
+        <span className="text-sm font-semibold text-[#e6e7ea] flex-1 text-left">
           {selectedLang.name}
         </span>
         <svg 
-          className={`w-4 h-4 text-foreground-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-4 h-4 text-[#a1a1aa] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
@@ -125,7 +125,7 @@ export default function LanguageButton() {
       {isOpen && (
         <div
           role="menu"
-          className="fixed w-48 rounded-lg glass p-1.5 shadow-xl border border-[var(--border)] max-h-64 overflow-y-auto"
+          className="fixed w-48 rounded-xl bg-[#0b0b0b] p-2 shadow-xl border border-[rgba(255,255,255,0.08)] max-h-64 overflow-y-auto"
           style={{ 
             zIndex: 9999,
             ...getDropdownPosition(),
@@ -136,14 +136,16 @@ export default function LanguageButton() {
             <button
               key={lang.code}
               onClick={() => handleLanguageSelect(lang)}
-              className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-md hover:bg-accent/10 transition-colors duration-200 ${
-                selectedLang.code === lang.code ? 'bg-accent/15' : ''
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg transition-all duration-200 ${
+                selectedLang.code === lang.code 
+                  ? 'bg-indigo-900/20 text-indigo-400' 
+                  : 'text-[#a1a1aa] hover:bg-[#1a1b1e] hover:text-[#e6e7ea]'
               }`}
             >
               <span className="text-base">{lang.flag}</span>
-              <span className="text-sm font-medium text-foreground flex-1">{lang.name}</span>
+              <span className="text-sm font-medium flex-1">{lang.name}</span>
               {selectedLang.code === lang.code && (
-                <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}

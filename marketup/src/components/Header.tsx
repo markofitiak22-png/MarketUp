@@ -78,11 +78,11 @@ export default function Header() {
     <header
       className={`sticky top-0 z-[100] transition-all duration-300 ${
         scrolled
-          ? "bg-background/95 backdrop-blur-2xl border-b border-[var(--border)] shadow-lg shadow-black/10"
-          : "bg-background/70 backdrop-blur-xl border-b border-transparent"
+          ? "bg-[#0b0b0b]/80 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)] shadow-sm"
+          : "bg-[#0b0b0b]/50 backdrop-blur-lg border-b border-transparent"
       }`}
     >
-      <div className="container flex items-center justify-between px-4 sm:px-6" style={{ minHeight: 72 }}>
+      <div className="w-full max-w-[1920px] mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12" style={{ minHeight: 72 }}>
         {/* Brand */}
         <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight">
           <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
@@ -94,13 +94,13 @@ export default function Header() {
               className="w-full h-full object-cover"
             />
           </div>
-          <span className="text-gradient bg-gradient-to-r from-foreground to-foreground-muted bg-clip-text text-transparent">
+          <span className="text-gradient bg-gradient-to-r from-[#e6e7ea] to-[#a1a1aa] bg-clip-text text-transparent">
             MarketUp
           </span>
         </Link>
 
         {/* Desktop navigation */}
-        <nav className="hidden lg:flex items-center gap-6 text-sm">
+        <nav className="hidden lg:flex items-center gap-0.5 text-sm">
           {currentLinks.map((link) => {
             const isActive =
               link.href === "/" ? pathname === "/" : pathname?.startsWith(link.href);
@@ -109,35 +109,47 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`group relative px-3 py-2 rounded-lg outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] ${
+                className={`group relative px-3 py-2 rounded-xl outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                   link.hideOnMd ? 'hidden xl:block' : ''
                 } ${
                   isActive
-                    ? "text-foreground bg-accent/10"
-                    : "text-foreground-muted hover:text-foreground hover:bg-accent/5"
+                    ? "text-indigo-400 bg-indigo-900/20 font-semibold"
+                    : "text-[#a1a1aa] hover:text-[#e6e7ea] hover:bg-[#1a1b1e]"
                 }`}
               >
                 {translations[link.labelKey as keyof typeof translations]}
-                <span
-                  aria-hidden
-                  className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-0.5 rounded-full bg-[var(--accent)] transition-all ${
-                    isActive ? "opacity-100" : "opacity-0 group-hover:opacity-60"
-                  }`}
-                />
               </a>
             );
           })}
-          <div className="flex items-center gap-2 pl-3 border-l border-[var(--border)]">
+          <div className="flex items-center gap-2 pl-3 ml-3 border-l border-[rgba(255,255,255,0.08)]">
             {isAuthenticated ? (
               <>
-                <a href="/onboarding" className="btn-primary btn-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200">{translations.getStarted}</a>
+                <a 
+                  href="/onboarding" 
+                  className="flex items-center gap-2 px-3 py-2 bg-[#121315] text-[#e6e7ea] text-sm font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  {translations.getStarted}
+                </a>
                 <LanguageButton />
                 <UserMenu />
               </>
             ) : (
               <>
-                <a href="/auth" className="btn-secondary btn-sm">{translations.signIn || "Sign In"}</a>
-                <a href="/auth" className="btn-primary btn-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200">{translations.signUp || "Sign Up"}</a>
+                <a 
+                  href="/auth" 
+                  className="px-3 py-2 text-[#a1a1aa] text-sm font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
+                >
+                  {translations.signIn || "Sign In"}
+                </a>
+                <a 
+                  href="/auth" 
+                  className="px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02] transition-all duration-200"
+                >
+                  {translations.signUp || "Sign Up"}
+                </a>
                 <LanguageButton />
               </>
             )}
@@ -146,15 +158,23 @@ export default function Header() {
 
         {/* Mobile menu button */}
         <div className="lg:hidden flex items-center gap-3">
+          {!isAuthenticated && (
+            <a 
+              href="/auth" 
+              className="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-semibold rounded-lg"
+            >
+              {translations.signUp || "Sign Up"}
+            </a>
+          )}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="mobile-menu p-2 rounded-lg hover:bg-accent/10 transition-colors"
+            className="mobile-menu p-2 rounded-xl hover:bg-[#1a1b1e] transition-colors"
             aria-label="Toggle mobile menu"
           >
             <div className="w-6 h-6 flex flex-col justify-center items-center">
-              <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-              <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ease-in-out mt-1 ${mobileMenuOpen ? 'opacity-0 scale-0' : ''}`} />
-              <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ease-in-out mt-1 ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+              <span className={`block w-5 h-0.5 bg-[#e6e7ea] transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+              <span className={`block w-5 h-0.5 bg-[#e6e7ea] transition-all duration-300 ease-in-out mt-1 ${mobileMenuOpen ? 'opacity-0 scale-0' : ''}`} />
+              <span className={`block w-5 h-0.5 bg-[#e6e7ea] transition-all duration-300 ease-in-out mt-1 ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
             </div>
           </button>
         </div>
@@ -167,37 +187,37 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden mobile-menu fixed top-0 right-0 z-[9999] h-full w-80 max-w-[85vw] bg-background border-l border-[var(--border)] shadow-2xl transform transition-transform duration-300 ease-out translate-x-0" style={{ display: 'block', visibility: 'visible', opacity: 1, position: 'fixed', top: 0, right: 0, width: '320px', height: '100vh' }}>
+        <div className="lg:hidden mobile-menu fixed top-0 right-0 z-[9999] h-full w-80 max-w-[85vw] bg-[#0b0b0b] border-l border-[rgba(255,255,255,0.08)] shadow-2xl transform transition-transform duration-300 ease-out translate-x-0" style={{ display: 'block', visibility: 'visible', opacity: 1, position: 'fixed', top: 0, right: 0, width: '320px', height: '100vh' }}>
           <div className="flex flex-col h-full overflow-hidden mobile-menu-content">
             {/* Mobile menu header */}
-            <div className="flex items-center justify-between p-6 border-b border-[var(--border)] bg-background flex-shrink-0">
+            <div className="flex items-center justify-between p-6 border-b border-[rgba(255,255,255,0.08)] bg-[#0b0b0b] flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-accent to-accent-2 logo-blue-glow">
+                <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
                   <Image 
                     src="/favicon-32x32.png" 
                     alt="MarketUp Logo" 
-                    width={40}
-                    height={40}
+                    width={32}
+                    height={32}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="text-xl font-bold text-gradient bg-gradient-to-r from-foreground to-foreground-muted bg-clip-text text-transparent">
+                <span className="text-xl font-bold text-gradient bg-gradient-to-r from-[#e6e7ea] to-[#a1a1aa] bg-clip-text text-transparent">
                   MarketUp
                 </span>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-xl hover:bg-accent/10 transition-colors"
+                className="p-2 rounded-xl hover:bg-[#1a1b1e] transition-colors"
                 aria-label="Close mobile menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#e6e7ea]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
             {/* Mobile navigation */}
-            <nav className="flex-1 p-6 overflow-y-auto overscroll-contain bg-background">
+            <nav className="flex-1 p-6 overflow-y-auto overscroll-contain bg-[#0b0b0b]">
               <div className="space-y-2">
                 {currentLinks.map((link) => {
                   const isActive =
@@ -208,16 +228,16 @@ export default function Header() {
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
                       aria-current={isActive ? "page" : undefined}
-                      className={`group flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-medium transition-all duration-200 ${
+                      className={`group flex items-center gap-4 px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
                         isActive
-                          ? "text-foreground bg-accent/15 border border-accent/20 shadow-lg shadow-accent/10"
-                          : "text-foreground-muted hover:text-foreground hover:bg-accent/5 hover:shadow-md"
+                          ? "text-indigo-400 bg-indigo-900/20 border border-indigo-800"
+                          : "text-[#a1a1aa] hover:text-[#e6e7ea] hover:bg-[#1a1b1e]"
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                         isActive 
-                          ? "bg-accent/20 text-accent" 
-                          : "bg-foreground-muted/10 text-foreground-muted group-hover:bg-accent/10 group-hover:text-accent"
+                          ? "bg-indigo-900/30 text-indigo-400" 
+                          : "bg-[#1a1b1e] text-[#a1a1aa] group-hover:bg-indigo-900/20 group-hover:text-indigo-400"
                       }`}>
                         {link.href === "/" && (
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,9 +277,9 @@ export default function Header() {
               </div>
 
               {/* Language Section */}
-              <div className="mt-8 pt-6 border-t border-[var(--border)]">
+              <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.08)]">
                 <div className="mb-4">
-                  <h3 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-3">
+                  <h3 className="text-sm font-semibold text-[#a1a1aa] uppercase tracking-wider mb-3">
                     {translations.language || "Language"}
                   </h3>
                   <div className="flex justify-center">
@@ -270,28 +290,28 @@ export default function Header() {
 
               {/* Account Section */}
               {isAuthenticated ? (
-                <div className="mt-6 pt-6 border-t border-[var(--border)]">
+                <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.08)]">
                   <div className="mb-4">
-                    <h3 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-3">
+                    <h3 className="text-sm font-semibold text-[#a1a1aa] uppercase tracking-wider mb-3">
                       {translations.account}
                     </h3>
                     <UserMenu />
                   </div>
                 </div>
               ) : (
-                <div className="mt-6 pt-6 border-t border-[var(--border)]">
+                <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.08)]">
                   <div className="space-y-3">
                     <a
                       href="/auth"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="btn-secondary w-full text-center py-3 px-6"
+                      className="w-full text-center py-3 px-6 text-[#a1a1aa] font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200 border border-[rgba(255,255,255,0.08)]"
                     >
                       {translations.signIn || "Sign In"}
                     </a>
                     <a
                       href="/auth"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="btn-primary w-full text-center py-3 px-6 shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200"
+                      className="w-full text-center py-3 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-200"
                     >
                       {translations.signUp || "Sign Up"}
                     </a>
@@ -301,18 +321,16 @@ export default function Header() {
 
               {/* Mobile CTA */}
               {isAuthenticated && (
-                <div className="mt-6 pt-6 border-t border-[var(--border)] flex-shrink-0">
+                <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.08)] flex-shrink-0">
                   <a
                     href="/onboarding"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="btn-primary w-full text-center py-4 px-6 shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-200 text-lg font-semibold"
+                    className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-[#121315] text-[#e6e7ea] text-lg font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
                   >
-                    <span className="flex items-center justify-center gap-3">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      {translations.getStarted}
-                    </span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    {translations.getStarted}
                   </a>
                 </div>
               )}

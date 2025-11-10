@@ -128,8 +128,8 @@ export default function PaymentModal({
         return;
       }
 
-      if (selectedMethod === 'stripe_card') {
-        // Stripe card payment
+      if (selectedMethod === 'stripe_card' || selectedMethod === 'klarna') {
+        // Stripe card payment or Klarna
         const response = await fetch("/api/payments/stripe/checkout-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -205,8 +205,28 @@ export default function PaymentModal({
         return;
       }
 
-      // For other methods (Klarna, Swish) - will be implemented
-      onError(`${methodInfo?.name || 'This payment method'} is coming soon`);
+      // For Swish - redirect to Stripe checkout (Swish can be handled through Stripe in supported regions)
+      if (selectedMethod === 'swish') {
+        const response = await fetch("/api/payments/stripe/checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            planId: planName.toLowerCase(),
+            amount: planPrice,
+            paymentMethod: selectedMethod,
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.url) {
+          throw new Error(data.error || "Failed to create checkout session");
+        }
+        window.location.href = data.url;
+        return;
+      }
+
+      // Unknown payment method
+      onError(`Payment method ${methodInfo?.name || 'selected'} is not supported`);
       setIsSubmitting(false);
 
     } catch (error: any) {

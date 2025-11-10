@@ -158,15 +158,12 @@ export default function PricingPage() {
       return;
     }
 
-    // Only pro plan is available for payment
-    if (planId === 'pro') {
+    // Pro and Premium plans are available for payment
+    if (planId === 'pro' || planId === 'premium') {
       router.push(`/checkout?plan=${planId}`);
     } else if (planId === 'free') {
       // Free plan - redirect to onboarding or auth
       router.push('/onboarding');
-    } else {
-      // Premium plan - show message that only pro is available
-      alert('Only Pro plan is currently available for purchase. Please select Pro plan.');
     }
   };
 
@@ -282,37 +279,28 @@ export default function PricingPage() {
                     {/* CTA Button */}
                     <button
                       onClick={() => handlePlanSelect(plan.id)}
-                      disabled={plan.id !== 'pro' || isPlanActive(plan.id)}
+                      disabled={isPlanActive(plan.id)}
                       className={`group relative w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base md:text-lg transition-all duration-300 overflow-hidden ${
                         isPlanActive(plan.id)
                           ? 'bg-success/20 text-success border-2 border-success/30 cursor-not-allowed opacity-75'
-                          : plan.id === 'pro'
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-1 cursor-pointer'
+                          : plan.id === 'pro' || plan.id === 'premium'
+                          ? `bg-gradient-to-r ${plan.color} text-white hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-1 cursor-pointer`
                           : plan.id === 'free'
                           ? 'bg-white/10 text-white border-2 border-white/20 hover:border-white/40 hover:bg-white/20 cursor-pointer'
                           : `bg-gradient-to-r ${plan.color} text-white opacity-50 cursor-not-allowed`
-                      } ${plan.id !== 'pro' && plan.id !== 'free' ? 'disabled:opacity-50' : ''}`}
+                      }`}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         {isPlanActive(plan.id) 
                           ? 'Current Plan' 
-                          : plan.id === 'pro' 
-                          ? plan.cta 
-                          : plan.id === 'free' 
-                          ? plan.cta 
-                          : 'Coming Soon'}
-                        {plan.id === 'pro' && !isPlanActive(plan.id) && (
-                          <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        )}
-                        {plan.id === 'free' && !isPlanActive(plan.id) && (
+                          : plan.cta}
+                        {(plan.id === 'pro' || plan.id === 'premium' || plan.id === 'free') && !isPlanActive(plan.id) && (
                           <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
                         )}
                       </span>
-                      {plan.popular && plan.id === 'pro' && !isPlanActive(plan.id) && (
+                      {(plan.popular || plan.id === 'premium') && (plan.id === 'pro' || plan.id === 'premium') && !isPlanActive(plan.id) && (
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       )}
                     </button>

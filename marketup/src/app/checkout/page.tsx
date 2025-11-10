@@ -21,6 +21,26 @@ const plans = {
       'Team support',
       'Company info'
     ]
+  },
+  premium: {
+    name: 'Premium',
+    price: 59,
+    description: 'Suitable for everyone',
+    features: [
+      '7 videos per month',
+      '4K quality',
+      'Subtitles included',
+      'Full avatars',
+      'Social publishing',
+      '4 background images',
+      'Team support',
+      'Company info',
+      'Template access',
+      'Marketing support',
+      'Video analytics',
+      'Cloud library',
+      'Verified partner'
+    ]
   }
 };
 
@@ -37,14 +57,14 @@ function CheckoutPageContent() {
   const successParam = searchParams.get('success');
   const canceledParam = searchParams.get('canceled');
   
-  // Only pro plan is available
-  const planId = rawPlanId === 'pro' ? 'pro' : 'pro';
+  // Support both pro and premium plans
+  const planId = (rawPlanId === 'pro' || rawPlanId === 'premium') ? rawPlanId : 'pro';
 
   useEffect(() => {
     if (!session) {
-      router.push('/auth?redirect=/checkout?plan=pro');
+      router.push(`/auth?redirect=/checkout?plan=${planId}`);
     }
-  }, [session, router]);
+  }, [session, router, planId]);
 
   useEffect(() => {
     const handlePaymentSuccess = async () => {
@@ -143,7 +163,7 @@ function CheckoutPageContent() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">Plan Not Found</h1>
           <p className="text-white/70 mb-6">
-            Only Pro plan is available. Redirecting to pricing...
+            This plan is not available. Redirecting to pricing...
           </p>
           <button
             onClick={() => router.push('/pricing')}

@@ -98,18 +98,26 @@ export async function POST(request: NextRequest) {
 
     // Determine payment method types based on selected method
     let paymentMethodTypes: Stripe.Checkout.SessionCreateParams.PaymentMethodType[] = ['card'];
+    let paymentMethodOptions: Stripe.Checkout.SessionCreateParams.PaymentMethodOptions = {
+      card: {
+        request_three_d_secure: 'automatic',
+      },
+    };
     
     if (paymentMethod === 'apple_pay') {
       paymentMethodTypes = ['card']; // Apple Pay is handled through card payment
     } else if (paymentMethod === 'klarna') {
       paymentMethodTypes = ['klarna'];
+      // Klarna doesn't need additional options in Checkout Sessions
+      // Stripe will automatically handle Klarna configuration
+      paymentMethodOptions = {};
     } else if (paymentMethod === 'swish') {
       // Swish is Sweden-specific, will be handled separately if needed
       paymentMethodTypes = ['card'];
     }
 
     // Create Stripe Checkout Session (one-time payment for monthly subscription)
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const checkoutSessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       customer_email: user.email || undefined,
       line_items: [
@@ -134,13 +142,14 @@ export async function POST(request: NextRequest) {
         paymentMethod: paymentMethod || 'stripe_card',
       },
       payment_method_types: paymentMethodTypes,
-      // Enable payment method options
-      payment_method_options: {
-        card: {
-          request_three_d_secure: 'automatic',
-        },
-      },
-    });
+    };
+
+    // Only add payment_method_options if not empty (for Klarna we don't need it)
+    if (Object.keys(paymentMethodOptions).length > 0) {
+      checkoutSessionParams.payment_method_options = paymentMethodOptions;
+    }
+
+    const checkoutSession = await stripe.checkout.sessions.create(checkoutSessionParams);
 
     if (!checkoutSession.url) {
       throw new Error("Stripe checkout session created but no URL returned");

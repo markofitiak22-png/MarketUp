@@ -106,14 +106,23 @@ export async function POST(request: NextRequest) {
     
     if (paymentMethod === 'apple_pay') {
       paymentMethodTypes = ['card']; // Apple Pay is handled through card payment
+    } else if (paymentMethod === 'google_pay') {
+      // Google Pay through Stripe Checkout - Stripe automatically shows Google Pay button
+      paymentMethodTypes = ['card'];
+      // Stripe Checkout will automatically show Google Pay if available
+    } else if (paymentMethod === 'samsung_pay') {
+      // Samsung Pay through Stripe Checkout
+      paymentMethodTypes = ['card'];
+      // Stripe Checkout will automatically show Samsung Pay if available
     } else if (paymentMethod === 'klarna') {
       paymentMethodTypes = ['klarna'];
       // Klarna doesn't need additional options in Checkout Sessions
       // Stripe will automatically handle Klarna configuration
       paymentMethodOptions = {};
     } else if (paymentMethod === 'swish') {
-      // Swish is Sweden-specific, will be handled separately if needed
-      paymentMethodTypes = ['card'];
+      // Swish is Sweden-specific and requires SEK currency
+      paymentMethodTypes = ['swish'];
+      paymentMethodOptions = {};
     }
 
     // Create Stripe Checkout Session (one-time payment for monthly subscription)

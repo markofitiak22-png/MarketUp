@@ -73,9 +73,39 @@ export default function PaymentModal({
     setSelectedMethod(method);
     const methodInfo = getPaymentMethodInfo(method);
     
-    // Wallet payments (Apple Pay, Google Pay, Samsung Pay) show button directly
-    if (method === 'apple_pay' || method === 'google_pay' || method === 'samsung_pay') {
+    // Apple Pay and Samsung Pay show button directly (WalletPaymentButton)
+    // Google Pay uses Stripe Checkout (redirects to checkout page)
+    if (method === 'apple_pay' || method === 'samsung_pay') {
       setStep("details");
+      return;
+    }
+    
+    // Google Pay - redirect immediately to Stripe Checkout
+    if (method === 'google_pay') {
+      // Immediately redirect to Stripe Checkout for Google Pay
+      setIsSubmitting(true);
+      fetch("/api/payments/stripe/checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          planId: planName.toLowerCase(),
+          amount: planPrice,
+          paymentMethod: 'google_pay',
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            setIsSubmitting(false);
+            onError(data.error || "Failed to create checkout session");
+          }
+        })
+        .catch((error) => {
+          setIsSubmitting(false);
+          onError(error.message || "Failed to process payment");
+        });
       return;
     }
     
@@ -119,12 +149,33 @@ export default function PaymentModal({
       const methodInfo = getPaymentMethodInfo(selectedMethod);
 
       // Handle different payment methods
-      // Wallet payments are handled by WalletPaymentButton component
-      if (selectedMethod === 'apple_pay' || selectedMethod === 'google_pay' || selectedMethod === 'samsung_pay') {
+      // Apple Pay and Samsung Pay use WalletPaymentButton component
+      // Google Pay uses Stripe Checkout (more reliable for Google Pay)
+      if (selectedMethod === 'apple_pay' || selectedMethod === 'samsung_pay') {
         // Wallet payments are handled by WalletPaymentButton component
         // This should not be reached, but handle it gracefully
         onError("Please use the wallet payment button below");
         setIsSubmitting(false);
+        return;
+      }
+
+      if (selectedMethod === 'google_pay') {
+        // Google Pay - use Stripe Checkout which has better Google Pay support
+        const response = await fetch("/api/payments/stripe/checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            planId: planName.toLowerCase(),
+            amount: planPrice,
+            paymentMethod: selectedMethod,
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.url) {
+          throw new Error(data.error || "Failed to create checkout session");
+        }
+        window.location.href = data.url;
         return;
       }
 
@@ -314,8 +365,8 @@ export default function PaymentModal({
               />
             )}
 
-            {/* Step 2: Wallet Payment Button */}
-            {step === "details" && selectedMethod && (selectedMethod === 'apple_pay' || selectedMethod === 'google_pay' || selectedMethod === 'samsung_pay') && (
+            {/* Step 2: Wallet Payment Button (Apple Pay and Samsung Pay) */}
+            {step === "details" && selectedMethod && (selectedMethod === 'apple_pay' || selectedMethod === 'samsung_pay') && (
               <WalletPaymentButton
                 amount={planPrice}
                 planName={planName}

@@ -34,7 +34,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'PayPal',
     description: 'Pay securely with PayPal',
     icon: '🔵',
-    available: true,
+    available: false, // Temporarily disabled
     countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH']
   },
   apple_pay: {
@@ -42,7 +42,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Apple Pay',
     description: 'Pay with Apple Pay',
     icon: '🍎',
-    available: true,
+    available: false, // Temporarily disabled
     countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI']
   },
   google_pay: {
@@ -50,7 +50,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Google Pay',
     description: 'Pay with Google Pay',
     icon: '🔵',
-    available: true,
+    available: false, // Temporarily disabled
     countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI', 'PL', 'CZ', 'IE', 'PT', 'GR']
   },
   samsung_pay: {
@@ -58,7 +58,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Samsung Pay',
     description: 'Pay with Samsung Pay',
     icon: '📱',
-    available: true,
+    available: false, // Temporarily disabled
     countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI', 'PL', 'CZ', 'IE', 'PT', 'GR']
   },
   klarna: {
@@ -74,7 +74,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Swish',
     description: 'Pay instantly with Swish',
     icon: '📱',
-    available: true,
+    available: false, // Temporarily disabled
     countrySpecific: ['SE']
   },
   syriatel_cash: {
@@ -82,7 +82,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Syriatel Cash',
     description: 'Pay with Syriatel Cash mobile wallet',
     icon: '📲',
-    available: true,
+    available: false, // Temporarily disabled
     requiresReceipt: true,
     countrySpecific: ['SY']
   },
@@ -91,7 +91,7 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Zain Cash',
     description: 'Pay with Zain Cash wallet',
     icon: '💼',
-    available: true,
+    available: false, // Temporarily disabled
     countrySpecific: ['JO']
   },
   iban_transfer: {
@@ -99,9 +99,9 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Bank Transfer (IBAN)',
     description: 'Transfer money via IBAN and upload receipt',
     icon: '🏦',
-    available: true,
+    available: false, // Temporarily disabled
     requiresReceipt: true,
-    countrySpecific: ['TR']
+    countrySpecific: ['TR', 'SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI', 'PL', 'CZ', 'IE', 'PT', 'GR']
   }
 };
 

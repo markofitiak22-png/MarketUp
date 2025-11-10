@@ -137,6 +137,12 @@ export async function GET(request: NextRequest) {
           paymentMethod = 'stripe';
         } else if (payment.note.includes('apple_pay')) {
           paymentMethod = 'apple_pay';
+        } else if (payment.note.includes('google_pay')) {
+          paymentMethod = 'google_pay';
+        } else if (payment.note.includes('samsung_pay')) {
+          paymentMethod = 'samsung_pay';
+        } else if (payment.note.includes('wallet')) {
+          paymentMethod = 'wallet'; // Generic wallet payment
         } else if (payment.note.includes('klarna')) {
           paymentMethod = 'klarna';
         } else {

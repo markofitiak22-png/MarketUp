@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { PaymentMethod, getPaymentMethodInfo } from "@/lib/payment-methods";
 import PaymentMethodSelector from "./PaymentMethodSelector";
+import WalletPaymentButton from "./WalletPaymentButton";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -72,6 +73,12 @@ export default function PaymentModal({
     setSelectedMethod(method);
     const methodInfo = getPaymentMethodInfo(method);
     
+    // Wallet payments (Apple Pay, Google Pay, Samsung Pay) show button directly
+    if (method === 'apple_pay' || method === 'google_pay' || method === 'samsung_pay') {
+      setStep("details");
+      return;
+    }
+    
     if (methodInfo?.requiresReceipt) {
       if (method === 'iban_transfer') {
         setStep("details");
@@ -112,8 +119,17 @@ export default function PaymentModal({
       const methodInfo = getPaymentMethodInfo(selectedMethod);
 
       // Handle different payment methods
-      if (selectedMethod === 'stripe_card' || selectedMethod === 'apple_pay') {
-        // Stripe payment
+      // Wallet payments are handled by WalletPaymentButton component
+      if (selectedMethod === 'apple_pay' || selectedMethod === 'google_pay' || selectedMethod === 'samsung_pay') {
+        // Wallet payments are handled by WalletPaymentButton component
+        // This should not be reached, but handle it gracefully
+        onError("Please use the wallet payment button below");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (selectedMethod === 'stripe_card') {
+        // Stripe card payment
         const response = await fetch("/api/payments/stripe/checkout-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -278,6 +294,18 @@ export default function PaymentModal({
               />
             )}
 
+            {/* Step 2: Wallet Payment Button */}
+            {step === "details" && selectedMethod && (selectedMethod === 'apple_pay' || selectedMethod === 'google_pay' || selectedMethod === 'samsung_pay') && (
+              <WalletPaymentButton
+                amount={planPrice}
+                planName={planName}
+                planId={planName.toLowerCase()}
+                onSuccess={onSuccess}
+                onError={onError}
+                onCancel={onClose}
+              />
+            )}
+
             {/* Step 2: IBAN Details */}
             {step === "details" && selectedMethod === 'iban_transfer' && (
               <div className="space-y-4">
@@ -431,7 +459,7 @@ export default function PaymentModal({
             >
               Cancel
             </button>
-            {selectedMethod && (step === "upload" || (step === "details" && !getPaymentMethodInfo(selectedMethod)?.requiresReceipt)) && (
+            {selectedMethod && (step === "upload" || (step === "details" && !getPaymentMethodInfo(selectedMethod)?.requiresReceipt && selectedMethod !== 'apple_pay' && selectedMethod !== 'google_pay' && selectedMethod !== 'samsung_pay')) && (
               <button
                 type="button"
                 onClick={handleSubmit}

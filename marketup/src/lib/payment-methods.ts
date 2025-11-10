@@ -2,6 +2,8 @@ export type PaymentMethod =
   | 'stripe_card'      // Visa/Mastercard через Stripe
   | 'paypal'           // PayPal
   | 'apple_pay'        // Apple Pay
+  | 'google_pay'       // Google Pay
+  | 'samsung_pay'      // Samsung Pay
   | 'klarna'           // Klarna
   | 'swish'            // Swish
   | 'syriatel_cash'    // Syriatel Cash (Syria)
@@ -42,6 +44,22 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     icon: '🍎',
     available: true,
     countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI']
+  },
+  google_pay: {
+    id: 'google_pay',
+    name: 'Google Pay',
+    description: 'Pay with Google Pay',
+    icon: '🔵',
+    available: true,
+    countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI', 'PL', 'CZ', 'IE', 'PT', 'GR']
+  },
+  samsung_pay: {
+    id: 'samsung_pay',
+    name: 'Samsung Pay',
+    description: 'Pay with Samsung Pay',
+    icon: '📱',
+    available: true,
+    countrySpecific: ['SE', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'NO', 'FI', 'PL', 'CZ', 'IE', 'PT', 'GR']
   },
   klarna: {
     id: 'klarna',

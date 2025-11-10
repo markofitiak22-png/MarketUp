@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "@/hooks/useTranslations";
+import LanguageButton from "@/components/LanguageButton";
 
 const getNavigation = (translations: any) => [
   { 
@@ -71,130 +73,259 @@ export default function DashboardClient({ children, userEmail }: DashboardClient
   const pathname = usePathname();
   const { translations } = useTranslations();
   const navigation = getNavigation(translations);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileWidth = window.innerWidth < 1024;
+      setIsMobile(isMobileWidth);
+      // Close menu if switching to desktop
+      if (!isMobileWidth && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    
+    // Check immediately
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close mobile menu when clicking outside or on link
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (mobileMenuOpen && !target.closest('.mobile-menu')) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    // Close menu on resize to desktop size
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen && isMobile) {
+      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+      window.addEventListener('resize', handleResize);
+      document.body.style.overflow = 'hidden';
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      if (mobileMenuOpen && !isMobile) {
+        setMobileMenuOpen(false);
+      }
+      document.body.style.overflow = 'unset';
+      document.body.classList.remove('mobile-menu-open');
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('resize', handleResize);
+      document.body.style.overflow = 'unset';
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [mobileMenuOpen, isMobile]);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:top-20 lg:bottom-0 lg:left-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-        <div className="flex grow flex-col overflow-y-auto glass-elevated">
-          {/* Header */}
-          <div className="flex h-20 shrink-0 items-center px-8">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-foreground">{translations.dashboardSidebarTitle}</h2>
-                <p className="text-sm text-foreground-muted">{translations.dashboardSidebarWelcomeBack}</p>
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#0b0b0b]">
+      {/* Dashboard Header */}
+      <header
+        className={`sticky top-0 z-[100] transition-all duration-300 ${
+          scrolled
+            ? "bg-[#0b0b0b]/80 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)] shadow-sm"
+            : "bg-[#0b0b0b]/50 backdrop-blur-lg border-b border-transparent"
+        }`}
+      >
+        <div className="w-full max-w-[1920px] mx-auto flex items-center gap-10 px-4 sm:px-6 lg:px-8 xl:px-12" style={{ minHeight: 80 }}>
+          {/* Back button */}
+          <Link 
+            href="/"
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#121315] border border-[rgba(255,255,255,0.08)] hover:bg-[#1a1b1e] hover:border-indigo-500/30 transition-all group"
+            aria-label="Go to home"
+          >
+            <svg 
+              className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
 
-          {/* Navigation */}
-          <nav className="flex flex-1 flex-col px-6 py-4">
-            <ul role="list" className="flex flex-1 flex-col gap-2">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={`group flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-semibold transition-all duration-200 ${
-                      pathname === item.href
-                        ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg"
-                        : "text-foreground-muted hover:text-foreground hover:bg-surface-elevated"
-                    }`}
-                  >
-                    <div className={`w-6 h-6 flex items-center justify-center ${
-                      pathname === item.href ? "text-white" : "text-foreground-muted group-hover:text-foreground"
-                    }`}>
-                      {item.icon}
-                    </div>
-                    <span>{item.name}</span>
-                    {pathname === item.href && (
-                      <div className="ml-auto w-2 h-2 bg-white rounded-full"></div>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Brand */}
+          <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight mr-6">
+            <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
+              <Image 
+                src="/favicon-32x32.png" 
+                alt="MarketUp Logo" 
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <span className="text-gradient bg-gradient-to-r from-[#e6e7ea] to-[#a1a1aa] bg-clip-text text-transparent">
+              MarketUp
+            </span>
+          </Link>
+
+          {/* Navigation Tabs - Desktop */}
+          <nav className="hidden lg:flex flex-1 items-center gap-16 overflow-x-auto scrollbar-hide">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`group relative flex items-center gap-3 px-5 py-3 rounded-xl outline-none transition-all duration-200 whitespace-nowrap text-sm ${
+                    isActive
+                      ? "text-indigo-400 bg-indigo-900/20 font-semibold"
+                      : "text-[#a1a1aa] hover:text-[#e6e7ea] hover:bg-[#1a1b1e]"
+                  }`}
+                >
+                  <div className={`w-5 h-5 flex items-center justify-center ${
+                    isActive ? "text-indigo-400" : "text-[#a1a1aa] group-hover:text-[#e6e7ea]"
+                  }`}>
+                    {item.icon}
+                  </div>
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* User section */}
-          <div className="p-6">
-            <div className="glass-elevated rounded-2xl p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
-                  <span className="text-sm font-bold text-white">
-                    {userEmail?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">
-                    {userEmail}
-                  </p>
-                  <p className="text-xs text-foreground-muted">{translations.dashboardSidebarAccount}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => signOut()}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl hover:bg-red-500/20 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                {translations.dashboardSidebarSignOut}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="lg:pl-72">
-        {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-20 shrink-0 items-center bg-background/80 backdrop-blur-xl px-6 lg:px-8">
-          <div className="flex flex-1 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="lg:hidden">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  {navigation.find(item => item.href === pathname)?.name || translations.dashboardSidebarTitle}
-                </h1>
-                <p className="text-sm text-foreground-muted">{translations.dashboardSidebarManageAccount}</p>
-              </div>
+          {/* Right side - Language button and Mobile menu button */}
+          <div className="flex items-center gap-3">
+            {/* Language button - Desktop only */}
+            <div className="hidden lg:flex">
+              <LanguageButton />
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-white">
-                    {userEmail?.charAt(0).toUpperCase()}
-                  </span>
+            {/* Mobile menu button - Mobile only */}
+            {isMobile && (
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden mobile-menu p-2 rounded-xl hover:bg-[#1a1b1e] transition-colors"
+                aria-label="Toggle mobile menu"
+              >
+                <div className="w-6 h-6 flex flex-col justify-center items-center">
+                  <span className={`block w-5 h-0.5 bg-[#e6e7ea] transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                  <span className={`block w-5 h-0.5 bg-[#e6e7ea] transition-all duration-300 ease-in-out mt-1 ${mobileMenuOpen ? 'opacity-0 scale-0' : ''}`} />
+                  <span className={`block w-5 h-0.5 bg-[#e6e7ea] transition-all duration-300 ease-in-out mt-1 ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">
-                    {userEmail}
-                  </p>
-                </div>
-              </div>
-            </div>
+              </button>
+            )}
           </div>
         </div>
+      </header>
 
-        {/* Page content */}
-        <main className="p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
-            {children}
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && isMobile && (
+        <div className="lg:hidden fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && isMobile && (
+        <div className="lg:hidden mobile-menu fixed top-0 right-0 z-[9999] h-full w-80 max-w-[85vw] bg-[#0b0b0b] border-l border-[rgba(255,255,255,0.08)] shadow-2xl transform transition-transform duration-300 ease-out translate-x-0" style={{ display: 'block', visibility: 'visible', opacity: 1, position: 'fixed', top: 0, right: 0, width: '320px', height: '100vh' }}>
+          <div className="flex flex-col h-full overflow-hidden mobile-menu-content">
+            {/* Mobile menu header */}
+            <div className="flex items-center justify-between p-6 border-b border-[rgba(255,255,255,0.08)] bg-[#0b0b0b] flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
+                  <Image 
+                    src="/favicon-32x32.png" 
+                    alt="MarketUp Logo" 
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <span className="text-xl font-bold text-gradient bg-gradient-to-r from-[#e6e7ea] to-[#a1a1aa] bg-clip-text text-transparent">
+                  MarketUp
+                </span>
+              </div>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-xl hover:bg-[#1a1b1e] transition-colors"
+                aria-label="Close mobile menu"
+              >
+                <svg className="w-6 h-6 text-[#e6e7ea]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Mobile navigation */}
+            <nav className="flex-1 p-6 overflow-y-auto overscroll-contain bg-[#0b0b0b]">
+              <div className="space-y-2">
+                {navigation.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
+                      className={`group flex items-center gap-4 px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
+                        isActive
+                          ? "text-indigo-400 bg-indigo-900/20 border border-indigo-800"
+                          : "text-[#a1a1aa] hover:text-[#e6e7ea] hover:bg-[#1a1b1e]"
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                        isActive 
+                          ? "bg-indigo-900/30 text-indigo-400" 
+                          : "bg-[#1a1b1e] text-[#a1a1aa] group-hover:bg-indigo-900/20 group-hover:text-indigo-400"
+                      }`}>
+                        {item.icon}
+                      </div>
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Language Section */}
+              <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.08)]">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-[#a1a1aa] uppercase tracking-wider mb-3">
+                    {translations.language || "Language"}
+                  </h3>
+                  <div className="flex justify-center">
+                    <LanguageButton />
+                  </div>
+                </div>
+              </div>
+            </nav>
           </div>
-        </main>
-      </div>
+        </div>
+      )}
+
+      {/* Page content */}
+      <main className="p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

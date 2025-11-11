@@ -59,20 +59,41 @@ export default function HomeClient({ session }: HomeClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0b0b]">
+    <div className="min-h-screen bg-[#0b0b0b] relative">
+      {/* Shared background blobs for all sections */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Top left blob */}
+        <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Top right blob */}
+        <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Middle left blob */}
+        <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Middle right blob */}
+        <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Bottom left blob */}
+        <div className="absolute top-[80%] left-[15%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Bottom right blob */}
+        <div className="absolute top-[90%] right-[5%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Additional connecting blobs */}
+        <div className="absolute top-[35%] left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[45%] right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[70%] left-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[75%] right-1/3 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl" />
+      </div>
+      
       {/* Hero Section */}
-      <section className="min-h-[85vh] flex items-center relative overflow-hidden w-full">
+      <section className="min-h-[85vh] flex items-center relative overflow-hidden w-full z-10">
         {/* Background image - KEEPING AS IS */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0b]/95 via-[#0b0b0b]/85 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0b]/95 via-[#0b0b0b]/85 to-transparent z-0" />
         
         {/* Content */}
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 max-w-7xl mx-auto py-20">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 relative z-20 max-w-7xl mx-auto py-20">
           <div className="max-w-3xl space-y-8">
               {/* Main heading */}
             <div className="space-y-6">
@@ -157,12 +178,7 @@ export default function HomeClient({ session }: HomeClientProps) {
       </section>
 
       {/* Statistics Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden bg-gradient-to-b from-[#0b0b0b] to-[#0b0b0b]">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
-        </div>
-        
+      <section className="py-16 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div className="group text-center p-6 rounded-2xl bg-gradient-to-br from-slate-800/30 to-slate-900/30 backdrop-blur-sm border border-slate-700/30 hover:border-indigo-500/50 hover:bg-gradient-to-br hover:from-slate-800/50 hover:to-slate-900/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/20">
@@ -207,17 +223,12 @@ export default function HomeClient({ session }: HomeClientProps) {
         {/* How it works Section */}
         <section 
           ref={setSectionRef("how-it-works")}
-        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden transition-all duration-1000 ${
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
             visibleSections.has("how-it-works")
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-10"
           }`}
         >
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0b0b0b] via-[#0b0b0b] to-[#0b0b0b]" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className={`text-center mb-16 transition-all duration-700 ${
             visibleSections.has("how-it-works")
@@ -343,17 +354,12 @@ export default function HomeClient({ session }: HomeClientProps) {
       {/* Preview Section */}
       <section 
         ref={setSectionRef("preview")}
-        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden transition-all duration-1000 ${
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
           visibleSections.has("preview")
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0b0b0b] via-[#0b0b0b] to-[#0b0b0b]" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
-        
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className={`text-center mb-16 transition-all duration-700 ${
             visibleSections.has("preview")
@@ -461,17 +467,12 @@ export default function HomeClient({ session }: HomeClientProps) {
       {/* Pricing Teaser Section */}
       <section 
         ref={setSectionRef("pricing")}
-        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden transition-all duration-1000 ${
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
           visibleSections.has("pricing")
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        {/* Background with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-purple-600/10 to-pink-500/10" />
-        <div className="absolute inset-0 bg-[#0b0b0b]" />
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent" />
-        
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className={`transition-all duration-700 delay-100 ${
             visibleSections.has("pricing")

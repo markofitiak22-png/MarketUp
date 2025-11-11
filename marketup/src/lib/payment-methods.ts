@@ -18,6 +18,7 @@ export interface PaymentMethodInfo {
   available: boolean;
   requiresReceipt?: boolean; // Для ручних платежів
   countrySpecific?: string[]; // Країни, де метод найбільш популярний
+  needsConfiguration?: boolean; // Потрібна налаштування (ключі не підставлені)
 }
 
 export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
@@ -74,7 +75,8 @@ export const PAYMENT_METHODS: Record<PaymentMethod, PaymentMethodInfo> = {
     name: 'Swish',
     description: 'Pay instantly with Swish',
     icon: '📱',
-    available: false, // Temporarily disabled
+    available: false, // Disabled - functionality ready, needs configuration
+    needsConfiguration: true,
     countrySpecific: ['SE']
   },
   syriatel_cash: {

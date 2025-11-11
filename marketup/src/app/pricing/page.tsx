@@ -162,8 +162,8 @@ export default function PricingPage() {
     if (planId === 'pro' || planId === 'premium') {
       router.push(`/checkout?plan=${planId}`);
     } else if (planId === 'free') {
-      // Free plan - redirect to onboarding or auth
-      router.push('/onboarding');
+      // Free plan - redirect to studio
+      router.push('/studio');
     }
   };
 

@@ -112,7 +112,7 @@ export default function HomeClient({ session }: HomeClientProps) {
             <div className="flex flex-col sm:flex-row gap-4">
                 {session ? (
                 <a 
-                  href="/onboarding" 
+                  href="/studio" 
                   className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-indigo-500/50 hover:scale-[1.02] transition-all duration-300 overflow-hidden animate-glow-pulse"
                 >
                   <span className="relative z-10 flex items-center gap-3">

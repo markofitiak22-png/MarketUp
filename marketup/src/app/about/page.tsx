@@ -351,7 +351,7 @@ export default function AboutPage() {
               
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 justify-center items-center">
                 <Link
-                  href="/onboarding"
+                  href="/studio"
                   className="group relative bg-gradient-to-r from-accent to-accent-2 text-white px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 rounded-2xl sm:rounded-3xl font-bold text-base sm:text-lg lg:text-xl hover:shadow-2xl hover:shadow-accent/30 transition-all duration-500 hover:-translate-y-2 hover:scale-105 border border-accent/20 hover:border-accent/40"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-accent-2/20 rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

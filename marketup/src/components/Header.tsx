@@ -125,7 +125,7 @@ export default function Header() {
             {isAuthenticated ? (
               <>
                 <a 
-                  href="/onboarding" 
+                  href="/studio" 
                   className="flex items-center gap-2 px-3 py-2 bg-[#121315] text-[#e6e7ea] text-sm font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -323,7 +323,7 @@ export default function Header() {
               {isAuthenticated && (
                 <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.08)] flex-shrink-0">
                   <a
-                    href="/onboarding"
+                    href="/studio"
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-[#121315] text-[#e6e7ea] text-lg font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
                   >

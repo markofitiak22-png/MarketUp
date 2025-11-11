@@ -256,21 +256,20 @@ export default function PaymentModal({
         return;
       }
 
-      // For Swish - redirect to Stripe checkout (Swish can be handled through Stripe in supported regions)
+      // For Swish - use Adyen
       if (selectedMethod === 'swish') {
-        const response = await fetch("/api/payments/stripe/checkout-session", {
+        const response = await fetch("/api/payments/adyen/swish", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             planId: planName.toLowerCase(),
             amount: planPrice,
-            paymentMethod: selectedMethod,
           }),
         });
 
         const data = await response.json();
         if (!response.ok || !data.url) {
-          throw new Error(data.error || "Failed to create checkout session");
+          throw new Error(data.error || "Failed to create payment session");
         }
         window.location.href = data.url;
         return;

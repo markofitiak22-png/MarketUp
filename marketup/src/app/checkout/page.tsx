@@ -98,7 +98,14 @@ function CheckoutPageContent() {
           console.error('PayPal capture error:', error);
           setError('Failed to process payment. Please contact support.');
         }
-      } else if (successParam === 'true' && paymentMethod !== 'paypal') {
+      } else if (successParam === 'true' && paymentMethod === 'swish') {
+        // Adyen Swish payment - webhook will handle subscription creation
+        console.log('Swish payment completed, waiting for webhook confirmation');
+        setIsSuccess(true);
+        setTimeout(() => {
+          router.push('/dashboard?success=true');
+        }, 2000);
+      } else if (successParam === 'true' && paymentMethod !== 'paypal' && paymentMethod !== 'swish') {
         // Stripe payment - verify session and create subscription
         const sessionId = searchParams.get('session_id');
         

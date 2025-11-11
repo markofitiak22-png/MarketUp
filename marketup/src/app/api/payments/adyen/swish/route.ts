@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Client, CheckoutAPI, Environment } from "@adyen/api-library";
+import { Client, CheckoutAPI, EnvironmentEnum } from "@adyen/api-library";
 
 // Initialize Adyen client
 function getAdyenClient() {
   const apiKey = process.env.ADYEN_API_KEY;
   const merchantAccount = process.env.ADYEN_MERCHANT_ACCOUNT;
   const environment = process.env.NODE_ENV === 'production' 
-    ? Environment.LIVE 
-    : Environment.TEST;
+    ? EnvironmentEnum.LIVE 
+    : EnvironmentEnum.TEST;
 
   if (!apiKey || !merchantAccount) {
     throw new Error("Adyen credentials not configured");
@@ -97,8 +97,8 @@ export async function POST(request: NextRequest) {
       merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT!,
       returnUrl: `${baseUrl}/checkout?success=true&paymentMethod=swish`,
       paymentMethod: {
-        type: "swish",
-      },
+        type: "swish" as const,
+      } as any, // Type assertion needed as Adyen SDK types may not include all payment methods
       // Store metadata in additionalData for webhook processing
       additionalData: {
         metadata: JSON.stringify({
@@ -114,10 +114,10 @@ export async function POST(request: NextRequest) {
         firstName: user.name.split(' ')[0] || '',
         lastName: user.name.split(' ').slice(1).join(' ') || '',
       } : undefined,
-    };
+    } as any; // Type assertion to bypass strict TypeScript checking for payment method types
 
     // Use payments endpoint for Swish (redirect-based payment)
-    const paymentResponse = await checkout.payments(paymentRequest);
+    const paymentResponse = await checkout.PaymentsApi.payments(paymentRequest);
 
     if (!paymentResponse) {
       throw new Error("Failed to create Adyen payment");
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         sessionId: paymentResponse.pspReference,
         url: paymentResponse.action.url,
-        paymentData: paymentResponse.action.paymentData,
+        paymentData: (paymentResponse.action as any).paymentData, // Type assertion for paymentData property
       });
     }
 

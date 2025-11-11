@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import crypto from 'crypto';
 
 // Adyen webhook signature verification
 // Adyen sends signatures in format: key1=value1,key2=value2
@@ -9,7 +10,6 @@ function verifyWebhookSignature(
   hmacKey: string
 ): boolean {
   try {
-    const crypto = require('crypto');
     
     // Parse signature header (format: key1=value1,key2=value2)
     const signatures = signatureHeader.split(',').reduce((acc: Record<string, string>, pair: string) => {

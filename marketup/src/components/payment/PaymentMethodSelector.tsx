@@ -1,6 +1,6 @@
 "use client";
-import { useMemo, useEffect, useState } from "react";
-import { PaymentMethod, PaymentMethodInfo, getAvailablePaymentMethods } from "@/lib/payment-methods";
+import { useMemo } from "react";
+import { PaymentMethod, getAvailablePaymentMethods } from "@/lib/payment-methods";
 
 interface PaymentMethodSelectorProps {
   selectedMethod: PaymentMethod | null;
@@ -13,20 +13,6 @@ export default function PaymentMethodSelector({
   onSelectMethod,
   userCountry,
 }: PaymentMethodSelectorProps) {
-  const [adyenConfigured, setAdyenConfigured] = useState<boolean | null>(null);
-
-  // Check Adyen configuration
-  useEffect(() => {
-    fetch("/api/payments/adyen/check-config")
-      .then((res) => res.json())
-      .then((data) => {
-        setAdyenConfigured(data.configured);
-      })
-      .catch(() => {
-        setAdyenConfigured(false);
-      });
-  }, []);
-
   // Мемоізуємо список методів, щоб він не змінювався при зміні країни
   const availableMethods = useMemo(() => {
     return getAvailablePaymentMethods(userCountry);

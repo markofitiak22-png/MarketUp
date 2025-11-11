@@ -10,9 +10,6 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"success" | "error" | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [nameFocused, setNameFocused] = useState(false);
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [messageFocused, setMessageFocused] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
@@ -237,8 +234,6 @@ export default function ContactPage() {
                           placeholder={translations.contactNamePlaceholder} 
                           value={name} 
                           onChange={(e) => setName(e.target.value)}
-                          onFocus={() => setNameFocused(true)}
-                          onBlur={() => setNameFocused(false)}
                           required 
                           className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-slate-800/50 text-white placeholder-white/40 focus:outline-none ${
                             error && !name.trim()
@@ -258,8 +253,6 @@ export default function ContactPage() {
                           placeholder={translations.contactEmailPlaceholder} 
                           value={email} 
                           onChange={(e) => setEmail(e.target.value)}
-                          onFocus={() => setEmailFocused(true)}
-                          onBlur={() => setEmailFocused(false)}
                           required 
                           className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-slate-800/50 text-white placeholder-white/40 focus:outline-none ${
                             error && (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
@@ -279,8 +272,6 @@ export default function ContactPage() {
                           placeholder={translations.contactMessagePlaceholder} 
                           value={message} 
                           onChange={(e) => setMessage(e.target.value)}
-                          onFocus={() => setMessageFocused(true)}
-                          onBlur={() => setMessageFocused(false)}
                           required 
                           className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-slate-800/50 text-white placeholder-white/40 focus:outline-none resize-none ${
                             error && (!message.trim() || message.trim().length < 10)

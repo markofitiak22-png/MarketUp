@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
       })
     ]);
 
-    // Get recent videos (last 5)
+    // Get recent videos (last 6)
     const recentVideos = await prisma.video.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
-      take: 5,
+      take: 6,
       select: {
         id: true,
         title: true,

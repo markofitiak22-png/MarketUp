@@ -108,61 +108,67 @@ export default function VideosPage() {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Completed":
-        return "bg-success/20 text-success";
-      case "Processing":
-        return "bg-warning/20 text-warning";
-      case "Draft":
-        return "bg-foreground-muted/20 text-foreground-muted";
-      default:
-        return "bg-foreground-muted/20 text-foreground-muted";
-    }
-  };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-accent/5" />
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-accent/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }} />
+    <div className="min-h-screen bg-[#0b0b0b] relative overflow-hidden">
+      {/* Shared background blobs */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Top left blob */}
+        <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Top right blob */}
+        <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Middle left blob */}
+        <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Middle right blob */}
+        <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Bottom left blob */}
+        <div className="absolute top-[80%] left-[15%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Bottom right blob */}
+        <div className="absolute top-[90%] right-[5%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Additional connecting blobs */}
+        <div className="absolute top-[35%] left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[45%] right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[70%] left-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[75%] right-1/3 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl" />
+      </div>
       
-      <div className="relative z-10 space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
-        {/* Hero Header */}
-        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-50" />
-          
-          <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 sm:gap-8">
-              <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 sm:mb-3">
-                  {translations.videosMyVideos.split(' ')[0]} <span className="text-gradient bg-gradient-to-r from-accent via-accent-2 to-purple-500 bg-clip-text text-transparent">{translations.videosMyVideos.split(' ')[1]}</span>
-                </h1>
-                <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">{translations.videosManageViewAll}</p>
-              </div>
-              <Link
-                href="/studio"
-                className="group relative btn-primary btn-lg px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-sm sm:text-base lg:text-lg font-bold overflow-hidden w-full sm:w-auto"
-              >
-                <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  {translations.videosCreateNewVideo}
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </Link>
+      <div className="relative z-10 max-w-7xl mx-auto p-3 sm:p-6 lg:p-8">
+        {/* Header Section with Badge */}
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6">
+            <div className="hidden sm:block h-px w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
+            <div className="hidden sm:block w-2 h-2 rounded-full bg-indigo-500" />
+            <div className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-full text-xs sm:text-sm font-medium text-indigo-300 shadow-lg shadow-indigo-500/10">
+              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
+              <span>My Videos</span>
             </div>
+            <div className="hidden sm:block w-2 h-2 rounded-full bg-indigo-500" />
+            <div className="hidden sm:block h-px w-16 bg-gradient-to-l from-transparent to-purple-500/50" />
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-4 sm:gap-6">
+            <div className="text-center sm:text-left">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">
+                {translations.videosMyVideos.split(' ')[0]} <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{translations.videosMyVideos.split(' ')[1]}</span>
+              </h1>
+              <p className="text-xs sm:text-sm lg:text-base text-white/60">{translations.videosManageViewAll}</p>
+            </div>
+            <Link
+              href="/studio"
+              className="px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 lg:py-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm lg:text-base transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 flex items-center gap-2"
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              {translations.videosCreateNewVideo}
+            </Link>
           </div>
         </div>
 
         {/* Filters and Search */}
-        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-accent-2/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
+        <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 relative overflow-hidden mb-4 sm:mb-6 lg:mb-8">
           <div className="relative z-10">
-            <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="flex flex-col gap-3 sm:gap-4">
               <div className="flex-1">
                 <div className="relative">
                   <input
@@ -170,10 +176,10 @@ export default function VideosPage() {
                     placeholder={translations.videosSearchVideos}
                     value={searchTerm}
                     onChange={handleSearch}
-                    className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border-strong bg-surface-elevated text-foreground placeholder-foreground-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light text-sm sm:text-base lg:text-lg"
+                    className="w-full px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl border border-slate-700/60 bg-slate-800/40 text-white placeholder-white/40 focus:outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/20 text-sm sm:text-base"
                   />
                   <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-foreground-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
@@ -195,10 +201,10 @@ export default function VideosPage() {
                     <button
                       key={status}
                       onClick={() => handleFilterChange(status)}
-                      className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 ${
+                      className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm lg:text-base font-semibold transition-all duration-300 ${
                         filter === status
-                          ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg shadow-accent/25"
-                          : "bg-surface text-foreground-muted hover:text-foreground hover:bg-surface-elevated border border-border-strong"
+                          ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/20"
+                          : "bg-slate-800/40 text-white/60 hover:text-white hover:bg-slate-800/60 border border-slate-700/60"
                       }`}
                     >
                       {getFilterText(status)}
@@ -212,153 +218,108 @@ export default function VideosPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="glass-elevated rounded-2xl sm:rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden">
             <div className="relative z-10">
-              <div className="animate-spin w-10 h-10 sm:w-12 sm:h-12 border-4 border-accent border-t-transparent rounded-full mx-auto mb-4 sm:mb-6"></div>
-              <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">{translations.videosLoadingVideos}</p>
+              <div className="animate-spin w-10 h-10 sm:w-12 sm:h-12 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto mb-4 sm:mb-6"></div>
+              <p className="text-sm sm:text-base lg:text-lg text-white/60">{translations.videosLoadingVideos}</p>
             </div>
           </div>
         )}
 
         {/* Videos Grid */}
         {!loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 relative">
             {videos.map((video) => (
-            <div key={video.id} className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group relative">
-              <div className="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
-              
-              {/* Action Icons - Top Right (Desktop only) */}
-              {video.status === "Completed" && (
-                <div className="hidden md:absolute md:top-4 md:right-4 md:flex gap-4 z-20">
-                  <button 
-                    className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center transition-all duration-300 hover:scale-125 group"
-                    onClick={() => handleVideoAction('download', video.id)}
-                    title="Скачати"
-                  >
-                    <svg className="w-6 h-6 lg:w-8 lg:h-8 text-white drop-shadow-lg group-hover:drop-shadow-xl" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </button>
-                  
-                  <button 
-                    className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center transition-all duration-300 hover:scale-125 group"
-                    onClick={() => handleVideoAction('share', video.id)}
-                    title="Поширити"
-                  >
-                    <svg className="w-6 h-6 lg:w-8 lg:h-8 text-white drop-shadow-lg group-hover:drop-shadow-xl" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                    </svg>
-                  </button>
-                </div>
-              )}
-              
+            <div key={video.id} className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 hover:border-indigo-500/40 hover:bg-slate-800/60 transition-all duration-300 group relative">
               <div className="relative z-10">
-                <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center text-2xl sm:text-3xl lg:text-4xl group-hover:scale-110 transition-transform">
-                    {video.thumbnail}
+                <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                    <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
                   </div>
-                  <div className="flex-1 pr-20 sm:pr-32">
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground mb-1 sm:mb-2 pr-2 sm:pr-4">{video.title}</h3>
-                    <p className="text-sm sm:text-base lg:text-lg text-foreground-muted pr-2 sm:pr-4">{video.createdAt}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-1 truncate">{video.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-white/60 truncate">{video.createdAt}</p>
                   </div>
                 </div>
             
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosStatus}</span>
-                    <span className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold ${getStatusColor(video.status)}`}>
+                    <span className="text-[10px] sm:text-xs text-white/60">{translations.videosStatus}</span>
+                    <span className={`px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-semibold ${
+                      video.status === "Completed" ? "bg-green-500/20 text-green-400" :
+                      video.status === "Processing" ? "bg-yellow-500/20 text-yellow-400" :
+                      "bg-white/10 text-white/60"
+                    }`}>
                       {video.status}
                     </span>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosDuration}</span>
-                    <span className="text-sm sm:text-base lg:text-lg font-bold text-foreground">{video.duration}</span>
+                    <span className="text-[10px] sm:text-xs text-white/60">{translations.videosDuration}</span>
+                    <span className="text-[10px] sm:text-xs font-semibold text-white">{video.duration}</span>
                   </div>
                   
                   {video.status === "Completed" && (
                     <>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosViews}</span>
-                        <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">{video.views.toLocaleString()}</span>
+                        <span className="text-[10px] sm:text-xs text-white/60">{translations.videosViews}</span>
+                        <span className="text-[10px] sm:text-xs font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{video.views.toLocaleString()}</span>
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">{translations.videosDownloads}</span>
-                        <span className="text-sm sm:text-base lg:text-lg font-bold text-gradient bg-gradient-to-r from-accent-2 to-purple-500 bg-clip-text text-transparent">{video.downloads}</span>
+                        <span className="text-[10px] sm:text-xs text-white/60">{translations.videosDownloads}</span>
+                        <span className="text-[10px] sm:text-xs font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{video.downloads}</span>
                       </div>
                     </>
                   )}
                 </div>
                 
-                <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-4 sm:mt-6">
-                  {video.status === "Completed" && video.videoUrl ? (
-                    <button 
-                      className="btn-outline btn-lg py-2 sm:py-3 text-xs sm:text-sm lg:text-lg font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2"
-                      onClick={() => window.open(video.videoUrl, '_blank')}
-                    >
-                      <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <span className="hidden sm:inline">{translations.videosView}</span>
-                      <span className="sm:hidden text-xs">{translations.videosView}</span>
-                    </button>
-                  ) : (
-                    <button className="btn-outline btn-lg py-2 sm:py-3 text-xs sm:text-sm lg:text-lg font-bold opacity-50 cursor-not-allowed" disabled>
-                      <span className="hidden sm:inline">{video.status === "Processing" ? translations.videosProcessingStatus : translations.videosView}</span>
-                      <span className="sm:hidden text-xs">{video.status === "Processing" ? translations.videosProcessingStatus : translations.videosView}</span>
-                    </button>
-                  )}
-                  
-                  <button className="btn-outline btn-lg py-2 sm:py-3 text-xs sm:text-sm lg:text-lg font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2">
-                    <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    <span className="hidden sm:inline">{translations.videosEdit}</span>
-                    <span className="sm:hidden text-xs">{translations.videosEdit}</span>
-                  </button>
-                  
-                  {/* Mobile-only Download and Share buttons - hidden on md and larger */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-slate-700/60">
+                  {/* Download and Share buttons - visible on all screens */}
                   {video.status === "Completed" && (
                     <>
                       <button 
-                        className="btn-outline btn-lg py-2 text-xs font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 md:hidden"
+                        className="px-2 sm:px-3 py-1.5 sm:py-2 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-indigo-500/40 text-[10px] sm:text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1"
                         onClick={() => handleVideoAction('download', video.id)}
                       >
-                        <span className="text-xs">{translations.videosDownload}</span>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        {translations.videosDownload}
                       </button>
                       
                       <button 
-                        className="btn-outline btn-lg py-2 text-xs font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 md:hidden"
+                        className="px-2 sm:px-3 py-1.5 sm:py-2 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-purple-500/40 text-[10px] sm:text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1"
                         onClick={() => handleVideoAction('share', video.id)}
                       >
-                        <span className="text-xs">{translations.videosShare}</span>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                        </svg>
+                        {translations.videosShare}
                       </button>
                     </>
                   )}
                   
                   <button 
-                    className="btn-outline btn-lg py-2 sm:py-3 text-xs sm:text-sm lg:text-lg font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2"
+                    className="px-2 sm:px-3 py-1.5 sm:py-2 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-slate-600/60 text-[10px] sm:text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1"
                     onClick={() => handleVideoAction('duplicate', video.id)}
                   >
-                    <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <span className="hidden sm:inline">{translations.videosDuplicate}</span>
-                    <span className="sm:hidden text-xs">{translations.videosDuplicate}</span>
+                    {translations.videosDuplicate}
                   </button>
                   
                   <button 
-                    className="btn-outline btn-lg py-2 sm:py-3 text-xs sm:text-sm lg:text-lg font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 text-red-500 hover:bg-red-500/10"
+                    className="px-2 sm:px-3 py-1.5 sm:py-2 bg-slate-800/40 hover:bg-red-500/10 text-red-400 rounded-lg border border-slate-700/60 hover:border-red-500/40 text-[10px] sm:text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1"
                     onClick={() => handleVideoAction('delete', video.id)}
                   >
-                    <svg className="hidden sm:block w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    <span className="hidden sm:inline">{translations.videosDelete}</span>
-                    <span className="sm:hidden text-xs">{translations.videosDelete}</span>
+                    {translations.videosDelete}
                   </button>
                 </div>
               </div>
@@ -369,59 +330,62 @@ export default function VideosPage() {
 
         {/* Empty State */}
         {!loading && videos.length === 0 && (
-          <div className="glass-elevated rounded-2xl sm:rounded-3xl p-12 sm:p-16 text-center">
-            <div className="text-6xl sm:text-8xl mb-6 sm:mb-8">🎥</div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">{translations.videosNoVideosFound}</h3>
-            <p className="text-base sm:text-lg lg:text-xl text-foreground-muted mb-6 sm:mb-8">
-              {searchTerm ? translations.videosTryAdjustingSearch : translations.videosCreateFirstVideo}
-            </p>
-            <Link
-              href="/studio"
-              className="btn-primary btn-lg px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold rounded-xl sm:rounded-2xl w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-3"
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              {translations.videosCreateVideo}
-            </Link>
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="flex items-center justify-center mb-4 sm:mb-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
+                  <svg className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 sm:mb-3">{translations.videosNoVideosFound}</h3>
+              <p className="text-xs sm:text-sm lg:text-base text-white/60 mb-4 sm:mb-6">
+                {searchTerm ? translations.videosTryAdjustingSearch : translations.videosCreateFirstVideo}
+              </p>
+              <Link
+                href="/studio"
+                className="inline-flex items-center justify-center px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 lg:py-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm lg:text-base transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 gap-2"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                {translations.videosCreateVideo}
+              </Link>
+            </div>
           </div>
         )}
 
         {/* Pagination */}
         {!loading && videos.length > 0 && (
-          <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 relative overflow-hidden mt-4 sm:mt-6 lg:mt-8">
             <div className="relative z-10">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-                <p className="text-base sm:text-lg lg:text-xl text-foreground-muted">
-                  {translations.videosPage} <span className="font-bold text-foreground">{page}</span> {translations.videosOf} <span className="font-bold text-foreground">{totalPages}</span>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                <p className="text-xs sm:text-sm lg:text-base text-white/60">
+                  {translations.videosPage} <span className="font-bold text-white">{page}</span> {translations.videosOf} <span className="font-bold text-white">{totalPages}</span>
                 </p>
-                <div className="flex gap-3 sm:gap-4">
+                <div className="flex gap-2 sm:gap-3">
                   <button 
-                    className="btn-outline btn-lg px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all duration-300" 
+                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-indigo-500/40 text-xs sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2" 
                     disabled={page === 1}
                     onClick={() => setPage(page - 1)}
                   >
-                    <span className="flex items-center gap-2 sm:gap-3">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                      <span className="hidden sm:inline">{translations.videosPrevious}</span>
-                      <span className="sm:hidden">{translations.videosPrev}</span>
-                    </span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span className="hidden sm:inline">{translations.videosPrevious}</span>
+                    <span className="sm:hidden">{translations.videosPrev}</span>
                   </button>
                   <button 
-                    className="btn-outline btn-lg px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all duration-300"
+                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-indigo-500/40 text-xs sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
                     disabled={page === totalPages}
                     onClick={() => setPage(page + 1)}
                   >
-                    <span className="flex items-center gap-2 sm:gap-3">
-                      <span className="hidden sm:inline">{translations.videosNext}</span>
-                      <span className="sm:hidden">{translations.videosNext}</span>
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </span>
+                    <span className="hidden sm:inline">{translations.videosNext}</span>
+                    <span className="sm:hidden">{translations.videosNext}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </button>
                 </div>
               </div>

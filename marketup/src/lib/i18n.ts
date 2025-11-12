@@ -584,6 +584,7 @@ export interface Translations {
   dashboardRecentVideos: string;
   dashboardViewAll: string;
   dashboardViews: string;
+  dashboardPerformance: string;
   dashboardNoVideosYet: string;
   dashboardCreateFirstVideo: string;
   dashboardVideoTitle: string;
@@ -732,6 +733,8 @@ export interface Translations {
   subscriptionMostPopular: string;
   subscriptionChoosePlan: string;
   subscriptionBillingHistory: string;
+  subscriptionFeatures: string;
+  subscriptionActions: string;
   subscriptionTrackPaymentHistory: string;
   subscriptionDownload: string;
   subscriptionNoBillingHistory: string;
@@ -780,6 +783,9 @@ export interface Translations {
   billingDetailedUsage: string;
   billingBandwidthThisMonth: string;
   billingUnlimited: string;
+  billingMonth: string;
+  billingTotalVideos: string;
+  billingAllTime: string;
   
   // Settings Page
   settingsTitle: string;
@@ -795,6 +801,7 @@ export interface Translations {
   settingsCountry: string;
   settingsSelectCountry: string;
   settingsNotifications: string;
+  settingsActiveNotifications: string;
   settingsEmailNotifications: string;
   settingsReceiveNotificationsViaEmail: string;
   settingsPushNotifications: string;
@@ -805,6 +812,7 @@ export interface Translations {
   settingsTwoFactor: string;
   settingsLoginAlerts: string;
   settingsPrivacy: string;
+  settingsPrivacyLevel: string;
   settingsDataExport: string;
   settingsDataDelete: string;
   settingsSave: string;
@@ -1721,6 +1729,7 @@ export const translations: Record<Language, Translations> = {
 	  dashboardRecentVideos: "Recent Videos",
 	  dashboardViewAll: "View all →",
 	  dashboardViews: "views",
+	  dashboardPerformance: "Performance",
 	  dashboardNoVideosYet: "No videos yet",
 	  dashboardCreateFirstVideo: "Create your first video to get started",
 	  dashboardVideoTitle: "Title",
@@ -1861,6 +1870,8 @@ export const translations: Record<Language, Translations> = {
 	  subscriptionMostPopular: "Most Popular",
 	  subscriptionChoosePlan: "Choose Plan",
 	  subscriptionBillingHistory: "Billing History",
+	  subscriptionFeatures: "features",
+	  subscriptionActions: "Actions",
 	  subscriptionTrackPaymentHistory: "Track your payment history and download invoices",
 	  subscriptionDownload: "Download",
 	  subscriptionNoBillingHistory: "No billing history",
@@ -1909,6 +1920,9 @@ export const translations: Record<Language, Translations> = {
 	  billingDetailedUsage: "Detailed Usage",
 	  billingBandwidthThisMonth: "Bandwidth This Month",
 	  billingUnlimited: "Unlimited",
+	  billingMonth: "month",
+	  billingTotalVideos: "Total Videos",
+	  billingAllTime: "All time",
 
 	  // Settings Page
 	  settingsTitle: "Settings",
@@ -1922,6 +1936,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsCountry: "Country",
 	  settingsSelectCountry: "Select Country",
 	  settingsNotifications: "Notifications",
+	  settingsActiveNotifications: "Active Notifications",
 	  settingsEmailNotifications: "Email Notifications",
 	  settingsReceiveNotificationsViaEmail: "Receive notifications via email",
 	  settingsPushNotifications: "Push Notifications",
@@ -1932,6 +1947,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsTwoFactor: "Two-Factor Authentication",
 	  settingsLoginAlerts: "Login Alerts",
 	  settingsPrivacy: "Privacy",
+	  settingsPrivacyLevel: "Privacy Level",
 	  settingsDataExport: "Data Export",
 	  settingsDataDelete: "Delete Data",
 	  settingsSave: "Save",
@@ -2909,6 +2925,7 @@ export const translations: Record<Language, Translations> = {
     dashboardRecentVideos: "Senaste videor",
     dashboardViewAll: "Visa alla →",
     dashboardViews: "visningar",
+    dashboardPerformance: "Prestanda",
     dashboardNoVideosYet: "Inga videor än",
     dashboardCreateFirstVideo: "Skapa din första video för att komma igång",
     dashboardVideoTitle: "Titel",
@@ -3049,6 +3066,8 @@ export const translations: Record<Language, Translations> = {
     subscriptionMostPopular: "Mest populär",
     subscriptionChoosePlan: "Välj plan",
     subscriptionBillingHistory: "Faktureringshistorik",
+    subscriptionFeatures: "funktioner",
+    subscriptionActions: "Åtgärder",
     subscriptionTrackPaymentHistory: "Spåra din betalningshistorik och ladda ner fakturor",
     subscriptionDownload: "Ladda ner",
     subscriptionNoBillingHistory: "Ingen faktureringshistorik",
@@ -3097,6 +3116,9 @@ export const translations: Record<Language, Translations> = {
     billingDetailedUsage: "Detaljerad användning",
     billingBandwidthThisMonth: "Bandbredd denna månad",
     billingUnlimited: "Obegränsat",
+    billingMonth: "månad",
+    billingTotalVideos: "Totalt antal videor",
+    billingAllTime: "Alla tider",
     
     // Settings Page
     settingsTitle: "Inställningar",
@@ -3110,6 +3132,7 @@ export const translations: Record<Language, Translations> = {
     settingsCountry: "Land",
     settingsSelectCountry: "Välj land",
     settingsNotifications: "Notifieringar",
+    settingsActiveNotifications: "Aktiva notifieringar",
     settingsEmailNotifications: "E-postnotifieringar",
     settingsReceiveNotificationsViaEmail: "Ta emot notifieringar via e-post",
     settingsPushNotifications: "Push-notifieringar",
@@ -3120,6 +3143,7 @@ export const translations: Record<Language, Translations> = {
     settingsTwoFactor: "Tvåfaktorsautentisering",
     settingsLoginAlerts: "Inloggningsvarningar",
     settingsPrivacy: "Integritet",
+    settingsPrivacyLevel: "Integritetsnivå",
     settingsDataExport: "Dataexport",
     settingsDataDelete: "Ta bort data",
     settingsSave: "Spara",
@@ -4089,6 +4113,7 @@ export const translations: Record<Language, Translations> = {
     dashboardRecentVideos: "Останні відео",
     dashboardViewAll: "Переглянути всі →",
     dashboardViews: "переглядів",
+    dashboardPerformance: "Продуктивність",
     dashboardNoVideosYet: "Поки немає відео",
     dashboardCreateFirstVideo: "Створіть своє перше відео, щоб розпочати",
     dashboardVideoTitle: "Назва",
@@ -4229,6 +4254,8 @@ export const translations: Record<Language, Translations> = {
     subscriptionMostPopular: "Найпопулярніший",
     subscriptionChoosePlan: "Обрати план",
     subscriptionBillingHistory: "Історія оплат",
+    subscriptionFeatures: "функції",
+    subscriptionActions: "Дії",
     subscriptionTrackPaymentHistory: "Відстежуйте історію платежів та завантажуйте рахунки",
     subscriptionDownload: "Завантажити",
     subscriptionNoBillingHistory: "Немає історії оплат",
@@ -4277,6 +4304,9 @@ export const translations: Record<Language, Translations> = {
     billingDetailedUsage: "Детальне використання",
     billingBandwidthThisMonth: "Пропускна здатність цього місяця",
     billingUnlimited: "Необмежено",
+    billingMonth: "місяць",
+    billingTotalVideos: "Всього відео",
+    billingAllTime: "За весь час",
     
     // Settings Page
     settingsTitle: "Налаштування",
@@ -4290,6 +4320,7 @@ export const translations: Record<Language, Translations> = {
     settingsCountry: "Країна",
     settingsSelectCountry: "Оберіть країну",
     settingsNotifications: "Сповіщення",
+    settingsActiveNotifications: "Активні сповіщення",
     settingsEmailNotifications: "Сповіщення електронною поштою",
     settingsReceiveNotificationsViaEmail: "Отримувати сповіщення електронною поштою",
     settingsPushNotifications: "Push-сповіщення",
@@ -4300,6 +4331,7 @@ export const translations: Record<Language, Translations> = {
     settingsTwoFactor: "Двофакторна автентифікація",
     settingsLoginAlerts: "Сповіщення про вхід",
     settingsPrivacy: "Конфіденційність",
+    settingsPrivacyLevel: "Рівень конфіденційності",
     settingsDataExport: "Експорт даних",
     settingsDataDelete: "Видалити дані",
     settingsSave: "Зберегти",
@@ -5269,6 +5301,7 @@ export const translations: Record<Language, Translations> = {
     dashboardRecentVideos: "Son Videolar",
     dashboardViewAll: "Tümünü Görüntüle →",
     dashboardViews: "görüntüleme",
+    dashboardPerformance: "Performans",
     dashboardNoVideosYet: "Henüz video yok",
     dashboardCreateFirstVideo: "Başlamak için ilk videonuzu oluşturun",
     dashboardVideoTitle: "Başlık",
@@ -5409,6 +5442,8 @@ export const translations: Record<Language, Translations> = {
     subscriptionMostPopular: "En Popüler",
     subscriptionChoosePlan: "Plan Seç",
     subscriptionBillingHistory: "Faturalandırma Geçmişi",
+    subscriptionFeatures: "özellikler",
+    subscriptionActions: "İşlemler",
     subscriptionTrackPaymentHistory: "Ödeme geçmişinizi takip edin ve faturaları indirin",
     subscriptionDownload: "İndir",
     subscriptionNoBillingHistory: "Faturalandırma geçmişi yok",
@@ -5457,6 +5492,9 @@ export const translations: Record<Language, Translations> = {
     billingDetailedUsage: "Detaylı Kullanım",
     billingBandwidthThisMonth: "Bu Ay Bant Genişliği",
     billingUnlimited: "Sınırsız",
+    billingMonth: "ay",
+    billingTotalVideos: "Toplam Video",
+    billingAllTime: "Tüm zamanlar",
     
     // Settings Page
     settingsTitle: "Ayarlar",
@@ -5470,6 +5508,7 @@ export const translations: Record<Language, Translations> = {
     settingsCountry: "Ülke",
     settingsSelectCountry: "Ülke Seçin",
     settingsNotifications: "Bildirimler",
+    settingsActiveNotifications: "Aktif Bildirimler",
     settingsEmailNotifications: "E-posta Bildirimleri",
     settingsReceiveNotificationsViaEmail: "E-posta ile bildirim alın",
     settingsPushNotifications: "Push Bildirimleri",
@@ -5480,6 +5519,7 @@ export const translations: Record<Language, Translations> = {
     settingsTwoFactor: "İki Faktörlü Kimlik Doğrulama",
     settingsLoginAlerts: "Giriş Uyarıları",
     settingsPrivacy: "Gizlilik",
+    settingsPrivacyLevel: "Gizlilik Seviyesi",
     settingsDataExport: "Veri Dışa Aktarma",
     settingsDataDelete: "Verileri Sil",
     settingsSave: "Kaydet",
@@ -6450,6 +6490,7 @@ export const translations: Record<Language, Translations> = {
     dashboardRecentVideos: "الفيديوهات الأخيرة",
     dashboardViewAll: "عرض الكل ←",
     dashboardViews: "مشاهدة",
+    dashboardPerformance: "الأداء",
     dashboardNoVideosYet: "لا توجد فيديوهات بعد",
     dashboardCreateFirstVideo: "أنشئ أول فيديو لك للبدء",
     dashboardVideoTitle: "العنوان",
@@ -6590,6 +6631,8 @@ export const translations: Record<Language, Translations> = {
     subscriptionMostPopular: "الأكثر شعبية",
     subscriptionChoosePlan: "اختر الخطة",
     subscriptionBillingHistory: "تاريخ الفوترة",
+    subscriptionFeatures: "ميزات",
+    subscriptionActions: "الإجراءات",
     subscriptionTrackPaymentHistory: "تتبع تاريخ مدفوعاتك وتحميل الفواتير",
     subscriptionDownload: "تحميل",
     subscriptionNoBillingHistory: "لا يوجد تاريخ فوترة",
@@ -6638,6 +6681,9 @@ export const translations: Record<Language, Translations> = {
     billingDetailedUsage: "استخدام مفصل",
     billingBandwidthThisMonth: "عرض النطاق هذا الشهر",
     billingUnlimited: "غير محدود",
+    billingMonth: "شهر",
+    billingTotalVideos: "إجمالي الفيديوهات",
+    billingAllTime: "طوال الوقت",
     
     // Settings Page
     settingsTitle: "الإعدادات",
@@ -6651,6 +6697,7 @@ export const translations: Record<Language, Translations> = {
     settingsCountry: "البلد",
     settingsSelectCountry: "اختر البلد",
     settingsNotifications: "الإشعارات",
+    settingsActiveNotifications: "الإشعارات النشطة",
     settingsEmailNotifications: "إشعارات البريد الإلكتروني",
     settingsReceiveNotificationsViaEmail: "تلقي الإشعارات عبر البريد الإلكتروني",
     settingsPushNotifications: "الإشعارات الفورية",
@@ -6661,6 +6708,7 @@ export const translations: Record<Language, Translations> = {
     settingsTwoFactor: "المصادقة الثنائية",
     settingsLoginAlerts: "تنبيهات تسجيل الدخول",
     settingsPrivacy: "الخصوصية",
+    settingsPrivacyLevel: "مستوى الخصوصية",
     settingsDataExport: "تصدير البيانات",
     settingsDataDelete: "حذف البيانات",
     settingsSave: "حفظ",
@@ -7670,6 +7718,7 @@ export const translations: Record<Language, Translations> = {
 	  dashboardAccountPreferences: "Kontoeinstellungen",
 	  dashboardRecentVideos: "Letzte Videos",
 	  dashboardViews: "Ansichten",
+	  dashboardPerformance: "Leistung",
 	  dashboardNoVideosYet: "Noch keine Videos",
 	  dashboardVideoTitle: "Titel",
 	  dashboardVideoStatus: "Status",
@@ -7812,6 +7861,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsTwoFactor: "Zwei-Faktor-Authentifizierung",
 	  settingsLoginAlerts: "Anmelde-Warnungen",
 	  settingsPrivacy: "Datenschutz",
+	  settingsPrivacyLevel: "Datenschutzebene",
 	  settingsDataExport: "Datenexport",
 	  settingsDataDelete: "Daten löschen",
 	  settingsSave: "Speichern",
@@ -7829,6 +7879,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsCountry: "Land",
 	  settingsSelectCountry: "Land auswählen",
 	  settingsNotifications: "Benachrichtigungen",
+	  settingsActiveNotifications: "Aktive Benachrichtigungen",
 	  settingsEmailNotifications: "E-Mail-Benachrichtigungen",
 	  settingsReceiveNotificationsViaEmail: "Erhalten Sie Benachrichtigungen per E-Mail",
 	  settingsPushNotifications: "Push-Benachrichtigungen",
@@ -7900,6 +7951,8 @@ export const translations: Record<Language, Translations> = {
 	  subscriptionChangePlan: "Plan ändern",
 	  subscriptionReactivate: "Reaktivieren",
 	  subscriptionBillingHistory: "Abrechnungshistorie",
+	  subscriptionFeatures: "Funktionen",
+	  subscriptionActions: "Aktionen",
 	  subscriptionDownload: "Herunterladen",
 	  subscriptionManagement: "Abonnementverwaltung",
 	  subscriptionManageBillingUpgrade: "Verwalten Sie Ihr Abonnement, Ihre Abrechnung und upgraden Sie Ihren Plan, um mehr Funktionen freizuschalten",
@@ -7949,6 +8002,9 @@ export const translations: Record<Language, Translations> = {
 	  billingVideosCreated: "Videos erstellt",
 	  billingOf: "von",
 	  billingUnlimited: "Unbegrenzt",
+	  billingMonth: "Monat",
+	  billingTotalVideos: "Gesamtvideos",
+	  billingAllTime: "Gesamte Zeit",
 	  billingStorageUsed: "Speicher verwendet",
 	  billingThisMonth: "diesen Monat",
 	  billingBandwidth: "Bandbreite",
@@ -8892,6 +8948,7 @@ export const translations: Record<Language, Translations> = {
 	  dashboardRecentVideos: "Vidéos récentes",
 	  dashboardViewAll: "Voir tout",
 	  dashboardViews: "Vues",
+	  dashboardPerformance: "Performance",
 	  dashboardNoVideosYet: "Aucune vidéo pour le moment",
 	  dashboardVideoTitle: "Titre",
 	  dashboardVideoStatus: "Statut",
@@ -9035,6 +9092,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsTwoFactor: "Authentification à deux facteurs",
 	  settingsLoginAlerts: "Alertes de connexion",
 	  settingsPrivacy: "Confidentialité",
+	  settingsPrivacyLevel: "Niveau de confidentialité",
 	  settingsDataExport: "Exporter les données",
 	  settingsDataDelete: "Supprimer les données",
 	  settingsSave: "Enregistrer",
@@ -9053,6 +9111,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsCountry: "Pays",
 	  settingsSelectCountry: "Sélectionner le pays",
 	  settingsNotifications: "Notifications",
+	  settingsActiveNotifications: "Notifications actives",
 	  settingsReceiveNotificationsViaEmail: "Recevez des notifications par e-mail",
 	  settingsPushNotifications: "Notifications push",
 	  settingsReceivePushNotificationsInBrowser: "Recevez des notifications push dans le navigateur",
@@ -9121,6 +9180,8 @@ export const translations: Record<Language, Translations> = {
 	  subscriptionChangePlan: "Changer de plan",
 	  subscriptionReactivate: "Réactiver",
 	  subscriptionBillingHistory: "Historique de facturation",
+	  subscriptionFeatures: "fonctionnalités",
+	  subscriptionActions: "Actions",
 	  subscriptionDownload: "Télécharger",
 	  subscriptionManagement: "Gestion de l'abonnement",
 	  subscriptionManageBillingUpgrade: "Gérez votre abonnement, votre facturation et mettez à niveau votre plan pour débloquer plus de fonctionnalités",
@@ -9170,6 +9231,9 @@ export const translations: Record<Language, Translations> = {
 	  billingVideosCreated: "Vidéos créées",
 	  billingOf: "de",
 	  billingUnlimited: "Illimité",
+	  billingMonth: "Mois",
+	  billingTotalVideos: "Total des vidéos",
+	  billingAllTime: "Tout le temps",
 	  billingStorageUsed: "Stockage utilisé",
 	  billingThisMonth: "ce mois-ci",
 	  billingBandwidth: "Bande passante",

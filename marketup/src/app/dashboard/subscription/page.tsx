@@ -372,9 +372,9 @@ export default function SubscriptionPage() {
                 }`}>
                   {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? translations.subscriptionCancelling : subscriptionData?.currentPlan?.status}
                 </span>
-                  {subscriptionData?.currentPlan?.price > 0 && (
+                  {subscriptionData?.currentPlan?.price != null && subscriptionData.currentPlan.price > 0 && (
                     <span className="text-xs sm:text-sm font-semibold text-white/60">
-                      ${subscriptionData?.currentPlan?.price}/{subscriptionData?.currentPlan?.period}
+                      ${subscriptionData.currentPlan.price}/{subscriptionData.currentPlan.period}
                   </span>
                 )}
                 </div>

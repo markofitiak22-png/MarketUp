@@ -195,47 +195,74 @@ export default function VideoCreationWizard() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <div className="text-center max-w-md mx-auto">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">{translations.studioAccessDenied}</h1>
-          <p className="text-sm sm:text-base text-foreground-muted mb-4 sm:mb-6">{translations.studioSignInRequired}</p>
-          <button
-            onClick={() => router.push('/auth')}
-            className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold"
-          >
-            {translations.studioSignIn}
-          </button>
+      <div className="min-h-screen bg-[#0b0b0b] flex items-center justify-center px-4 relative">
+        {/* Background blobs */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="text-center max-w-md mx-auto relative z-10">
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-8 shadow-xl">
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">{translations.studioAccessDenied}</h1>
+            <p className="text-sm sm:text-base text-white/70 mb-4 sm:mb-6">{translations.studioSignInRequired}</p>
+            <button
+              onClick={() => router.push('/auth')}
+              className="px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg transition-all duration-300 shadow-lg shadow-indigo-500/20"
+            >
+              {translations.studioSignIn}
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-2/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+    <div className="min-h-screen bg-[#0b0b0b] relative">
+      {/* Shared background blobs */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Top left blob */}
+        <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Top right blob */}
+        <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Middle left blob */}
+        <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Middle right blob */}
+        <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Bottom left blob */}
+        <div className="absolute top-[80%] left-[15%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Bottom right blob */}
+        <div className="absolute top-[90%] right-[5%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Additional connecting blobs */}
+        <div className="absolute top-[35%] left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[45%] right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[70%] left-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[75%] right-1/3 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl" />
+      </div>
       
       <div className="relative z-10">
-       
-
         {/* Main Content */}
         <div>
-          <section className="pt-16 sm:pt-20 text-center">
-            <div className="container px-4 sm:px-6">
-              <div className="max-w-6xl mx-auto">
-                {/* Step Badge */}
-                <div className="mx-auto glass-glow rounded-xl sm:rounded-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4 inline-flex items-center gap-2 sm:gap-3 text-xs sm:text-sm border border-accent/20 mb-8 sm:mb-12">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-accent to-accent-2 rounded-full animate-pulse" />
-                  <span className="text-gradient font-semibold text-sm sm:text-base">{translations.studioStep} {currentStep + 1} {translations.studioOf} {steps.length}</span>
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent-2 rounded-full animate-ping" />
+          <section className="pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 xl:px-12">
+            <div className="max-w-7xl mx-auto">
+              {/* Badge with decorative lines */}
+              <div className="flex items-center justify-center gap-4 mb-8">
+                <div className="h-px w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
+                <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-full text-sm font-medium text-indigo-300 shadow-lg shadow-indigo-500/10">
+                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
+                  <span>{translations.studioStep} {currentStep + 1} {translations.studioOf} {steps.length}</span>
                 </div>
-                
-                {/* Step Content */}
-                <div className="animate-fade-in">
-                  {renderCurrentStep()}
-                </div>
+                <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                <div className="h-px w-16 bg-gradient-to-l from-transparent to-purple-500/50" />
+              </div>
+              
+              {/* Step Content */}
+              <div>
+                {renderCurrentStep()}
               </div>
             </div>
           </section>

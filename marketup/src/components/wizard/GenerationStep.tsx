@@ -199,373 +199,194 @@ export default function GenerationStep({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 sm:space-y-12">
       {/* Header */}
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-4">{translations.studioGenerateYourVideo}</h2>
-        <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+      <div className="text-center px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-4 sm:mb-6">
+          <span className="block bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent">
+            {translations.studioGenerateYourVideo}
+          </span>
+        </h1>
+        <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
           {translations.studioCreatePersonalizedVideo} {translations.studioProcessTakes2To3Minutes}
         </p>
       </div>
 
-      {/* Video Summary */}
-      <div className="max-w-5xl mx-auto">
-        <div className="glass-elevated rounded-3xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-3xl" />
-          
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-accent to-accent-2 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">📋</span>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-foreground">{translations.studioVideoSummary}</h3>
-              <p className="text-sm text-foreground-muted">Review your video configuration</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column - Avatar & Voice */}
+      {/* Two Sections in Row */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Video Summary */}
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{translations.studioVideoSummary}</h3>
+            <p className="text-sm text-white/60 mb-6">Review your video configuration</p>
+            
             <div className="space-y-4">
-              {/* Avatar Card */}
-              <div className="glass rounded-2xl p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-accent/10 to-accent-2/10">
-                    <img 
-                      src={data.avatar?.image} 
-                      alt={data.avatar?.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs text-accent font-semibold mb-1">AVATAR</div>
-                    <div className="font-bold text-foreground text-lg">{data.avatar?.name}</div>
-                    <div className="text-sm text-foreground-muted capitalize">{data.avatar?.gender}</div>
-                  </div>
+            {/* Avatar Card */}
+            <div className="bg-slate-800/40 rounded-xl p-4 border border-slate-700/60">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-700/40 flex-shrink-0">
+                  <img 
+                    src={data.avatar?.image} 
+                    alt={data.avatar?.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-              </div>
-              
-              {/* Voice Card */}
-              <div className="glass rounded-2xl p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                    <span className="text-3xl">🗣️</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs text-accent font-semibold mb-1">VOICE & LANGUAGE</div>
-                    <div className="font-bold text-foreground text-lg">{data.language?.voice.name}</div>
-                    <div className="text-sm text-foreground-muted">{data.language?.name} • {data.language?.voice.tone}</div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Duration Card */}
-              <div className="glass rounded-2xl p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
-                    <span className="text-3xl">⏱️</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs text-accent font-semibold mb-1">VIDEO DURATION</div>
-                    <div className="font-bold text-foreground text-lg">{data.settings.duration} seconds</div>
-                    <div className="text-sm text-foreground-muted">{data.text.split(' ').length} words • {data.settings.quality.toUpperCase()}</div>
-                  </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-indigo-400 font-semibold mb-1">AVATAR</div>
+                  <div className="font-bold text-white text-sm truncate">{data.avatar?.name}</div>
+                  <div className="text-xs text-white/60 capitalize">{data.avatar?.gender}</div>
                 </div>
               </div>
             </div>
             
-            {/* Right Column - Backgrounds & Script */}
-            <div className="space-y-4">
-              {/* Backgrounds Card */}
-              <div className="glass rounded-2xl p-6">
-                <div className="text-xs text-accent font-semibold mb-3">BACKGROUNDS ({data.backgrounds?.length || 0})</div>
-                <div className="grid grid-cols-2 gap-3">
-                  {data.backgrounds?.slice(0, 4).map((bg, index) => (
-                    <div key={bg.id} className="relative">
-                      <div className="aspect-video rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
-                        <img 
-                          src={bg.image} 
-                          alt={bg.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                      <div className="absolute top-2 left-2 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">{index + 1}</span>
-                      </div>
-                      <div className="mt-1 text-xs font-medium text-foreground truncate">{bg.name}</div>
-                    </div>
-                  ))}
+            {/* Voice Card */}
+            <div className="bg-slate-800/40 rounded-xl p-4 border border-slate-700/60">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl">🗣️</span>
                 </div>
-                {(data.backgrounds?.length || 0) > 4 && (
-                  <div className="mt-3 text-sm text-foreground-muted text-center">
-                    +{(data.backgrounds?.length || 0) - 4} more backgrounds
-                  </div>
-                )}
-              </div>
-              
-              {/* Script Preview Card */}
-              <div className="glass rounded-2xl p-6">
-                <div className="text-xs text-accent font-semibold mb-3">SCRIPT PREVIEW</div>
-                <div className="bg-surface/50 rounded-xl p-4 max-h-40 overflow-y-auto">
-                  <p className="text-sm text-foreground leading-relaxed line-clamp-6">
-                    {data.text}
-                  </p>
-                </div>
-                <div className="mt-3 flex items-center justify-between text-xs text-foreground-muted">
-                  <span>{data.text.length} characters</span>
-                  <span>~{Math.ceil(data.text.split(' ').length / 150)} min read</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-indigo-400 font-semibold mb-1">VOICE & LANGUAGE</div>
+                  <div className="font-bold text-white text-sm truncate">{data.language?.voice.name}</div>
+                  <div className="text-xs text-white/60 truncate">{data.language?.name} • {data.language?.voice.tone}</div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          {/* Video Settings */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <div className="flex flex-wrap items-center gap-4 justify-center text-sm">
-              <div className="flex items-center gap-2 px-4 py-2 bg-surface rounded-lg">
-                <span className="font-medium text-foreground-muted">Quality:</span>
-                <span className="font-bold text-accent">{data.settings.quality.toUpperCase()}</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-surface rounded-lg">
-                <span className="font-medium text-foreground-muted">Format:</span>
-                <span className="font-bold text-accent">{data.settings.format.toUpperCase()}</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-surface rounded-lg">
-                <span className="font-medium text-foreground-muted">Scenes:</span>
-                <span className="font-bold text-accent">{data.backgrounds?.length || 0}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Generation Process */}
-      {isGenerating ? (
-        <div className="max-w-4xl mx-auto">
-          <div className="glass-elevated rounded-3xl p-10 relative overflow-hidden">
-            {/* Animated Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-accent-2/5 to-purple-500/5 animate-pulse" />
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-full animate-pulse" />
             
-            <div className="relative z-10">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <div className="w-20 h-20 mx-auto mb-6 relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent to-accent-2 rounded-2xl animate-pulse" />
-                  <div className="absolute inset-2 bg-background rounded-xl flex items-center justify-center">
-                    <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-                  </div>
+            {/* Duration Card */}
+            <div className="bg-slate-800/40 rounded-xl p-4 border border-slate-700/60">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl">⏱️</span>
                 </div>
-                <h3 className="text-3xl font-bold text-foreground mb-3">{translations.studioGeneratingYourVideo}</h3>
-                <p className="text-lg text-foreground-muted">{translations.studioDontCloseWindow}</p>
-              </div>
-
-              {/* Large Progress Bar */}
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg font-bold text-foreground">{translations.studioProgress}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl font-bold text-gradient bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-                      {Math.round(progress)}%
-                    </span>
-                  </div>
-                </div>
-                <div className="relative w-full bg-surface rounded-full h-6 overflow-hidden shadow-inner">
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent-2 to-purple-500 h-6 rounded-full transition-all duration-500 ease-out shadow-lg"
-                    style={{ width: `${progress}%` }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
-                  </div>
-                </div>
-                <div className="mt-3 flex justify-between text-sm text-foreground-muted">
-                  <span>{generationSteps[currentStep]?.label || 'Processing...'}</span>
-                  <span>Step {currentStep + 1} of {generationSteps.length}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-indigo-400 font-semibold mb-1">VIDEO DURATION</div>
+                  <div className="font-bold text-white text-sm">{data.settings.duration} seconds</div>
+                  <div className="text-xs text-white/60">{data.text.split(' ').length} words • {data.settings.quality.toUpperCase()}</div>
                 </div>
               </div>
-
-              {/* Generation Steps Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                {generationSteps.map((step, index) => (
-                  <div 
-                    key={step.id} 
-                    className={`glass rounded-2xl p-4 transition-all duration-300 ${
-                      index === currentStep 
-                        ? 'ring-2 ring-accent shadow-lg scale-105' 
-                        : index < currentStep 
-                        ? 'opacity-60' 
-                        : 'opacity-40'
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-accent/10 to-accent-2/10 flex items-center justify-center">
-                        {getStepIcon(index)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-foreground text-sm mb-1 truncate">{step.label}</div>
-                        {index === currentStep && isGenerating && (
-                          <div className="flex items-center gap-2">
-                            <div className="flex gap-1">
-                              <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                              <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                              <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                            </div>
-                            <span className="text-xs text-foreground-muted">
-                              {Math.round((index + 1) * 100 / generationSteps.length)}%
-                            </span>
-                          </div>
-                        )}
-                        {index < currentStep && (
-                          <div className="text-xs text-success font-medium flex items-center gap-1">
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                            {translations.studioComplete}
-                          </div>
-                        )}
-                      </div>
+            </div>
+            
+            {/* Backgrounds */}
+            <div className="bg-slate-800/40 rounded-xl p-4 border border-slate-700/60">
+              <div className="text-xs text-indigo-400 font-semibold mb-3">BACKGROUNDS ({data.backgrounds?.length || 0})</div>
+              <div className="grid grid-cols-2 gap-2">
+                {data.backgrounds?.slice(0, 4).map((bg, index) => (
+                  <div key={bg.id} className="relative">
+                    <div className="aspect-video rounded-lg overflow-hidden bg-slate-700/40">
+                      <img 
+                        src={bg.image} 
+                        alt={bg.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
                     </div>
+                    <div className="absolute top-1 left-1 w-5 h-5 bg-black/70 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">{index + 1}</span>
+                    </div>
+                    <div className="mt-1 text-xs font-medium text-white/80 truncate">{bg.name}</div>
                   </div>
                 ))}
               </div>
-
-              {/* Info Cards */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="glass rounded-xl p-4 text-center">
-                  <div className="text-2xl mb-2">⏱️</div>
-                  <div className="text-sm text-foreground-muted mb-1">Estimated Time</div>
-                  <div className="text-lg font-bold text-foreground">
-                    {formatTime(Math.max(0, Math.floor((100 - progress) * 3)))}
-                  </div>
-                </div>
-                <div className="glass rounded-xl p-4 text-center">
-                  <div className="text-2xl mb-2">🎬</div>
-                  <div className="text-sm text-foreground-muted mb-1">Video Quality</div>
-                  <div className="text-lg font-bold text-foreground uppercase">{data.settings.quality}</div>
-                </div>
-              </div>
-
-              {/* Cancel Button */}
-              <div className="text-center">
-                <button
-                  onClick={cancelGeneration}
-                  className="px-6 py-3 rounded-xl border-2 border-red-500/30 text-red-500 font-semibold hover:bg-red-500/10 transition-all flex items-center gap-2 mx-auto"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  {translations.studioCancelGeneration}
-                </button>
-              </div>
+            </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="max-w-3xl mx-auto">
-          <div className="glass-elevated rounded-3xl p-12 text-center relative overflow-hidden">
-            {/* Background Decorations */}
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-2/5" />
-            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-full" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-accent-2/10 to-transparent rounded-tr-full" />
-            
-            <div className="relative z-10">
-              {/* Icon */}
-              <div className="w-24 h-24 mx-auto mb-6 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-3xl animate-pulse" />
-                <div className="absolute inset-3 bg-background rounded-2xl flex items-center justify-center">
-                  <svg className="w-10 h-10 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        
+          {/* Ready to Generate / Generation Process */}
+        {isGenerating ? (
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 mx-auto mb-4 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl animate-pulse" />
+                <div className="absolute inset-2 bg-slate-800/40 rounded-xl flex items-center justify-center">
+                  <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                </div>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{translations.studioGeneratingYourVideo}</h3>
+              <p className="text-sm text-white/60">{translations.studioDontCloseWindow}</p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-sm font-bold text-white">{translations.studioProgress}</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  {Math.round(progress)}%
+                </span>
+              </div>
+              <div className="relative w-full bg-slate-800/40 rounded-full h-4 overflow-hidden">
+                <div 
+                  className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-4 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className="mt-2 flex justify-between text-xs text-white/60">
+                <span>{generationSteps[currentStep]?.label || 'Processing...'}</span>
+                <span>Step {currentStep + 1} of {generationSteps.length}</span>
+              </div>
+            </div>
+
+            {/* Cancel Button */}
+            <div className="text-center">
+              <button
+                onClick={cancelGeneration}
+                className="px-4 py-2 rounded-lg border border-red-500/30 text-red-400 text-sm font-semibold hover:bg-red-500/10 transition-all"
+              >
+                {translations.studioCancelGeneration}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl p-6 sm:p-8 relative overflow-hidden flex flex-col justify-center">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl" />
+                <div className="absolute inset-2 bg-slate-800/40 rounded-xl flex items-center justify-center">
+                  <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
                 </div>
               </div>
               
-              {/* Title */}
-              <h3 className="text-3xl font-bold text-foreground mb-4">{translations.studioReadyToGenerate}</h3>
-              <p className="text-lg text-foreground-muted mb-8 max-w-xl mx-auto">
-                {translations.studioVideoCreatedWithSettings} Everything is ready to create your personalized video!
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{translations.studioReadyToGenerate}</h3>
+              <p className="text-sm text-white/60 mb-6">
+                {translations.studioVideoCreatedWithSettings}
               </p>
               
-              {/* Quick Stats */}
-              <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <span className="text-lg">👤</span>
-                  </div>
-                  <span className="font-medium text-foreground">{data.avatar?.name}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <span className="text-lg">🌍</span>
-                  </div>
-                  <span className="font-medium text-foreground">{data.language?.name}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <span className="text-lg">🎬</span>
-                  </div>
-                  <span className="font-medium text-foreground">{data.backgrounds?.length} scenes</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <span className="text-lg">⏱️</span>
-                  </div>
-                  <span className="font-medium text-foreground">~{data.settings.duration}s</span>
-                </div>
-              </div>
-              
-              {/* Generate Button */}
               <button
                 onClick={startGeneration}
-                className="group relative inline-flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-accent via-accent-2 to-purple-500 text-white text-xl font-bold rounded-2xl shadow-2xl hover:shadow-accent/50 transition-all duration-300 hover:scale-105 overflow-hidden"
+                className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-base font-bold rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-accent-2 via-purple-500 to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <svg className="w-7 h-7 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span className="relative z-10">{translations.studioStartGeneration}</span>
-                <div className="flex gap-1 relative z-10">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
-                </div>
+                <span>{translations.studioStartGeneration}</span>
               </button>
               
-              {/* Note */}
-              <p className="mt-6 text-sm text-foreground-muted flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <p className="mt-4 text-xs text-white/50">
                 {translations.studioGenerationTakes2To3Minutes}
               </p>
             </div>
           </div>
+        )}
         </div>
-      )}
+      </div>
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
         <button
           onClick={onPrev}
           disabled={isGenerating}
-          className="btn-outline btn-lg px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold bg-[#1a1a1a] hover:bg-[#222222] text-white rounded-full transition-all duration-300 border border-[#3a3a3a] flex items-center gap-2 sm:gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           {translations.studioBack}
         </button>
-        
-        {!isGenerating && (
-          <div className="text-sm text-foreground-muted flex items-center">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {translations.studioGenerationTakes2To3Minutes}
-          </div>
-        )}
       </div>
     </div>
   );

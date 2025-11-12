@@ -209,39 +209,44 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
       {/* Header */}
       <div className="text-center px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-4 sm:mb-6">
-          {translations.studioChooseYourAvatar}
+          <span className="block bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent">
+            {translations.studioChooseYourAvatar}
+          </span>
         </h1>
-        <p className="text-base sm:text-lg md:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed font-light">
-          {translations.studioSelectVirtualPresenter} <span className="text-accent font-medium">{translations.studioEachAvatarUnique}</span>
+        <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
+          {translations.studioSelectVirtualPresenter} <span className="text-indigo-400 font-medium">{translations.studioEachAvatarUnique}</span>
         </p>
       </div>
 
       {/* Avatar Grid */}
       <div className="max-w-5xl mx-auto px-4">
-        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
-          
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="w-8 h-8 sm:w-12 sm:h-12 border-4 border-accent/20 border-t-accent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-foreground-muted text-sm sm:text-base">Loading avatars...</p>
-              </div>
+        <div className="mb-6 text-center">
+          <p className="text-sm sm:text-base text-white/60 font-medium uppercase tracking-wider">
+            Personality and speaking style
+          </p>
+        </div>
+        
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-white/70 text-sm sm:text-base">Loading avatars...</p>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {avatars.map((avatar) => (
               <div
                 key={avatar.id}
-                className={`group relative p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                className={`group relative bg-slate-900/60 backdrop-blur-sm border rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 cursor-pointer ${
                   selectedAvatar === avatar.id
-                    ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20 scale-105'
-                    : 'border-[var(--border)] hover:border-accent/50 hover:bg-accent/5 hover:scale-102'
+                    ? 'border-indigo-500/60 bg-slate-800/80 shadow-xl shadow-indigo-500/20 scale-[1.02]'
+                    : 'border-slate-700/60 hover:border-indigo-500/40 hover:bg-slate-800/70 hover:scale-[1.01]'
                 }`}
                 onClick={() => handleAvatarSelect(avatar)}
               >
-                <div className="relative">
-                  <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gradient-to-br from-accent/10 to-accent-2/10 flex items-center justify-center">
+                <div className="relative mb-4">
+                  <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden bg-slate-800/40 flex items-center justify-center">
                     <img 
                       src={avatar.image} 
                       alt={avatar.name}
@@ -250,8 +255,8 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                   </div>
                   
                   {selectedAvatar === avatar.id && (
-                    <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <div className="absolute top-2 right-2 w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/50">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
@@ -259,88 +264,83 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
                 </div>
                 
                 <div className="text-center">
-                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1">{avatar.name}</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">{avatar.name}</h3>
                   {avatar.personality && (
-                    <p className="text-xs font-medium text-accent mb-1">{avatar.personality}</p>
+                    <p className="text-sm font-medium text-indigo-400 mb-2">{avatar.personality}</p>
                   )}
-                  <p className="text-xs sm:text-sm text-foreground-muted">{avatar.description}</p>
+                  <p className="text-xs sm:text-sm text-white/60">{avatar.description}</p>
                 </div>
               </div>
             ))}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Preview Section */}
       {selectedAvatar && data.avatar && (
         <div className="max-w-2xl mx-auto px-4">
-          <div className="glass-elevated rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent-2/15 to-transparent rounded-bl-2xl sm:rounded-bl-3xl" />
-            
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">{translations.studioPreview}</h3>
-            <div className="flex flex-col items-center justify-center gap-4">
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 text-center">{translations.studioPreview}</h3>
+            <div className="flex flex-col items-center justify-center gap-6">
               <div className="relative">
-                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-br from-accent/10 to-accent-2/10 flex items-center justify-center shadow-xl">
+                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-lg sm:rounded-xl overflow-hidden bg-slate-800/40 flex items-center justify-center">
                   <img 
                     src={data.avatar.image} 
                     alt={data.avatar.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-accent to-accent-2 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <div className="absolute -bottom-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/50">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
               </div>
-              <div className="text-center space-y-4 w-full">
-                <div>
-                  <p className="text-lg sm:text-xl font-bold text-foreground mb-1">{data.avatar.name}</p>
-                  {data.avatar.voice && (
-                    <p className="text-xs sm:text-sm text-accent-2 font-medium mb-2">
-                      Voice: {data.avatar.voice.name}
-                    </p>
-                  )}
-                  <p className="text-sm sm:text-base text-foreground-muted">
-                    {translations.studioWillPresentVideo}
+              <div className="text-center space-y-2 w-full">
+                <p className="text-xl sm:text-2xl font-bold text-white">{data.avatar.name}</p>
+                {data.avatar.voice && (
+                  <p className="text-sm sm:text-base text-white">
+                    Voice: {data.avatar.voice.name}
                   </p>
-                </div>
-                
-                {/* Voice Preview Button */}
-                <button
-                  onClick={isPlayingVoice ? stopVoicePreview : playVoicePreview}
-                  disabled={isGeneratingPreview}
-                  className={`w-full max-w-xs mx-auto flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    isPlayingVoice 
-                      ? 'bg-red-500 hover:bg-red-600 text-white' 
-                      : isGeneratingPreview
-                      ? 'bg-gray-500 text-white cursor-wait'
-                      : 'bg-gradient-to-r from-accent to-accent-2 hover:from-accent-2 hover:to-accent text-white shadow-lg hover:shadow-xl'
-                  }`}
-                >
-                  {isGeneratingPreview ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Generating Preview...</span>
-                    </>
-                  ) : isPlayingVoice ? (
-                    <>
-                      <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
-                      </svg>
-                      <span>Stop Voice</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      </svg>
-                      <span>Listen to Voice</span>
-                    </>
-                  )}
-                </button>
+                )}
+                <p className="text-xs sm:text-sm text-white/60">
+                  {translations.studioWillPresentVideo}
+                </p>
               </div>
+              
+              {/* Voice Preview Button */}
+              <button
+                onClick={isPlayingVoice ? stopVoicePreview : playVoicePreview}
+                disabled={isGeneratingPreview}
+                className={`w-full max-w-xs mx-auto flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  isPlayingVoice 
+                    ? 'bg-red-600 hover:bg-red-700 text-white' 
+                    : isGeneratingPreview
+                    ? 'bg-slate-800/70 text-white cursor-wait'
+                    : 'bg-slate-800/70 hover:bg-slate-800/90 text-white border border-slate-700/60'
+                }`}
+              >
+                {isGeneratingPreview ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Generating Preview...</span>
+                  </>
+                ) : isPlayingVoice ? (
+                  <>
+                    <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
+                    </svg>
+                    <span>Stop Voice</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <span>Listen to Voice</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -351,15 +351,12 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
         <button
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className="group relative btn-primary btn-lg px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold bg-[#1a1a1a] hover:bg-[#222222] text-white rounded-full transition-all duration-300 border border-[#3a3a3a] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 sm:gap-3"
         >
-          <span className="relative z-10 flex items-center gap-2 sm:gap-3">
-            {translations.studioContinue}
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-2 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {translations.studioContinue}
+          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
     </div>

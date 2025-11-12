@@ -64,9 +64,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Map planId to tier80-=-09ш8гн7е6кячс м.Є
-
-	Єдлорт амсвчя
+    // Map planId to tier
     const tierMap: Record<string, "BASIC" | "STANDARD" | "PREMIUM"> = {
       'pro': 'STANDARD',
       'premium': 'PREMIUM',

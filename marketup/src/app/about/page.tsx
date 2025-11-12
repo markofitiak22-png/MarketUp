@@ -1,10 +1,60 @@
 "use client";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "@/hooks/useTranslations";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 export default function AboutPage() {
   const { translations } = useTranslations();
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+
+    const setupObservers = () => {
+      const sectionKeys = ["mission-vision", "what-makes-different", "marketup-offers", "support-quote", "slogans", "cta"];
+      
+      sectionKeys.forEach((key) => {
+        const element = sectionRefs.current[key];
+        if (!element) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                setVisibleSections((prev) => new Set(prev).add(key));
+              } else {
+                setVisibleSections((prev) => {
+                  const next = new Set(prev);
+                  next.delete(key);
+                  return next;
+                });
+              }
+            });
+          },
+          {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px",
+          }
+        );
+
+        observer.observe(element);
+        observers.push(observer);
+      });
+    };
+
+    const timeoutId = setTimeout(setupObservers, 200);
+
+    return () => {
+      clearTimeout(timeoutId);
+      observers.forEach((observer) => observer.disconnect());
+    };
+  }, []);
+
+  const setSectionRef = (key: string) => (el: HTMLElement | null) => {
+    sectionRefs.current[key] = el;
+  };
   
   return (
     <div className="min-h-screen bg-[#0b0b0b] relative">
@@ -95,10 +145,21 @@ export default function AboutPage() {
       </section>
 
         {/* Mission & Vision Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+      <section 
+        ref={setSectionRef("mission-vision")}
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
+          visibleSections.has("mission-vision")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-20">
+          <div className={`text-center mb-20 transition-all duration-1000 delay-100 ${
+            visibleSections.has("mission-vision")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <div className="inline-flex items-center gap-4 mb-8">
               <div className="h-px w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
               <div className="w-2 h-2 rounded-full bg-indigo-500" />
@@ -115,7 +176,11 @@ export default function AboutPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-10">
               {/* Mission Card */}
-              <div className="group relative h-full">
+              <div className={`group relative h-full transition-all duration-1000 delay-200 ${
+                visibleSections.has("mission-vision")
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-10"
+              }`}>
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-indigo-400 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
                 <div className="relative h-full p-10 bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl hover:border-indigo-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-1 overflow-hidden">
                   <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-indigo-500/20 via-indigo-500/10 to-transparent rounded-bl-[3rem] group-hover:from-indigo-500/30 transition-all duration-500" />
@@ -138,7 +203,11 @@ export default function AboutPage() {
                 </div>
 
               {/* Vision Card */}
-              <div className="group relative h-full">
+              <div className={`group relative h-full transition-all duration-1000 delay-300 ${
+                visibleSections.has("mission-vision")
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10"
+              }`}>
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-purple-400 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
                 <div className="relative h-full p-10 bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl hover:border-purple-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-1 overflow-hidden">
                   <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-purple-500/20 via-purple-500/10 to-transparent rounded-bl-[3rem] group-hover:from-purple-500/30 transition-all duration-500" />
@@ -166,9 +235,20 @@ export default function AboutPage() {
         </section>
 
         {/* What Makes Us Different */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+      <section 
+        ref={setSectionRef("what-makes-different")}
+        className={`py-20 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
+          visibleSections.has("what-makes-different")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="relative z-10 max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 transition-all duration-1000 delay-100 ${
+            visibleSections.has("what-makes-different")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <div className="inline-block px-6 py-2 mb-6 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-full">
               <span className="text-sm font-semibold text-indigo-300">Our Difference</span>
             </div>
@@ -200,9 +280,20 @@ export default function AboutPage() {
         </section>
 
         {/* MarketUp Offers */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+      <section 
+        ref={setSectionRef("marketup-offers")}
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
+          visibleSections.has("marketup-offers")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-20">
+          <div className={`text-center mb-20 transition-all duration-1000 delay-100 ${
+            visibleSections.has("marketup-offers")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 text-white">
                 {translations.aboutWhatMarketUpOffers}
               </h2>
@@ -262,7 +353,14 @@ export default function AboutPage() {
         </section>
 
       {/* Combined: Commitment, Quote & Slogans */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+      <section 
+        ref={setSectionRef("support-quote")}
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
+          visibleSections.has("support-quote")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="relative z-10 max-w-7xl mx-auto space-y-16">
           {/* Commitment */}
           <div className="max-w-5xl mx-auto">
@@ -324,7 +422,14 @@ export default function AboutPage() {
           </div>
 
           {/* Slogans */}
-          <div>
+          <div 
+            ref={setSectionRef("slogans")}
+            className={`transition-all duration-1000 delay-200 ${
+              visibleSections.has("support-quote")
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+            }`}
+          >
             <div className="text-center mb-12">
               <div className="inline-block px-6 py-2 mb-6 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-full">
                 <span className="text-sm font-semibold text-indigo-300">Our Values</span>
@@ -372,13 +477,24 @@ export default function AboutPage() {
         </section>
 
         {/* CTA Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+      <section 
+        ref={setSectionRef("cta")}
+        className={`py-24 px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10 transition-all duration-1000 ${
+          visibleSections.has("cta")
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-full max-w-2xl h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
           </div>
           
-          <div className="relative text-center">
+          <div className={`relative text-center transition-all duration-1000 delay-100 ${
+            visibleSections.has("cta")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-5"
+          }`}>
             <div className="inline-flex items-center gap-3 px-6 py-2.5 mb-8 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-full">
               <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
               <span className="text-sm font-semibold text-indigo-300">Ready to Start?</span>
@@ -469,7 +585,7 @@ export default function AboutPage() {
             
             {/* Content wrapper */}
             <div className="relative z-10">
-              <ReviewsSection />
+                <ReviewsSection />
               </div>
             </div>
           </div>

@@ -576,10 +576,10 @@ export default function SettingsPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+            </div>
+      </div>
 
-        {/* Danger Zone */}
+          {/* Danger Zone */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-red-500/30 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-lg shadow-red-500/20">
@@ -641,8 +641,8 @@ export default function SettingsPage() {
                   </button>
                 </div>
               ))}
-            </div>
           </div>
+        </div>
       </div>
     </div>
   );

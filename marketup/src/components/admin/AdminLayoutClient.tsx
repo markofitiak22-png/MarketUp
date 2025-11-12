@@ -56,19 +56,40 @@ export default function AdminLayoutClient({ children }: AdminLayoutClientProps) 
   }, [mobileMenuOpen, isMobile]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0b0b0b] relative overflow-x-hidden w-full">
+      {/* Shared background blobs */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Top left blob */}
+        <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Top right blob */}
+        <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Middle left blob */}
+        <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Middle right blob */}
+        <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Bottom left blob */}
+        <div className="absolute top-[80%] left-[15%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Bottom right blob */}
+        <div className="absolute top-[90%] right-[5%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Additional connecting blobs */}
+        <div className="absolute top-[35%] left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[45%] right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[70%] left-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[75%] right-1/3 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl" />
+      </div>
+
       <AdminHeader 
         mobileMenuOpen={mobileMenuOpen}
         onMobileMenuToggle={handleMobileMenuToggle}
       />
-      <div className="flex">
+      <div className="flex relative z-10">
         <AdminSidebar 
           mobileMenuOpen={mobileMenuOpen}
           onClose={handleMobileMenuClose}
         />
-        <main className="flex-1 lg:ml-72 pt-20">
-          <div className="p-4 sm:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
+        <main className="flex-1 lg:ml-72 pt-20 overflow-x-hidden">
+          <div className="p-3 sm:p-6 lg:p-8 w-full">
+            <div className="max-w-7xl mx-auto w-full">
               {children}
             </div>
           </div>

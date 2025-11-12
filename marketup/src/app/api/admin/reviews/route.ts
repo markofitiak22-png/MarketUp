@@ -61,7 +61,8 @@ export async function GET(request: NextRequest) {
         break;
     }
 
-    const [reviews, totalCount] = await Promise.all([
+    // Get reviews with related data for current page
+    const [reviews, totalCount, allReviewsForStats] = await Promise.all([
       prisma.review.findMany({
         where,
         orderBy,
@@ -85,18 +86,47 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.review.count({ where }),
+      // Get all reviews for statistics (without pagination)
+      prisma.review.findMany({
+        select: {
+          id: true,
+          rating: true,
+          status: true,
+        },
+      }),
     ]);
 
-    // Get statistics
-    const stats = await prisma.review.groupBy({
-      by: ["status"],
-      _count: { status: true },
+    // Calculate statistics for all reviews
+    const stats = allReviewsForStats.reduce((acc, review) => {
+      acc.totalReviews++;
+      acc.totalRating += review.rating;
+      
+      switch (review.status) {
+        case 'PENDING':
+          acc.pendingReviews++;
+          break;
+        case 'APPROVED':
+          acc.approvedReviews++;
+          break;
+        case 'REJECTED':
+          acc.rejectedReviews++;
+          break;
+        case 'HIDDEN':
+          acc.hiddenReviews++;
+          break;
+      }
+      
+      return acc;
+    }, {
+      totalReviews: 0,
+      pendingReviews: 0,
+      approvedReviews: 0,
+      rejectedReviews: 0,
+      hiddenReviews: 0,
+      totalRating: 0
     });
 
-    const statusCounts = stats.reduce((acc, stat) => {
-      acc[stat.status] = stat._count.status;
-      return acc;
-    }, {} as Record<string, number>);
+    const averageRating = stats.totalReviews > 0 ? stats.totalRating / stats.totalReviews : 0;
 
     return NextResponse.json({
       reviews,
@@ -106,7 +136,14 @@ export async function GET(request: NextRequest) {
         total: totalCount,
         pages: Math.ceil(totalCount / limit),
       },
-      stats: statusCounts,
+      stats: {
+        totalReviews: stats.totalReviews,
+        pendingReviews: stats.pendingReviews,
+        approvedReviews: stats.approvedReviews,
+        rejectedReviews: stats.rejectedReviews,
+        hiddenReviews: stats.hiddenReviews,
+        averageRating: Math.round(averageRating * 10) / 10
+      },
     });
   } catch (error) {
     console.error("Error fetching admin reviews:", error);

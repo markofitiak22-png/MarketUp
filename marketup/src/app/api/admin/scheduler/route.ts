@@ -18,6 +18,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'all';
     const network = searchParams.get('network') || 'all';
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
 
     // Build where clause for scheduled posts
     const where: any = {};
@@ -64,26 +66,47 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Get scheduled posts
-    const scheduledPosts = await prisma.scheduledPost.findMany({
-      where,
-      include: {
-        videoJob: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true
+    // Get scheduled posts with pagination
+    const [scheduledPosts, totalCount, allPostsForStats] = await Promise.all([
+      prisma.scheduledPost.findMany({
+        where,
+        include: {
+          videoJob: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          scheduledDate: 'desc'
+        },
+        skip: (page - 1) * limit,
+        take: limit
+      }),
+      prisma.scheduledPost.count({ where }),
+      // Get all posts for statistics (without pagination)
+      prisma.scheduledPost.findMany({
+        include: {
+          videoJob: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true
+                }
               }
             }
           }
         }
-      },
-      orderBy: {
-        scheduledDate: 'desc'
-      }
-    });
+      })
+    ]);
 
     // Transform approved videos to match frontend interface
     const transformedVideos = approvedVideos.map(video => {
@@ -169,11 +192,52 @@ export async function GET(request: NextRequest) {
 
     console.log('Admin Scheduler API - Found videos:', transformedVideos.length, 'Scheduled posts:', transformedPosts.length);
 
+    // Calculate statistics for all posts
+    const stats = allPostsForStats.reduce((acc, post) => {
+      acc.totalPosts++;
+      
+      switch (post.status) {
+        case 'SCHEDULED':
+          acc.scheduledPosts++;
+          break;
+        case 'PUBLISHED':
+          acc.publishedPosts++;
+          break;
+        case 'FAILED':
+          acc.failedPosts++;
+          break;
+        case 'CANCELLED':
+          acc.cancelledPosts++;
+          break;
+      }
+      
+      return acc;
+    }, {
+      totalPosts: 0,
+      scheduledPosts: 0,
+      publishedPosts: 0,
+      failedPosts: 0,
+      cancelledPosts: 0
+    });
+
     return NextResponse.json({
       success: true,
       data: {
         videos: transformedVideos,
         scheduledPosts: transformedPosts,
+        pagination: {
+          page,
+          limit,
+          total: totalCount,
+          pages: Math.ceil(totalCount / limit)
+        },
+        stats: {
+          totalPosts: stats.totalPosts,
+          scheduledPosts: stats.scheduledPosts,
+          publishedPosts: stats.publishedPosts,
+          failedPosts: stats.failedPosts,
+          cancelledPosts: stats.cancelledPosts
+        },
         filters: {
           status,
           network

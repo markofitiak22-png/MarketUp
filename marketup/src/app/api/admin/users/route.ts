@@ -46,8 +46,8 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Get users with related data
-    const [users, totalCount] = await Promise.all([
+    // Get users with related data for current page
+    const [users, totalCount, allUsersForStats] = await Promise.all([
       prisma.user.findMany({
         where,
         include: {
@@ -77,7 +77,24 @@ export async function GET(request: NextRequest) {
         skip: (page - 1) * limit,
         take: limit
       }),
-      prisma.user.count({ where })
+      prisma.user.count({ where }),
+      // Get all users for statistics (without pagination)
+      prisma.user.findMany({
+        include: {
+          subscriptions: {
+            where: { status: 'ACTIVE' },
+            orderBy: { createdAt: 'desc' },
+            take: 1
+          },
+          sessions: {
+            orderBy: { expires: 'desc' },
+            take: 1,
+            select: {
+              expires: true
+            }
+          }
+        }
+      })
     ]);
 
     // Transform users data
@@ -159,6 +176,50 @@ export async function GET(request: NextRequest) {
 
     console.log('Admin Users API - Found users:', filteredUsers.length);
 
+    // Calculate statistics for all users
+    const stats = allUsersForStats.reduce((acc, user) => {
+      // Determine user status
+      let userStatus = 'active';
+      if (user.sessions.length === 0) {
+        userStatus = 'inactive';
+      } else {
+        const lastSession = user.sessions[0];
+        const daysSinceLastSession = Math.floor((Date.now() - lastSession.expires.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysSinceLastSession > 30) {
+          userStatus = 'inactive';
+        }
+      }
+
+      // Get subscription info
+      const activeSubscription = user.subscriptions[0];
+      const subscriptionTier = activeSubscription?.tier || 'FREE';
+      const subscriptionName = subscriptionTier === 'BASIC' ? 'Basic' :
+                              subscriptionTier === 'STANDARD' ? 'Premium' :
+                              subscriptionTier === 'PREMIUM' ? 'Enterprise' : 'Free';
+
+      // Calculate total spent
+      const totalSpent = activeSubscription ? 
+        (subscriptionTier === 'BASIC' ? 9 * 12 : 
+         subscriptionTier === 'STANDARD' ? 29 * 12 : 
+         subscriptionTier === 'PREMIUM' ? 99 * 12 : 0) : 0;
+
+      // Update stats
+      if (userStatus === 'active') {
+        acc.activeUsers++;
+      }
+      if (subscriptionName === 'Premium') {
+        acc.premiumUsers++;
+      }
+      acc.totalRevenue += totalSpent;
+
+      return acc;
+    }, {
+      totalUsers: allUsersForStats.length,
+      activeUsers: 0,
+      premiumUsers: 0,
+      totalRevenue: 0
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -168,6 +229,12 @@ export async function GET(request: NextRequest) {
           limit,
           total: totalCount,
           pages: Math.ceil(totalCount / limit)
+        },
+        stats: {
+          totalUsers: stats.totalUsers,
+          activeUsers: stats.activeUsers,
+          premiumUsers: stats.premiumUsers,
+          totalRevenue: stats.totalRevenue
         },
         filters: {
           search,

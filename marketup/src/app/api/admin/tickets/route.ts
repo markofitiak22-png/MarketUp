@@ -75,8 +75,8 @@ export async function GET(request: NextRequest) {
     
     const actualSortBy = sortByMapping[sortBy] || 'createdAt';
 
-    // Get contact messages (tickets) with related data
-    const [tickets, totalCount] = await Promise.all([
+    // Get contact messages (tickets) with related data for current page
+    const [tickets, totalCount, allTicketsForStats] = await Promise.all([
       prisma.contactMessage.findMany({
         where,
         include: {
@@ -98,7 +98,23 @@ export async function GET(request: NextRequest) {
         skip: (page - 1) * limit,
         take: limit
       }),
-      prisma.contactMessage.count({ where })
+      prisma.contactMessage.count({ where }),
+      // Get all tickets for statistics (without pagination)
+      prisma.contactMessage.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              subscriptions: {
+                where: { status: 'ACTIVE' },
+                select: { tier: true }
+              }
+            }
+          }
+        }
+      })
     ]);
 
     // Transform tickets data to match frontend interface
@@ -218,6 +234,43 @@ export async function GET(request: NextRequest) {
 
     console.log('Admin Tickets API - Found tickets:', filteredTickets.length);
 
+    // Calculate statistics for all tickets
+    const stats = allTicketsForStats.reduce((acc, ticket) => {
+      acc.totalTickets++;
+      
+      // Map database status to frontend status
+      const ticketStatus = ticket.status || 'PENDING';
+      switch (ticketStatus) {
+        case 'PENDING':
+          acc.openTickets++;
+          break;
+        case 'IN_PROGRESS':
+          acc.inProgressTickets++;
+          break;
+        case 'RESOLVED':
+          acc.resolvedTickets++;
+          break;
+        case 'CLOSED':
+          acc.closedTickets++;
+          break;
+      }
+      
+      // Map database priority to frontend priority
+      const ticketPriority = ticket.priority || 'MEDIUM';
+      if (ticketPriority === 'URGENT') {
+        acc.urgentTickets++;
+      }
+      
+      return acc;
+    }, {
+      totalTickets: 0,
+      openTickets: 0,
+      inProgressTickets: 0,
+      resolvedTickets: 0,
+      closedTickets: 0,
+      urgentTickets: 0
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -227,6 +280,14 @@ export async function GET(request: NextRequest) {
           limit,
           total: totalCount,
           pages: Math.ceil(totalCount / limit)
+        },
+        stats: {
+          totalTickets: stats.totalTickets,
+          openTickets: stats.openTickets,
+          inProgressTickets: stats.inProgressTickets,
+          resolvedTickets: stats.resolvedTickets,
+          closedTickets: stats.closedTickets,
+          urgentTickets: stats.urgentTickets
         },
         filters: {
           search,

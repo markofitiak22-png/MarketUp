@@ -107,25 +107,25 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
         transition-transform duration-300 ease-in-out
         lg:translate-x-0 lg:block lg:fixed lg:top-0 lg:bottom-0 lg:h-screen
       `}>
-        <div className="flex grow flex-col overflow-y-auto glass-elevated h-full min-h-screen lg:min-h-full">
+        <div className="flex grow flex-col overflow-y-auto bg-slate-900/95 backdrop-blur-sm border-r border-slate-700/60 h-full min-h-screen lg:min-h-full">
         {/* Header */}
         <div className="flex h-16 sm:h-20 shrink-0 items-center justify-between px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <svg className="w-4 h-4 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-foreground">{translations.adminSidebarAdminPanel}</h2>
-              <p className="text-xs sm:text-sm text-foreground-muted">{translations.adminSidebarManagePlatform}</p>
+              <h2 className="text-lg sm:text-xl font-bold text-white">{translations.adminSidebarAdminPanel}</h2>
+              <p className="text-xs sm:text-sm text-white/60">{translations.adminSidebarManagePlatform}</p>
             </div>
           </div>
           
           {/* Mobile Close Button */}
           <button
             onClick={onClose}
-            className="mobile-close-button lg:hidden p-2 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg transition-colors"
+            className="mobile-close-button lg:hidden p-2 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-colors"
           >
             <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -145,12 +145,12 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
                     onClick={onClose}
                     className={`group flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? "bg-gradient-to-r from-accent to-accent-2 text-white shadow-lg"
-                        : "text-foreground-muted hover:text-foreground hover:bg-surface-elevated"
+                        ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/20"
+                        : "text-white/60 hover:text-white hover:bg-slate-800/60"
                     }`}
                   >
                     <div className={`w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center ${
-                      isActive ? "text-white" : "text-foreground-muted group-hover:text-foreground"
+                      isActive ? "text-white" : "text-white/60 group-hover:text-white"
                     }`}>
                       {item.icon}
                     </div>
@@ -167,17 +167,17 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
 
         {/* User section */}
         <div className="p-4 sm:p-6 mt-auto pb-6 sm:pb-8">
-          <div className="glass-elevated rounded-2xl p-3 sm:p-4">
+          <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center">
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <span className="text-xs sm:text-sm font-bold text-white">A</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm font-semibold text-foreground truncate">{translations.adminHeaderAdminUser}</p>
-                <p className="text-xs text-foreground-muted truncate">admin@marketup.com</p>
+                <p className="text-xs sm:text-sm font-semibold text-white truncate">{translations.adminHeaderAdminUser}</p>
+                <p className="text-xs text-white/60 truncate">admin@marketup.com</p>
               </div>
             </div>
-            <button className="w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl hover:bg-red-500/20 transition-colors">
+            <button className="w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl hover:bg-red-500/20 transition-colors">
               <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>

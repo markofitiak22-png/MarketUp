@@ -46,6 +46,20 @@ export default function PublicationScheduler() {
   const [filterStatus, setFilterStatus] = useState<"all" | "scheduled" | "published" | "failed" | "cancelled">("all");
   const [filterNetwork, setFilterNetwork] = useState<string>("all");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 1
+  });
+  const [stats, setStats] = useState({
+    totalPosts: 0,
+    scheduledPosts: 0,
+    publishedPosts: 0,
+    failedPosts: 0,
+    cancelledPosts: 0
+  });
 
   const socialNetworks: SocialNetwork[] = [
     {
@@ -93,13 +107,14 @@ export default function PublicationScheduler() {
   ];
 
   // Fetch data from API
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async (page: number = currentPage) => {
       setLoading(true);
       try {
         const params = new URLSearchParams({
           status: filterStatus,
-          network: filterNetwork
+        network: filterNetwork,
+        page: page.toString(),
+        limit: '10'
         });
         
         const response = await fetch(`/api/admin/scheduler?${params}`, {
@@ -110,6 +125,11 @@ export default function PublicationScheduler() {
         if (data.success) {
           setVideos(data.data.videos);
           setScheduledPosts(data.data.scheduledPosts);
+        setPagination(data.data.pagination);
+        setCurrentPage(data.data.pagination.page);
+        if (data.data.stats) {
+          setStats(data.data.stats);
+        }
         } else {
           console.error('Failed to fetch scheduler data:', data.error);
         }
@@ -120,10 +140,20 @@ export default function PublicationScheduler() {
       }
     };
 
-    fetchData();
+  useEffect(() => {
+    setCurrentPage(1); // Reset to first page when filters change
+    fetchData(1);
   }, [filterStatus, filterNetwork]);
 
-  // Handle escape key to close modal
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= pagination.pages) {
+      setCurrentPage(page);
+      fetchData(page);
+    }
+  };
+
+  // Handle escape key to close modal and prevent body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && showScheduler) {
@@ -132,14 +162,26 @@ export default function PublicationScheduler() {
     };
 
     if (showScheduler) {
-      document.addEventListener('keydown', handleEscape);
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      // Apply styles to prevent scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-    }
+      
+      document.addEventListener('keydown', handleEscape);
 
     return () => {
+        // Restore scroll position
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
     };
+    }
   }, [showScheduler]);
 
   const handleSchedulePost = async () => {
@@ -182,16 +224,6 @@ export default function PublicationScheduler() {
       const data = await response.json();
       
       if (data.success) {
-        // Refresh the data to get the new scheduled posts
-        const refreshResponse = await fetch('/api/admin/scheduler', {
-          credentials: "include",
-        });
-        const refreshData = await refreshResponse.json();
-        
-        if (refreshData.success) {
-          setScheduledPosts(refreshData.data.scheduledPosts);
-        }
-        
         // Reset form
         setSelectedVideo(null);
         setSelectedNetworks([]);
@@ -200,6 +232,7 @@ export default function PublicationScheduler() {
         setCustomMessage("");
         setShowScheduler(false);
         alert(translations.adminSchedulerPostScheduledSuccessfully);
+        fetchData(currentPage); // Refresh current page
       } else {
         console.error('Failed to schedule post:', data.error);
         alert(translations.adminSchedulerFailedToSchedulePost);
@@ -229,9 +262,7 @@ export default function PublicationScheduler() {
       const data = await response.json();
       
       if (data.success) {
-        setScheduledPosts(prev => prev.map(post => 
-          post.id === postId ? { ...post, status: "cancelled" as const } : post
-        ));
+        fetchData(currentPage); // Refresh current page
       } else {
         console.error('Failed to cancel post:', data.error);
         alert(translations.adminSchedulerFailedToCancelPost);
@@ -259,9 +290,7 @@ export default function PublicationScheduler() {
       const data = await response.json();
       
       if (data.success) {
-        setScheduledPosts(prev => prev.map(post => 
-          post.id === postId ? { ...post, status: "published" as const } : post
-        ));
+        fetchData(currentPage); // Refresh current page
       } else {
         console.error('Failed to publish post:', data.error);
         alert(translations.adminSchedulerFailedToPublishPost);
@@ -279,36 +308,36 @@ export default function PublicationScheduler() {
     switch (status) {
       case "scheduled":
         return (
-          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-400 rounded-full mr-1 sm:mr-1.5"></div>
-            {translations.adminSchedulerScheduled}
+          <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full mr-1.5 sm:mr-2"></div>
+            {translations.adminSchedulerScheduled || "Scheduled"}
           </span>
         );
       case "published":
         return (
-          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold bg-green-500/20 text-green-400 border border-green-500/30">
+            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            {translations.adminSchedulerPublished}
+            {translations.adminSchedulerPublished || "Published"}
           </span>
         );
       case "failed":
         return (
-          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            {translations.adminSchedulerFailed}
+            {translations.adminSchedulerFailed || "Failed"}
           </span>
         );
       case "cancelled":
         return (
-          <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface text-foreground-muted">
-            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold bg-slate-500/20 text-slate-400 border border-slate-500/30">
+            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            {translations.adminSchedulerCancelled}
+            {translations.adminSchedulerCancelled || "Cancelled"}
           </span>
         );
       default:
@@ -335,7 +364,7 @@ export default function PublicationScheduler() {
     const scheduled = new Date(scheduledDate);
     const diff = scheduled.getTime() - now.getTime();
     
-    if (diff <= 0) return translations.adminSchedulerOverdue;
+    if (diff <= 0) return translations.adminSchedulerOverdue || "Overdue";
     
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -346,76 +375,227 @@ export default function PublicationScheduler() {
     return `${minutes}m`;
   };
 
+  if (loading && scheduledPosts.length === 0) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/50 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent/20 to-accent-2/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-accent-2/20 to-accent/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/10 to-accent-2/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+      <div className="min-h-screen bg-[#0b0b0b] relative overflow-hidden">
+        {/* Shared background blobs */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 space-y-8">
-        {/* Hero Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-accent via-accent-2 to-accent bg-clip-text text-transparent mb-4 sm:mb-6">
-            {translations.adminSchedulerPublicationScheduler}
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed px-4">
-            {translations.adminSchedulerScheduleVideoPublications}
-          </p>
+        <div className="relative z-10 space-y-8 p-3 sm:p-6 lg:p-8">
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-3xl p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+            <div className="animate-pulse">
+              <div className="h-8 bg-slate-800/40 rounded mb-6"></div>
+              <div className="h-64 bg-slate-800/40 rounded-xl"></div>
+            </div>
+          </div>
         </div>
+      </div>
+    );
+  }
 
-        {/* Action Button */}
-        <div className="flex justify-center mb-6 sm:mb-8">
-          <button
-            onClick={() => setShowScheduler(true)}
-            className="btn-primary px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 text-base sm:text-lg lg:text-xl font-bold hover:scale-105 transition-all duration-300"
-          >
-            {translations.adminSchedulerScheduleNewPost}
-          </button>
-        </div>
+  return (
+    <div className="min-h-screen bg-[#0b0b0b] relative overflow-hidden">
+      {/* Shared background blobs */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Top left blob */}
+        <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Top right blob */}
+        <div className="absolute top-[20%] right-[15%] w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Middle left blob */}
+        <div className="absolute top-[50%] left-[5%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Middle right blob */}
+        <div className="absolute top-[60%] right-[10%] w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        {/* Bottom left blob */}
+        <div className="absolute top-[80%] left-[15%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Bottom right blob */}
+        <div className="absolute top-[90%] right-[5%] w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        {/* Additional connecting blobs */}
+        <div className="absolute top-[35%] left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[45%] right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[70%] left-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-[75%] right-1/3 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl" />
+      </div>
 
-        {/* Enhanced Filters */}
-        <div className="glass-elevated rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10 hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
-          <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-600 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
-                <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/>
-                <path d="M9 14l2 2 4-4"/>
+      <div className="relative z-10 max-w-7xl mx-auto p-3 sm:p-6 lg:p-8">
+        {/* Header Section with Badge */}
+        <div className="mb-4 sm:mb-8">
+          <div className="hidden sm:flex items-center justify-center gap-4 mb-4">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
+            <div className="w-2 h-2 rounded-full bg-indigo-500" />
+            <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-full text-sm font-medium text-indigo-300 shadow-lg shadow-indigo-500/10">
+              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
+              <span>{translations.adminSchedulerPublicationScheduler || "Publication Scheduler"}</span>
+            </div>
+            <div className="w-2 h-2 rounded-full bg-indigo-500" />
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-purple-500/50" />
+          </div>
+
+          <div className="text-center mb-4 sm:mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 mb-3 sm:mb-4 shadow-lg shadow-indigo-500/20">
+              <svg className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground">{translations.adminSchedulerSearchFilters}</h2>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-3">
+              {translations.adminSchedulerPublicationScheduler || "Publication Scheduler"}
+          </h1>
+            <p className="text-sm sm:text-base text-white/60">
+              {translations.adminSchedulerScheduleVideoPublications || "Schedule video publications"}
+          </p>
+          </div>
+        </div>
+
+        {/* Main Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-6 lg:mb-8">
+          {/* Total Posts */}
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden group hover:border-indigo-500/40 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h3 className="text-xs sm:text-sm font-semibold text-white/60 uppercase tracking-wider">{translations.adminTotalPosts || "Total Posts"}</h3>
+              </div>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-1 sm:mb-2">
+                {loading ? "..." : stats.totalPosts}
+              </p>
+            </div>
+        </div>
+
+          {/* Scheduled Posts */}
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden group hover:border-blue-500/40 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500/10 to-blue-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+                <h3 className="text-xs sm:text-sm font-semibold text-white/60 uppercase tracking-wider">{translations.adminScheduledPosts || "Scheduled"}</h3>
+              </div>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent mb-1 sm:mb-2">
+                {loading ? "..." : stats.scheduledPosts}
+              </p>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div>
-              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                {translations.adminSchedulerStatusFilter}
-              </label>
+          {/* Published Posts */}
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden group hover:border-green-500/40 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500/10 to-green-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-xs sm:text-sm font-semibold text-white/60 uppercase tracking-wider">{translations.adminPublishedPosts || "Published"}</h3>
+              </div>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent mb-1 sm:mb-2">
+                {loading ? "..." : stats.publishedPosts}
+              </p>
+            </div>
+        </div>
+
+          {/* Failed Posts */}
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden group hover:border-red-500/40 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-500/10 to-red-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+                </div>
+                <h3 className="text-xs sm:text-sm font-semibold text-white/60 uppercase tracking-wider">{translations.adminFailedPosts || "Failed"}</h3>
+              </div>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent mb-1 sm:mb-2">
+                {loading ? "..." : stats.failedPosts}
+              </p>
+            </div>
+          </div>
+          
+          {/* Cancelled Posts */}
+          <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden group hover:border-slate-500/40 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-500/5 via-transparent to-slate-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-slate-500/10 to-slate-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-xs sm:text-sm font-semibold text-white/60 uppercase tracking-wider">{translations.adminCancelledPosts || "Cancelled"}</h3>
+              </div>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-400 to-slate-500 bg-clip-text text-transparent mb-1 sm:mb-2">
+                {loading ? "..." : stats.cancelledPosts}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          {/* Left Column - Filters and Table (2/3 width) */}
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+            {/* Action Button and Filters */}
+            <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-2xl" />
+              <div className="relative z-10">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-6">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">{translations.adminFilters || "Filters"}</h2>
+                  </div>
+                  <button
+                    onClick={() => setShowScheduler(true)}
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105 flex items-center gap-2 whitespace-nowrap"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    {translations.adminSchedulerScheduleNewPost || "Schedule New Post"}
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
-                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
-              >
-                <option value="all">{translations.adminSchedulerAllStatus}</option>
-                <option value="scheduled">{translations.adminSchedulerScheduled}</option>
-                <option value="published">{translations.adminSchedulerPublished}</option>
-                <option value="failed">{translations.adminSchedulerFailed}</option>
-                <option value="cancelled">{translations.adminSchedulerCancelled}</option>
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/40 border border-slate-700/60 rounded-lg sm:rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent transition-all duration-300"
+                  >
+                    <option value="all">{translations.adminSchedulerAllStatus || "All Status"}</option>
+                    <option value="scheduled">{translations.adminSchedulerScheduled || "Scheduled"}</option>
+                    <option value="published">{translations.adminSchedulerPublished || "Published"}</option>
+                    <option value="failed">{translations.adminSchedulerFailed || "Failed"}</option>
+                    <option value="cancelled">{translations.adminSchedulerCancelled || "Cancelled"}</option>
               </select>
-            </div>
 
-            <div>
-              <label className="block text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3">
-                {translations.adminSchedulerSocialNetwork}
-              </label>
               <select
                 value={filterNetwork}
                 onChange={(e) => setFilterNetwork(e.target.value)}
-                className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/40 border border-slate-700/60 rounded-lg sm:rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent transition-all duration-300"
               >
-                <option value="all">{translations.adminSchedulerAllNetworks}</option>
+                    <option value="all">{translations.adminSchedulerAllNetworks || "All Networks"}</option>
                 {socialNetworks.map(network => (
                   <option key={network.id} value={network.id}>
                     {network.icon} {network.name}
@@ -426,162 +606,284 @@ export default function PublicationScheduler() {
           </div>
         </div>
 
-        {/* Scheduled Posts */}
-        <div className="glass-elevated rounded-2xl sm:rounded-3xl overflow-hidden hover:scale-[1.01] transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 group">
+            {/* Scheduled Posts Table */}
+            <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-2xl" />
+              <div className="relative z-10">
           {loading ? (
-            <div className="p-4 sm:p-6 lg:p-10">
-              <div className="space-y-4 sm:space-y-6">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="flex items-center space-x-3 sm:space-x-6 p-4 sm:p-6">
-                    <div className="w-16 h-10 sm:w-20 sm:h-12 lg:w-24 lg:h-16 bg-surface-elevated rounded-xl sm:rounded-2xl animate-pulse"></div>
-                    <div className="flex-1 space-y-2 sm:space-y-3">
-                      <div className="h-4 sm:h-5 bg-surface-elevated rounded animate-pulse w-3/4"></div>
-                      <div className="h-3 sm:h-4 bg-surface-elevated rounded animate-pulse w-1/2"></div>
+                  <div className="space-y-4">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className="flex items-center gap-4 p-4 bg-slate-800/40 rounded-lg animate-pulse">
+                        <div className="w-16 h-10 bg-slate-700/60 rounded"></div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 bg-slate-700/60 rounded w-3/4"></div>
+                          <div className="h-3 bg-slate-700/60 rounded w-1/2"></div>
                     </div>
-                    <div className="w-16 sm:w-20 lg:w-24 h-6 sm:h-8 bg-surface-elevated rounded-full animate-pulse"></div>
+                        <div className="w-20 h-6 bg-slate-700/60 rounded-full"></div>
                   </div>
                 ))}
               </div>
+                ) : filteredPosts.length === 0 ? (
+                  <div className="text-center py-12 sm:py-16 lg:py-20">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
+                      <svg className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 sm:mb-3">{translations.adminNoScheduledPosts || "No scheduled posts"}</h3>
+                    <p className="text-xs sm:text-sm lg:text-base text-white/60 mb-4 sm:mb-6">{translations.adminScheduleYourFirstPost || "Schedule your first post to get started"}</p>
+                    <button
+                      onClick={() => setShowScheduler(true)}
+                      className="inline-flex items-center justify-center px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-base font-bold bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 gap-2"
+                    >
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      {translations.adminSchedulerScheduleNewPost || "Schedule New Post"}
+                    </button>
             </div>
           ) : (
-            <div className="divide-y divide-border">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-slate-800/60 border-b-2 border-slate-700/80 sticky top-0 z-20">
+                        <tr>
+                          <th className="px-4 sm:px-6 lg:px-8 py-4 sm:py-5 bg-slate-800/60 backdrop-blur-sm text-left text-xs sm:text-sm font-bold text-white uppercase tracking-wider min-w-[200px]">{translations.adminVideo || "Video"}</th>
+                          <th className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 bg-slate-800/60 backdrop-blur-sm text-left text-xs sm:text-sm font-bold text-white uppercase tracking-wider hidden md:table-cell min-w-[150px]">{translations.adminSchedulerSocialNetwork || "Network"}</th>
+                          <th className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 bg-slate-800/60 backdrop-blur-sm text-left text-xs sm:text-sm font-bold text-white uppercase tracking-wider hidden lg:table-cell min-w-[180px]">{translations.adminSchedulerScheduledDate || "Scheduled Date"}</th>
+                          <th className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 bg-slate-800/60 backdrop-blur-sm text-left text-xs sm:text-sm font-bold text-white uppercase tracking-wider hidden md:table-cell min-w-[100px]">{translations.adminSchedulerStatus || "Status"}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700/60">
               {filteredPosts.map((post) => {
                 const network = getNetworkInfo(post.socialNetwork);
                 return (
-                  <div key={post.id} className="p-4 sm:p-6 lg:p-8 hover:bg-surface/50 transition-all duration-300 hover:scale-[1.01] group">
-                    <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
-                      {/* Video Thumbnail */}
-                      <div className="flex-shrink-0 w-full sm:w-auto">
+                            <tr key={post.id} className="hover:bg-slate-800/60 transition-all duration-200 group border-b border-slate-700/60">
+                              <td className="px-4 sm:px-6 lg:px-8 py-4 sm:py-5 min-w-[200px]">
+                                <div className="flex items-center gap-3 sm:gap-4">
+                                  <div className="relative w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-lg sm:rounded-xl overflow-hidden bg-slate-800/40 flex-shrink-0">
                         <img
                           src={post.video.thumbnail}
                           alt={post.video.title}
-                          className="w-full sm:w-20 lg:w-28 h-16 sm:h-16 lg:h-20 object-cover rounded-xl sm:rounded-2xl group-hover:scale-105 transition-transform"
-                        />
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        e.currentTarget.style.display = 'none';
+                                      }}
+                                    />
+                                    {/* Video Icon Overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                      <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                                        <svg className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-slate-900 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                          <path d="M8 5v14l11-7z"/>
+                                        </svg>
                       </div>
-
-                      {/* Post Info */}
-                      <div className="flex-1 min-w-0 w-full">
-                        <div className="flex flex-col sm:flex-row sm:items-start justify-between space-y-4 sm:space-y-0">
+                                    </div>
+                      </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 sm:mb-3">
-                              {post.video.title}
-                            </h3>
-                            
-                            {/* Social Network */}
-                            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-3 sm:mb-4">
-                              <span className={`inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-sm sm:text-base lg:text-lg font-bold text-white ${network?.color}`}>
+                                    <p className="text-sm sm:text-base lg:text-lg font-bold text-white truncate mb-0.5">{post.video.title}</p>
+                                    <p className="text-xs sm:text-sm lg:text-base text-white/70 truncate">{post.video.duration}</p>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 hidden md:table-cell min-w-[150px]">
+                                <div className="flex items-center gap-2 sm:gap-3">
+                                  <span className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white ${network?.color || 'bg-slate-500'}`}>
                                 {network?.icon} {network?.name}
                               </span>
-                              <span className="text-sm sm:text-base lg:text-lg text-foreground-muted">
-                                • {formatDate(post.scheduledDate)}
-                              </span>
                             </div>
-
-                            {/* Custom Message */}
-                            {post.customMessage && (
-                              <p className="text-sm sm:text-base lg:text-lg text-foreground-muted mb-3 sm:mb-4">
-                                &ldquo;{post.customMessage}&rdquo;
-                              </p>
-                            )}
-
-                            {/* Time Info */}
-                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-6 text-sm sm:text-base lg:text-lg text-foreground-muted">
-                              <span className="font-bold">{translations.adminSchedulerDuration}: {post.video.duration}</span>
-                              <span className="font-bold">{translations.adminSchedulerCategory}: {post.video.category}</span>
+                              </td>
+                              <td className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 hidden lg:table-cell min-w-[180px]">
+                                <div className="space-y-1">
+                                  <span className="text-xs sm:text-sm lg:text-base text-white/70 block">{formatDate(post.scheduledDate)}</span>
                               {post.status === "scheduled" && (
-                                <span className="text-blue-600 font-bold text-base sm:text-lg lg:text-xl">
-                                  {translations.adminSchedulerPublishesIn}: {getTimeUntilPublish(post.scheduledDate)}
+                                    <span className="text-xs sm:text-sm text-blue-400 font-semibold block">
+                                      {translations.adminSchedulerPublishesIn || "Publishes in"}: {getTimeUntilPublish(post.scheduledDate)}
                                 </span>
                               )}
                             </div>
-                          </div>
-
-                          {/* Status and Actions */}
-                          <div className="flex flex-col sm:flex-row sm:flex-col items-start sm:items-end space-y-3 sm:space-y-4 w-full sm:w-auto">
-                            <div className="flex-shrink-0">
+                              </td>
+                              <td className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 hidden md:table-cell min-w-[100px]">
+                                <div className="flex flex-col items-start gap-2">
                               {getStatusBadge(post.status)}
-                            </div>
-                            
                             {post.status === "scheduled" && (
-                              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
+                                    <div className="flex gap-2">
                                 <button
                                   onClick={() => handlePublishNow(post.id)}
-                                  className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-xl sm:rounded-2xl hover:bg-green-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
+                                        className="px-2 sm:px-3 py-1 sm:py-1 bg-green-500/10 hover:bg-green-500/20 text-green-400 text-xs sm:text-sm font-semibold rounded-lg border border-green-500/30 hover:border-green-500/50 transition-all duration-300"
                                 >
-                                  {translations.adminSchedulerPublishNow}
+                                        {translations.adminSchedulerPublishNow || "Publish"}
                                 </button>
                                 <button
                                   onClick={() => handleCancelPost(post.id)}
-                                  className="px-4 sm:px-6 py-2 sm:py-3 bg-red-500 text-white rounded-xl sm:rounded-2xl hover:bg-red-600 transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
+                                        className="px-2 sm:px-3 py-1 sm:py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs sm:text-sm font-semibold rounded-lg border border-red-500/30 hover:border-red-500/50 transition-all duration-300"
                                 >
-                                  {translations.adminSchedulerCancel}
+                                        {translations.adminSchedulerCancel || "Cancel"}
                                 </button>
                               </div>
                             )}
                           </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                       </div>
+                            )}
                     </div>
                   </div>
-                </div>
+
+            {/* Pagination */}
+            {pagination.total > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                <p className="text-sm sm:text-base text-white/60">
+                  {translations.adminShowingPosts || "Showing"} {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} {translations.adminOfPosts || "of"} {pagination.total} {translations.adminPosts || "posts"}
+                </p>
+                {pagination.pages > 1 && (
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <button 
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="px-4 sm:px-6 py-2 sm:py-3 bg-slate-800/40 border border-slate-700/60 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold text-white hover:bg-slate-800/60 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {translations.adminPrevious || "Previous"}
+                    </button>
+                    
+                    {/* Page Numbers */}
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      {Array.from({ length: Math.min(5, pagination.pages) }, (_, i) => {
+                        let pageNum: number;
+                        if (pagination.pages <= 5) {
+                          pageNum = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNum = i + 1;
+                        } else if (currentPage >= pagination.pages - 2) {
+                          pageNum = pagination.pages - 4 + i;
+                        } else {
+                          pageNum = currentPage - 2 + i;
+                        }
+                        
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => handlePageChange(pageNum)}
+                            className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 ${
+                              currentPage === pageNum
+                                ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/20'
+                                : 'bg-slate-800/40 border border-slate-700/60 text-white hover:bg-slate-800/60 hover:scale-105'
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
               );
             })}
+                    </div>
+                    
+                    <button 
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === pagination.pages}
+                      className="px-4 sm:px-6 py-2 sm:py-3 bg-slate-800/40 border border-slate-700/60 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold text-white hover:bg-slate-800/60 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {translations.adminNext || "Next"}
+                    </button>
+                  </div>
+                )}
           </div>
         )}
+          </div>
+
+          {/* Right Column - Quick Actions (1/3 width) */}
+          <div className="space-y-4 sm:space-y-6">
+            {/* Quick Actions */}
+            <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-2xl" />
+              <div className="relative z-10">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">{translations.adminQuickActions || "Quick Actions"}</h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <button
+                    onClick={() => fetchData(currentPage)}
+                    className="w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg sm:rounded-xl border border-slate-700/60 hover:border-indigo-500/40 text-sm sm:text-base font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    {translations.adminRefreshData || "Refresh Data"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
 
         {/* Scheduler Modal */}
         {showScheduler && (
           <div 
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-in fade-in duration-300"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end justify-center z-50 p-4 sm:p-6 lg:p-8"
             onClick={(e) => {
               if (e.target === e.currentTarget) {
                 setShowScheduler(false);
               }
             }}
           >
-            <div className="glass-elevated rounded-2xl sm:rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden hover:scale-[1.02] transition-all duration-300 animate-in zoom-in-95 duration-300">
-              <div className="p-4 sm:p-6 lg:p-8 border-b border-border">
+            <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl max-w-5xl w-full max-h-[85vh] overflow-y-auto relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5" />
+              <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-2xl" />
+              <div className="relative z-10">
+                <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-700/60">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{translations.adminSchedulerScheduleNewPost}</h2>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">{translations.adminSchedulerScheduleNewPost || "Schedule New Post"}</h2>
                   <button
                     onClick={() => setShowScheduler(false)}
-                    className="p-2 sm:p-3 text-foreground-muted hover:text-foreground hover:bg-surface-elevated rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-110"
+                      className="p-2 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-all duration-300 hover:scale-110"
                   >
-                    <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
               </div>
 
-              <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 overflow-y-auto max-h-[calc(85vh-100px)]">
                 {/* Video Selection */}
                 <div>
-                  <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">
-                    {translations.adminSchedulerSelectVideo}
+                    <label className="block text-sm sm:text-base lg:text-lg font-bold text-white mb-3 sm:mb-4">
+                      {translations.adminSchedulerSelectVideo || "Select Video"}
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
                     {videos.map((video) => (
                       <div
                         key={video.id}
-                        className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border cursor-pointer transition-all duration-300 hover:scale-105 ${
+                        className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
                           selectedVideo?.id === video.id
-                            ? "border-accent bg-accent/10"
-                            : "border-border hover:border-accent/50"
+                              ? "border-indigo-500 bg-indigo-500/10"
+                              : "border-slate-700/60 hover:border-indigo-500/50 bg-slate-800/40"
                         }`}
                         onClick={() => setSelectedVideo(video)}
                       >
-                        <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
+                            <div className="relative w-10 h-7 sm:w-12 sm:h-9 rounded-lg overflow-hidden bg-slate-800/40 flex-shrink-0">
                           <img
                             src={video.thumbnail}
                             alt={video.title}
-                            className="w-12 h-9 sm:w-16 sm:h-12 object-cover rounded-lg sm:rounded-xl"
-                          />
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                                  <svg className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-slate-900 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-foreground text-sm sm:text-base lg:text-lg line-clamp-1">
+                              <h4 className="font-bold text-white text-xs sm:text-sm lg:text-base line-clamp-1">
                               {video.title}
                             </h4>
-                            <p className="text-xs sm:text-sm lg:text-base text-foreground-muted">
+                              <p className="text-[10px] sm:text-xs lg:text-sm text-white/60">
                               {video.duration} • {video.category}
                             </p>
                           </div>
@@ -593,17 +895,17 @@ export default function PublicationScheduler() {
 
                 {/* Social Networks Selection */}
                 <div>
-                  <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">
-                    {translations.adminSchedulerSelectSocialNetworks}
+                    <label className="block text-sm sm:text-base lg:text-lg font-bold text-white mb-3 sm:mb-4">
+                      {translations.adminSchedulerSelectSocialNetworks || "Select Social Networks"}
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3">
                     {socialNetworks.map((network) => (
                       <label
                         key={network.id}
-                        className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border cursor-pointer transition-all duration-300 hover:scale-105 ${
+                        className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
                           selectedNetworks.includes(network.id)
-                            ? "border-accent bg-accent/10"
-                            : "border-border hover:border-accent/50"
+                              ? "border-indigo-500 bg-indigo-500/10"
+                              : "border-slate-700/60 hover:border-indigo-500/50 bg-slate-800/40"
                         }`}
                       >
                         <input
@@ -618,9 +920,9 @@ export default function PublicationScheduler() {
                           }}
                           className="sr-only"
                         />
-                        <div className="flex items-center space-x-3 sm:space-x-4">
-                          <span className="text-2xl sm:text-3xl">{network.icon}</span>
-                          <span className="font-bold text-foreground text-sm sm:text-base lg:text-lg">{network.name}</span>
+                          <div className="flex items-center space-x-2 sm:space-x-3">
+                            <span className="text-lg sm:text-xl">{network.icon}</span>
+                            <span className="font-bold text-white text-xs sm:text-sm lg:text-base">{network.name}</span>
                         </div>
                       </label>
                     ))}
@@ -628,66 +930,67 @@ export default function PublicationScheduler() {
                 </div>
 
                 {/* Date and Time Selection */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-                      {translations.adminSchedulerPublicationDate}
+                      <label className="block text-sm sm:text-base font-bold text-white mb-2 sm:mb-3">
+                        {translations.adminSchedulerPublicationDate || "Publication Date"}
                     </label>
                     <input
                       type="date"
                       value={scheduledDate}
                       onChange={(e) => setScheduledDate(e.target.value)}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-700/60 bg-slate-800/40 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent transition-all duration-300"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-                      {translations.adminSchedulerPublicationTime}
+                      <label className="block text-sm sm:text-base font-bold text-white mb-2 sm:mb-3">
+                        {translations.adminSchedulerPublicationTime || "Publication Time"}
                     </label>
                     <input
                       type="time"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-700/60 bg-slate-800/40 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent transition-all duration-300"
                     />
                   </div>
                 </div>
 
                 {/* Custom Message */}
                 <div>
-                  <label className="block text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-                    {translations.adminSchedulerCustomMessageOptional}
+                    <label className="block text-sm sm:text-base font-bold text-white mb-2 sm:mb-3">
+                      {translations.adminSchedulerCustomMessageOptional || "Custom Message (Optional)"}
                   </label>
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    placeholder={translations.adminSchedulerCustomMessagePlaceholder}
-                    rows={4}
-                    className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-border bg-surface-elevated text-sm sm:text-base lg:text-lg text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-300"
+                      placeholder={translations.adminSchedulerCustomMessagePlaceholder || "Enter a custom message..."}
+                      rows={3}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-700/60 bg-slate-800/40 text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent transition-all duration-300"
                   />
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-6 pt-4 sm:pt-6 border-t border-border">
+                  <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-slate-700/60">
                   <button
                     onClick={() => setShowScheduler(false)}
-                    className="px-6 sm:px-8 py-3 sm:py-4 bg-surface text-foreground rounded-xl sm:rounded-2xl hover:bg-surface-elevated transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none"
+                      className="px-4 sm:px-6 py-2 sm:py-2.5 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg sm:rounded-xl border border-slate-700/60 hover:border-slate-600/60 transition-all duration-300 text-xs sm:text-sm font-bold hover:scale-105 flex-1 sm:flex-none"
                   >
-                    {translations.adminSchedulerCancel}
+                      {translations.adminSchedulerCancel || "Cancel"}
                   </button>
                   <button
                     onClick={handleSchedulePost}
                     disabled={isSubmitting}
-                    className={`px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 text-sm sm:text-base lg:text-lg font-bold hover:scale-105 flex-1 sm:flex-none ${
+                      className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl transition-all duration-300 text-xs sm:text-sm font-bold hover:scale-105 flex-1 sm:flex-none ${
                       isSubmitting 
-                        ? 'bg-accent/50 text-white cursor-not-allowed' 
-                        : 'bg-accent text-white hover:bg-accent-hover'
+                          ? 'bg-indigo-500/50 text-white cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg shadow-indigo-500/20'
                     }`}
                   >
-                    {isSubmitting ? translations.adminSchedulerScheduling : translations.adminSchedulerSchedulePost}
+                      {isSubmitting ? translations.adminSchedulerScheduling || "Scheduling..." : translations.adminSchedulerSchedulePost || "Schedule Post"}
                   </button>
+                  </div>
                 </div>
               </div>
             </div>

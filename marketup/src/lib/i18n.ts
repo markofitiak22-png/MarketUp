@@ -964,6 +964,11 @@ export interface Translations {
   adminFailedToDeleteUsers: string;
   adminErrorPerformingAction: string;
   adminActionComingSoon: string;
+  adminPremiumUsers: string;
+  adminFromUsers: string;
+  adminCreateNewUser: string;
+  adminUpdateList: string;
+  adminUsers: string;
   
   // Admin Videos Management
   adminVideosModeration: string;
@@ -1002,6 +1007,14 @@ export interface Translations {
   adminVideosEnterRejectionReason: string;
   adminVideosVideoPlayer: string;
   adminVideosClickToPlay: string;
+  adminTotalVideos: string;
+  adminPendingVideos: string;
+  adminApprovedVideos: string;
+  adminRejectedVideos: string;
+  adminNoVideosFound: string;
+  adminVideosVideo: string;
+  adminShowingVideos: string;
+  adminOfVideos: string;
   
   // Admin Scheduler Management
   adminSchedulerPublicationScheduler: string;
@@ -1016,6 +1029,8 @@ export interface Translations {
   adminSchedulerCancelled: string;
   adminSchedulerSocialNetwork: string;
   adminSchedulerAllNetworks: string;
+  adminSchedulerScheduledDate: string;
+  adminSchedulerStatus: string;
   adminSchedulerDuration: string;
   adminSchedulerCategory: string;
   adminSchedulerPublishesIn: string;
@@ -1092,6 +1107,18 @@ export interface Translations {
   adminPaymentsErrorProcessingRefund: string;
   adminPaymentsFailedToCancelPayment: string;
   adminPaymentsErrorCancellingPayment: string;
+  adminCompletedRevenue: string;
+  adminTransactions: string;
+  adminPendingTransactions: string;
+  adminFailedTransactions: string;
+  adminSearch: string;
+  adminNoTransactionsFound: string;
+  adminTryDifferentFilters: string;
+  adminPaymentsPaymentMethod: string;
+  adminPaymentsDate: string;
+  adminAmount: string;
+  adminShowingTransactions: string;
+  adminOfTransactions: string;
   
   // Admin Tickets Management
   adminTicketsSupportTickets: string;
@@ -1143,6 +1170,24 @@ export interface Translations {
   adminTicketsJustNow: string;
   adminTicketsHoursAgo: string;
   adminTicketsDaysAgo: string;
+  adminNoTicketsFound: string;
+  adminTicketsSubject: string;
+  adminTicketsDate: string;
+  adminShowingTickets: string;
+  adminOfTickets: string;
+  adminTotalPosts: string;
+  adminScheduledPosts: string;
+  adminPublishedPosts: string;
+  adminFailedPosts: string;
+  adminCancelledPosts: string;
+  adminFilters: string;
+  adminNoScheduledPosts: string;
+  adminScheduleYourFirstPost: string;
+  adminVideo: string;
+  adminShowingPosts: string;
+  adminOfPosts: string;
+  adminPosts: string;
+  adminQuickActions: string;
 
   // Admin Sidebar
   adminSidebarDashboard: string;
@@ -2100,6 +2145,11 @@ export const translations: Record<Language, Translations> = {
 	  adminFailedToDeleteUsers: "Failed to delete users:",
 	  adminErrorPerformingAction: "Error performing",
 	  adminActionComingSoon: "action for",
+	  adminPremiumUsers: "Premium Users",
+	  adminFromUsers: "From users",
+	  adminCreateNewUser: "Create new user",
+	  adminUpdateList: "Update list",
+	  adminUsers: "users",
 
 	  // Admin Videos Management
 	  adminVideosModeration: "Video Moderation",
@@ -2138,6 +2188,14 @@ export const translations: Record<Language, Translations> = {
 	  adminVideosEnterRejectionReason: "Enter rejection reason:",
 	  adminVideosVideoPlayer: "Video Player",
 	  adminVideosClickToPlay: "Click to play",
+	  adminTotalVideos: "Total Videos",
+	  adminPendingVideos: "Pending",
+	  adminApprovedVideos: "Approved",
+	  adminRejectedVideos: "Rejected",
+	  adminNoVideosFound: "No videos found",
+	  adminVideosVideo: "Video",
+	  adminShowingVideos: "Showing",
+	  adminOfVideos: "of",
 
 	  // Admin Scheduler Management
 	  adminSchedulerPublicationScheduler: "Publication Scheduler",
@@ -2152,6 +2210,8 @@ export const translations: Record<Language, Translations> = {
 	  adminSchedulerCancelled: "Cancelled",
 	  adminSchedulerSocialNetwork: "Social Network",
 	  adminSchedulerAllNetworks: "All Networks",
+	  adminSchedulerScheduledDate: "Scheduled Date",
+	  adminSchedulerStatus: "Status",
 	  adminSchedulerDuration: "Duration",
 	  adminSchedulerCategory: "Category",
 	  adminSchedulerPublishesIn: "Publishes in",
@@ -2228,6 +2288,18 @@ export const translations: Record<Language, Translations> = {
 	  adminPaymentsErrorProcessingRefund: "Error processing refund. Please try again.",
 	  adminPaymentsFailedToCancelPayment: "Failed to cancel payment. Please try again.",
 	  adminPaymentsErrorCancellingPayment: "Error cancelling payment. Please try again.",
+	  adminCompletedRevenue: "Completed Revenue",
+	  adminTransactions: "transactions",
+	  adminPendingTransactions: "Pending Transactions",
+	  adminFailedTransactions: "Failed Transactions",
+	  adminSearch: "Search",
+	  adminNoTransactionsFound: "No transactions found",
+	  adminTryDifferentFilters: "Try different filters or search terms",
+	  adminPaymentsPaymentMethod: "Payment Method",
+	  adminPaymentsDate: "Date",
+	  adminAmount: "Amount",
+	  adminShowingTransactions: "Showing",
+	  adminOfTransactions: "of",
 
 	  // Admin Tickets Management
 	  adminTicketsSupportTickets: "Support Tickets",
@@ -2279,6 +2351,24 @@ export const translations: Record<Language, Translations> = {
 	  adminTicketsJustNow: "Just now",
 	  adminTicketsHoursAgo: "h ago",
 	  adminTicketsDaysAgo: "d ago",
+	  adminNoTicketsFound: "No tickets found",
+	  adminTicketsSubject: "Subject",
+	  adminTicketsDate: "Date",
+	  adminShowingTickets: "Showing",
+	  adminOfTickets: "of",
+	  adminTotalPosts: "Total Posts",
+	  adminScheduledPosts: "Scheduled",
+	  adminPublishedPosts: "Published",
+	  adminFailedPosts: "Failed",
+	  adminCancelledPosts: "Cancelled",
+	  adminFilters: "Filters",
+	  adminNoScheduledPosts: "No scheduled posts",
+	  adminScheduleYourFirstPost: "Schedule your first post to get started",
+	  adminVideo: "Video",
+	  adminShowingPosts: "Showing",
+	  adminOfPosts: "of",
+	  adminPosts: "posts",
+	  adminQuickActions: "Quick Actions",
 
 	  // Admin Sidebar
 	  adminSidebarDashboard: "Dashboard",
@@ -3295,6 +3385,11 @@ export const translations: Record<Language, Translations> = {
     adminFailedToDeleteUsers: "Misslyckades att ta bort användare:",
     adminErrorPerformingAction: "Fel vid utförande av",
     adminActionComingSoon: "åtgärd för",
+    adminPremiumUsers: "Premium Användare",
+    adminFromUsers: "Från användare",
+    adminCreateNewUser: "Skapa ny användare",
+    adminUpdateList: "Uppdatera lista",
+    adminUsers: "användare",
     
     // Admin Videos Management
     adminVideosModeration: "Videomoderering",
@@ -3333,6 +3428,14 @@ export const translations: Record<Language, Translations> = {
     adminVideosEnterRejectionReason: "Ange avvisningsanledning:",
     adminVideosVideoPlayer: "Videospelare",
     adminVideosClickToPlay: "Klicka för att spela",
+    adminTotalVideos: "Totalt Videor",
+    adminPendingVideos: "Väntande",
+    adminApprovedVideos: "Godkända",
+    adminRejectedVideos: "Avvisade",
+    adminNoVideosFound: "Inga videor hittades",
+    adminVideosVideo: "Video",
+    adminShowingVideos: "Visar",
+    adminOfVideos: "av",
     
     // Admin Scheduler Management
     adminSchedulerPublicationScheduler: "Publiceringsplanerare",
@@ -3347,6 +3450,8 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCancelled: "Avbruten",
     adminSchedulerSocialNetwork: "Socialt Nätverk",
     adminSchedulerAllNetworks: "Alla Nätverk",
+    adminSchedulerScheduledDate: "Schemalagd Datum",
+    adminSchedulerStatus: "Status",
     adminSchedulerDuration: "Varaktighet",
     adminSchedulerCategory: "Kategori",
     adminSchedulerPublishesIn: "Publiceras om",
@@ -3423,7 +3528,19 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsErrorProcessingRefund: "Fel vid bearbetning av återbetalning. Försök igen.",
     adminPaymentsFailedToCancelPayment: "Misslyckades att avbryta betalning. Försök igen.",
     adminPaymentsErrorCancellingPayment: "Fel vid avbrytning av betalning. Försök igen.",
-    
+    adminCompletedRevenue: "Slutförd Intäkt",
+    adminTransactions: "transaktioner",
+    adminPendingTransactions: "Väntande Transaktioner",
+    adminFailedTransactions: "Misslyckade Transaktioner",
+    adminSearch: "Sök",
+    adminNoTransactionsFound: "Inga transaktioner hittades",
+    adminTryDifferentFilters: "Prova olika filter eller söktermer",
+    adminPaymentsPaymentMethod: "Betalningsmetod",
+    adminPaymentsDate: "Datum",
+    adminAmount: "Belopp",
+    adminShowingTransactions: "Visar",
+    adminOfTransactions: "av",
+
     // Admin Tickets Management
     adminTicketsSupportTickets: "Supportärenden",
     adminTicketsManageCustomerSupport: "Hantera kundsupportärenden för premiumkunder",
@@ -3474,6 +3591,24 @@ export const translations: Record<Language, Translations> = {
     adminTicketsJustNow: "Just nu",
     adminTicketsHoursAgo: "h sedan",
     adminTicketsDaysAgo: "d sedan",
+    adminNoTicketsFound: "Inga ärenden hittades",
+    adminTicketsSubject: "Ämne",
+    adminTicketsDate: "Datum",
+    adminShowingTickets: "Visar",
+    adminOfTickets: "av",
+    adminTotalPosts: "Totalt Inlägg",
+    adminScheduledPosts: "Schemalagda",
+    adminPublishedPosts: "Publicerade",
+    adminFailedPosts: "Misslyckade",
+    adminCancelledPosts: "Avbrutna",
+    adminFilters: "Filter",
+    adminNoScheduledPosts: "Inga schemalagda inlägg",
+    adminScheduleYourFirstPost: "Schemalägg ditt första inlägg för att komma igång",
+    adminVideo: "Video",
+    adminShowingPosts: "Visar",
+    adminOfPosts: "av",
+    adminPosts: "inlägg",
+    adminQuickActions: "Snabbåtgärder",
 
     // Admin Sidebar
     adminSidebarDashboard: "Instrumentpanel",
@@ -4483,6 +4618,11 @@ export const translations: Record<Language, Translations> = {
     adminFailedToDeleteUsers: "Не вдалося видалити користувачів:",
     adminErrorPerformingAction: "Помилка виконання",
     adminActionComingSoon: "дії для",
+    adminPremiumUsers: "Преміум Користувачі",
+    adminFromUsers: "Від користувачів",
+    adminCreateNewUser: "Створити нового користувача",
+    adminUpdateList: "Оновити список",
+    adminUsers: "користувачів",
     
     // Admin Videos Management
     adminVideosModeration: "Модерація Відео",
@@ -4521,6 +4661,14 @@ export const translations: Record<Language, Translations> = {
     adminVideosEnterRejectionReason: "Введіть причину відхилення:",
     adminVideosVideoPlayer: "Відеоплеєр",
     adminVideosClickToPlay: "Натисніть для відтворення",
+    adminTotalVideos: "Всього Відео",
+    adminPendingVideos: "Очікує",
+    adminApprovedVideos: "Схвалені",
+    adminRejectedVideos: "Відхилені",
+    adminNoVideosFound: "Відео не знайдено",
+    adminVideosVideo: "Відео",
+    adminShowingVideos: "Показано",
+    adminOfVideos: "з",
     
     // Admin Scheduler Management
     adminSchedulerPublicationScheduler: "Планувальник Публікацій",
@@ -4535,6 +4683,8 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCancelled: "Скасовано",
     adminSchedulerSocialNetwork: "Соціальна Мережа",
     adminSchedulerAllNetworks: "Всі Мережі",
+    adminSchedulerScheduledDate: "Запланована Дата",
+    adminSchedulerStatus: "Статус",
     adminSchedulerDuration: "Тривалість",
     adminSchedulerCategory: "Категорія",
     adminSchedulerPublishesIn: "Опублікується через",
@@ -4611,7 +4761,19 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsErrorProcessingRefund: "Помилка при обробці повернення. Спробуйте ще раз.",
     adminPaymentsFailedToCancelPayment: "Не вдалося скасувати платіж. Спробуйте ще раз.",
     adminPaymentsErrorCancellingPayment: "Помилка при скасуванні платежу. Спробуйте ще раз.",
-    
+    adminCompletedRevenue: "Завершений Дохід",
+    adminTransactions: "транзакцій",
+    adminPendingTransactions: "Транзакції в очікуванні",
+    adminFailedTransactions: "Невдалі Транзакції",
+    adminSearch: "Пошук",
+    adminNoTransactionsFound: "Транзакції не знайдено",
+    adminTryDifferentFilters: "Спробуйте інші фільтри або умови пошуку",
+    adminPaymentsPaymentMethod: "Спосіб оплати",
+    adminPaymentsDate: "Дата",
+    adminAmount: "Сума",
+    adminShowingTransactions: "Показано",
+    adminOfTransactions: "з",
+
     // Admin Tickets Management
     adminTicketsSupportTickets: "Тікети Підтримки",
     adminTicketsManageCustomerSupport: "Керуйте тікетами підтримки клієнтів для преміум клієнтів",
@@ -4662,6 +4824,24 @@ export const translations: Record<Language, Translations> = {
     adminTicketsJustNow: "Щойно",
     adminTicketsHoursAgo: "год тому",
     adminTicketsDaysAgo: "дн тому",
+    adminNoTicketsFound: "Тікети не знайдено",
+    adminTicketsSubject: "Тема",
+    adminTicketsDate: "Дата",
+    adminShowingTickets: "Показано",
+    adminOfTickets: "з",
+    adminTotalPosts: "Всього Постів",
+    adminScheduledPosts: "Заплановані",
+    adminPublishedPosts: "Опубліковані",
+    adminFailedPosts: "Невдалі",
+    adminCancelledPosts: "Скасовані",
+    adminFilters: "Фільтри",
+    adminNoScheduledPosts: "Немає запланованих постів",
+    adminScheduleYourFirstPost: "Заплануйте свій перший пост, щоб почати",
+    adminVideo: "Відео",
+    adminShowingPosts: "Показано",
+    adminOfPosts: "з",
+    adminPosts: "постів",
+    adminQuickActions: "Швидкі Дії",
 
     // Admin Sidebar
     adminSidebarDashboard: "Панель керування",
@@ -5671,6 +5851,11 @@ export const translations: Record<Language, Translations> = {
     adminFailedToDeleteUsers: "Kullanıcılar silinemedi:",
     adminErrorPerformingAction: "İşlem yapılırken hata",
     adminActionComingSoon: "işlemi için",
+    adminPremiumUsers: "Premium Kullanıcılar",
+    adminFromUsers: "Kullanıcılardan",
+    adminCreateNewUser: "Yeni kullanıcı oluştur",
+    adminUpdateList: "Listeyi güncelle",
+    adminUsers: "kullanıcılar",
     
     // Admin Videos Management
     adminVideosModeration: "Video Moderasyonu",
@@ -5709,6 +5894,14 @@ export const translations: Record<Language, Translations> = {
     adminVideosEnterRejectionReason: "Reddetme sebebini girin:",
     adminVideosVideoPlayer: "Video Oynatıcı",
     adminVideosClickToPlay: "Oynatmak için tıklayın",
+    adminTotalVideos: "Toplam Video",
+    adminPendingVideos: "Beklemede",
+    adminApprovedVideos: "Onaylanmış",
+    adminRejectedVideos: "Reddedilmiş",
+    adminNoVideosFound: "Video bulunamadı",
+    adminVideosVideo: "Video",
+    adminShowingVideos: "Gösteriliyor",
+    adminOfVideos: "toplam",
     
     // Admin Scheduler Management
     adminSchedulerPublicationScheduler: "Yayın Planlayıcısı",
@@ -5723,6 +5916,8 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCancelled: "İptal Edildi",
     adminSchedulerSocialNetwork: "Sosyal Ağ",
     adminSchedulerAllNetworks: "Tüm Ağlar",
+    adminSchedulerScheduledDate: "Zamanlanmış Tarih",
+    adminSchedulerStatus: "Durum",
     adminSchedulerDuration: "Süre",
     adminSchedulerCategory: "Kategori",
     adminSchedulerPublishesIn: "Yayınlanacak",
@@ -5799,6 +5994,18 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsErrorProcessingRefund: "İade işlenirken hata. Lütfen tekrar deneyin.",
     adminPaymentsFailedToCancelPayment: "Ödeme iptal edilemedi. Lütfen tekrar deneyin.",
     adminPaymentsErrorCancellingPayment: "Ödeme iptal edilirken hata. Lütfen tekrar deneyin.",
+    adminCompletedRevenue: "Tamamlanan Gelir",
+    adminTransactions: "işlemler",
+    adminPendingTransactions: "Bekleyen İşlemler",
+    adminFailedTransactions: "Başarısız İşlemler",
+    adminSearch: "Ara",
+    adminNoTransactionsFound: "İşlem bulunamadı",
+    adminTryDifferentFilters: "Farklı filtreler veya arama terimleri deneyin",
+    adminPaymentsPaymentMethod: "Ödeme Yöntemi",
+    adminPaymentsDate: "Tarih",
+    adminAmount: "Tutar",
+    adminShowingTransactions: "Gösteriliyor",
+    adminOfTransactions: "toplam",
     
     // Admin Tickets Management
     adminTicketsSupportTickets: "Destek Biletleri",
@@ -5850,6 +6057,24 @@ export const translations: Record<Language, Translations> = {
     adminTicketsJustNow: "Az önce",
     adminTicketsHoursAgo: "saat önce",
     adminTicketsDaysAgo: "gün önce",
+    adminNoTicketsFound: "Bilet bulunamadı",
+    adminTicketsSubject: "Konu",
+    adminTicketsDate: "Tarih",
+    adminShowingTickets: "Gösteriliyor",
+    adminOfTickets: "toplam",
+    adminTotalPosts: "Toplam Gönderi",
+    adminScheduledPosts: "Zamanlanmış",
+    adminPublishedPosts: "Yayınlanmış",
+    adminFailedPosts: "Başarısız",
+    adminCancelledPosts: "İptal Edilmiş",
+    adminFilters: "Filtreler",
+    adminNoScheduledPosts: "Zamanlanmış gönderi yok",
+    adminScheduleYourFirstPost: "Başlamak için ilk gönderinizi zamanlayın",
+    adminVideo: "Video",
+    adminShowingPosts: "Gösteriliyor",
+    adminOfPosts: "toplam",
+    adminPosts: "gönderi",
+    adminQuickActions: "Hızlı İşlemler",
 
     // Admin Sidebar
     adminSidebarDashboard: "Kontrol Paneli",
@@ -6860,6 +7085,11 @@ export const translations: Record<Language, Translations> = {
     adminFailedToDeleteUsers: "فشل في حذف المستخدمين:",
     adminErrorPerformingAction: "خطأ في تنفيذ",
     adminActionComingSoon: "إجراء لـ",
+    adminPremiumUsers: "المستخدمون المميزون",
+    adminFromUsers: "من المستخدمين",
+    adminCreateNewUser: "إنشاء مستخدم جديد",
+    adminUpdateList: "تحديث القائمة",
+    adminUsers: "المستخدمون",
     
     // Admin Videos Management
     adminVideosModeration: "إدارة الفيديوهات",
@@ -6898,6 +7128,14 @@ export const translations: Record<Language, Translations> = {
     adminVideosEnterRejectionReason: "أدخل سبب الرفض:",
     adminVideosVideoPlayer: "مشغل الفيديو",
     adminVideosClickToPlay: "انقر للتشغيل",
+    adminTotalVideos: "إجمالي الفيديوهات",
+    adminPendingVideos: "في الانتظار",
+    adminApprovedVideos: "موافق عليها",
+    adminRejectedVideos: "مرفوضة",
+    adminNoVideosFound: "لم يتم العثور على فيديوهات",
+    adminVideosVideo: "فيديو",
+    adminShowingVideos: "عرض",
+    adminOfVideos: "من",
     
     // Admin Scheduler Management
     adminSchedulerPublicationScheduler: "مجدول النشر",
@@ -6912,6 +7150,8 @@ export const translations: Record<Language, Translations> = {
     adminSchedulerCancelled: "ملغي",
     adminSchedulerSocialNetwork: "الشبكة الاجتماعية",
     adminSchedulerAllNetworks: "جميع الشبكات",
+    adminSchedulerScheduledDate: "التاريخ المجدول",
+    adminSchedulerStatus: "الحالة",
     adminSchedulerDuration: "المدة",
     adminSchedulerCategory: "الفئة",
     adminSchedulerPublishesIn: "ينشر خلال",
@@ -6988,7 +7228,19 @@ export const translations: Record<Language, Translations> = {
     adminPaymentsErrorProcessingRefund: "خطأ في معالجة الاسترداد. يرجى المحاولة مرة أخرى.",
     adminPaymentsFailedToCancelPayment: "فشل في إلغاء الدفع. يرجى المحاولة مرة أخرى.",
     adminPaymentsErrorCancellingPayment: "خطأ في إلغاء الدفع. يرجى المحاولة مرة أخرى.",
-    
+    adminCompletedRevenue: "الإيرادات المكتملة",
+    adminTransactions: "المعاملات",
+    adminPendingTransactions: "المعاملات المعلقة",
+    adminFailedTransactions: "المعاملات الفاشلة",
+    adminSearch: "بحث",
+    adminNoTransactionsFound: "لم يتم العثور على معاملات",
+    adminTryDifferentFilters: "جرب فلاتر أو مصطلحات بحث مختلفة",
+    adminPaymentsPaymentMethod: "طريقة الدفع",
+    adminPaymentsDate: "التاريخ",
+    adminAmount: "المبلغ",
+    adminShowingTransactions: "عرض",
+    adminOfTransactions: "من",
+
     // Admin Tickets Management
     adminTicketsSupportTickets: "تذاكر الدعم",
     adminTicketsManageCustomerSupport: "إدارة تذاكر دعم العملاء للعملاء المميزين",
@@ -7039,6 +7291,24 @@ export const translations: Record<Language, Translations> = {
     adminTicketsJustNow: "الآن",
     adminTicketsHoursAgo: "ساعة مضت",
     adminTicketsDaysAgo: "يوم مضى",
+    adminNoTicketsFound: "لم يتم العثور على تذاكر",
+    adminTicketsSubject: "الموضوع",
+    adminTicketsDate: "التاريخ",
+    adminShowingTickets: "عرض",
+    adminOfTickets: "من",
+    adminTotalPosts: "إجمالي المنشورات",
+    adminScheduledPosts: "المجدولة",
+    adminPublishedPosts: "المنشورة",
+    adminFailedPosts: "الفاشلة",
+    adminCancelledPosts: "الملغاة",
+    adminFilters: "المرشحات",
+    adminNoScheduledPosts: "لا توجد منشورات مجدولة",
+    adminScheduleYourFirstPost: "قم بجدولة منشورك الأول للبدء",
+    adminVideo: "فيديو",
+    adminShowingPosts: "عرض",
+    adminOfPosts: "من",
+    adminPosts: "منشورات",
+    adminQuickActions: "إجراءات سريعة",
 
     // Admin Sidebar
     adminSidebarDashboard: "لوحة التحكم",
@@ -8115,6 +8385,11 @@ export const translations: Record<Language, Translations> = {
 	  adminFailedToDeleteUsers: "Fehler beim Löschen der Benutzer:",
 	  adminErrorPerformingAction: "Fehler beim Ausführen der",
 	  adminActionComingSoon: "Aktion für",
+	  adminPremiumUsers: "Premium Benutzer",
+	  adminFromUsers: "Von Benutzern",
+	  adminCreateNewUser: "Neuen Benutzer erstellen",
+	  adminUpdateList: "Liste aktualisieren",
+	  adminUsers: "Benutzer",
 
 	  // Admin Videos Moderation
 	  adminVideosModeration: "Video-Moderation",
@@ -8153,6 +8428,14 @@ export const translations: Record<Language, Translations> = {
 	  adminVideosEnterRejectionReason: "Ablehnungsgrund eingeben:",
 	  adminVideosVideoPlayer: "Video-Player",
 	  adminVideosClickToPlay: "Zum Abspielen klicken",
+	  adminTotalVideos: "Gesamt Videos",
+	  adminPendingVideos: "Ausstehend",
+	  adminApprovedVideos: "Genehmigt",
+	  adminRejectedVideos: "Abgelehnt",
+	  adminNoVideosFound: "Keine Videos gefunden",
+	  adminVideosVideo: "Video",
+	  adminShowingVideos: "Zeige",
+	  adminOfVideos: "von",
 
 	  // Admin Scheduler
 	  adminSchedulerPublicationScheduler: "Veröffentlichungsplaner",
@@ -8167,6 +8450,8 @@ export const translations: Record<Language, Translations> = {
 	  adminSchedulerCancelled: "Abgebrochen",
 	  adminSchedulerSocialNetwork: "Soziales Netzwerk",
 	  adminSchedulerAllNetworks: "Alle Netzwerke",
+	  adminSchedulerScheduledDate: "Geplantes Datum",
+	  adminSchedulerStatus: "Status",
 	  adminSchedulerDuration: "Dauer",
 	  adminSchedulerCategory: "Kategorie",
 	  adminSchedulerPublishesIn: "Veröffentlicht in",
@@ -8242,6 +8527,18 @@ export const translations: Record<Language, Translations> = {
 	  adminPaymentsErrorProcessingRefund: "Fehler beim Verarbeiten der Erstattung. Bitte versuchen Sie es erneut.",
 	  adminPaymentsFailedToCancelPayment: "Fehler beim Stornieren der Zahlung. Bitte versuchen Sie es erneut.",
 	  adminPaymentsErrorCancellingPayment: "Fehler beim Stornieren der Zahlung. Bitte versuchen Sie es erneut.",
+	  adminCompletedRevenue: "Abgeschlossene Einnahmen",
+	  adminTransactions: "Transaktionen",
+	  adminPendingTransactions: "Ausstehende Transaktionen",
+	  adminFailedTransactions: "Fehlgeschlagene Transaktionen",
+	  adminSearch: "Suchen",
+	  adminNoTransactionsFound: "Keine Transaktionen gefunden",
+	  adminTryDifferentFilters: "Versuchen Sie andere Filter oder Suchbegriffe",
+	  adminPaymentsPaymentMethod: "Zahlungsmethode",
+	  adminPaymentsDate: "Datum",
+	  adminAmount: "Betrag",
+	  adminShowingTransactions: "Zeige",
+	  adminOfTransactions: "von",
 
 	  // Admin Tickets Management
 	  adminTicketsSupportTickets: "Support-Tickets",
@@ -8293,6 +8590,24 @@ export const translations: Record<Language, Translations> = {
 	  adminTicketsJustNow: "Gerade eben",
 	  adminTicketsHoursAgo: "h her",
 	  adminTicketsDaysAgo: "T her",
+	  adminNoTicketsFound: "Keine Tickets gefunden",
+	  adminTicketsSubject: "Betreff",
+	  adminTicketsDate: "Datum",
+	  adminShowingTickets: "Zeige",
+	  adminOfTickets: "von",
+	  adminTotalPosts: "Gesamt Beiträge",
+	  adminScheduledPosts: "Geplant",
+	  adminPublishedPosts: "Veröffentlicht",
+	  adminFailedPosts: "Fehlgeschlagen",
+	  adminCancelledPosts: "Abgebrochen",
+	  adminFilters: "Filter",
+	  adminNoScheduledPosts: "Keine geplanten Beiträge",
+	  adminScheduleYourFirstPost: "Planen Sie Ihren ersten Beitrag, um zu beginnen",
+	  adminVideo: "Video",
+	  adminShowingPosts: "Zeige",
+	  adminOfPosts: "von",
+	  adminPosts: "Beiträge",
+	  adminQuickActions: "Schnellaktionen",
 
 	  // Admin Sidebar
 	  adminSidebarDashboard: "Dashboard",
@@ -9350,6 +9665,11 @@ export const translations: Record<Language, Translations> = {
 	  adminFailedToDeleteUsers: "Échec de la suppression des utilisateurs :",
 	  adminErrorPerformingAction: "Erreur lors de l'exécution de l'",
 	  adminActionComingSoon: "action pour",
+	  adminPremiumUsers: "Utilisateurs Premium",
+	  adminFromUsers: "Des utilisateurs",
+	  adminCreateNewUser: "Créer un nouvel utilisateur",
+	  adminUpdateList: "Mettre à jour la liste",
+	  adminUsers: "utilisateurs",
 
 	  // Admin Videos Moderation
 	  adminVideosModeration: "Modération vidéo",
@@ -9381,6 +9701,14 @@ export const translations: Record<Language, Translations> = {
 	  adminVideosEnterRejectionReason: "Entrez la raison du rejet :",
 	  adminVideosVideoPlayer: "Lecteur vidéo",
 	  adminVideosClickToPlay: "Cliquez pour jouer",
+	  adminTotalVideos: "Total des Vidéos",
+	  adminPendingVideos: "En Attente",
+	  adminApprovedVideos: "Approuvées",
+	  adminRejectedVideos: "Rejetées",
+	  adminNoVideosFound: "Aucune vidéo trouvée",
+	  adminVideosVideo: "Vidéo",
+	  adminShowingVideos: "Affichage",
+	  adminOfVideos: "sur",
 
 	  // Admin Scheduler
 	  adminSchedulerPublicationScheduler: "Planificateur de publication",
@@ -9395,6 +9723,8 @@ export const translations: Record<Language, Translations> = {
 	  adminSchedulerCancelled: "Annulé",
 	  adminSchedulerSocialNetwork: "Réseau social",
 	  adminSchedulerAllNetworks: "Tous les réseaux",
+	  adminSchedulerScheduledDate: "Date Planifiée",
+	  adminSchedulerStatus: "Statut",
 	  adminSchedulerDuration: "Durée",
 	  adminSchedulerCategory: "Catégorie",
 	  adminSchedulerPublishesIn: "Publie dans",
@@ -9461,6 +9791,18 @@ export const translations: Record<Language, Translations> = {
 	  adminPaymentsErrorProcessingRefund: "Erreur lors du traitement du remboursement. Veuillez réessayer.",
 	  adminPaymentsFailedToCancelPayment: "Échec de l'annulation du paiement. Veuillez réessayer.",
 	  adminPaymentsErrorCancellingPayment: "Erreur lors de l'annulation du paiement. Veuillez réessayer.",
+	  adminCompletedRevenue: "Revenus Complétés",
+	  adminTransactions: "transactions",
+	  adminPendingTransactions: "Transactions en Attente",
+	  adminFailedTransactions: "Transactions Échouées",
+	  adminSearch: "Rechercher",
+	  adminNoTransactionsFound: "Aucune transaction trouvée",
+	  adminTryDifferentFilters: "Essayez différents filtres ou termes de recherche",
+	  adminPaymentsPaymentMethod: "Méthode de Paiement",
+	  adminPaymentsDate: "Date",
+	  adminAmount: "Montant",
+	  adminShowingTransactions: "Affichage",
+	  adminOfTransactions: "sur",
 
 	  // Admin Tickets Management
 	  adminTicketsSupportTickets: "Tickets de support",
@@ -9512,6 +9854,24 @@ export const translations: Record<Language, Translations> = {
 	  adminTicketsJustNow: "À l'instant",
 	  adminTicketsHoursAgo: "h il y a",
 	  adminTicketsDaysAgo: "j il y a",
+	  adminNoTicketsFound: "Aucun ticket trouvé",
+	  adminTicketsSubject: "Sujet",
+	  adminTicketsDate: "Date",
+	  adminShowingTickets: "Affichage",
+	  adminOfTickets: "sur",
+	  adminTotalPosts: "Total des Publications",
+	  adminScheduledPosts: "Planifiées",
+	  adminPublishedPosts: "Publiées",
+	  adminFailedPosts: "Échouées",
+	  adminCancelledPosts: "Annulées",
+	  adminFilters: "Filtres",
+	  adminNoScheduledPosts: "Aucune publication planifiée",
+	  adminScheduleYourFirstPost: "Planifiez votre première publication pour commencer",
+	  adminVideo: "Vidéo",
+	  adminShowingPosts: "Affichage",
+	  adminOfPosts: "sur",
+	  adminPosts: "publications",
+	  adminQuickActions: "Actions Rapides",
 
 	  // Admin Sidebar
 	  adminSidebarDashboard: "Tableau de bord",

@@ -564,57 +564,57 @@ export default function SubscriptionPage() {
                 </div>
               </div>
             )}
+            </div>
           </div>
-        </div>
 
-        {/* Billing History */}
+          {/* Billing History */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 relative overflow-hidden">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6">{translations.subscriptionBillingHistory}</h2>
           <div className="space-y-2 sm:space-y-3">
 
-            {(subscriptionData?.billingHistory?.length || 0) > 0 ? (
-              subscriptionData?.billingHistory?.map((invoice, index) => (
+              {(subscriptionData?.billingHistory?.length || 0) > 0 ? (
+                subscriptionData?.billingHistory?.map((invoice, index) => (
               <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 bg-slate-800/40 border border-slate-700/60 rounded-lg sm:rounded-xl hover:border-indigo-500/40 hover:bg-slate-800/60 transition-all duration-300 group gap-2 sm:gap-0">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                  </div>
-                  <div>
+                    </div>
+                    <div>
                     <p className="text-xs sm:text-sm font-semibold text-white">{invoice.description}</p>
                     <p className="text-[10px] sm:text-xs text-white/60">{invoice.date}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <span className="text-xs sm:text-sm font-semibold text-white">{invoice.amount}</span>
                   <span className="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30">
-                    {invoice.status}
-                  </span>
-                  <button 
+                      {invoice.status}
+                    </span>
+                    <button 
                     className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-slate-800/60 hover:bg-indigo-500/20 text-indigo-400 hover:text-indigo-300 text-[10px] sm:text-xs font-semibold transition-all duration-300 border border-slate-700/60 hover:border-indigo-500/40 flex items-center gap-1.5"
-                    onClick={() => {
-                      if (invoice.downloadUrl) {
-                        const newWindow = window.open(invoice.downloadUrl, '_blank');
-                        if (newWindow) {
-                          newWindow.onload = () => {
-                            setTimeout(() => {
-                              newWindow.print();
-                            }, 500);
-                          };
+                      onClick={() => {
+                        if (invoice.downloadUrl) {
+                          const newWindow = window.open(invoice.downloadUrl, '_blank');
+                          if (newWindow) {
+                            newWindow.onload = () => {
+                              setTimeout(() => {
+                                newWindow.print();
+                              }, 500);
+                            };
+                          }
                         }
-                      }
-                    }}
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    {translations.subscriptionDownload}
-                  </button>
+                      }}
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      {translations.subscriptionDownload}
+                    </button>
+                  </div>
                 </div>
-              </div>
-              ))
-            ) : (
+                ))
+              ) : (
               <div className="text-center py-6 sm:py-8 lg:py-12">
                 <div className="flex items-center justify-center mb-3 sm:mb-4">
                   <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
@@ -625,8 +625,8 @@ export default function SubscriptionPage() {
                 </div>
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-2 sm:mb-3">{translations.subscriptionNoBillingHistory}</h3>
                 <p className="text-xs sm:text-sm text-white/60">{translations.subscriptionBillingHistoryWillAppear}</p>
-              </div>
-            )}
+                </div>
+              )}
           </div>
         </div>
       </div>

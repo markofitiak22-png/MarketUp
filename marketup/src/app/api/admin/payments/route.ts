@@ -80,8 +80,8 @@ export async function GET(request: NextRequest) {
     
     const actualSortBy = sortByMapping[sortBy] || 'createdAt';
 
-    // Get manual payments with related data
-    const [payments, totalCount] = await Promise.all([
+    // Get manual payments with related data for current page
+    const [payments, totalCount, allPaymentsForStats] = await Promise.all([
       prisma.manualPayment.findMany({
         where,
         include: {
@@ -99,7 +99,19 @@ export async function GET(request: NextRequest) {
         skip: (page - 1) * limit,
         take: limit
       }),
-      prisma.manualPayment.count({ where })
+      prisma.manualPayment.count({ where }),
+      // Get all payments for statistics (without pagination)
+      prisma.manualPayment.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      })
     ]);
 
     // Transform payments data to match frontend interface
@@ -200,6 +212,37 @@ export async function GET(request: NextRequest) {
 
     console.log('Admin Payments API - Found payments:', filteredPayments.length);
 
+    // Calculate statistics for all payments
+    const stats = allPaymentsForStats.reduce((acc, payment) => {
+      const amount = payment.amountCents / 100;
+      acc.totalTransactions++;
+      acc.totalRevenue += amount;
+      
+      switch (payment.status) {
+        case 'PENDING':
+          acc.pendingTransactions++;
+          acc.pendingRevenue += amount;
+          break;
+        case 'APPROVED':
+          acc.completedTransactions++;
+          acc.completedRevenue += amount;
+          break;
+        case 'REJECTED':
+          acc.failedTransactions++;
+          break;
+      }
+      
+      return acc;
+    }, {
+      totalTransactions: 0,
+      totalRevenue: 0,
+      completedTransactions: 0,
+      completedRevenue: 0,
+      pendingTransactions: 0,
+      pendingRevenue: 0,
+      failedTransactions: 0
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -209,6 +252,15 @@ export async function GET(request: NextRequest) {
           limit,
           total: totalCount,
           pages: Math.ceil(totalCount / limit)
+        },
+        stats: {
+          totalTransactions: stats.totalTransactions,
+          totalRevenue: stats.totalRevenue,
+          completedTransactions: stats.completedTransactions,
+          completedRevenue: stats.completedRevenue,
+          pendingTransactions: stats.pendingTransactions,
+          pendingRevenue: stats.pendingRevenue,
+          failedTransactions: stats.failedTransactions
         },
         filters: {
           search,

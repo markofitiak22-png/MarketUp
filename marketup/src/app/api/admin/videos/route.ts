@@ -60,8 +60,8 @@ export async function GET(request: NextRequest) {
     
     const actualSortBy = sortByMapping[sortBy] || 'createdAt';
 
-    // Get videos with related data
-    const [videos, totalCount] = await Promise.all([
+    // Get videos with related data for current page
+    const [videos, totalCount, allVideosForStats] = await Promise.all([
       prisma.video.findMany({
         where,
         include: {
@@ -79,7 +79,19 @@ export async function GET(request: NextRequest) {
         skip: (page - 1) * limit,
         take: limit
       }),
-      prisma.video.count({ where })
+      prisma.video.count({ where }),
+      // Get all videos for statistics (without pagination)
+      prisma.video.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      })
     ]);
 
     // Transform videos data to match frontend interface
@@ -156,6 +168,27 @@ export async function GET(request: NextRequest) {
 
     console.log('Admin Videos API - Found videos:', filteredVideos.length);
 
+    // Calculate statistics for all videos
+    const stats = allVideosForStats.reduce((acc, video) => {
+      acc.totalVideos++;
+      
+      // Map database status to frontend status
+      if (video.status === 'PENDING' || video.status === 'PROCESSING') {
+        acc.pendingVideos++;
+      } else if (video.status === 'COMPLETED') {
+        acc.approvedVideos++;
+      } else if (video.status === 'FAILED') {
+        acc.rejectedVideos++;
+      }
+      
+      return acc;
+    }, {
+      totalVideos: 0,
+      pendingVideos: 0,
+      approvedVideos: 0,
+      rejectedVideos: 0
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -165,6 +198,12 @@ export async function GET(request: NextRequest) {
           limit,
           total: totalCount,
           pages: Math.ceil(totalCount / limit)
+        },
+        stats: {
+          totalVideos: stats.totalVideos,
+          pendingVideos: stats.pendingVideos,
+          approvedVideos: stats.approvedVideos,
+          rejectedVideos: stats.rejectedVideos
         },
         filters: {
           search,

@@ -44,6 +44,13 @@ export default function ReferralsPage() {
         const element = sectionRefs.current[key];
         if (!element) return;
 
+        // Check if element is already visible on load
+        const rect = element.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isVisible) {
+          setVisibleSections((prev) => new Set(prev).add(key));
+        }
+
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -284,11 +291,7 @@ export default function ReferralsPage() {
             {/* Header */}
             <div 
               ref={setSectionRef("header")}
-              className={`text-center mb-20 transition-all duration-1000 ${
-                visibleSections.has("header")
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
+              className="text-center mb-20"
             >
               <div className="inline-flex items-center gap-4 mb-8">
                 <div className="h-px w-16 bg-gradient-to-r from-transparent to-indigo-500/50" />
@@ -309,11 +312,7 @@ export default function ReferralsPage() {
             {referralData && (
               <div 
                 ref={setSectionRef("stats")}
-                className={`grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 transition-all duration-1000 delay-200 ${
-                  visibleSections.has("stats")
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
               >
                 <div className="group relative">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-indigo-400 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
@@ -348,11 +347,7 @@ export default function ReferralsPage() {
             {/* Create Referral Code */}
             <div 
               ref={setSectionRef("create-code")}
-              className={`group relative mb-12 transition-all duration-1000 delay-300 ${
-                visibleSections.has("create-code")
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
+              className="group relative mb-12"
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
               <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-8 hover:border-indigo-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/20">
@@ -396,11 +391,7 @@ export default function ReferralsPage() {
             {referralData?.referralCodes && referralData.referralCodes.length > 0 && (
               <div 
                 ref={setSectionRef("my-codes")}
-                className={`group relative mb-12 transition-all duration-1000 delay-400 ${
-                  visibleSections.has("my-codes")
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
+                className="group relative mb-12"
               >
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
                 <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-8 hover:border-purple-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20">
@@ -449,11 +440,7 @@ export default function ReferralsPage() {
             {/* Use Referral Code */}
             <div 
               ref={setSectionRef("use-code")}
-              className={`group relative mb-12 transition-all duration-1000 delay-500 ${
-                visibleSections.has("use-code")
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
+              className="group relative mb-12"
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
               <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-8 hover:border-pink-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-pink-500/20">
@@ -528,11 +515,7 @@ export default function ReferralsPage() {
             {referralData?.referredEvents && referralData.referredEvents.length > 0 && (
               <div 
                 ref={setSectionRef("used-codes")}
-                className={`group relative mb-12 transition-all duration-1000 delay-600 ${
-                  visibleSections.has("used-codes")
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
+                className="group relative mb-12"
               >
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
                 <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-8 hover:border-indigo-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/20">
@@ -585,11 +568,7 @@ export default function ReferralsPage() {
             {referralData?.referralEvents && referralData.referralEvents.length > 0 && (
               <div 
                 ref={setSectionRef("activity")}
-                className={`group relative transition-all duration-1000 delay-700 ${
-                  visibleSections.has("activity")
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
+                className="group relative"
               >
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
                 <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-8 hover:border-purple-500/60 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20">

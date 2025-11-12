@@ -53,10 +53,10 @@ export default function ReviewsList({
         {[1, 2, 3, 4, 5].map((star) => (
           <svg
             key={star}
-            className={`w-4 h-4 ${
+            className={`w-5 h-5 ${
               star <= rating
-                ? "text-yellow-400 fill-current"
-                : "text-gray-300 fill-current"
+                ? "text-yellow-400 fill-yellow-400 drop-shadow-lg"
+                : "text-white/20 fill-white/10"
             }`}
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -71,9 +71,9 @@ export default function ReviewsList({
   if (isLoading) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto"></div>
-          <p className="text-foreground-muted mt-2">Loading reviews...</p>
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-10 w-10 border-2 border-indigo-500/30 border-t-indigo-500 mx-auto"></div>
+          <p className="text-white/60 mt-4">Loading reviews...</p>
         </div>
       </div>
     );
@@ -82,33 +82,39 @@ export default function ReviewsList({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Reviews Summary */}
-      <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <div className="text-4xl font-bold text-foreground">
-            {averageRating.toFixed(1)}
-          </div>
-          <div>
-            <div className="flex items-center gap-1 mb-1">
-              {renderStars(Math.round(averageRating))}
+      <div className="relative group">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-50" />
+        <div className="relative bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-md border border-slate-700/60 rounded-2xl p-8 text-center overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-2xl" />
+          <div className="relative z-10">
+            <div className="flex items-center justify-center gap-6 mb-4">
+              <div className="text-5xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                {averageRating.toFixed(1)}
+              </div>
+              <div>
+                <div className="flex items-center gap-1 mb-2">
+                  {renderStars(Math.round(averageRating))}
+                </div>
+                <p className="text-sm text-white/60">
+                  Based on {totalReviews} review{totalReviews !== 1 ? "s" : ""}
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-foreground-muted">
-              Based on {totalReviews} review{totalReviews !== 1 ? "s" : ""}
-            </p>
           </div>
         </div>
       </div>
 
       {/* Sort Controls */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-foreground">
+      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+        <h3 className="text-xl font-bold text-white">
           Reviews ({totalReviews})
         </h3>
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-foreground-muted">Sort by:</label>
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-white/70 font-medium">Sort by:</label>
           <select
             value={sortBy}
             onChange={(e) => handleSortChange(e.target.value)}
-            className="px-3 py-1 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+            className="px-4 py-2 border border-slate-700/60 rounded-lg bg-slate-800/50 backdrop-blur-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300"
           >
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
@@ -120,14 +126,14 @@ export default function ReviewsList({
 
       {/* Reviews List */}
       {reviews.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-center py-16">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-600/30 to-purple-600/30 backdrop-blur-sm border border-indigo-500/30 flex items-center justify-center">
+            <svg className="w-10 h-10 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </div>
-          <h4 className="text-lg font-semibold text-foreground mb-2">No reviews yet</h4>
-          <p className="text-foreground-muted">Be the first to share your experience!</p>
+          <h4 className="text-xl font-semibold text-white mb-2">No reviews yet</h4>
+          <p className="text-white/60">Be the first to share your experience!</p>
         </div>
       ) : (
         <div className="space-y-4">

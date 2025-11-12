@@ -29,6 +29,7 @@ interface ReviewsData {
     averageRating: number;
     totalReviews: number;
   };
+  userHasReview?: boolean;
 }
 
 export default function ReviewsSection() {
@@ -133,8 +134,8 @@ export default function ReviewsSection() {
 
   return (
     <div className="space-y-8">
-      {/* Review Form */}
-      {session && (
+      {/* Review Form - Only show if user is logged in and hasn't submitted a review */}
+      {session && !reviewsData?.userHasReview && (
         <ReviewForm
           onSubmit={handleSubmitReview}
           isSubmitting={isSubmitting}

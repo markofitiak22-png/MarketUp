@@ -88,6 +88,17 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    // Get session to check if user has already submitted a review
+    const session = await getServerSession(authOptions);
+    let userHasReview = false;
+    
+    if ((session as any)?.user?.id) {
+      const userReview = await prisma.review.findFirst({
+        where: { userId: (session as any).user.id },
+      });
+      userHasReview = !!userReview;
+    }
+
     const [reviews, totalCount] = await Promise.all([
       prisma.review.findMany({
         where,
@@ -130,6 +141,7 @@ export async function GET(request: NextRequest) {
         averageRating: avgRatingResult._avg.rating || 0,
         totalReviews: avgRatingResult._count.rating || 0,
       },
+      userHasReview,
     });
   } catch (error) {
     console.error("Error fetching reviews:", error);

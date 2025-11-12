@@ -1,7 +1,6 @@
 "use client";
 
 import StarRating from "./StarRating";
-import Card from "../ui/Card";
 
 interface ReviewCardProps {
   review: {
@@ -53,35 +52,46 @@ export default function ReviewCard({ review, showUser = true, className = "" }: 
   };
 
   return (
-    <Card variant="elevated" className={`p-6 ${className}`}>
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          {showUser && (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent to-accent-2 flex items-center justify-center text-white font-bold text-sm">
-              {getInitials(review.user.name, review.user.email)}
-            </div>
-          )}
-          <div>
-            {showUser && (
-              <h4 className="font-semibold text-foreground">
-                {getDisplayName(review.user.name, review.user.email)}
-              </h4>
-            )}
-            <div className="flex items-center gap-2">
-              <StarRating rating={review.rating} size="sm" />
-              <span className="text-sm text-foreground-muted">
-                {formatDate(review.createdAt)}
-              </span>
+    <div className={`group relative ${className}`}>
+      {/* Outer glow */}
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      {/* Main card */}
+      <div className="relative p-6 bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 overflow-hidden">
+        {/* Decorative corner */}
+        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-500/5 to-transparent rounded-bl-2xl" />
+        
+        <div className="relative z-10">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-4">
+              {showUser && (
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                  {getInitials(review.user.name, review.user.email)}
+                </div>
+              )}
+              <div>
+                {showUser && (
+                  <h4 className="font-semibold text-white mb-1.5">
+                    {getDisplayName(review.user.name, review.user.email)}
+                  </h4>
+                )}
+                <div className="flex items-center gap-3">
+                  <StarRating rating={review.rating} size="sm" />
+                  <span className="text-sm text-white/50">
+                    {formatDate(review.createdAt)}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+          
+          {review.comment && (
+            <p className="text-white/80 leading-relaxed">
+              {review.comment}
+            </p>
+          )}
         </div>
       </div>
-      
-      {review.comment && (
-        <p className="text-foreground-muted leading-relaxed">
-          {review.comment}
-        </p>
-      )}
-    </Card>
+    </div>
   );
 }

@@ -46,13 +46,13 @@ export default function StarRating({
   const displayRating = hoverRating || rating;
 
   return (
-    <div className={`flex items-center gap-1 ${className}`}>
+    <div className={`flex items-center gap-2 ${className}`}>
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
           type="button"
           className={`transition-all duration-200 ${
-            interactive ? "cursor-pointer hover:scale-110" : "cursor-default"
+            interactive ? "cursor-pointer hover:scale-125 active:scale-95" : "cursor-default"
           }`}
           onClick={() => handleClick(star)}
           onMouseEnter={() => handleMouseEnter(star)}
@@ -60,10 +60,10 @@ export default function StarRating({
           disabled={!interactive}
         >
           <svg
-            className={`${sizeClasses[size]} ${
+            className={`${sizeClasses[size]} transition-all duration-200 ${
               star <= displayRating
-                ? "text-yellow-500 fill-yellow-500"
-                : "text-gray-300 fill-gray-300"
+                ? "text-yellow-400 fill-yellow-400 drop-shadow-lg"
+                : "text-white/20 fill-white/10"
             }`}
             viewBox="0 0 20 20"
             fill="currentColor"

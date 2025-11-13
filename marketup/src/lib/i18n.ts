@@ -2379,7 +2379,7 @@ export const translations: Record<Language, Translations> = {
 	  adminSidebarTicketSystem: "Ticket System",
 	  adminSidebarAdminPanel: "Admin Panel",
 	  adminSidebarManagePlatform: "Manage your platform and analytics",
-	  adminSidebarSignOut: "Sign Out",
+	  adminSidebarSignOut: "Go to Home",
 
 	  // Admin Header
 	  adminHeaderDashboard: "Dashboard",
@@ -3619,7 +3619,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarTicketSystem: "Ärendesystem",
     adminSidebarAdminPanel: "Adminpanel",
     adminSidebarManagePlatform: "Hantera din plattform och analyser",
-    adminSidebarSignOut: "Logga ut",
+    adminSidebarSignOut: "Gå till hem",
 
     // Admin Header
     adminHeaderDashboard: "Instrumentpanel",
@@ -4852,7 +4852,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarTicketSystem: "Система тікетів",
     adminSidebarAdminPanel: "Адмін панель",
     adminSidebarManagePlatform: "Керуйте своєю платформою та аналітикою",
-    adminSidebarSignOut: "Вийти",
+    adminSidebarSignOut: "Перейти на home",
 
     // Admin Header
     adminHeaderDashboard: "Панель керування",
@@ -6085,7 +6085,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarTicketSystem: "Bilet Sistemi",
     adminSidebarAdminPanel: "Admin Paneli",
     adminSidebarManagePlatform: "Platformunuzu ve analitiklerinizi yönetin",
-    adminSidebarSignOut: "Çıkış Yap",
+    adminSidebarSignOut: "Ana sayfaya git",
 
     // Admin Header
     adminHeaderDashboard: "Kontrol Paneli",
@@ -7319,7 +7319,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarTicketSystem: "نظام التذاكر",
     adminSidebarAdminPanel: "لوحة الإدارة",
     adminSidebarManagePlatform: "إدارة منصتك وتحليلاتك",
-    adminSidebarSignOut: "تسجيل الخروج",
+    adminSidebarSignOut: "الانتقال إلى الصفحة الرئيسية",
 
     // Admin Header
     adminHeaderDashboard: "لوحة التحكم",
@@ -8618,7 +8618,7 @@ export const translations: Record<Language, Translations> = {
 	  adminSidebarTicketSystem: "Ticket-System",
 	  adminSidebarAdminPanel: "Admin-Panel",
 	  adminSidebarManagePlatform: "Plattform verwalten",
-	  adminSidebarSignOut: "Abmelden",
+	  adminSidebarSignOut: "Zur Startseite",
 
 	  // Missing properties
 	  pricingProPrice: "79€",
@@ -9882,7 +9882,7 @@ export const translations: Record<Language, Translations> = {
 	  adminSidebarTicketSystem: "Système de tickets",
 	  adminSidebarAdminPanel: "Panneau d'administration",
 	  adminSidebarManagePlatform: "Gérer la plateforme",
-	  adminSidebarSignOut: "Se déconnecter",
+	  adminSidebarSignOut: "Aller à l'accueil",
 	  dashboardTotalVideos: '',
 	  dashboardThisMonth: '',
 	  dashboardSidebarAccount: '',

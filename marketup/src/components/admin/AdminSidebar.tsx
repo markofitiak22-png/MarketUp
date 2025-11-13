@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "@/hooks/useTranslations";
 
@@ -85,6 +85,7 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { translations } = useTranslations();
   const navigation = getNavigation(translations);
 
@@ -177,7 +178,13 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
                 <p className="text-xs text-white/60 truncate">admin@marketup.com</p>
               </div>
             </div>
-            <button className="w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl hover:bg-red-500/20 transition-colors">
+            <button 
+              onClick={() => {
+                // Redirect to home page without logging out
+                router.push("/");
+              }}
+              className="w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl hover:bg-red-500/20 transition-colors"
+            >
               <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>

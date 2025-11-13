@@ -819,7 +819,7 @@ export default function PublicationScheduler() {
         {/* Scheduler Modal */}
         {showScheduler && (
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end justify-center z-50 p-4 sm:p-6 lg:p-8"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end justify-end z-50 p-4 sm:p-6 lg:p-8"
             onClick={(e) => {
               if (e.target === e.currentTarget) {
                 setShowScheduler(false);

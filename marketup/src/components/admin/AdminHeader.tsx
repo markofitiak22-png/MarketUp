@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "@/hooks/useTranslations";
 
 interface AdminHeaderProps {
@@ -11,7 +12,12 @@ interface AdminHeaderProps {
 export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: AdminHeaderProps) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
   const { translations } = useTranslations();
+
+  const userEmail = (session as any)?.user?.email || "";
+  const userName = (session as any)?.user?.name || (session as any)?.user?.email?.split("@")[0] || "Admin";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   const getPageTitle = () => {
     switch (pathname) {
@@ -27,6 +33,8 @@ export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: Admi
         return translations.adminHeaderPaymentManagement;
       case "/admin/tickets":
         return translations.adminHeaderTicketSystem;
+      case "/admin/marketers":
+        return translations.adminSidebarMarketers || "Marketers";
       default:
         return translations.adminHeaderAdminPanel;
     }
@@ -122,11 +130,11 @@ export default function AdminHeader({ mobileMenuOpen, onMobileMenuToggle }: Admi
             {/* User Menu */}
             <div className="flex items-center gap-1.5 sm:gap-3">
               <div className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <span className="text-white text-xs sm:text-sm font-bold">A</span>
+                <span className="text-white text-xs sm:text-sm font-bold">{userInitial}</span>
               </div>
               <div className="text-xs sm:text-sm hidden lg:block">
-                <p className="font-medium text-white">{translations.adminHeaderAdminUser}</p>
-                <p className="text-white/60">admin@marketup.com</p>
+                <p className="font-medium text-white">{userName}</p>
+                <p className="text-white/60">{userEmail || translations.adminHeaderAdminUser}</p>
               </div>
             </div>
         </div>

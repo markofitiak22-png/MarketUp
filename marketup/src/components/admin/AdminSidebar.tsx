@@ -1,6 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "@/hooks/useTranslations";
 
 const getNavigation = (translations: any) => [
@@ -76,6 +77,18 @@ const getNavigation = (translations: any) => [
       </svg>
     ),
   },
+  {
+    name: translations.adminSidebarMarketers || "Marketers",
+    href: "/admin/marketers",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ),
+  },
 ];
 
 interface AdminSidebarProps {
@@ -86,8 +99,13 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
   const { translations } = useTranslations();
   const navigation = getNavigation(translations);
+
+  const userEmail = (session as any)?.user?.email || "";
+  const userName = (session as any)?.user?.name || (session as any)?.user?.email?.split("@")[0] || "Admin";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   return (
     <>
@@ -171,11 +189,11 @@ export default function AdminSidebar({ mobileMenuOpen, onClose }: AdminSidebarPr
           <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <span className="text-xs sm:text-sm font-bold text-white">A</span>
+                <span className="text-xs sm:text-sm font-bold text-white">{userInitial}</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm font-semibold text-white truncate">{translations.adminHeaderAdminUser}</p>
-                <p className="text-xs text-white/60 truncate">admin@marketup.com</p>
+                <p className="text-xs sm:text-sm font-semibold text-white truncate">{userName}</p>
+                <p className="text-xs text-white/60 truncate">{userEmail || translations.adminHeaderAdminUser}</p>
               </div>
             </div>
             <button 

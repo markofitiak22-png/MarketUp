@@ -231,6 +231,22 @@ async function handlePaymentSuccess({
       userId: newSubscription.userId
     });
     console.log(`✅ User ${user.email} subscribed to ${planId} plan via Adyen Swish`);
+
+    // Calculate marketer commission if applicable
+    try {
+      const { calculateMarketerCommission } = await import("@/lib/marketer-commissions");
+      const amountCents = Math.round(amount.value / 100); // Adyen amount is in minor units
+      const commission = await calculateMarketerCommission(
+        user.id,
+        tier as "BASIC" | "STANDARD" | "PREMIUM",
+        amountCents
+      );
+      if (commission) {
+        console.log(`💰 Marketer commission calculated:`, commission);
+      }
+    } catch (error) {
+      console.error("Error calculating marketer commission:", error);
+    }
   } catch (error) {
     console.error("❌ Error handling payment success:", error);
     if (error instanceof Error) {

@@ -64,7 +64,10 @@ export async function POST(request: NextRequest) {
     console.log('Looking for referral code:', referralCode.toUpperCase());
     const referralCodeRecord = await prisma.referralCode.findUnique({
       where: { code: referralCode.toUpperCase() },
-      include: { owner: true }
+      include: { 
+        owner: true,
+        marketer: true
+      }
     });
 
     console.log('Found referral code:', referralCodeRecord);
@@ -73,8 +76,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid referral code" }, { status: 404 });
     }
 
-    // Check if user is trying to use their own code
-    if (referralCodeRecord.ownerId === userId) {
+    // Check if user is trying to use their own code (only for user-owned codes)
+    if (referralCodeRecord.ownerId && referralCodeRecord.ownerId === userId) {
       return NextResponse.json({ error: "You cannot use your own referral code" }, { status: 400 });
     }
 
@@ -128,10 +131,19 @@ export async function POST(request: NextRequest) {
     const ip = forwarded ? forwarded.split(/, /)[0] : request.headers.get("x-real-ip") || "unknown";
     const userAgent = request.headers.get("user-agent") || "unknown";
 
+    // Get referrer ID (marketer codes use system user as owner)
+    const referrerId = referralCodeRecord.ownerId;
+    
+    if (!referrerId) {
+      return NextResponse.json({ 
+        error: "Referral code configuration error" 
+      }, { status: 500 });
+    }
+
     // Create referral event with automatic approval
     const referralEvent = await prisma.referralEvent.create({
       data: {
-        referrerId: referralCodeRecord.ownerId,
+        referrerId: referrerId!,
         referredUserId: userId,
         referralCodeId: referralCodeRecord.id,
         referredIpHash: Buffer.from(ip).toString("base64"), // Simple hash for demo
@@ -143,7 +155,11 @@ export async function POST(request: NextRequest) {
         referrer: {
           select: { id: true, name: true, email: true }
         },
-        referralCode: true
+        referralCode: {
+          include: {
+            marketer: true
+          }
+        }
       }
     });
 

@@ -190,6 +190,21 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       userId: newSubscription.userId
     });
     console.log(`✅ User ${user.email} subscribed to ${planId} plan via Stripe`);
+
+    // Calculate marketer commission if applicable
+    try {
+      const { calculateMarketerCommission } = await import("@/lib/marketer-commissions");
+      const commission = await calculateMarketerCommission(
+        user.id,
+        tier as "BASIC" | "STANDARD" | "PREMIUM",
+        amountTotal
+      );
+      if (commission) {
+        console.log(`💰 Marketer commission calculated:`, commission);
+      }
+    } catch (error) {
+      console.error("Error calculating marketer commission:", error);
+    }
   } catch (error) {
     console.error("❌ Error handling checkout session completed:", error);
     if (error instanceof Error) {

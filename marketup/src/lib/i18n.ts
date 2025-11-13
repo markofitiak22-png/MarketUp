@@ -1196,6 +1196,7 @@ export interface Translations {
   adminSidebarPublicationScheduler: string;
   adminSidebarPaymentManagement: string;
   adminSidebarTicketSystem: string;
+  adminSidebarMarketers: string;
   adminSidebarAdminPanel: string;
   adminSidebarManagePlatform: string;
   adminSidebarSignOut: string;
@@ -2377,6 +2378,7 @@ export const translations: Record<Language, Translations> = {
 	  adminSidebarPublicationScheduler: "Publication Scheduler",
 	  adminSidebarPaymentManagement: "Payment Management",
 	  adminSidebarTicketSystem: "Ticket System",
+	  adminSidebarMarketers: "Marketers",
 	  adminSidebarAdminPanel: "Admin Panel",
 	  adminSidebarManagePlatform: "Manage your platform and analytics",
 	  adminSidebarSignOut: "Go to Home",
@@ -3617,6 +3619,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarPublicationScheduler: "Publiceringsplanerare",
     adminSidebarPaymentManagement: "Betalningshantering",
     adminSidebarTicketSystem: "Ärendesystem",
+    adminSidebarMarketers: "Marknadsförare",
     adminSidebarAdminPanel: "Adminpanel",
     adminSidebarManagePlatform: "Hantera din plattform och analyser",
     adminSidebarSignOut: "Gå till hem",
@@ -4850,6 +4853,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarPublicationScheduler: "Планувальник публікацій",
     adminSidebarPaymentManagement: "Управління платежами",
     adminSidebarTicketSystem: "Система тікетів",
+    adminSidebarMarketers: "Маркетологи",
     adminSidebarAdminPanel: "Адмін панель",
     adminSidebarManagePlatform: "Керуйте своєю платформою та аналітикою",
     adminSidebarSignOut: "Перейти на home",
@@ -6083,6 +6087,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarPublicationScheduler: "Yayın Planlayıcısı",
     adminSidebarPaymentManagement: "Ödeme Yönetimi",
     adminSidebarTicketSystem: "Bilet Sistemi",
+    adminSidebarMarketers: "Pazarlamacılar",
     adminSidebarAdminPanel: "Admin Paneli",
     adminSidebarManagePlatform: "Platformunuzu ve analitiklerinizi yönetin",
     adminSidebarSignOut: "Ana sayfaya git",
@@ -7317,6 +7322,7 @@ export const translations: Record<Language, Translations> = {
     adminSidebarPublicationScheduler: "جدولة النشر",
     adminSidebarPaymentManagement: "إدارة المدفوعات",
     adminSidebarTicketSystem: "نظام التذاكر",
+    adminSidebarMarketers: "المسوقون",
     adminSidebarAdminPanel: "لوحة الإدارة",
     adminSidebarManagePlatform: "إدارة منصتك وتحليلاتك",
     adminSidebarSignOut: "الانتقال إلى الصفحة الرئيسية",
@@ -8616,6 +8622,7 @@ export const translations: Record<Language, Translations> = {
 	  adminSidebarPublicationScheduler: "Veröffentlichungsplaner",
 	  adminSidebarPaymentManagement: "Zahlungsverwaltung",
 	  adminSidebarTicketSystem: "Ticket-System",
+	  adminSidebarMarketers: "Vermarkter",
 	  adminSidebarAdminPanel: "Admin-Panel",
 	  adminSidebarManagePlatform: "Plattform verwalten",
 	  adminSidebarSignOut: "Zur Startseite",
@@ -9880,6 +9887,7 @@ export const translations: Record<Language, Translations> = {
 	  adminSidebarPublicationScheduler: "Planificateur de publication",
 	  adminSidebarPaymentManagement: "Gestion des paiements",
 	  adminSidebarTicketSystem: "Système de tickets",
+	  adminSidebarMarketers: "Marketiers",
 	  adminSidebarAdminPanel: "Panneau d'administration",
 	  adminSidebarManagePlatform: "Gérer la plateforme",
 	  adminSidebarSignOut: "Aller à l'accueil",

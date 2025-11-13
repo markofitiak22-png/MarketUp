@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
       const now = new Date();
       const end = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30); // 30 days
 
-      await prisma.subscription.create({
+      const newSubscription = await prisma.subscription.create({
         data: {
           userId: user.id,
           tier: tier,
@@ -96,6 +96,25 @@ export async function POST(request: NextRequest) {
       });
 
       console.log(`User ${user.email} subscribed to ${planId} plan (${billingPeriod}) via PayPal`);
+
+      // Calculate marketer commission if applicable
+      try {
+        const { calculateMarketerCommission } = await import("@/lib/marketer-commissions");
+        // PayPal amount is in the captureData, extract it if available
+        const amountCents = captureData.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value 
+          ? Math.round(parseFloat(captureData.purchase_units[0].payments.captures[0].amount.value) * 100)
+          : 0;
+        const commission = await calculateMarketerCommission(
+          user.id,
+          tier,
+          amountCents
+        );
+        if (commission) {
+          console.log(`💰 Marketer commission calculated:`, commission);
+        }
+      } catch (error) {
+        console.error("Error calculating marketer commission:", error);
+      }
       
       return NextResponse.json({
         success: true,

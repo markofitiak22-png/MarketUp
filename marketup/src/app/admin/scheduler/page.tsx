@@ -33,7 +33,7 @@ interface ScheduledPost {
 }
 
 export default function PublicationScheduler() {
-  const { translations } = useTranslations();
+  const { translations, language } = useTranslations();
   const [videos, setVideos] = useState<Video[]>([]);
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +60,20 @@ export default function PublicationScheduler() {
     failedPosts: 0,
     cancelledPosts: 0
   });
+
+  // Helper function to get locale code for date input
+  const getDateLocale = (lang: string): string => {
+    const localeMap: Record<string, string> = {
+      'uk': 'uk-UA',
+      'ar': 'ar-SA',
+      'sv': 'sv-SE',
+      'tr': 'tr-TR',
+      'de': 'de-DE',
+      'fr': 'fr-FR',
+      'en': 'en-US'
+    };
+    return localeMap[lang] || 'en-US';
+  };
 
   const socialNetworks: SocialNetwork[] = [
     {
@@ -844,7 +858,7 @@ export default function PublicationScheduler() {
                 </div>
               </div>
 
-              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 overflow-y-auto max-h-[calc(85vh-100px)]">
+              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 overflow-y-auto max-h-[calc(85vh-100px)]" lang={getDateLocale(language)}>
                 {/* Video Selection */}
                 <div>
                     <label className="block text-sm sm:text-base lg:text-lg font-bold text-white mb-3 sm:mb-4">
@@ -940,6 +954,7 @@ export default function PublicationScheduler() {
                       value={scheduledDate}
                       onChange={(e) => setScheduledDate(e.target.value)}
                       min={new Date().toISOString().split('T')[0]}
+                      lang={getDateLocale(language)}
                         className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-slate-700/60 bg-slate-800/40 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent transition-all duration-300"
                     />
                   </div>

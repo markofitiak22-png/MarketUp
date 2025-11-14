@@ -106,8 +106,9 @@ export async function POST(request: Request) {
             }
           }
 
-          if (canCreateReferral) {
+          if (canCreateReferral && referralCodeRecord.ownerId) {
             // Create referral event with automatic approval
+            // Only create if ownerId exists (required field)
             await prisma.referralEvent.create({
               data: {
                 referrerId: referralCodeRecord.ownerId,
@@ -118,6 +119,8 @@ export async function POST(request: Request) {
               }
             });
             console.log('Referral event created and approved automatically');
+          } else if (!referralCodeRecord.ownerId) {
+            console.log('Referral code has no owner, skipping referral event creation');
           } else {
             console.log('Referral code limits exceeded');
           }

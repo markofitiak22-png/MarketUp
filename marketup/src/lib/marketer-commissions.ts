@@ -72,7 +72,7 @@ export async function calculateMarketerCommission(
 
     // Check tiered commissions
     if (marketer.tieredCommissions) {
-      const tiers = marketer.tieredCommissions as TieredCommission[];
+      const tiers = marketer.tieredCommissions as unknown as TieredCommission[];
       // Sort by userCount descending to find the highest applicable tier
       const sortedTiers = [...tiers].sort(
         (a, b) => b.userCount - a.userCount

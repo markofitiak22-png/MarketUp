@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import RememberMeSettings from "@/components/RememberMeSettings";
 import { useTranslations } from "@/hooks/useTranslations";
 
@@ -34,6 +36,7 @@ interface SettingsData {
 }
 
 export default function SettingsPage() {
+  const router = useRouter();
   const { translations } = useTranslations();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [settings, setSettings] = useState<SettingsData>({
@@ -627,12 +630,40 @@ export default function SettingsPage() {
                   </div>
                   <button 
                     className={item.buttonClass}
-                    onClick={() => {
+                    onClick={async () => {
                       if (item.title === translations.settingsExportData) {
                         alert(translations.settingsDataExportFeatureComingSoon);
                       } else if (item.title === translations.settingsDeleteAccount) {
-                        if (confirm(translations.settingsAreYouSureDeleteAccount)) {
-                          alert(translations.settingsAccountDeletionFeatureComingSoon);
+                        const confirmed = confirm(
+                          translations.settingsAreYouSureDeleteAccount || 
+                          "Are you sure you want to permanently delete your account? This action cannot be undone and all your data will be lost."
+                        );
+                        
+                        if (confirmed) {
+                          try {
+                            const response = await fetch('/api/dashboard/account/delete', {
+                              method: 'DELETE',
+                              credentials: 'include',
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                              // Clear localStorage
+                              localStorage.clear();
+                              
+                              // Sign out and redirect to home
+                              await signOut({ 
+                                callbackUrl: '/',
+                                redirect: true 
+                              });
+                            } else {
+                              alert(data.error || 'Failed to delete account. Please try again.');
+                            }
+                          } catch (error) {
+                            console.error('Error deleting account:', error);
+                            alert('An error occurred while deleting your account. Please try again.');
+                          }
                         }
                       }
                     }}

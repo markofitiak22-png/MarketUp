@@ -4,6 +4,15 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import videoGenerator from "@/lib/video-generator";
+import { 
+  getActiveSubscriptionForUser, 
+  getMonthlyVideoLimit, 
+  getDurationLimits,
+  getVideosThisMonth,
+  calculateDurationFromText,
+  getAllowedQuality,
+  areSubtitlesAllowed
+} from "@/lib/subscriptions";
 
 // In-memory storage for video generation status (in production, use Redis or database)
 const generationStatus = new Map<string, {
@@ -43,6 +52,74 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
+    // Check subscription limits
+    const subscription = await getActiveSubscriptionForUser(userId);
+    const tier = subscription?.tier || null;
+    
+    // Check monthly video quota
+    const videosThisMonth = await getVideosThisMonth(userId);
+    const monthlyLimit = getMonthlyVideoLimit(tier);
+    
+    if (videosThisMonth >= monthlyLimit) {
+      const planName = !tier ? "Free" : tier === "STANDARD" ? "Pro" : tier === "PREMIUM" ? "Premium" : "Free";
+      return NextResponse.json({ 
+        error: "Monthly video limit reached",
+        message: `You have reached your monthly limit of ${monthlyLimit} video${monthlyLimit > 1 ? 's' : ''} for the ${planName} plan. Please upgrade your plan to create more videos.`,
+        limit: monthlyLimit,
+        used: videosThisMonth,
+        plan: planName
+      }, { status: 403 });
+    }
+
+    // Check duration limits (only max duration is enforced)
+    let duration = settings?.duration || calculateDurationFromText(text);
+    const durationLimits = getDurationLimits(tier);
+    
+    // Ensure duration is at least 1 second
+    if (duration < 1) {
+      duration = 1;
+    }
+    
+    // Automatically adjust duration if it exceeds maximum
+    if (duration > durationLimits.max) {
+      duration = durationLimits.max;
+      const planName = !tier ? "Free" : tier === "STANDARD" ? "Pro" : tier === "PREMIUM" ? "Premium" : "Free";
+      console.log(`Duration adjusted from ${settings?.duration || calculateDurationFromText(text)} to ${durationLimits.max} seconds (max for ${planName} plan)`);
+    }
+
+    // Check quality limits
+    const requestedQuality = settings?.quality || 'hd';
+    const allowedQuality = getAllowedQuality(tier);
+    
+    // Map quality values for comparison
+    const qualityLevels: Record<string, number> = {
+      'standard': 1,
+      'hd': 2,
+      '4k': 3
+    };
+    
+    // Automatically downgrade quality to allowed level if requested quality is too high
+    let finalQuality = requestedQuality;
+    if (qualityLevels[requestedQuality] > qualityLevels[allowedQuality]) {
+      finalQuality = allowedQuality;
+      const planName = !tier ? "Free" : tier === "STANDARD" ? "Pro" : tier === "PREMIUM" ? "Premium" : "Free";
+      // Log warning but don't block - just use allowed quality
+      console.log(`Quality downgraded from ${requestedQuality} to ${allowedQuality} for ${planName} plan`);
+    }
+
+    // Check subtitles permission
+    const subtitlesRequested = settings?.subtitles || false;
+    const subtitlesAllowed = areSubtitlesAllowed(tier);
+    
+    if (subtitlesRequested && !subtitlesAllowed) {
+      const planName = !tier ? "Free" : tier === "STANDARD" ? "Pro" : tier === "PREMIUM" ? "Premium" : "Free";
+      return NextResponse.json({ 
+        error: "Subtitles not available",
+        message: `Subtitles are not included in the ${planName} plan. Please upgrade to Premium plan to use subtitles.`,
+        plan: planName
+      }, { status: 403 });
+    }
+
     // Generate unique video ID
     const videoId = nanoid(12);
     
@@ -53,7 +130,7 @@ export async function POST(request: NextRequest) {
       createdAt: new Date()
     });
 
-    // Create video record in database
+    // Create video record in database (save calculated duration)
     const video = await prisma.video.create({
       data: {
         id: videoId,
@@ -66,9 +143,10 @@ export async function POST(request: NextRequest) {
           backgrounds: bgData,
           background: bgData[0]?.image || '', // Keep old field for compatibility
           text,
-          quality: settings?.quality || 'hd',
+          quality: finalQuality, // Use validated/allowed quality (may be downgraded)
           format: settings?.format || 'mp4',
-          duration: settings?.duration || 0
+          duration: duration, // Use calculated/validated duration
+          subtitles: subtitlesAllowed && (settings?.subtitles || false) // Only allow if plan supports it
         }
       }
     });

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { WizardData } from "@/app/studio/page";
 import { useTranslations } from "@/hooks/useTranslations";
+import QuotaExceededModal from "./QuotaExceededModal";
 
 interface AvatarStepProps {
   data: WizardData;
@@ -39,6 +40,52 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+  
+  // Quota check state
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
+  const [quotaData, setQuotaData] = useState<{
+    planName: string;
+    videosUsed: number;
+    videoLimit: number;
+  } | null>(null);
+  const [checkingQuota, setCheckingQuota] = useState(true);
+
+  // Check quota on mount
+  useEffect(() => {
+    const checkQuota = async () => {
+      try {
+        const response = await fetch('/api/dashboard/subscription', {
+          credentials: 'include',
+        });
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          const { usage, currentPlan } = result.data;
+          const videosUsed = usage?.videosThisMonth || 0;
+          const videoLimit = usage?.limit || 1;
+          const planName = currentPlan?.name || 'Free';
+          
+          setQuotaData({
+            planName,
+            videosUsed,
+            videoLimit,
+          });
+          
+          // Check if quota is exceeded
+          if (videosUsed >= videoLimit) {
+            setQuotaExceeded(true);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking quota:', error);
+        // Don't block user if check fails, but log error
+      } finally {
+        setCheckingQuota(false);
+      }
+    };
+
+    checkQuota();
+  }, []);
 
   // Load avatars - show fallback immediately, then update from API
   useEffect(() => {
@@ -199,15 +246,33 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
   };
 
   const handleNext = () => {
+    // Block navigation if quota is exceeded
+    if (quotaData && quotaData.videosUsed >= quotaData.videoLimit) {
+      setQuotaExceeded(true);
+      return;
+    }
+    
     if (selectedAvatar) {
       onNext();
     }
   };
 
   return (
-    <div className="space-y-8 sm:space-y-12">
-      {/* Header */}
-      <div className="text-center px-4">
+    <>
+      {/* Quota Exceeded Modal */}
+      {quotaData && (
+        <QuotaExceededModal
+          isOpen={quotaExceeded}
+          onClose={() => setQuotaExceeded(false)}
+          planName={quotaData.planName}
+          videosUsed={quotaData.videosUsed}
+          videoLimit={quotaData.videoLimit}
+        />
+      )}
+
+      <div className="space-y-8 sm:space-y-12">
+        {/* Header */}
+        <div className="text-center px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[0.9] mb-4 sm:mb-6">
           <span className="block bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent">
             {translations.studioChooseYourAvatar}
@@ -350,15 +415,51 @@ export default function AvatarStep({ data, onUpdate, onNext }: AvatarStepProps) 
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
         <button
           onClick={handleNext}
-          disabled={!selectedAvatar}
+          disabled={!selectedAvatar || (quotaData !== null && quotaData.videosUsed >= quotaData.videoLimit)}
           className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold bg-[#1a1a1a] hover:bg-[#222222] text-white rounded-full transition-all duration-300 border border-[#3a3a3a] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 sm:gap-3"
         >
-          {translations.studioContinue}
+          {quotaData !== null && quotaData.videosUsed >= quotaData.videoLimit 
+            ? translations.quotaExceeded 
+            : translations.studioContinue}
           <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
+      
+      {/* Quota Warning Banner */}
+      {quotaData && quotaData.videosUsed >= quotaData.videoLimit && (
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/40 rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg
+                  className="w-5 h-5 text-orange-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-white">
+                  {translations.monthlyVideoLimitReached}
+                </p>
+                <p className="text-xs text-white/70 mt-1">
+                  {translations.youveUsedAllVideos} {quotaData.videoLimit} video{quotaData.videoLimit > 1 ? 's' : ''} {translations.upgradeToCreateMore}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+    </>
   );
 }

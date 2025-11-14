@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getMonthlyVideoLimit } from "@/lib/subscriptions";
 
 export async function GET() {
   try {
@@ -65,6 +66,9 @@ export async function GET() {
     };
 
     // Usage data
+    const tier = subscription?.tier || null;
+    const videoLimit = getMonthlyVideoLimit(tier);
+    
     const usage = {
       videos: videosThisMonth,
       storage: storageUsedGB,
@@ -73,9 +77,7 @@ export async function GET() {
       storageLimit: !subscription ? 1 : 
                    subscription.tier === 'STANDARD' ? 10 : 
                    subscription.tier === 'PREMIUM' ? 50 : 1, // GB
-      videoLimit: !subscription ? 1 : 
-                 subscription.tier === 'STANDARD' ? 4 : 
-                 subscription.tier === 'PREMIUM' ? 7 : 1
+      videoLimit: videoLimit
     };
 
     // Mock payment method (in real app, this would come from payment provider)

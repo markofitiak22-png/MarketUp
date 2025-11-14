@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "@/hooks/useTranslations";
 
 interface SubscriptionData {
@@ -38,6 +39,7 @@ interface SubscriptionData {
 }
 
 export default function SubscriptionPage() {
+  const router = useRouter();
   const { translations } = useTranslations();
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -497,8 +499,22 @@ export default function SubscriptionPage() {
                       disabled={plan.current}
                       onClick={() => {
                         if (plan.current) return;
-                        alert(translations.subscriptionUpgradeToPlanFunctionalityComingSoon.replace('{plan}', plan.name));
-                        setIsUpgrading(true);
+                        
+                        // Map plan tier to plan ID for checkout
+                        const planIdMap: Record<string, string> = {
+                          'FREE': 'free',
+                          'STANDARD': 'pro',
+                          'PREMIUM': 'premium'
+                        };
+                        
+                        const planId = planIdMap[plan.tier] || plan.name.toLowerCase();
+                        
+                        // Redirect to checkout page (same as pricing page)
+                        if (planId === 'pro' || planId === 'premium') {
+                          router.push(`/checkout?plan=${planId}`);
+                        } else if (planId === 'free') {
+                          router.push('/studio');
+                        }
                       }}
                     >
                       {plan.current ? translations.subscriptionCurrentPlan : translations.subscriptionChoosePlan}
@@ -542,7 +558,7 @@ export default function SubscriptionPage() {
               {subscriptionData?.currentPlan?.tier === 'FREE' && (
                 <button 
                       className="w-full px-3 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30"
-                  onClick={() => alert(translations.subscriptionUpgradePlanFunctionalityComingSoon)}
+                  onClick={() => router.push('/pricing')}
                 >
                   {translations.subscriptionUpgradePlan}
                 </button>

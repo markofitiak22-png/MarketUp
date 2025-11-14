@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getMonthlyVideoLimit } from "@/lib/subscriptions";
 
 export async function GET() {
   try {
@@ -22,12 +23,12 @@ export async function GET() {
       orderBy: { createdAt: 'desc' }
     });
 
-    // Get user's video usage this month
+    // Get user's video usage this month (using Video model, not VideoJob)
     const thisMonth = new Date();
     thisMonth.setDate(1);
     thisMonth.setHours(0, 0, 0, 0);
 
-    const videosThisMonth = await prisma.videoJob.count({
+    const videosThisMonth = await prisma.video.count({
       where: {
         userId,
         createdAt: {
@@ -37,7 +38,7 @@ export async function GET() {
     });
 
     // Get total videos created
-    const totalVideos = await prisma.videoJob.count({
+    const totalVideos = await prisma.video.count({
       where: { userId }
     });
 
@@ -159,6 +160,10 @@ export async function GET() {
       cancelAtPeriodEnd: false
     };
 
+    // Get video limit based on subscription tier
+    const tier = subscription?.tier || null;
+    const videoLimit = getMonthlyVideoLimit(tier);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -167,9 +172,7 @@ export async function GET() {
         usage: {
           videosThisMonth,
           totalVideos,
-          limit: currentPlan.tier === 'FREE' ? 1 : 
-                 currentPlan.tier === 'STANDARD' ? 4 : 
-                 currentPlan.tier === 'PREMIUM' ? 7 : 1
+          limit: videoLimit
         },
         billingHistory
       }

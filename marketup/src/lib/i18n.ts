@@ -512,6 +512,22 @@ export interface Translations {
 
   studioVideoGeneratedSuccessfully: string;
   
+  // Video Limit / Quota
+  monthlyVideoLimitReached: string;
+  planLimitExceeded: string;
+  youveReachedMonthlyLimit: string;
+  videosCreated: string;
+  toCreateMoreVideos: string;
+  upgradeToHigherPlan: string;
+  upgradeBenefits: string;
+  proPlanBenefits: string;
+  premiumPlanBenefits: string;
+  youveUsedAllVideos: string;
+  upgradeToCreateMore: string;
+  close: string;
+  upgradePlan: string;
+  quotaExceeded: string;
+  
   // About Page
   aboutTitle: string;
   aboutWelcome: string;
@@ -1701,9 +1717,25 @@ export const translations: Record<Language, Translations> = {
 	  studioRegenerate: "Regenerate",
 	  studioSaveContinue: "Save & Continue",
 	  studioDownloadProgress: "Download Progress",
-	  studioVideoGeneratedSuccessfully: "Video generated successfully",
-
-	  // About Page
+    studioVideoGeneratedSuccessfully: "Video generated successfully",
+    
+    // Video Limit / Quota
+    monthlyVideoLimitReached: "Monthly Video Limit Reached",
+    planLimitExceeded: "Plan Limit Exceeded",
+    youveReachedMonthlyLimit: "You've reached your monthly video creation limit for the",
+    videosCreated: "Videos Created",
+    toCreateMoreVideos: "To create more videos this month, please upgrade to a higher plan with increased limits.",
+    upgradeToHigherPlan: "Upgrade to a higher plan",
+    upgradeBenefits: "Upgrade Benefits:",
+    proPlanBenefits: "Pro Plan: Create up to 4 videos per month (60-180 seconds each)",
+    premiumPlanBenefits: "Premium Plan: Create up to 7 videos per month (60-180 seconds each)",
+    youveUsedAllVideos: "You've used all",
+    upgradeToCreateMore: "for your plan this month. Upgrade to create more videos.",
+    close: "Close",
+    upgradePlan: "Upgrade Plan",
+    quotaExceeded: "Quota Exceeded",
+    
+    // About Page
 	  aboutTitle: "About MarketUp",
 	  aboutWelcome: "Welcome to MarketUp, a European platform designed to help everyone—from small shop owners and cafés to large companies—promote their business easily and affordably.",
 	  aboutEasilyAffordably: "Our goal is to simplify marketing for all members of society, providing a seamless experience from video creation to publishing.",
@@ -2945,6 +2977,22 @@ export const translations: Record<Language, Translations> = {
     studioDownloadProgress: "Nedladdningsframsteg",
     studioVideoGeneratedSuccessfully: "Video genererad framgångsrikt",
     
+    // Video Limit / Quota
+    monthlyVideoLimitReached: "Månadsvis Videogräns Nådd",
+    planLimitExceeded: "Plan Gräns Överskriden",
+    youveReachedMonthlyLimit: "Du har nått din månadsvisa videoskapandegräns för",
+    videosCreated: "Videor Skapade",
+    toCreateMoreVideos: "För att skapa fler videor denna månad, vänligen uppgradera till en högre plan med ökade gränser.",
+    upgradeToHigherPlan: "Uppgradera till en högre plan",
+    upgradeBenefits: "Uppgraderingsfördelar:",
+    proPlanBenefits: "Pro Plan: Skapa upp till 4 videor per månad (60-180 sekunder vardera)",
+    premiumPlanBenefits: "Premium Plan: Skapa upp till 7 videor per månad (60-180 sekunder vardera)",
+    youveUsedAllVideos: "Du har använt alla",
+    upgradeToCreateMore: "för din plan denna månad. Uppgradera för att skapa fler videor.",
+    close: "Stäng",
+    upgradePlan: "Uppgradera Plan",
+    quotaExceeded: "Kvot Överskriden",
+    
     // About Page
     aboutTitle: "Om MarketUp",
     aboutWelcome: "Välkommen till MarketUp, en europeisk plattform designad för att hjälpa alla — från små butiksägare och kaféer till stora företag — att marknadsföra sin verksamhet",
@@ -4179,6 +4227,22 @@ export const translations: Record<Language, Translations> = {
     studioDownloadProgress: "Прогрес Завантаження",
     studioVideoGeneratedSuccessfully: "Відео успішно згенеровано",
     
+    // Video Limit / Quota
+    monthlyVideoLimitReached: "Досягнуто місячний ліміт відео",
+    planLimitExceeded: "Ліміт плану перевищено",
+    youveReachedMonthlyLimit: "Ви досягли місячного ліміту створення відео для",
+    videosCreated: "Створено відео",
+    toCreateMoreVideos: "Щоб створити більше відео цього місяця, будь ласка, оновіть до вищого плану зі збільшеними лімітами.",
+    upgradeToHigherPlan: "Оновити до вищого плану",
+    upgradeBenefits: "Переваги оновлення:",
+    proPlanBenefits: "Pro План: Створюйте до 4 відео на місяць (60-180 секунд кожне)",
+    premiumPlanBenefits: "Premium План: Створюйте до 7 відео на місяць (60-180 секунд кожне)",
+    youveUsedAllVideos: "Ви використали всі",
+    upgradeToCreateMore: "для вашого плану цього місяця. Оновіть, щоб створити більше відео.",
+    close: "Закрити",
+    upgradePlan: "Оновити План",
+    quotaExceeded: "Квота Перевищена",
+    
     // About Page
     aboutTitle: "Про MarketUp",
     aboutWelcome: "Ласкаво просимо до MarketUp, європейської платформи, створеної для допомоги всім — від власників невеликих магазинів і кафе до великих компаній — просувати свій бізнес",
@@ -5412,6 +5476,22 @@ export const translations: Record<Language, Translations> = {
     studioSaveContinue: "Kaydet ve Devam Et",
     studioDownloadProgress: "İndirme İlerlemesi",
     studioVideoGeneratedSuccessfully: "Video başarıyla oluşturuldu",
+    
+    // Video Limit / Quota
+    monthlyVideoLimitReached: "Aylık Video Limiti Aşıldı",
+    planLimitExceeded: "Plan Limiti Aşıldı",
+    youveReachedMonthlyLimit: "Aylık video oluşturma limitinize ulaştınız",
+    videosCreated: "Oluşturulan Videolar",
+    toCreateMoreVideos: "Bu ay daha fazla video oluşturmak için lütfen artırılmış limitlerle daha yüksek bir plana yükseltin.",
+    upgradeToHigherPlan: "Daha yüksek bir plana yükselt",
+    upgradeBenefits: "Yükseltme Avantajları:",
+    proPlanBenefits: "Pro Plan: Ayda 4 videoya kadar oluşturun (her biri 60-180 saniye)",
+    premiumPlanBenefits: "Premium Plan: Ayda 7 videoya kadar oluşturun (her biri 60-180 saniye)",
+    youveUsedAllVideos: "Tüm",
+    upgradeToCreateMore: "planınız için bu ay kullandınız. Daha fazla video oluşturmak için yükseltin.",
+    close: "Kapat",
+    upgradePlan: "Planı Yükselt",
+    quotaExceeded: "Kota Aşıldı",
     
     // About Page
     aboutTitle: "MarketUp Hakkında",
@@ -6648,6 +6728,22 @@ export const translations: Record<Language, Translations> = {
     studioDownloadProgress: "تقدم التحميل",
     studioVideoGeneratedSuccessfully: "تم إنشاء الفيديو بنجاح",
     
+    // Video Limit / Quota
+    monthlyVideoLimitReached: "تم الوصول إلى الحد الشهري للفيديو",
+    planLimitExceeded: "تم تجاوز حد الخطة",
+    youveReachedMonthlyLimit: "لقد وصلت إلى حد إنشاء الفيديو الشهري لـ",
+    videosCreated: "الفيديوهات المُنشأة",
+    toCreateMoreVideos: "لإنشاء المزيد من الفيديوهات هذا الشهر، يرجى الترقية إلى خطة أعلى بحدود متزايدة.",
+    upgradeToHigherPlan: "الترقية إلى خطة أعلى",
+    upgradeBenefits: "فوائد الترقية:",
+    proPlanBenefits: "الخطة الاحترافية: أنشئ ما يصل إلى 4 فيديوهات شهريًا (60-180 ثانية لكل منها)",
+    premiumPlanBenefits: "الخطة المميزة: أنشئ ما يصل إلى 7 فيديوهات شهريًا (60-180 ثانية لكل منها)",
+    youveUsedAllVideos: "لقد استخدمت جميع",
+    upgradeToCreateMore: "لخطتك هذا الشهر. قم بالترقية لإنشاء المزيد من الفيديوهات.",
+    close: "إغلاق",
+    upgradePlan: "ترقية الخطة",
+    quotaExceeded: "تم تجاوز الحصة",
+    
     // About Page
     aboutTitle: "حول MarketUp",
     aboutWelcome: "مرحباً بكم في MarketUp، منصة أوروبية مصممة لمساعدة الجميع — من أصحاب المتاجر الصغيرة والمقاهي إلى الشركات الكبيرة — في الترويج لأعمالهم",
@@ -7600,6 +7696,22 @@ export const translations: Record<Language, Translations> = {
 	  studioSaveContinue: "Speichern und fortfahren",
 	  studioDownloadProgress: "Download-Fortschritt",
 	  studioVideoGeneratedSuccessfully: "Video erfolgreich generiert",
+	  
+	  // Video Limit / Quota
+	  monthlyVideoLimitReached: "Monatliches Video-Limit erreicht",
+	  planLimitExceeded: "Plan-Limit überschritten",
+	  youveReachedMonthlyLimit: "Sie haben Ihr monatliches Video-Erstellungslimit für",
+	  videosCreated: "Erstellte Videos",
+	  toCreateMoreVideos: "Um diesen Monat mehr Videos zu erstellen, aktualisieren Sie bitte auf einen höheren Plan mit erhöhten Limits.",
+	  upgradeToHigherPlan: "Auf einen höheren Plan aktualisieren",
+	  upgradeBenefits: "Upgrade-Vorteile:",
+	  proPlanBenefits: "Pro-Plan: Erstellen Sie bis zu 4 Videos pro Monat (jeweils 60-180 Sekunden)",
+	  premiumPlanBenefits: "Premium-Plan: Erstellen Sie bis zu 7 Videos pro Monat (jeweils 60-180 Sekunden)",
+	  youveUsedAllVideos: "Sie haben alle",
+	  upgradeToCreateMore: "für Ihren Plan diesen Monat verwendet. Aktualisieren Sie, um mehr Videos zu erstellen.",
+	  close: "Schließen",
+	  upgradePlan: "Plan Aktualisieren",
+	  quotaExceeded: "Kontingent Überschritten",
 
 	  // Onboarding Page
 	  onboardingWelcome: "Willkommen bei MarketUp",
@@ -8863,6 +8975,22 @@ export const translations: Record<Language, Translations> = {
 	  studioSaveContinue: "Sauvegarder et continuer",
 	  studioDownloadProgress: "Progrès du téléchargement",
 	  studioVideoGeneratedSuccessfully: "Vidéo générée avec succès",
+	  
+	  // Video Limit / Quota
+	  monthlyVideoLimitReached: "Limite Mensuelle de Vidéos Atteinte",
+	  planLimitExceeded: "Limite du Plan Dépassée",
+	  youveReachedMonthlyLimit: "Vous avez atteint votre limite mensuelle de création de vidéos pour",
+	  videosCreated: "Vidéos Créées",
+	  toCreateMoreVideos: "Pour créer plus de vidéos ce mois-ci, veuillez passer à un plan supérieur avec des limites accrues.",
+	  upgradeToHigherPlan: "Passer à un plan supérieur",
+	  upgradeBenefits: "Avantages de la mise à niveau:",
+	  proPlanBenefits: "Plan Pro: Créez jusqu'à 4 vidéos par mois (60-180 secondes chacune)",
+	  premiumPlanBenefits: "Plan Premium: Créez jusqu'à 7 vidéos par mois (60-180 secondes chacune)",
+	  youveUsedAllVideos: "Vous avez utilisé toutes les",
+	  upgradeToCreateMore: "pour votre plan ce mois-ci. Mettez à niveau pour créer plus de vidéos.",
+	  close: "Fermer",
+	  upgradePlan: "Mettre à Niveau le Plan",
+	  quotaExceeded: "Quota Dépassé",
 
 	  // Onboarding Page
 	  onboardingWelcome: "Bienvenue sur MarketUp",

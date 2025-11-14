@@ -205,15 +205,23 @@ export async function GET(request: NextRequest) {
       </tr>
     </thead>
     <tbody>
-      ${subscriptions.map(sub => `
+      ${subscriptions.map(sub => {
+        const planNameMap: Record<string, string> = {
+          'BASIC': 'Free',
+          'STANDARD': 'Pro',
+          'PREMIUM': 'Premium'
+        };
+        const planName = planNameMap[sub.tier] || sub.tier;
+        return `
         <tr>
           <td>${sub.id}</td>
-          <td>${sub.tier}</td>
+          <td>${planName}</td>
           <td>${sub.status}</td>
           <td>${(sub.user?.name || sub.user?.email || 'N/A').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
           <td>${sub.createdAt.toLocaleDateString()}</td>
         </tr>
-      `).join('')}
+      `;
+      }).join('')}
     </tbody>
   </table>
 
@@ -271,7 +279,7 @@ export async function GET(request: NextRequest) {
     await browser.close();
     
     // Return PDF file
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(Buffer.from(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="marketup-report-${new Date().toISOString().split('T')[0]}.pdf"`,

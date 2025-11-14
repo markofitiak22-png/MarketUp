@@ -70,10 +70,20 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Clear all remember me sessions for this user
+    const userId = (session as any).user.id;
+
+    // Delete all remember me sessions for this user (not just update the flag)
+    const deletedCount = await prisma.session.deleteMany({
+      where: { 
+        userId: userId,
+        rememberMe: true
+      }
+    });
+
+    // Also clear rememberMe flag from any remaining sessions (in case some weren't deleted)
     await prisma.session.updateMany({
       where: { 
-        userId: (session as any).user.id,
+        userId: userId,
         rememberMe: true
       },
       data: {
@@ -81,8 +91,20 @@ export async function DELETE(request: NextRequest) {
       }
     });
 
-    const response = NextResponse.json({ success: true });
-    response.cookies.delete('remember_me');
+    const response = NextResponse.json({ 
+      success: true,
+      deleted: deletedCount.count 
+    });
+    
+    // Delete the remember_me cookie with the same path as it was set
+    response.cookies.set('remember_me', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0, // Expire immediately
+      path: '/'
+    });
+    
     return response;
   } catch (error) {
     console.error('Clear remember me error:', error);

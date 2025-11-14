@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "@/hooks/useTranslations";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import Toast from "@/components/ui/Toast";
 
 interface SubscriptionData {
   currentPlan: {
@@ -44,6 +46,31 @@ export default function SubscriptionPage() {
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpgrading, setIsUpgrading] = useState(false);
+  
+  // Dialog and Toast states
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'danger' | 'warning' | 'info';
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'warning',
+    onConfirm: () => {},
+  });
+  const [toast, setToast] = useState<{
+    isOpen: boolean;
+    message: string;
+    type: 'success' | 'error' | 'info' | 'warning';
+  }>({
+    isOpen: false,
+    message: '',
+    type: 'info',
+  });
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Function to get translated plan features (matching pricing page)
   const getTranslatedFeatures = (planName: string) => {
@@ -537,19 +564,90 @@ export default function SubscriptionPage() {
                 <>
                   <button 
                         className="w-full px-3 py-2 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-indigo-500/40 text-xs sm:text-sm font-semibold transition-all duration-300"
-                    onClick={() => alert(translations.subscriptionChangePlanFunctionalityComingSoon)}
+                    onClick={() => router.push('/pricing')}
                   >
                     {translations.subscriptionChangePlan}
                   </button>
                   <button 
                         className="w-full px-3 py-2 bg-slate-800/40 hover:bg-slate-800/60 text-white rounded-lg border border-slate-700/60 hover:border-purple-500/40 text-xs sm:text-sm font-semibold transition-all duration-300"
-                    onClick={() => alert(translations.subscriptionUpdatePaymentFunctionalityComingSoon)}
+                    onClick={() => {
+                      // Redirect to checkout with current plan to update payment
+                      const planIdMap: Record<string, string> = {
+                        'STANDARD': 'pro',
+                        'PREMIUM': 'premium'
+                      };
+                      const planId = planIdMap[subscriptionData?.currentPlan?.tier || 'STANDARD'] || 'pro';
+                      router.push(`/checkout?plan=${planId}&update=true`);
+                    }}
                   >
                     {translations.subscriptionUpdatePayment}
                   </button>
                   <button 
-                        className="w-full px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg border border-red-500/30 hover:border-red-500/40 text-xs sm:text-sm font-semibold transition-all duration-300"
-                    onClick={() => alert(translations.subscriptionCancelSubscriptionFunctionalityComingSoon)}
+                        className={`w-full px-3 py-2 rounded-lg border text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                          subscriptionData?.currentPlan?.cancelAtPeriodEnd
+                            ? 'bg-green-500/10 hover:bg-green-500/20 text-green-400 border-green-500/30 hover:border-green-500/40'
+                            : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30 hover:border-red-500/40'
+                        }`}
+                    onClick={() => {
+                      const isCanceling = !subscriptionData?.currentPlan?.cancelAtPeriodEnd;
+                      const confirmMessage = isCanceling
+                        ? translations.subscriptionConfirmCancel || 'Are you sure you want to cancel your subscription? It will remain active until the end of the current billing period.'
+                        : translations.subscriptionConfirmReactivate || 'Are you sure you want to reactivate your subscription?';
+                      
+                      const confirmTitle = isCanceling
+                        ? translations.subscriptionCancelSubscription || 'Cancel Subscription'
+                        : translations.subscriptionReactivate || 'Reactivate Subscription';
+
+                      setConfirmDialog({
+                        isOpen: true,
+                        title: confirmTitle,
+                        message: confirmMessage,
+                        type: isCanceling ? 'danger' : 'warning',
+                        onConfirm: async () => {
+                          setConfirmDialog(prev => ({ ...prev, isOpen: false }));
+                          setIsProcessing(true);
+
+                          try {
+                            const response = await fetch('/api/subscriptions/cancel', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ 
+                                action: isCanceling ? 'cancel' : 'reactivate' 
+                              }),
+                            });
+
+                            const data = await response.json();
+                            
+                            if (data.ok) {
+                              // Refresh subscription data
+                              await fetchSubscriptionData();
+                              setToast({
+                                isOpen: true,
+                                message: isCanceling 
+                                  ? translations.subscriptionCanceledSuccessfully || 'Subscription will be canceled at the end of the billing period.'
+                                  : translations.subscriptionReactivatedSuccessfully || 'Subscription reactivated successfully!',
+                                type: 'success',
+                              });
+                            } else {
+                              setToast({
+                                isOpen: true,
+                                message: translations.subscriptionError || 'An error occurred. Please try again.',
+                                type: 'error',
+                              });
+                            }
+                          } catch (error) {
+                            console.error('Subscription action error:', error);
+                            setToast({
+                              isOpen: true,
+                              message: translations.subscriptionError || 'An error occurred. Please try again.',
+                              type: 'error',
+                            });
+                          } finally {
+                            setIsProcessing(false);
+                          }
+                        },
+                      });
+                    }}
                   >
                     {subscriptionData?.currentPlan?.cancelAtPeriodEnd ? translations.subscriptionReactivate : translations.subscriptionCancelSubscription}
                   </button>
@@ -646,6 +744,28 @@ export default function SubscriptionPage() {
           </div>
         </div>
       </div>
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        type={confirmDialog.type}
+        isLoading={isProcessing}
+        confirmText={confirmDialog.type === 'danger' ? translations.subscriptionCancelSubscription : translations.subscriptionReactivate}
+        cancelText={translations.close || 'Cancel'}
+      />
+
+      {/* Toast Notification */}
+      <Toast
+        isOpen={toast.isOpen}
+        onClose={() => setToast(prev => ({ ...prev, isOpen: false }))}
+        message={toast.message}
+        type={toast.type}
+        duration={5000}
+      />
     </div>
   );
 }

@@ -663,6 +663,20 @@ export interface Translations {
   profileConfirmPassword: string;
   profilePasswordChanged: string;
   profilePasswordError: string;
+  profilePasswordMinLength: string;
+  profilePasswordsDoNotMatch: string;
+  profilePasswordChangedSuccessfully: string;
+  profileUnauthorized: string;
+  profileInvalidInput: string;
+  profileNoPasswordSet: string;
+  profileWrongPassword: string;
+  profileServerError: string;
+  profileFailedToChangePassword: string;
+  profileErrorChangingPassword: string;
+  profileEnterCurrentPassword: string;
+  profileEnterNewPassword: string;
+  profileConfirmNewPassword: string;
+  profileChanging: string;
   
   // Videos Page
   videosMyVideos: string;
@@ -688,6 +702,9 @@ export interface Translations {
   videosNoVideosFound: string;
   videosTryAdjustingSearch: string;
   videosCreateFirstVideo: string;
+  videosVideoNotFound: string;
+  videosVideoNotAvailable: string;
+  videosDownloadError: string;
   videosCreateVideo: string;
   videosPage: string;
   videosOf: string;
@@ -699,6 +716,21 @@ export interface Translations {
   videosDeleteFunctionalityComingSoon: string;
   videosDuplicateFunctionalityComingSoon: string;
   videosAreYouSureDelete: string;
+  videosDeleting: string;
+  videosDeleteSuccess: string;
+  videosDeleteError: string;
+  videosDeleteWarning: string;
+  videosDuplicating: string;
+  videosDuplicateSuccess: string;
+  videosDuplicateError: string;
+  videosShareVideo: string;
+  videosCopyLink: string;
+  videosLinkCopied: string;
+  videosShareOnFacebook: string;
+  videosShareOnTwitter: string;
+  videosShareOnLinkedIn: string;
+  videosShareOnWhatsApp: string;
+  videosShareViaEmail: string;
   
   // Subscription Plan Features
   planFeature3VideosPerMonth: string;
@@ -764,6 +796,11 @@ export interface Translations {
   subscriptionUpgradePlanFunctionalityComingSoon: string;
   subscriptionDownloadInvoiceFunctionalityComingSoon: string;
   subscriptionUpgradeToPlanFunctionalityComingSoon: string;
+  subscriptionConfirmCancel: string;
+  subscriptionConfirmReactivate: string;
+  subscriptionCanceledSuccessfully: string;
+  subscriptionReactivatedSuccessfully: string;
+  subscriptionError: string;
   
   // Billing Page
   billingInvoices: string;
@@ -802,6 +839,10 @@ export interface Translations {
   billingMonth: string;
   billingTotalVideos: string;
   billingAllTime: string;
+  billingPaymentMethodAddedSuccessfully: string;
+  billingPaymentMethodUpdatedSuccessfully: string;
+  billingPaymentMethodAddCanceled: string;
+  billingErrorAddingPaymentMethod: string;
   
   // Settings Page
   settingsTitle: string;
@@ -877,6 +918,7 @@ export interface Translations {
   settingsPermanentlyDeleteAccount: string;
   settingsErrorSavingSettings: string;
   settingsDataExportFeatureComingSoon: string;
+  settingsExportError: string;
   settingsAccountDeletionFeatureComingSoon: string;
   settingsAreYouSureDeleteAccount: string;
   
@@ -1882,6 +1924,20 @@ export const translations: Record<Language, Translations> = {
 	  profileConfirmPassword: "Confirm Password",
 	  profilePasswordChanged: "Password changed successfully",
 	  profilePasswordError: "Error changing password",
+	  profilePasswordMinLength: "Password must be at least 6 characters",
+	  profilePasswordsDoNotMatch: "Passwords do not match",
+	  profilePasswordChangedSuccessfully: "Password changed successfully!",
+	  profileUnauthorized: "Unauthorized",
+	  profileInvalidInput: "Invalid input",
+	  profileNoPasswordSet: "No password set",
+	  profileWrongPassword: "Current password is incorrect",
+	  profileServerError: "Server error",
+	  profileFailedToChangePassword: "Failed to change password",
+	  profileErrorChangingPassword: "Error changing password",
+	  profileEnterCurrentPassword: "Enter current password",
+	  profileEnterNewPassword: "Enter new password (min 6 characters)",
+	  profileConfirmNewPassword: "Confirm new password",
+	  profileChanging: "Changing...",
 
 	  // Videos Page
 	  videosMyVideos: "My Videos",
@@ -1907,6 +1963,9 @@ export const translations: Record<Language, Translations> = {
 	  videosNoVideosFound: "No videos found",
 	  videosTryAdjustingSearch: "Try adjusting your search terms",
 	  videosCreateFirstVideo: "Create your first video to get started",
+	  videosVideoNotFound: "Video not found",
+	  videosVideoNotAvailable: "Video is not available for download",
+	  videosDownloadError: "Failed to download video",
 	  videosCreateVideo: "Create Video",
 	  videosPage: "Page",
 	  videosOf: "of",
@@ -1918,6 +1977,21 @@ export const translations: Record<Language, Translations> = {
 	  videosDeleteFunctionalityComingSoon: "Delete functionality coming soon!",
 	  videosDuplicateFunctionalityComingSoon: "Duplicate functionality coming soon!",
 	  videosAreYouSureDelete: "Are you sure you want to delete this video?",
+	  videosDeleting: "Deleting video...",
+	  videosDeleteSuccess: "Video deleted successfully!",
+	  videosDeleteError: "Failed to delete video",
+	  videosDeleteWarning: "This action cannot be undone.",
+	  videosDuplicating: "Duplicating video...",
+	  videosDuplicateSuccess: "Video duplication started successfully!",
+	  videosDuplicateError: "Failed to duplicate video",
+	  videosShareVideo: "Share Video",
+	  videosCopyLink: "Copy Link",
+	  videosLinkCopied: "Link copied to clipboard!",
+	  videosShareOnFacebook: "Share on Facebook",
+	  videosShareOnTwitter: "Share on Twitter",
+	  videosShareOnLinkedIn: "Share on LinkedIn",
+	  videosShareOnWhatsApp: "Share on WhatsApp",
+	  videosShareViaEmail: "Share via Email",
 
 	  // Subscription Plan Features
 	  planFeature3VideosPerMonth: "3 videos per month",
@@ -1975,6 +2049,11 @@ export const translations: Record<Language, Translations> = {
 	  subscriptionUpgradePlanFunctionalityComingSoon: "Upgrade Plan functionality coming soon!",
 	  subscriptionDownloadInvoiceFunctionalityComingSoon: "Download invoice functionality coming soon!",
 	  subscriptionUpgradeToPlanFunctionalityComingSoon: "Upgrade to {plan} plan functionality coming soon!",
+	  subscriptionConfirmCancel: "Are you sure you want to cancel your subscription? It will remain active until the end of the current billing period.",
+	  subscriptionConfirmReactivate: "Are you sure you want to reactivate your subscription?",
+	  subscriptionCanceledSuccessfully: "Subscription will be canceled at the end of the billing period.",
+	  subscriptionReactivatedSuccessfully: "Subscription reactivated successfully!",
+	  subscriptionError: "An error occurred. Please try again.",
 
 	  // Billing Page
 	  billingInvoices: "Billing & Invoices",
@@ -2013,6 +2092,10 @@ export const translations: Record<Language, Translations> = {
 	  billingMonth: "month",
 	  billingTotalVideos: "Total Videos",
 	  billingAllTime: "All time",
+	  billingPaymentMethodAddedSuccessfully: "Payment method added successfully!",
+	  billingPaymentMethodUpdatedSuccessfully: "Payment method updated successfully!",
+	  billingPaymentMethodAddCanceled: "Payment method addition was canceled.",
+	  billingErrorAddingPaymentMethod: "Failed to add payment method. Please try again.",
 
 	  // Settings Page
 	  settingsTitle: "Settings",
@@ -2087,6 +2170,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsPermanentlyDeleteAccount: "Permanently delete your account and all data",
 
 	  settingsDataExportFeatureComingSoon: "Data export feature coming soon!",
+	  settingsExportError: "Failed to export data. Please try again.",
 	  settingsAccountDeletionFeatureComingSoon: "Account deletion feature coming soon!",
 	  settingsAreYouSureDeleteAccount: "Are you sure you want to delete your account? This action cannot be undone.",
 
@@ -3152,6 +3236,20 @@ export const translations: Record<Language, Translations> = {
     profileConfirmPassword: "Bekräfta lösenord",
     profilePasswordChanged: "Lösenord ändrat framgångsrikt",
     profilePasswordError: "Fel vid ändring av lösenord",
+    profilePasswordMinLength: "Lösenordet måste vara minst 6 tecken",
+    profilePasswordsDoNotMatch: "Lösenorden matchar inte",
+    profilePasswordChangedSuccessfully: "Lösenordet ändrades framgångsrikt!",
+    profileUnauthorized: "Obehörig",
+    profileInvalidInput: "Ogiltig inmatning",
+    profileNoPasswordSet: "Inget lösenord är inställt",
+    profileWrongPassword: "Nuvarande lösenord är felaktigt",
+    profileServerError: "Serverfel",
+    profileFailedToChangePassword: "Kunde inte ändra lösenord",
+    profileErrorChangingPassword: "Fel vid ändring av lösenord",
+    profileEnterCurrentPassword: "Ange nuvarande lösenord",
+    profileEnterNewPassword: "Ange nytt lösenord (min 6 tecken)",
+    profileConfirmNewPassword: "Bekräfta nytt lösenord",
+    profileChanging: "Ändrar...",
     
     // Videos Page
     videosMyVideos: "Mina videor",
@@ -3177,6 +3275,9 @@ export const translations: Record<Language, Translations> = {
     videosNoVideosFound: "Inga videor hittades",
     videosTryAdjustingSearch: "Försök justera dina söktermer",
     videosCreateFirstVideo: "Skapa din första video för att komma igång",
+    videosVideoNotFound: "Video hittades inte",
+    videosVideoNotAvailable: "Video är inte tillgänglig för nedladdning",
+    videosDownloadError: "Kunde inte ladda ner video",
     videosCreateVideo: "Skapa video",
     videosPage: "Sida",
     videosOf: "av",
@@ -3188,6 +3289,21 @@ export const translations: Record<Language, Translations> = {
     videosDeleteFunctionalityComingSoon: "Borttagningsfunktionalitet kommer snart!",
     videosDuplicateFunctionalityComingSoon: "Dupliceringsfunktionalitet kommer snart!",
     videosAreYouSureDelete: "Är du säker på att du vill ta bort denna video?",
+    videosDeleting: "Tar bort video...",
+    videosDeleteSuccess: "Video borttaget framgångsrikt!",
+    videosDeleteError: "Misslyckades med att ta bort video",
+    videosDeleteWarning: "Denna åtgärd kan inte ångras.",
+    videosDuplicating: "Duplicerar video...",
+    videosDuplicateSuccess: "Videoduplicering startade framgångsrikt!",
+    videosDuplicateError: "Misslyckades med att duplicera video",
+    videosShareVideo: "Dela video",
+    videosCopyLink: "Kopiera länk",
+    videosLinkCopied: "Länk kopierad till urklipp!",
+    videosShareOnFacebook: "Dela på Facebook",
+    videosShareOnTwitter: "Dela på Twitter",
+    videosShareOnLinkedIn: "Dela på LinkedIn",
+    videosShareOnWhatsApp: "Dela på WhatsApp",
+    videosShareViaEmail: "Dela via e-post",
     
     // Subscription Plan Features
     planFeature3VideosPerMonth: "3 videor per månad",
@@ -3245,6 +3361,11 @@ export const translations: Record<Language, Translations> = {
     subscriptionUpgradePlanFunctionalityComingSoon: "Funktionalitet för att uppgradera plan kommer snart!",
     subscriptionDownloadInvoiceFunctionalityComingSoon: "Funktionalitet för att ladda ner faktura kommer snart!",
     subscriptionUpgradeToPlanFunctionalityComingSoon: "Uppgradera till {plan} plan funktionalitet kommer snart!",
+    subscriptionConfirmCancel: "Är du säker på att du vill avsluta din prenumeration? Den förblir aktiv till slutet av den nuvarande faktureringsperioden.",
+    subscriptionConfirmReactivate: "Är du säker på att du vill återaktivera din prenumeration?",
+    subscriptionCanceledSuccessfully: "Prenumerationen kommer att avslutas i slutet av faktureringsperioden.",
+    subscriptionReactivatedSuccessfully: "Prenumerationen återaktiverades framgångsrikt!",
+    subscriptionError: "Ett fel uppstod. Vänligen försök igen.",
     
     // Billing Page
     billingInvoices: "Fakturering & Fakturor",
@@ -3283,6 +3404,10 @@ export const translations: Record<Language, Translations> = {
     billingMonth: "månad",
     billingTotalVideos: "Totalt antal videor",
     billingAllTime: "Alla tider",
+    billingPaymentMethodAddedSuccessfully: "Betalningsmetod tillagd framgångsrikt!",
+    billingPaymentMethodUpdatedSuccessfully: "Betalningsmetod uppdaterad framgångsrikt!",
+    billingPaymentMethodAddCanceled: "Tillägg av betalningsmetod avbröts.",
+    billingErrorAddingPaymentMethod: "Misslyckades med att lägga till betalningsmetod. Försök igen.",
     
     // Settings Page
     settingsTitle: "Inställningar",
@@ -3356,6 +3481,7 @@ export const translations: Record<Language, Translations> = {
     settingsDeleteAccount: "Ta bort konto",
     settingsPermanentlyDeleteAccount: "Ta bort ditt konto och all data permanent",
     settingsDataExportFeatureComingSoon: "Dataexportfunktion kommer snart!",
+    settingsExportError: "Misslyckades med att exportera data. Försök igen.",
     settingsAccountDeletionFeatureComingSoon: "Kontoborttagningsfunktion kommer snart!",
     settingsAreYouSureDeleteAccount: "Är du säker på att du vill ta bort ditt konto? Denna åtgärd kan inte ångras.",
     
@@ -4414,6 +4540,20 @@ export const translations: Record<Language, Translations> = {
     profileConfirmPassword: "Підтвердити пароль",
     profilePasswordChanged: "Пароль успішно змінено",
     profilePasswordError: "Помилка зміни паролю",
+    profilePasswordMinLength: "Пароль повинен містити мінімум 6 символів",
+    profilePasswordsDoNotMatch: "Паролі не співпадають",
+    profilePasswordChangedSuccessfully: "Пароль успішно змінено!",
+    profileUnauthorized: "Неавторизовано",
+    profileInvalidInput: "Невірний ввід",
+    profileNoPasswordSet: "Пароль не встановлено",
+    profileWrongPassword: "Поточний пароль невірний",
+    profileServerError: "Помилка сервера",
+    profileFailedToChangePassword: "Не вдалося змінити пароль",
+    profileErrorChangingPassword: "Помилка зміни паролю",
+    profileEnterCurrentPassword: "Введіть поточний пароль",
+    profileEnterNewPassword: "Введіть новий пароль (мін. 6 символів)",
+    profileConfirmNewPassword: "Підтвердіть новий пароль",
+    profileChanging: "Зміна...",
     
     // Videos Page
     videosMyVideos: "Мої відео",
@@ -4439,6 +4579,9 @@ export const translations: Record<Language, Translations> = {
     videosNoVideosFound: "Відео не знайдено",
     videosTryAdjustingSearch: "Спробуйте змінити пошукові терміни",
     videosCreateFirstVideo: "Створіть своє перше відео, щоб розпочати",
+    videosVideoNotFound: "Відео не знайдено",
+    videosVideoNotAvailable: "Відео недоступне для завантаження",
+    videosDownloadError: "Не вдалося завантажити відео",
     videosCreateVideo: "Створити відео",
     videosPage: "Сторінка",
     videosOf: "з",
@@ -4450,6 +4593,21 @@ export const translations: Record<Language, Translations> = {
     videosDeleteFunctionalityComingSoon: "Функціональність видалення незабаром!",
     videosDuplicateFunctionalityComingSoon: "Функціональність дублювання незабаром!",
     videosAreYouSureDelete: "Ви впевнені, що хочете видалити це відео?",
+    videosDeleting: "Видалення відео...",
+    videosDeleteSuccess: "Відео успішно видалено!",
+    videosDeleteError: "Не вдалося видалити відео",
+    videosDeleteWarning: "Цю дію неможливо скасувати.",
+    videosDuplicating: "Дублювання відео...",
+    videosDuplicateSuccess: "Дублювання відео успішно запущено!",
+    videosDuplicateError: "Не вдалося продублювати відео",
+    videosShareVideo: "Поділитися відео",
+    videosCopyLink: "Копіювати посилання",
+    videosLinkCopied: "Посилання скопійовано в буфер обміну!",
+    videosShareOnFacebook: "Поділитися на Facebook",
+    videosShareOnTwitter: "Поділитися на Twitter",
+    videosShareOnLinkedIn: "Поділитися на LinkedIn",
+    videosShareOnWhatsApp: "Поділитися в WhatsApp",
+    videosShareViaEmail: "Поділитися через Email",
     
     // Subscription Plan Features
     planFeature3VideosPerMonth: "3 відео на місяць",
@@ -4507,6 +4665,11 @@ export const translations: Record<Language, Translations> = {
     subscriptionUpgradePlanFunctionalityComingSoon: "Функціональність оновлення плану незабаром!",
     subscriptionDownloadInvoiceFunctionalityComingSoon: "Функціональність завантаження рахунку незабаром!",
     subscriptionUpgradeToPlanFunctionalityComingSoon: "Оновлення до {plan} плану функціональність незабаром!",
+    subscriptionConfirmCancel: "Ви впевнені, що хочете скасувати підписку? Вона залишиться активною до кінця поточного розрахункового періоду.",
+    subscriptionConfirmReactivate: "Ви впевнені, що хочете повторно активувати підписку?",
+    subscriptionCanceledSuccessfully: "Підписка буде скасована в кінці розрахункового періоду.",
+    subscriptionReactivatedSuccessfully: "Підписку успішно повторно активовано!",
+    subscriptionError: "Сталася помилка. Будь ласка, спробуйте ще раз.",
     
     // Billing Page
     billingInvoices: "Оплата та рахунки",
@@ -4545,6 +4708,10 @@ export const translations: Record<Language, Translations> = {
     billingMonth: "місяць",
     billingTotalVideos: "Всього відео",
     billingAllTime: "За весь час",
+    billingPaymentMethodAddedSuccessfully: "Спосіб оплати успішно додано!",
+    billingPaymentMethodUpdatedSuccessfully: "Спосіб оплати успішно оновлено!",
+    billingPaymentMethodAddCanceled: "Додавання способу оплати скасовано.",
+    billingErrorAddingPaymentMethod: "Не вдалося додати спосіб оплати. Будь ласка, спробуйте ще раз.",
     
     // Settings Page
     settingsTitle: "Налаштування",
@@ -4618,6 +4785,7 @@ export const translations: Record<Language, Translations> = {
     settingsDeleteAccount: "Видалити обліковий запис",
     settingsPermanentlyDeleteAccount: "Назавжди видалити ваш обліковий запис та всі дані",
     settingsDataExportFeatureComingSoon: "Функція експорту даних незабаром!",
+    settingsExportError: "Не вдалося експортувати дані. Будь ласка, спробуйте ще раз.",
     settingsAccountDeletionFeatureComingSoon: "Функція видалення облікового запису незабаром!",
     settingsAreYouSureDeleteAccount: "Ви впевнені, що хочете видалити свій обліковий запис? Цю дію неможливо скасувати.",
     
@@ -5676,6 +5844,20 @@ export const translations: Record<Language, Translations> = {
     profileConfirmPassword: "Şifreyi Onayla",
     profilePasswordChanged: "Şifre başarıyla değiştirildi",
     profilePasswordError: "Şifre değiştirilirken hata oluştu",
+    profilePasswordMinLength: "Şifre en az 6 karakter olmalıdır",
+    profilePasswordsDoNotMatch: "Şifreler eşleşmiyor",
+    profilePasswordChangedSuccessfully: "Şifre başarıyla değiştirildi!",
+    profileUnauthorized: "Yetkisiz",
+    profileInvalidInput: "Geçersiz giriş",
+    profileNoPasswordSet: "Şifre ayarlanmamış",
+    profileWrongPassword: "Mevcut şifre yanlış",
+    profileServerError: "Sunucu hatası",
+    profileFailedToChangePassword: "Şifre değiştirilemedi",
+    profileErrorChangingPassword: "Şifre değiştirilirken hata",
+    profileEnterCurrentPassword: "Mevcut şifrenizi girin",
+    profileEnterNewPassword: "Yeni şifre girin (min 6 karakter)",
+    profileConfirmNewPassword: "Yeni şifreyi onaylayın",
+    profileChanging: "Değiştiriliyor...",
     
     // Videos Page
     videosMyVideos: "Videolarım",
@@ -5701,6 +5883,9 @@ export const translations: Record<Language, Translations> = {
     videosNoVideosFound: "Video bulunamadı",
     videosTryAdjustingSearch: "Arama terimlerinizi ayarlamayı deneyin",
     videosCreateFirstVideo: "Başlamak için ilk videonuzu oluşturun",
+    videosVideoNotFound: "Video bulunamadı",
+    videosVideoNotAvailable: "Video indirme için mevcut değil",
+    videosDownloadError: "Video indirilemedi",
     videosCreateVideo: "Video Oluştur",
     videosPage: "Sayfa",
     videosOf: "toplam",
@@ -5712,6 +5897,21 @@ export const translations: Record<Language, Translations> = {
     videosDeleteFunctionalityComingSoon: "Silme işlevselliği yakında geliyor!",
     videosDuplicateFunctionalityComingSoon: "Kopyalama işlevselliği yakında geliyor!",
     videosAreYouSureDelete: "Bu videoyu silmek istediğinizden emin misiniz?",
+    videosDeleting: "Video siliniyor...",
+    videosDeleteSuccess: "Video başarıyla silindi!",
+    videosDeleteError: "Video silinemedi",
+    videosDeleteWarning: "Bu işlem geri alınamaz.",
+    videosDuplicating: "Video kopyalanıyor...",
+    videosDuplicateSuccess: "Video kopyalama başarıyla başlatıldı!",
+    videosDuplicateError: "Video kopyalanamadı",
+    videosShareVideo: "Videoyu Paylaş",
+    videosCopyLink: "Bağlantıyı Kopyala",
+    videosLinkCopied: "Bağlantı panoya kopyalandı!",
+    videosShareOnFacebook: "Facebook'ta Paylaş",
+    videosShareOnTwitter: "Twitter'da Paylaş",
+    videosShareOnLinkedIn: "LinkedIn'de Paylaş",
+    videosShareOnWhatsApp: "WhatsApp'ta Paylaş",
+    videosShareViaEmail: "E-posta ile Paylaş",
     
     // Subscription Plan Features
     planFeature3VideosPerMonth: "Ayda 3 video",
@@ -5769,6 +5969,11 @@ export const translations: Record<Language, Translations> = {
     subscriptionUpgradePlanFunctionalityComingSoon: "Plan yükseltme işlevselliği yakında geliyor!",
     subscriptionDownloadInvoiceFunctionalityComingSoon: "Fatura indirme işlevselliği yakında geliyor!",
     subscriptionUpgradeToPlanFunctionalityComingSoon: "{plan} planına yükseltme işlevselliği yakında geliyor!",
+    subscriptionConfirmCancel: "Aboneliğinizi iptal etmek istediğinizden emin misiniz? Mevcut faturalandırma döneminin sonuna kadar aktif kalacaktır.",
+    subscriptionConfirmReactivate: "Aboneliğinizi yeniden etkinleştirmek istediğinizden emin misiniz?",
+    subscriptionCanceledSuccessfully: "Abonelik faturalandırma döneminin sonunda iptal edilecektir.",
+    subscriptionReactivatedSuccessfully: "Abonelik başarıyla yeniden etkinleştirildi!",
+    subscriptionError: "Bir hata oluştu. Lütfen tekrar deneyin.",
     
     // Billing Page
     billingInvoices: "Faturalandırma ve Faturalar",
@@ -5807,6 +6012,10 @@ export const translations: Record<Language, Translations> = {
     billingMonth: "ay",
     billingTotalVideos: "Toplam Video",
     billingAllTime: "Tüm zamanlar",
+    billingPaymentMethodAddedSuccessfully: "Ödeme yöntemi başarıyla eklendi!",
+    billingPaymentMethodUpdatedSuccessfully: "Ödeme yöntemi başarıyla güncellendi!",
+    billingPaymentMethodAddCanceled: "Ödeme yöntemi ekleme iptal edildi.",
+    billingErrorAddingPaymentMethod: "Ödeme yöntemi eklenemedi. Lütfen tekrar deneyin.",
     
     // Settings Page
     settingsTitle: "Ayarlar",
@@ -5880,6 +6089,7 @@ export const translations: Record<Language, Translations> = {
     settingsDeleteAccount: "Hesabı Sil",
     settingsPermanentlyDeleteAccount: "Hesabınızı ve tüm verilerinizi kalıcı olarak silin",
     settingsDataExportFeatureComingSoon: "Veri dışa aktarma özelliği yakında geliyor!",
+    settingsExportError: "Veri dışa aktarma başarısız oldu. Lütfen tekrar deneyin.",
     settingsAccountDeletionFeatureComingSoon: "Hesap silme özelliği yakında geliyor!",
     settingsAreYouSureDeleteAccount: "Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     
@@ -6939,6 +7149,20 @@ export const translations: Record<Language, Translations> = {
     profileConfirmPassword: "تأكيد كلمة المرور",
     profilePasswordChanged: "تم تغيير كلمة المرور بنجاح",
     profilePasswordError: "خطأ في تغيير كلمة المرور",
+    profilePasswordMinLength: "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+    profilePasswordsDoNotMatch: "كلمات المرور غير متطابقة",
+    profilePasswordChangedSuccessfully: "تم تغيير كلمة المرور بنجاح!",
+    profileUnauthorized: "غير مصرح",
+    profileInvalidInput: "إدخال غير صالح",
+    profileNoPasswordSet: "لم يتم تعيين كلمة مرور",
+    profileWrongPassword: "كلمة المرور الحالية غير صحيحة",
+    profileServerError: "خطأ في الخادم",
+    profileFailedToChangePassword: "فشل تغيير كلمة المرور",
+    profileErrorChangingPassword: "خطأ في تغيير كلمة المرور",
+    profileEnterCurrentPassword: "أدخل كلمة المرور الحالية",
+    profileEnterNewPassword: "أدخل كلمة مرور جديدة (6 أحرف على الأقل)",
+    profileConfirmNewPassword: "تأكيد كلمة المرور الجديدة",
+    profileChanging: "جارٍ التغيير...",
     
     // Videos Page
     videosMyVideos: "فيديوهاتي",
@@ -6964,6 +7188,9 @@ export const translations: Record<Language, Translations> = {
     videosNoVideosFound: "لم يتم العثور على فيديوهات",
     videosTryAdjustingSearch: "حاول تعديل مصطلحات البحث",
     videosCreateFirstVideo: "أنشئ أول فيديو لك للبدء",
+    videosVideoNotFound: "لم يتم العثور على الفيديو",
+    videosVideoNotAvailable: "الفيديو غير متاح للتحميل",
+    videosDownloadError: "فشل تحميل الفيديو",
     videosCreateVideo: "إنشاء فيديو",
     videosPage: "صفحة",
     videosOf: "من",
@@ -6975,6 +7202,21 @@ export const translations: Record<Language, Translations> = {
     videosDeleteFunctionalityComingSoon: "وظيفة الحذف قريباً!",
     videosDuplicateFunctionalityComingSoon: "وظيفة النسخ قريباً!",
     videosAreYouSureDelete: "هل أنت متأكد من أنك تريد حذف هذا الفيديو؟",
+    videosDeleting: "جاري حذف الفيديو...",
+    videosDeleteSuccess: "تم حذف الفيديو بنجاح!",
+    videosDeleteError: "فشل حذف الفيديو",
+    videosDeleteWarning: "لا يمكن التراجع عن هذا الإجراء.",
+    videosDuplicating: "جاري نسخ الفيديو...",
+    videosDuplicateSuccess: "تم بدء نسخ الفيديو بنجاح!",
+    videosDuplicateError: "فشل نسخ الفيديو",
+    videosShareVideo: "مشاركة الفيديو",
+    videosCopyLink: "نسخ الرابط",
+    videosLinkCopied: "تم نسخ الرابط إلى الحافظة!",
+    videosShareOnFacebook: "مشاركة على Facebook",
+    videosShareOnTwitter: "مشاركة على Twitter",
+    videosShareOnLinkedIn: "مشاركة على LinkedIn",
+    videosShareOnWhatsApp: "مشاركة على WhatsApp",
+    videosShareViaEmail: "مشاركة عبر البريد الإلكتروني",
     
     // Subscription Plan Features
     planFeature3VideosPerMonth: "3 فيديوهات شهرياً",
@@ -7032,6 +7274,11 @@ export const translations: Record<Language, Translations> = {
     subscriptionUpgradePlanFunctionalityComingSoon: "وظيفة ترقية الخطة قريباً!",
     subscriptionDownloadInvoiceFunctionalityComingSoon: "وظيفة تحميل الفاتورة قريباً!",
     subscriptionUpgradeToPlanFunctionalityComingSoon: "ترقية إلى خطة {plan} قريباً!",
+    subscriptionConfirmCancel: "هل أنت متأكد أنك تريد إلغاء اشتراكك؟ سيبقى نشطاً حتى نهاية فترة الفوترة الحالية.",
+    subscriptionConfirmReactivate: "هل أنت متأكد أنك تريد إعادة تفعيل اشتراكك؟",
+    subscriptionCanceledSuccessfully: "سيتم إلغاء الاشتراك في نهاية فترة الفوترة.",
+    subscriptionReactivatedSuccessfully: "تم إعادة تفعيل الاشتراك بنجاح!",
+    subscriptionError: "حدث خطأ. يرجى المحاولة مرة أخرى.",
     
     // Billing Page
     billingInvoices: "الفوترة والفواتير",
@@ -7070,6 +7317,10 @@ export const translations: Record<Language, Translations> = {
     billingMonth: "شهر",
     billingTotalVideos: "إجمالي الفيديوهات",
     billingAllTime: "طوال الوقت",
+    billingPaymentMethodAddedSuccessfully: "تمت إضافة طريقة الدفع بنجاح!",
+    billingPaymentMethodUpdatedSuccessfully: "تم تحديث طريقة الدفع بنجاح!",
+    billingPaymentMethodAddCanceled: "تم إلغاء إضافة طريقة الدفع.",
+    billingErrorAddingPaymentMethod: "فشل في إضافة طريقة الدفع. يرجى المحاولة مرة أخرى.",
     
     // Settings Page
     settingsTitle: "الإعدادات",
@@ -7143,6 +7394,7 @@ export const translations: Record<Language, Translations> = {
     settingsDeleteAccount: "حذف الحساب",
     settingsPermanentlyDeleteAccount: "حذف حسابك وجميع البيانات نهائياً",
     settingsDataExportFeatureComingSoon: "ميزة تصدير البيانات قريباً!",
+    settingsExportError: "فشل تصدير البيانات. يرجى المحاولة مرة أخرى.",
     settingsAccountDeletionFeatureComingSoon: "ميزة حذف الحساب قريباً!",
     settingsAreYouSureDeleteAccount: "هل أنت متأكد من أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.",
     
@@ -8225,6 +8477,20 @@ export const translations: Record<Language, Translations> = {
 	  profileConfirmPassword: "Passwort bestätigen",
 	  profilePasswordChanged: "Passwort erfolgreich geändert",
 	  profilePasswordError: "Fehler beim Ändern des Passworts",
+	  profilePasswordMinLength: "Das Passwort muss mindestens 6 Zeichen lang sein",
+	  profilePasswordsDoNotMatch: "Die Passwörter stimmen nicht überein",
+	  profilePasswordChangedSuccessfully: "Passwort erfolgreich geändert!",
+	  profileUnauthorized: "Nicht autorisiert",
+	  profileInvalidInput: "Ungültige Eingabe",
+	  profileNoPasswordSet: "Kein Passwort festgelegt",
+	  profileWrongPassword: "Aktuelles Passwort ist falsch",
+	  profileServerError: "Serverfehler",
+	  profileFailedToChangePassword: "Passwort konnte nicht geändert werden",
+	  profileErrorChangingPassword: "Fehler beim Ändern des Passworts",
+	  profileEnterCurrentPassword: "Aktuelles Passwort eingeben",
+	  profileEnterNewPassword: "Neues Passwort eingeben (min. 6 Zeichen)",
+	  profileConfirmNewPassword: "Neues Passwort bestätigen",
+	  profileChanging: "Wird geändert...",
 	  profileAnonymousUser: "Anonymer Benutzer",
 	  profileNotSet: "Nicht festgelegt",
 	  profileEditProfile: "Profil bearbeiten",
@@ -8278,6 +8544,9 @@ export const translations: Record<Language, Translations> = {
 	  videosNoVideosFound: "Keine Videos gefunden",
 	  videosTryAdjustingSearch: "Versuchen Sie, Ihre Suchfilter anzupassen",
 	  videosCreateFirstVideo: "Erstellen Sie Ihr erstes Video, um loszulegen",
+	  videosVideoNotFound: "Video nicht gefunden",
+	  videosVideoNotAvailable: "Video ist nicht zum Download verfügbar",
+	  videosDownloadError: "Video konnte nicht heruntergeladen werden",
 	  videosCreateVideo: "Video erstellen",
 	  videosPage: "Seite",
 	  videosOf: "von",
@@ -8289,6 +8558,21 @@ export const translations: Record<Language, Translations> = {
 	  videosDeleteFunctionalityComingSoon: "Löschen-Funktion kommt bald!",
 	  videosDuplicateFunctionalityComingSoon: "Duplizieren-Funktion kommt bald!",
 	  videosAreYouSureDelete: "Sind Sie sicher, dass Sie dieses Video löschen möchten?",
+	  videosDeleting: "Video wird gelöscht...",
+	  videosDeleteSuccess: "Video erfolgreich gelöscht!",
+	  videosDeleteError: "Video konnte nicht gelöscht werden",
+	  videosDeleteWarning: "Diese Aktion kann nicht rückgängig gemacht werden.",
+	  videosDuplicating: "Video wird dupliziert...",
+	  videosDuplicateSuccess: "Videoduplizierung erfolgreich gestartet!",
+	  videosDuplicateError: "Video konnte nicht dupliziert werden",
+	  videosShareVideo: "Video teilen",
+	  videosCopyLink: "Link kopieren",
+	  videosLinkCopied: "Link in die Zwischenablage kopiert!",
+	  videosShareOnFacebook: "Auf Facebook teilen",
+	  videosShareOnTwitter: "Auf Twitter teilen",
+	  videosShareOnLinkedIn: "Auf LinkedIn teilen",
+	  videosShareOnWhatsApp: "Auf WhatsApp teilen",
+	  videosShareViaEmail: "Per E-Mail teilen",
 
 	  // Subscription Plan Features
 	  planFeature3VideosPerMonth: "3 Videos pro Monat",
@@ -8385,6 +8669,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsDeleteAccount: "Konto löschen",
 	  settingsPermanentlyDeleteAccount: "Löschen Sie Ihr Konto dauerhaft",
 	  settingsDataExportFeatureComingSoon: "Datenexport-Funktion kommt bald!",
+	  settingsExportError: "Datenexport fehlgeschlagen. Bitte versuchen Sie es erneut.",
 	  settingsAreYouSureDeleteAccount: "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
 	  settingsAccountDeletionFeatureComingSoon: "Konto-Löschungsfunktion kommt bald!",
 	  rememberMeSettings: "Angemeldet bleiben-Einstellungen",
@@ -8441,6 +8726,11 @@ export const translations: Record<Language, Translations> = {
 	  subscriptionUpgradePlanFunctionalityComingSoon: "Plan-Upgrade-Funktion kommt bald!",
 	  subscriptionUpgradeToPlanFunctionalityComingSoon: "Upgrade auf {plan} kommt bald!",
 	  subscriptionDownloadInvoiceFunctionalityComingSoon: "Rechnungsdownload-Funktion kommt bald!",
+	  subscriptionConfirmCancel: "Sind Sie sicher, dass Sie Ihr Abonnement kündigen möchten? Es bleibt bis zum Ende des aktuellen Abrechnungszeitraums aktiv.",
+	  subscriptionConfirmReactivate: "Sind Sie sicher, dass Sie Ihr Abonnement reaktivieren möchten?",
+	  subscriptionCanceledSuccessfully: "Das Abonnement wird am Ende des Abrechnungszeitraums gekündigt.",
+	  subscriptionReactivatedSuccessfully: "Abonnement erfolgreich reaktiviert!",
+	  subscriptionError: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
 
 	  // Billing Page
 	  billingErrorLoadingData: "Fehler beim Laden der Abrechnungsdaten",
@@ -8465,6 +8755,10 @@ export const translations: Record<Language, Translations> = {
 	  billingMonth: "Monat",
 	  billingTotalVideos: "Gesamtvideos",
 	  billingAllTime: "Gesamte Zeit",
+	  billingPaymentMethodAddedSuccessfully: "Zahlungsmethode erfolgreich hinzugefügt!",
+	  billingPaymentMethodUpdatedSuccessfully: "Zahlungsmethode erfolgreich aktualisiert!",
+	  billingPaymentMethodAddCanceled: "Hinzufügen der Zahlungsmethode wurde abgebrochen.",
+	  billingErrorAddingPaymentMethod: "Zahlungsmethode konnte nicht hinzugefügt werden. Bitte versuchen Sie es erneut.",
 	  billingStorageUsed: "Speicher verwendet",
 	  billingThisMonth: "diesen Monat",
 	  billingBandwidth: "Bandbreite",
@@ -9529,6 +9823,20 @@ export const translations: Record<Language, Translations> = {
 	  profileConfirmPassword: "Confirmer le mot de passe",
 	  profilePasswordChanged: "Mot de passe changé avec succès",
 	  profilePasswordError: "Erreur lors du changement du mot de passe",
+	  profilePasswordMinLength: "Le mot de passe doit contenir au moins 6 caractères",
+	  profilePasswordsDoNotMatch: "Les mots de passe ne correspondent pas",
+	  profilePasswordChangedSuccessfully: "Mot de passe changé avec succès !",
+	  profileUnauthorized: "Non autorisé",
+	  profileInvalidInput: "Entrée invalide",
+	  profileNoPasswordSet: "Aucun mot de passe défini",
+	  profileWrongPassword: "Le mot de passe actuel est incorrect",
+	  profileServerError: "Erreur serveur",
+	  profileFailedToChangePassword: "Échec du changement de mot de passe",
+	  profileErrorChangingPassword: "Erreur lors du changement du mot de passe",
+	  profileEnterCurrentPassword: "Entrez le mot de passe actuel",
+	  profileEnterNewPassword: "Entrez un nouveau mot de passe (min 6 caractères)",
+	  profileConfirmNewPassword: "Confirmez le nouveau mot de passe",
+	  profileChanging: "Changement en cours...",
 	  profileAnonymousUser: "Utilisateur anonyme",
 	  profileNotSet: "Non défini",
 	  profileEditProfile: "Modifier le profil",
@@ -9582,6 +9890,9 @@ export const translations: Record<Language, Translations> = {
 	  videosNoVideosFound: "Aucune vidéo trouvée",
 	  videosTryAdjustingSearch: "Essayez d'ajuster vos filtres de recherche",
 	  videosCreateFirstVideo: "Créez votre première vidéo pour commencer",
+	  videosVideoNotFound: "Vidéo introuvable",
+	  videosVideoNotAvailable: "La vidéo n'est pas disponible au téléchargement",
+	  videosDownloadError: "Échec du téléchargement de la vidéo",
 	  videosCreateVideo: "Créer une vidéo",
 	  videosPage: "Page",
 	  videosOf: "de",
@@ -9593,6 +9904,21 @@ export const translations: Record<Language, Translations> = {
 	  videosDeleteFunctionalityComingSoon: "Fonctionnalité de suppression bientôt disponible !",
 	  videosDuplicateFunctionalityComingSoon: "Fonctionnalité de duplication bientôt disponible !",
 	  videosAreYouSureDelete: "Êtes-vous sûr de vouloir supprimer cette vidéo ?",
+	  videosDeleting: "Suppression de la vidéo...",
+	  videosDeleteSuccess: "Vidéo supprimée avec succès !",
+	  videosDeleteError: "Échec de la suppression de la vidéo",
+	  videosDeleteWarning: "Cette action ne peut pas être annulée.",
+	  videosDuplicating: "Duplication de la vidéo...",
+	  videosDuplicateSuccess: "Duplication de la vidéo démarrée avec succès !",
+	  videosDuplicateError: "Échec de la duplication de la vidéo",
+	  videosShareVideo: "Partager la vidéo",
+	  videosCopyLink: "Copier le lien",
+	  videosLinkCopied: "Lien copié dans le presse-papiers !",
+	  videosShareOnFacebook: "Partager sur Facebook",
+	  videosShareOnTwitter: "Partager sur Twitter",
+	  videosShareOnLinkedIn: "Partager sur LinkedIn",
+	  videosShareOnWhatsApp: "Partager sur WhatsApp",
+	  videosShareViaEmail: "Partager par e-mail",
 
 	  // Subscription Plan Features
 	  planFeature3VideosPerMonth: "3 vidéos par mois",
@@ -9688,6 +10014,7 @@ export const translations: Record<Language, Translations> = {
 	  settingsDeleteAccount: "Supprimer le compte",
 	  settingsPermanentlyDeleteAccount: "Supprimez votre compte définitivement",
 	  settingsDataExportFeatureComingSoon: "Fonctionnalité d'export de données bientôt disponible !",
+	  settingsExportError: "Échec de l'exportation des données. Veuillez réessayer.",
 	  settingsAreYouSureDeleteAccount: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.",
 	  settingsAccountDeletionFeatureComingSoon: "Fonctionnalité de suppression de compte bientôt disponible !",
 	  rememberMeSettings: "Paramètres de mémorisation",
@@ -9744,6 +10071,11 @@ export const translations: Record<Language, Translations> = {
 	  subscriptionUpgradePlanFunctionalityComingSoon: "Fonctionnalité de mise à niveau du plan bientôt disponible !",
 	  subscriptionUpgradeToPlanFunctionalityComingSoon: "Mise à niveau vers {plan} bientôt disponible !",
 	  subscriptionDownloadInvoiceFunctionalityComingSoon: "Fonctionnalité de téléchargement de facture bientôt disponible !",
+	  subscriptionConfirmCancel: "Êtes-vous sûr de vouloir annuler votre abonnement ? Il restera actif jusqu'à la fin de la période de facturation actuelle.",
+	  subscriptionConfirmReactivate: "Êtes-vous sûr de vouloir réactiver votre abonnement ?",
+	  subscriptionCanceledSuccessfully: "L'abonnement sera annulé à la fin de la période de facturation.",
+	  subscriptionReactivatedSuccessfully: "Abonnement réactivé avec succès !",
+	  subscriptionError: "Une erreur s'est produite. Veuillez réessayer.",
 
 	  // Billing Page
 	  billingErrorLoadingData: "Erreur lors du chargement des données de facturation",
@@ -9768,6 +10100,10 @@ export const translations: Record<Language, Translations> = {
 	  billingMonth: "Mois",
 	  billingTotalVideos: "Total des vidéos",
 	  billingAllTime: "Tout le temps",
+	  billingPaymentMethodAddedSuccessfully: "Méthode de paiement ajoutée avec succès !",
+	  billingPaymentMethodUpdatedSuccessfully: "Méthode de paiement mise à jour avec succès !",
+	  billingPaymentMethodAddCanceled: "L'ajout de la méthode de paiement a été annulé.",
+	  billingErrorAddingPaymentMethod: "Échec de l'ajout de la méthode de paiement. Veuillez réessayer.",
 	  billingStorageUsed: "Stockage utilisé",
 	  billingThisMonth: "ce mois-ci",
 	  billingBandwidth: "Bande passante",

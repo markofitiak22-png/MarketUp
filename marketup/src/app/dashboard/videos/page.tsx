@@ -29,6 +29,19 @@ export default function VideosPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareVideo, setShareVideo] = useState<Video | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [savingTitle, setSavingTitle] = useState(false);
+  const [notification, setNotification] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error' | 'info' | 'loading';
+  }>({ show: false, message: '', type: 'info' });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [videoToDelete, setVideoToDelete] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Fetch videos from API
   const fetchVideos = useCallback(async () => {
@@ -61,6 +74,16 @@ export default function VideosPage() {
     fetchVideos();
   }, [fetchVideos]);
 
+  // Auto-close notification after 3 seconds for success/info messages
+  useEffect(() => {
+    if (notification.show && (notification.type === 'success' || notification.type === 'info')) {
+      const timer = setTimeout(() => {
+        setNotification({ show: false, message: '', type: 'info' });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification.show, notification.type]);
+
 
   // Debounce search
   useEffect(() => {
@@ -86,24 +109,102 @@ export default function VideosPage() {
   const handleVideoAction = async (action: string, videoId: string) => {
     switch (action) {
       case 'download':
-        // TODO: Implement download functionality
-        console.log('Download video:', videoId);
-        alert(translations.videosDownloadFunctionalityComingSoon);
-        break;
-      case 'share':
-        // TODO: Implement share functionality
-        console.log('Share video:', videoId);
-        alert(translations.videosShareFunctionalityComingSoon);
-        break;
-      case 'delete':
-        if (confirm(translations.videosAreYouSureDelete)) {
-          // TODO: Implement delete functionality
-          alert(translations.videosDeleteFunctionalityComingSoon);
+        try {
+          const video = videos.find(v => v.id === videoId);
+          if (!video) {
+            setNotification({ show: true, message: translations.videosVideoNotFound || 'Video not found', type: 'error' });
+            return;
+          }
+
+          if (!video.videoUrl) {
+            setNotification({ show: true, message: translations.videosVideoNotAvailable || 'Video is not available for download', type: 'error' });
+            return;
+          }
+
+          // Fetch the video file as blob
+          const response = await fetch(video.videoUrl);
+          if (!response.ok) {
+            throw new Error('Failed to fetch video');
+          }
+
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          
+          // Determine file extension from content type or default to mp4
+          const contentType = response.headers.get('content-type') || 'video/mp4';
+          const extension = contentType.includes('webm') ? 'webm' : 
+                           contentType.includes('mov') ? 'mov' : 
+                           contentType.includes('avi') ? 'avi' : 'mp4';
+          
+          // Create a temporary link and trigger download
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${video.title || `video-${videoId}`}.${extension}`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Clean up the object URL
+          window.URL.revokeObjectURL(url);
+
+          // Optionally update download count (if you have an API for that)
+          // await fetch(`/api/dashboard/videos/${videoId}/download`, { method: 'POST' });
+        } catch (error) {
+          console.error('Error downloading video:', error);
+          setNotification({ show: true, message: translations.videosDownloadError || 'Failed to download video', type: 'error' });
         }
         break;
+      case 'share':
+        const videoToShare = videos.find(v => v.id === videoId);
+        if (!videoToShare) {
+          setNotification({ show: true, message: translations.videosVideoNotFound || 'Video not found', type: 'error' });
+          return;
+        }
+        if (!videoToShare.videoUrl) {
+          setNotification({ show: true, message: translations.videosVideoNotAvailable || 'Video is not available for sharing', type: 'error' });
+          return;
+        }
+        setShareVideo(videoToShare);
+        setEditingTitle(videoToShare.title);
+        setShowShareModal(true);
+        setLinkCopied(false);
+        break;
+      case 'delete':
+        setVideoToDelete(videoId);
+        setShowDeleteConfirm(true);
+        break;
       case 'duplicate':
-        // TODO: Implement duplicate functionality
-        alert(translations.videosDuplicateFunctionalityComingSoon);
+        try {
+          const videoToDuplicate = videos.find(v => v.id === videoId);
+          if (!videoToDuplicate) {
+            setNotification({ show: true, message: translations.videosVideoNotFound || 'Video not found', type: 'error' });
+            return;
+          }
+
+          // Show loading message
+          const loadingMessage = translations.videosDuplicating || 'Duplicating video...';
+          setNotification({ show: true, message: loadingMessage, type: 'loading' });
+
+          const response = await fetch('/api/dashboard/videos/duplicate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ videoId })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            setNotification({ show: true, message: translations.videosDuplicateSuccess || 'Video duplication started successfully!', type: 'success' });
+            // Refresh videos list
+            fetchVideos();
+          } else {
+            setNotification({ show: true, message: data.message || translations.videosDuplicateError || 'Failed to duplicate video', type: 'error' });
+          }
+        } catch (error) {
+          console.error('Error duplicating video:', error);
+          setNotification({ show: true, message: translations.videosDuplicateError || 'Failed to duplicate video', type: 'error' });
+        }
         break;
     }
   };
@@ -393,6 +494,449 @@ export default function VideosPage() {
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && shareVideo && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6 lg:p-8"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowShareModal(false);
+              setShareVideo(null);
+              setLinkCopied(false);
+              setEditingTitle("");
+            }
+          }}
+        >
+          <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto relative">
+            <div className="p-4 sm:p-6 border-b border-slate-700/60">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                  {translations.videosShareVideo}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowShareModal(false);
+                    setShareVideo(null);
+                    setLinkCopied(false);
+                    setEditingTitle("");
+                  }}
+                  className="p-2 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-all"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              {/* Video Info */}
+              <div className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/60">
+                <label className="block text-sm text-white/60 mb-2">Title</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editingTitle}
+                    onChange={(e) => setEditingTitle(e.target.value)}
+                    onKeyDown={async (e) => {
+                      if (e.key === 'Enter') {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    onBlur={async () => {
+                      if (editingTitle.trim() && editingTitle !== shareVideo.title) {
+                        setSavingTitle(true);
+                        try {
+                          const response = await fetch('/api/dashboard/videos', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                              videoId: shareVideo.id,
+                              title: editingTitle.trim()
+                            })
+                          });
+                          const data = await response.json();
+                          if (data.success) {
+                            setShareVideo({ ...shareVideo, title: editingTitle.trim() });
+                            // Update video in the list
+                            setVideos(videos.map(v => 
+                              v.id === shareVideo.id 
+                                ? { ...v, title: editingTitle.trim() }
+                                : v
+                            ));
+                          }
+                        } catch (error) {
+                          console.error('Error updating title:', error);
+                          setEditingTitle(shareVideo.title); // Revert on error
+                        } finally {
+                          setSavingTitle(false);
+                        }
+                      }
+                    }}
+                    className="flex-1 px-3 py-2 rounded-lg border border-slate-700/60 bg-slate-900/60 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                    disabled={savingTitle}
+                  />
+                  {savingTitle && (
+                    <div className="flex items-center px-2">
+                      <svg className="animate-spin h-4 w-4 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Copy Link Section */}
+              <div>
+                <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                  {translations.videosCopyLink}
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={shareVideo.videoUrl}
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                  />
+                  <button
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(shareVideo.videoUrl || '');
+                        setLinkCopied(true);
+                        setTimeout(() => setLinkCopied(false), 2000);
+                      } catch (error) {
+                        console.error('Failed to copy link:', error);
+                        // Fallback for older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = shareVideo.videoUrl || '';
+                        textArea.style.position = 'fixed';
+                        textArea.style.opacity = '0';
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        try {
+                          document.execCommand('copy');
+                          setLinkCopied(true);
+                          setTimeout(() => setLinkCopied(false), 2000);
+                        } catch (err) {
+                          console.error('Fallback copy failed:', err);
+                        }
+                        document.body.removeChild(textArea);
+                      }
+                    }}
+                    className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 ${
+                      linkCopied
+                        ? 'bg-green-500/20 border border-green-500/30 text-green-400'
+                        : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white border border-indigo-500/30'
+                    }`}
+                  >
+                    {linkCopied ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {translations.videosLinkCopied}
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        {translations.videosCopyLink}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Social Share Buttons */}
+              <div>
+                <label className="block text-sm sm:text-base font-bold text-white mb-3">
+                  {translations.videosShare || "Share on"}
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                  {/* Facebook */}
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(shareVideo.videoUrl || '');
+                      const text = encodeURIComponent(shareVideo.title);
+                      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
+                    }}
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg text-blue-400 hover:text-blue-300 transition-all duration-300 text-xs sm:text-sm font-semibold"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    <span className="hidden sm:inline">Facebook</span>
+                  </button>
+
+                  {/* Twitter */}
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(shareVideo.videoUrl || '');
+                      const text = encodeURIComponent(shareVideo.title);
+                      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+                    }}
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/30 rounded-lg text-sky-400 hover:text-sky-300 transition-all duration-300 text-xs sm:text-sm font-semibold"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                    <span className="hidden sm:inline">Twitter</span>
+                  </button>
+
+                  {/* LinkedIn */}
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(shareVideo.videoUrl || '');
+                      const text = encodeURIComponent(shareVideo.title);
+                      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+                    }}
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-blue-700/20 hover:bg-blue-700/30 border border-blue-600/30 rounded-lg text-blue-400 hover:text-blue-300 transition-all duration-300 text-xs sm:text-sm font-semibold"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    <span className="hidden sm:inline">LinkedIn</span>
+                  </button>
+
+                  {/* WhatsApp */}
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(shareVideo.videoUrl || '');
+                      const text = encodeURIComponent(`${shareVideo.title} - ${shareVideo.videoUrl}`);
+                      window.open(`https://wa.me/?text=${text}`, '_blank', 'width=600,height=400');
+                    }}
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded-lg text-green-400 hover:text-green-300 transition-all duration-300 text-xs sm:text-sm font-semibold"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    <span className="hidden sm:inline">WhatsApp</span>
+                  </button>
+
+                  {/* Email */}
+                  <button
+                    onClick={() => {
+                      const subject = encodeURIComponent(shareVideo.title);
+                      const body = encodeURIComponent(`Check out this video: ${shareVideo.videoUrl}`);
+                      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+                    }}
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/20 hover:bg-slate-600/30 border border-slate-500/30 rounded-lg text-slate-400 hover:text-slate-300 transition-all duration-300 text-xs sm:text-sm font-semibold"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span className="hidden sm:inline">Email</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notification Modal */}
+      {notification.show && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6 lg:p-8"
+          onClick={() => {
+            if (notification.type !== 'loading') {
+              setNotification({ show: false, message: '', type: 'info' });
+            }
+          }}
+        >
+          <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl max-w-md w-full relative">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-start gap-4">
+                {/* Icon */}
+                <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${
+                  notification.type === 'success' ? 'bg-green-500/20' :
+                  notification.type === 'error' ? 'bg-red-500/20' :
+                  notification.type === 'loading' ? 'bg-indigo-500/20' :
+                  'bg-blue-500/20'
+                }`}>
+                  {notification.type === 'success' ? (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : notification.type === 'error' ? (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  ) : notification.type === 'loading' ? (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )}
+                </div>
+
+                {/* Message */}
+                <div className="flex-1">
+                  <p className={`text-sm sm:text-base font-medium ${
+                    notification.type === 'success' ? 'text-green-400' :
+                    notification.type === 'error' ? 'text-red-400' :
+                    notification.type === 'loading' ? 'text-indigo-400' :
+                    'text-blue-400'
+                  }`}>
+                    {notification.message}
+                  </p>
+                </div>
+
+                {/* Close button (only for non-loading notifications) */}
+                {notification.type !== 'loading' && (
+                  <button
+                    onClick={() => setNotification({ show: false, message: '', type: 'info' })}
+                    className="flex-shrink-0 p-1 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-all"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && videoToDelete && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6 lg:p-8"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !deleting) {
+              setShowDeleteConfirm(false);
+              setVideoToDelete(null);
+            }
+          }}
+        >
+          <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl max-w-md w-full relative">
+            <div className="p-4 sm:p-6 border-b border-slate-700/60">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                    {translations.videosDelete || "Delete Video"}
+                  </h2>
+                </div>
+                {!deleting && (
+                  <button
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setVideoToDelete(null);
+                    }}
+                    className="p-2 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-all"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              <p className="text-white/80 text-sm sm:text-base">
+                {translations.videosAreYouSureDelete}
+              </p>
+              <p className="text-white/60 text-xs sm:text-sm">
+                {translations.videosDeleteWarning || "This action cannot be undone."}
+              </p>
+
+              <div className="flex gap-3 sm:gap-4 pt-4">
+                <button
+                  onClick={async () => {
+                    if (!videoToDelete) return;
+                    
+                    setDeleting(true);
+                    try {
+                      const response = await fetch(`/api/dashboard/videos?videoId=${videoToDelete}`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+                      });
+
+                      const data = await response.json();
+
+                      if (data.success) {
+                        setShowDeleteConfirm(false);
+                        setVideoToDelete(null);
+                        setNotification({ 
+                          show: true, 
+                          message: translations.videosDeleteSuccess || 'Video deleted successfully!', 
+                          type: 'success' 
+                        });
+                        // Refresh videos list
+                        fetchVideos();
+                      } else {
+                        setNotification({ 
+                          show: true, 
+                          message: data.message || translations.videosDeleteError || 'Failed to delete video', 
+                          type: 'error' 
+                        });
+                      }
+                    } catch (error) {
+                      console.error('Error deleting video:', error);
+                      setNotification({ 
+                        show: true, 
+                        message: translations.videosDeleteError || 'Failed to delete video', 
+                        type: 'error' 
+                      });
+                    } finally {
+                      setDeleting(false);
+                    }
+                  }}
+                  disabled={deleting}
+                  className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/30 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {deleting ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>{translations.videosDeleting || "Deleting..."}</span>
+                    </>
+                  ) : (
+                    <span>{translations.videosDelete || "Delete"}</span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setVideoToDelete(null);
+                  }}
+                  disabled={deleting}
+                  className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/40 border border-slate-700/60 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl hover:bg-slate-800/60 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {translations.profileCancel || "Cancel"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

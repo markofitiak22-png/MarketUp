@@ -22,6 +22,14 @@ export default function ProfileClient({ initialData, userStats }: ProfileClientP
   const { translations } = useTranslations();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: initialData.name || "",
     email: initialData.email || "",
@@ -68,6 +76,57 @@ export default function ProfileClient({ initialData, userStats }: ProfileClientP
       console.error("Error updating profile:", error);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError("");
+    
+    // Validation
+    if (passwordForm.newPassword.length < 6) {
+      setPasswordError(translations.profilePasswordMinLength || "Password must be at least 6 characters");
+      return;
+    }
+    
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError(translations.profilePasswordsDoNotMatch || "Passwords do not match");
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const response = await fetch("/api/password/change", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.ok) {
+        setShowChangePassword(false);
+        setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        alert(translations.profilePasswordChangedSuccessfully || "Password changed successfully!");
+      } else {
+        const errorMessages: Record<string, string> = {
+          "unauthorized": translations.profileUnauthorized || "Unauthorized",
+          "invalid_input": translations.profileInvalidInput || "Invalid input",
+          "no_password_set": translations.profileNoPasswordSet || "No password set",
+          "wrong_password": translations.profileWrongPassword || "Current password is incorrect",
+          "server_error": translations.profileServerError || "Server error"
+        };
+        setPasswordError(errorMessages[data.error] || translations.profileFailedToChangePassword || "Failed to change password");
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setPasswordError(translations.profileErrorChangingPassword || "Error changing password");
+    } finally {
+      setPasswordLoading(false);
     }
   };
 
@@ -425,7 +484,14 @@ export default function ProfileClient({ initialData, userStats }: ProfileClientP
               <div className="relative z-10">
                 <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-3 sm:mb-4">{translations.profileAccountSettings}</h3>
                 <div className="space-y-2">
-                  <button className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-slate-800/40 border border-slate-700/60 hover:border-indigo-500/40 hover:bg-slate-800/60 transition-all duration-300 group">
+                  <button 
+                    onClick={() => {
+                      setShowChangePassword(true);
+                      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                      setPasswordError("");
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-slate-800/40 border border-slate-700/60 hover:border-indigo-500/40 hover:bg-slate-800/60 transition-all duration-300 group"
+                  >
                     <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                       <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -441,46 +507,140 @@ export default function ProfileClient({ initialData, userStats }: ProfileClientP
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
-
-                  <button className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-slate-800/40 border border-slate-700/60 hover:border-green-500/40 hover:bg-slate-800/60 transition-all duration-300 group">
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                      </div>
-                      <div className="text-left min-w-0">
-                        <div className="font-semibold text-white text-xs sm:text-sm truncate">{translations.profileTwoFactorAuth}</div>
-                        <div className="text-[10px] sm:text-xs text-white/60 truncate">{translations.profileAddExtraSecurity}</div>
-                      </div>
-                    </div>
-                    <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/40 group-hover:text-green-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-
-                  <button className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-slate-800/40 border border-slate-700/60 hover:border-red-500/40 hover:bg-red-500/10 transition-all duration-300 group">
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </div>
-                      <div className="text-left min-w-0">
-                        <div className="font-semibold text-red-400 text-xs sm:text-sm group-hover:text-red-300 truncate">{translations.profileDeleteAccount}</div>
-                        <div className="text-[10px] sm:text-xs text-white/60 truncate">{translations.profilePermanentlyDeleteAccount}</div>
-                      </div>
-                    </div>
-                    <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/40 group-hover:text-red-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      {showChangePassword && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6 lg:p-8"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowChangePassword(false);
+              setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+              setPasswordError("");
+            }
+          }}
+        >
+          <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto relative">
+            <div className="p-4 sm:p-6 border-b border-slate-700/60">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                  {translations.profileChangePassword}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowChangePassword(false);
+                    setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                    setPasswordError("");
+                  }}
+                  className="p-2 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-all"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={handleChangePassword} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              {passwordError && (
+                <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                  {passwordError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                  {translations.profileCurrentPassword || "Current Password"} *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={passwordForm.currentPassword}
+                  onChange={(e) =>
+                    setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
+                  }
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                  placeholder={translations.profileEnterCurrentPassword || "Enter current password"}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                  {translations.profileNewPassword || "New Password"} *
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={passwordForm.newPassword}
+                  onChange={(e) =>
+                    setPasswordForm({ ...passwordForm, newPassword: e.target.value })
+                  }
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                  placeholder={translations.profileEnterNewPassword || "Enter new password (min 6 characters)"}
+                />
+                <p className="text-xs text-white/60 mt-1">
+                  {translations.profilePasswordMinLength || "Minimum 6 characters"}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                  {translations.profileConfirmPassword || "Confirm New Password"} *
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) =>
+                    setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })
+                  }
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                  placeholder={translations.profileConfirmNewPassword || "Confirm new password"}
+                />
+              </div>
+
+              <div className="flex gap-3 sm:gap-4 pt-4">
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {passwordLoading ? (translations.profileChanging || "Changing...") : (translations.profileChangePassword || "Change Password")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowChangePassword(false);
+                    setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                    setPasswordError("");
+                  }}
+                  className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/40 border border-slate-700/60 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl hover:bg-slate-800/60 transition-all duration-300 hover:scale-105"
+                >
+                  {translations.profileCancel || "Cancel"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

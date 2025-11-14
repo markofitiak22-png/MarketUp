@@ -97,3 +97,111 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!(session as any)?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { videoId, title } = body;
+
+    if (!videoId || !title) {
+      return NextResponse.json(
+        { error: "Video ID and title are required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify video belongs to user
+    const video = await prisma.video.findFirst({
+      where: {
+        id: videoId,
+        userId: (session as any).user.id
+      }
+    });
+
+    if (!video) {
+      return NextResponse.json(
+        { error: "Video not found" },
+        { status: 404 }
+      );
+    }
+
+    // Update video title
+    const updatedVideo = await prisma.video.update({
+      where: { id: videoId },
+      data: { title }
+    });
+
+    return NextResponse.json({
+      success: true,
+      video: {
+        id: updatedVideo.id,
+        title: updatedVideo.title
+      }
+    });
+
+  } catch (error) {
+    console.error("Update video error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!(session as any)?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const videoId = searchParams.get('videoId');
+
+    if (!videoId) {
+      return NextResponse.json(
+        { error: "Video ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify video belongs to user
+    const video = await prisma.video.findFirst({
+      where: {
+        id: videoId,
+        userId: (session as any).user.id
+      }
+    });
+
+    if (!video) {
+      return NextResponse.json(
+        { error: "Video not found" },
+        { status: 404 }
+      );
+    }
+
+    // Delete video
+    await prisma.video.delete({
+      where: { id: videoId }
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Video deleted successfully"
+    });
+
+  } catch (error) {
+    console.error("Delete video error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

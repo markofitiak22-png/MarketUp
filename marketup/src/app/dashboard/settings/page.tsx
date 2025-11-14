@@ -61,6 +61,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [isExporting, setIsExporting] = useState(false);
   const isInitialLoadRef = useRef(true);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -629,10 +630,36 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <button 
-                    className={item.buttonClass}
+                    className={`${item.buttonClass} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
+                    disabled={isExporting}
                     onClick={async () => {
                       if (item.title === translations.settingsExportData) {
-                        alert(translations.settingsDataExportFeatureComingSoon);
+                        try {
+                          setIsExporting(true);
+                          const response = await fetch('/api/dashboard/export-data', {
+                            method: 'GET',
+                            credentials: 'include',
+                          });
+
+                          if (!response.ok) {
+                            throw new Error('Export failed');
+                          }
+
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `marketup-data-export-${new Date().toISOString().split('T')[0]}.pdf`;
+                          document.body.appendChild(a);
+                          a.click();
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        } catch (error) {
+                          console.error('Export error:', error);
+                          alert(translations.settingsExportError || 'Failed to export data. Please try again.');
+                        } finally {
+                          setIsExporting(false);
+                        }
                       } else if (item.title === translations.settingsDeleteAccount) {
                         const confirmed = confirm(
                           translations.settingsAreYouSureDeleteAccount || 
@@ -668,7 +695,17 @@ export default function SettingsPage() {
                       }
                     }}
                   >
-                    {item.buttonText}
+                    {isExporting && item.title === translations.settingsExportData ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Exporting...</span>
+                      </>
+                    ) : (
+                      item.buttonText
+                    )}
                   </button>
                 </div>
               ))}

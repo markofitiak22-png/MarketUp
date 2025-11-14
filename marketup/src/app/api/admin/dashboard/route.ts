@@ -48,7 +48,8 @@ export async function GET(request: NextRequest) {
       revenueThisMonth,
       revenueLastMonth,
       recentUsers,
-      recentVideos
+      recentVideos,
+      recentSubscriptions
     ] = await Promise.all([
       // Total counts
       prisma.user.count(),
@@ -119,6 +120,22 @@ export async function GET(request: NextRequest) {
         select: {
           id: true,
           title: true,
+          status: true,
+          createdAt: true,
+          user: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        }
+      }),
+      prisma.subscription.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          tier: true,
           status: true,
           createdAt: true,
           user: {
@@ -230,7 +247,25 @@ export async function GET(request: NextRequest) {
         timestamp: video.createdAt,
         icon: 'video',
         status: video.status
-      }))
+      })),
+      ...recentSubscriptions.map(subscription => {
+        // Map tier to plan name
+        const planNameMap: Record<string, string> = {
+          'BASIC': 'Free',
+          'STANDARD': 'Pro',
+          'PREMIUM': 'Premium'
+        };
+        const planName = planNameMap[subscription.tier] || subscription.tier;
+        
+        return {
+          type: 'subscription_purchased',
+          title: 'Subscription purchased',
+          description: `${subscription.user?.name || subscription.user?.email || 'Unknown'} purchased ${planName} plan`,
+          timestamp: subscription.createdAt,
+          icon: 'subscription',
+          status: subscription.status
+        };
+      })
     ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
 
     return NextResponse.json({

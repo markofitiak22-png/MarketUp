@@ -908,6 +908,8 @@ export interface Translations {
   adminOverview: string;
   adminOverviewDescription: string;
   adminExportReport: string;
+  adminExportData: string;
+  adminExportFailed: string;
   adminRefreshing: string;
   adminRefreshData: string;
   adminTotalUsers: string;
@@ -985,6 +987,16 @@ export interface Translations {
   adminCreateNewUser: string;
   adminUpdateList: string;
   adminUsers: string;
+  adminUserCreatedSuccessfully: string;
+  adminFailedToCreateUser: string;
+  adminErrorCreatingUser: string;
+  adminEnterName: string;
+  adminEnterEmail: string;
+  adminPassword: string;
+  adminEnterPassword: string;
+  adminPasswordMinLength: string;
+  adminCreating: string;
+  adminCreateUser: string;
   
   // Admin Videos Management
   adminVideosModeration: string;
@@ -2106,6 +2118,8 @@ export const translations: Record<Language, Translations> = {
 	  adminOverview: "Overview of your platform metrics and analytics",
 	  adminOverviewDescription: "Overview of your platform metrics and analytics",
 	  adminExportReport: "Export Report",
+	  adminExportData: "Export data",
+	  adminExportFailed: "Failed to export data. Please try again.",
 	  adminRefreshing: "Refreshing...",
 	  adminRefreshData: "Refresh Data",
 	  adminTotalUsers: "Total Users",
@@ -2183,6 +2197,16 @@ export const translations: Record<Language, Translations> = {
 	  adminCreateNewUser: "Create new user",
 	  adminUpdateList: "Update list",
 	  adminUsers: "users",
+	  adminUserCreatedSuccessfully: "User created successfully!",
+	  adminFailedToCreateUser: "Failed to create user",
+	  adminErrorCreatingUser: "Error creating user",
+	  adminEnterName: "Enter user name",
+	  adminEnterEmail: "Enter user email",
+	  adminPassword: "Password",
+	  adminEnterPassword: "Enter password (min 8 characters)",
+	  adminPasswordMinLength: "Minimum 8 characters",
+	  adminCreating: "Creating...",
+	  adminCreateUser: "Create User",
 
 	  // Admin Videos Management
 	  adminVideosModeration: "Video Moderation",
@@ -3363,6 +3387,8 @@ export const translations: Record<Language, Translations> = {
     adminOverview: "Översikt av dina plattformsmetriker och analyser",
     adminOverviewDescription: "Översikt av dina plattformsmetriker och analyser",
     adminExportReport: "Exportera rapport",
+    adminExportData: "Exportera data",
+    adminExportFailed: "Kunde inte exportera data. Försök igen.",
     adminRefreshing: "Uppdaterar...",
     adminRefreshData: "Uppdatera data",
     adminTotalUsers: "Totalt antal användare",
@@ -3440,6 +3466,16 @@ export const translations: Record<Language, Translations> = {
     adminCreateNewUser: "Skapa ny användare",
     adminUpdateList: "Uppdatera lista",
     adminUsers: "användare",
+    adminUserCreatedSuccessfully: "Användare skapad framgångsrikt!",
+    adminFailedToCreateUser: "Misslyckades att skapa användare",
+    adminErrorCreatingUser: "Fel vid skapande av användare",
+    adminEnterName: "Ange användarnamn",
+    adminEnterEmail: "Ange användarens e-post",
+    adminPassword: "Lösenord",
+    adminEnterPassword: "Ange lösenord (min 8 tecken)",
+    adminPasswordMinLength: "Minst 8 tecken",
+    adminCreating: "Skapar...",
+    adminCreateUser: "Skapa användare",
     
     // Admin Videos Management
     adminVideosModeration: "Videomoderering",
@@ -4613,6 +4649,8 @@ export const translations: Record<Language, Translations> = {
     adminOverview: "Огляд метрик та аналітики вашої платформи",
     adminOverviewDescription: "Огляд метрик та аналітики вашої платформи",
     adminExportReport: "Експорт звіту",
+    adminExportData: "Експортувати дані",
+    adminExportFailed: "Не вдалося експортувати дані. Спробуйте ще раз.",
     adminRefreshing: "Оновлення...",
     adminRefreshData: "Оновити дані",
     adminTotalUsers: "Загальна кількість користувачів",
@@ -4690,6 +4728,16 @@ export const translations: Record<Language, Translations> = {
     adminCreateNewUser: "Створити нового користувача",
     adminUpdateList: "Оновити список",
     adminUsers: "користувачів",
+    adminUserCreatedSuccessfully: "Користувача успішно створено!",
+    adminFailedToCreateUser: "Не вдалося створити користувача",
+    adminErrorCreatingUser: "Помилка створення користувача",
+    adminEnterName: "Введіть ім'я користувача",
+    adminEnterEmail: "Введіть електронну пошту користувача",
+    adminPassword: "Пароль",
+    adminEnterPassword: "Введіть пароль (мін. 8 символів)",
+    adminPasswordMinLength: "Мінімум 8 символів",
+    adminCreating: "Створення...",
+    adminCreateUser: "Створити користувача",
     
     // Admin Videos Management
     adminVideosModeration: "Модерація Відео",
@@ -5863,6 +5911,8 @@ export const translations: Record<Language, Translations> = {
     adminOverview: "Platform metriklerinizin ve analizlerinizin genel bakışı",
     adminOverviewDescription: "Platform metriklerinizin ve analizlerinizin genel bakışı",
     adminExportReport: "Raporu Dışa Aktar",
+    adminExportData: "Verileri dışa aktar",
+    adminExportFailed: "Veriler dışa aktarılamadı. Lütfen tekrar deneyin.",
     adminRefreshing: "Yenileniyor...",
     adminRefreshData: "Verileri Yenile",
     adminTotalUsers: "Toplam Kullanıcı",
@@ -5940,6 +5990,16 @@ export const translations: Record<Language, Translations> = {
     adminCreateNewUser: "Yeni kullanıcı oluştur",
     adminUpdateList: "Listeyi güncelle",
     adminUsers: "kullanıcılar",
+    adminUserCreatedSuccessfully: "Kullanıcı başarıyla oluşturuldu!",
+    adminFailedToCreateUser: "Kullanıcı oluşturulamadı",
+    adminErrorCreatingUser: "Kullanıcı oluşturulurken hata",
+    adminEnterName: "Kullanıcı adını girin",
+    adminEnterEmail: "Kullanıcı e-postasını girin",
+    adminPassword: "Şifre",
+    adminEnterPassword: "Şifre girin (min 8 karakter)",
+    adminPasswordMinLength: "Minimum 8 karakter",
+    adminCreating: "Oluşturuluyor...",
+    adminCreateUser: "Kullanıcı Oluştur",
     
     // Admin Videos Management
     adminVideosModeration: "Video Moderasyonu",
@@ -7114,6 +7174,8 @@ export const translations: Record<Language, Translations> = {
     adminOverview: "نظرة عامة على مقاييس ومنطقيات منصتك",
     adminOverviewDescription: "نظرة عامة على مقاييس ومنطقيات منصتك",
     adminExportReport: "تصدير التقرير",
+    adminExportData: "تصدير البيانات",
+    adminExportFailed: "فشل تصدير البيانات. يرجى المحاولة مرة أخرى.",
     adminRefreshing: "جاري التحديث...",
     adminRefreshData: "تحديث البيانات",
     adminTotalUsers: "إجمالي المستخدمين",
@@ -7191,6 +7253,16 @@ export const translations: Record<Language, Translations> = {
     adminCreateNewUser: "إنشاء مستخدم جديد",
     adminUpdateList: "تحديث القائمة",
     adminUsers: "المستخدمون",
+    adminUserCreatedSuccessfully: "تم إنشاء المستخدم بنجاح!",
+    adminFailedToCreateUser: "فشل في إنشاء المستخدم",
+    adminErrorCreatingUser: "خطأ في إنشاء المستخدم",
+    adminEnterName: "أدخل اسم المستخدم",
+    adminEnterEmail: "أدخل بريد المستخدم الإلكتروني",
+    adminPassword: "كلمة المرور",
+    adminEnterPassword: "أدخل كلمة المرور (8 أحرف على الأقل)",
+    adminPasswordMinLength: "8 أحرف على الأقل",
+    adminCreating: "جارٍ الإنشاء...",
+    adminCreateUser: "إنشاء مستخدم",
     
     // Admin Videos Management
     adminVideosModeration: "إدارة الفيديوهات",
@@ -8434,6 +8506,8 @@ export const translations: Record<Language, Translations> = {
 	  // Admin Dashboard
 	  adminOverviewDescription: "Übersicht über Ihre Plattform-Metriken und Analysen",
 	  adminExportReport: "Bericht exportieren",
+	  adminExportData: "Daten exportieren",
+	  adminExportFailed: "Daten konnten nicht exportiert werden. Bitte versuchen Sie es erneut.",
 	  adminRefreshing: "Wird aktualisiert...",
 	  adminRefreshData: "Daten aktualisieren",
 	  adminTotalUsers: "Gesamtbenutzer",
@@ -8508,6 +8582,16 @@ export const translations: Record<Language, Translations> = {
 	  adminCreateNewUser: "Neuen Benutzer erstellen",
 	  adminUpdateList: "Liste aktualisieren",
 	  adminUsers: "Benutzer",
+	  adminUserCreatedSuccessfully: "Benutzer erfolgreich erstellt!",
+	  adminFailedToCreateUser: "Fehler beim Erstellen des Benutzers",
+	  adminErrorCreatingUser: "Fehler beim Erstellen des Benutzers",
+	  adminEnterName: "Benutzernamen eingeben",
+	  adminEnterEmail: "E-Mail-Adresse des Benutzers eingeben",
+	  adminPassword: "Passwort",
+	  adminEnterPassword: "Passwort eingeben (min. 8 Zeichen)",
+	  adminPasswordMinLength: "Mindestens 8 Zeichen",
+	  adminCreating: "Wird erstellt...",
+	  adminCreateUser: "Benutzer erstellen",
 
 	  // Admin Videos Moderation
 	  adminVideosModeration: "Video-Moderation",
@@ -9733,6 +9817,8 @@ export const translations: Record<Language, Translations> = {
 	  // Admin Dashboard
 	  adminOverviewDescription: "Aperçu de vos métriques et analyses de plateforme",
 	  adminExportReport: "Exporter le rapport",
+	  adminExportData: "Exporter les données",
+	  adminExportFailed: "Échec de l'exportation des données. Veuillez réessayer.",
 	  adminRefreshing: "Actualisation en cours...",
 	  adminRefreshData: "Actualiser les données",
 	  adminTotalUsers: "Utilisateurs totaux",
@@ -9805,6 +9891,16 @@ export const translations: Record<Language, Translations> = {
 	  adminCreateNewUser: "Créer un nouvel utilisateur",
 	  adminUpdateList: "Mettre à jour la liste",
 	  adminUsers: "utilisateurs",
+	  adminUserCreatedSuccessfully: "Utilisateur créé avec succès !",
+	  adminFailedToCreateUser: "Échec de la création de l'utilisateur",
+	  adminErrorCreatingUser: "Erreur lors de la création de l'utilisateur",
+	  adminEnterName: "Entrez le nom d'utilisateur",
+	  adminEnterEmail: "Entrez l'e-mail de l'utilisateur",
+	  adminPassword: "Mot de passe",
+	  adminEnterPassword: "Entrez le mot de passe (min 8 caractères)",
+	  adminPasswordMinLength: "Minimum 8 caractères",
+	  adminCreating: "Création en cours...",
+	  adminCreateUser: "Créer un utilisateur",
 
 	  // Admin Videos Moderation
 	  adminVideosModeration: "Modération vidéo",

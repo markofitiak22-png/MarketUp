@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { hash } from "bcrypt";
+import { z } from "zod";
 
 export async function GET(request: NextRequest) {
   try {
@@ -286,6 +288,81 @@ export async function PUT(request: NextRequest) {
     console.error("Update user error:", error);
     return NextResponse.json(
       { error: "Failed to update user" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session || !(session as any).user || !((session as any).user as any).id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { name, email, password } = body;
+
+    // Validate input
+    const schema = z.object({
+      name: z.string().min(2).max(50),
+      email: z.string().email(),
+      password: z.string().min(8)
+    });
+
+    const parsed = schema.safeParse({ name, email, password });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.issues },
+        { status: 400 }
+      );
+    }
+
+    // Check if user already exists
+    const existing = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "User with this email already exists" },
+        { status: 409 }
+      );
+    }
+
+    // Hash password
+    const passwordHash = await hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        passwordHash
+      }
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt
+      }
+    });
+
+  } catch (error: any) {
+    console.error("Create user error:", error);
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { error: "User with this email already exists" },
+        { status: 409 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Failed to create user" },
       { status: 500 }
     );
   }

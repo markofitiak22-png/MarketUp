@@ -86,6 +86,32 @@ export default function AdminDashboard() {
     return new Intl.NumberFormat('en-US').format(num);
   };
 
+  // Handle export
+  const handleExport = async () => {
+    try {
+      const response = await fetch('/api/admin/export', {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `marketup-report-${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export error:', error);
+      alert(translations.adminExportFailed || 'Failed to export data. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0b0b0b] relative overflow-hidden">
@@ -500,7 +526,7 @@ export default function AdminDashboard() {
               <h3 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4">{translations.adminActions || "Quick Actions"}</h3>
               <div className="space-y-2 sm:space-y-3">
                 <button
-                  onClick={() => alert('Export feature coming soon!')}
+                  onClick={handleExport}
                   className="w-full flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-slate-800/40 rounded-lg sm:rounded-xl border border-slate-700/60 hover:border-indigo-500/40 hover:bg-slate-800/60 transition-all duration-300 group"
                 >
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
@@ -510,7 +536,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="text-xs sm:text-sm font-semibold text-white truncate">{translations.adminExportReport}</p>
-                    <p className="text-[10px] sm:text-xs text-white/60 truncate">Export data</p>
+                    <p className="text-[10px] sm:text-xs text-white/60 truncate">{translations.adminExportData || "Export data"}</p>
                   </div>
                 </button>
                 
@@ -560,6 +586,7 @@ export default function AdminDashboard() {
                     <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center ${
                       activity.icon === 'user' ? 'bg-gradient-to-br from-green-500 to-emerald-500' :
                       activity.icon === 'video' ? 'bg-gradient-to-br from-yellow-500 to-orange-500' :
+                      activity.icon === 'subscription' ? 'bg-gradient-to-br from-blue-500 to-cyan-500' :
                       'bg-gradient-to-br from-indigo-500 to-purple-500'
                     }`}>
                       {activity.icon === 'user' ? (
@@ -573,6 +600,10 @@ export default function AdminDashboard() {
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
                           <polygon points="23 7 16 12 23 17 23 7"/>
                           <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                        </svg>
+                      ) : activity.icon === 'subscription' ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
+                          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
                       ) : (
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">

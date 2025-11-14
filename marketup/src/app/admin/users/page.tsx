@@ -45,6 +45,14 @@ export default function UsersPage() {
     subscription: "Basic"
   });
   const [showBulkActions, setShowBulkActions] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
+  const [createError, setCreateError] = useState("");
+  const [createLoading, setCreateLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -278,6 +286,40 @@ export default function UsersPage() {
     setShowBulkActions(false);
   };
 
+  // Handle create user
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateError("");
+    setCreateLoading(true);
+
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify(createForm),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setShowCreateModal(false);
+        setCreateForm({ name: "", email: "", password: "" });
+        fetchUsers(currentPage);
+        alert(translations.adminUserCreatedSuccessfully || "User created successfully!");
+      } else {
+        setCreateError(data.error || translations.adminFailedToCreateUser || "Failed to create user");
+      }
+    } catch (error) {
+      console.error('Error creating user:', error);
+      setCreateError(translations.adminErrorCreatingUser || "Error creating user");
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   // Users are already filtered and sorted by the API
   const filteredUsers = users;
 
@@ -473,7 +515,11 @@ export default function UsersPage() {
             </div>
 
               <button
-                onClick={() => alert('Add user feature coming soon!')}
+                onClick={() => {
+                  setCreateForm({ name: "", email: "", password: "" });
+                  setCreateError("");
+                  setShowCreateModal(true);
+                }}
                 className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105 whitespace-nowrap"
               >
                 {translations.adminAddUser || "Add User"}
@@ -685,7 +731,11 @@ export default function UsersPage() {
               <h3 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4">{translations.adminQuickActions || "Quick Actions"}</h3>
               <div className="space-y-2 sm:space-y-3">
                 <button
-                  onClick={() => alert('Add user feature coming soon!')}
+                  onClick={() => {
+                    setCreateForm({ name: "", email: "", password: "" });
+                    setCreateError("");
+                    setShowCreateModal(true);
+                  }}
                   className="w-full flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-slate-800/40 rounded-lg sm:rounded-xl border border-slate-700/60 hover:border-indigo-500/40 hover:bg-slate-800/60 transition-all duration-300 group"
                 >
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
@@ -860,6 +910,135 @@ export default function UsersPage() {
                 </button>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Create User Modal */}
+        {showCreateModal && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6 lg:p-8"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setShowCreateModal(false);
+                setCreateForm({ name: "", email: "", password: "" });
+                setCreateError("");
+              }
+            }}
+          >
+            <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+              <div className="p-4 sm:p-6 border-b border-slate-700/60">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                    {translations.adminAddUser || "Add User"}
+                  </h2>
+                  <button
+                    onClick={() => {
+                      setShowCreateModal(false);
+                      setCreateForm({ name: "", email: "", password: "" });
+                      setCreateError("");
+                    }}
+                    className="p-2 text-white/60 hover:text-white hover:bg-slate-800/60 rounded-lg transition-all"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleCreateUser} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                {createError && (
+                  <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                    {createError}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                    {translations.adminName || "Name"} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    minLength={2}
+                    maxLength={50}
+                    value={createForm.name}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, name: e.target.value })
+                    }
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                    placeholder={translations.adminEnterName || "Enter user name"}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                    {translations.adminEmail || "Email"} *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={createForm.email}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, email: e.target.value })
+                    }
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                    placeholder={translations.adminEnterEmail || "Enter user email"}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm sm:text-base font-bold text-white mb-2">
+                    {translations.adminPassword || "Password"} *
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    minLength={8}
+                    value={createForm.password}
+                    onChange={(e) =>
+                      setCreateForm({ ...createForm, password: e.target.value })
+                    }
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+                    placeholder={translations.adminEnterPassword || "Enter password (min 8 characters)"}
+                  />
+                  <p className="text-xs text-white/60 mt-1">
+                    {translations.adminPasswordMinLength || "Minimum 8 characters"}
+                  </p>
+                </div>
+
+                <div className="flex gap-3 sm:gap-4 pt-4">
+                  <button
+                    type="submit"
+                    disabled={createLoading}
+                    className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {createLoading ? (translations.adminCreating || "Creating...") : (translations.adminCreateUser || "Create User")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCreateModal(false);
+                      setCreateForm({ name: "", email: "", password: "" });
+                      setCreateError("");
+                    }}
+                    className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/40 border border-slate-700/60 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl hover:bg-slate-800/60 transition-all duration-300 hover:scale-105"
+                  >
+                    {translations.adminCancel || "Cancel"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

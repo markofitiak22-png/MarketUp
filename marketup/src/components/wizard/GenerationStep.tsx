@@ -104,6 +104,26 @@ export default function GenerationStep({
         settings: requestData.settings
       });
       
+      // Check if this is an edit (video ID exists in session storage)
+      // Only use existingVideoId if we're actually editing (coming from preview step)
+      // For new videos, clear the old video ID
+      const existingVideoId = sessionStorage.getItem('currentVideoId');
+      const isEditing = sessionStorage.getItem('isEditing') === 'true';
+      
+      // Add existingVideoId if this is an edit
+      const finalRequestData = {
+        ...requestData,
+        ...(existingVideoId && isEditing ? { existingVideoId } : {})
+      };
+      
+      if (existingVideoId && isEditing) {
+        // Clear the editing flag
+        sessionStorage.removeItem('isEditing');
+      } else {
+        // Clear old video ID for new video generation
+        sessionStorage.removeItem('currentVideoId');
+      }
+      
       // Call the real API to start video generation with full data
       const response = await fetch('/api/video/generate', {
         method: 'POST',
@@ -111,7 +131,7 @@ export default function GenerationStep({
           'Content-Type': 'application/json',
         },
         credentials: "include",
-        body: JSON.stringify(requestData),
+        body: JSON.stringify(finalRequestData),
       });
 
       const result = await response.json();

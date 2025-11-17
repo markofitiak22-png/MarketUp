@@ -78,30 +78,38 @@ const getPlans = (translations: any) => [
   }
 ];
 
-// Internal pricing logic - not displayed to users
-const getCountryPricing = (translations: any) => {
-  // 5 specific countries with their own pricing
-  const specificCountries = [
-    { country: translations.pricingJordan, free: "0", pro: "42 USD", premium: "59 USD", flag: "🇯🇴" },
-    { country: translations.pricingSweden, free: "0", pro: "41 USD", premium: "58 USD", flag: "🇸🇪" },
-    { country: translations.pricingLebanon, free: "0", pro: "31 USD", premium: "49 USD", flag: "🇱🇧" },
-    { country: translations.pricingTurkey, free: "0", pro: "35 USD", premium: "48 USD", flag: "🇹🇷" },
-    { country: translations.pricingSyria, free: "0", pro: "29 USD", premium: "45 USD", flag: "🇸🇾" }
-  ];
-  
-  // All other European countries use Sweden's pricing
-  const europeanCountries = [
-    { country: "Germany", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇩🇪" },
-    { country: "France", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇫🇷" },
-    { country: "Italy", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇮🇹" },
-    { country: "Spain", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇪🇸" },
-    { country: "Netherlands", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇳🇱" },
-    { country: "Poland", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇵🇱" },
-    { country: "Norway", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇳🇴" },
-    { country: "Denmark", free: "0", pro: "41 USD", premium: "58 USD", flag: "🇩🇰" }
-  ];
-  
-  return [...specificCountries, ...europeanCountries];
+// Country code to pricing mapping
+const getCountryPricingMap = () => {
+  return {
+    'JO': { pro: 42, premium: 59 }, // Jordan
+    'SE': { pro: 41, premium: 58 }, // Sweden
+    'LB': { pro: 31, premium: 49 }, // Lebanon
+    'TR': { pro: 35, premium: 48 }, // Turkey
+    'SY': { pro: 29, premium: 45 }, // Syria
+    // European countries use Sweden's pricing
+    'DE': { pro: 41, premium: 58 }, // Germany
+    'FR': { pro: 41, premium: 58 }, // France
+    'IT': { pro: 41, premium: 58 }, // Italy
+    'ES': { pro: 41, premium: 58 }, // Spain
+    'NL': { pro: 41, premium: 58 }, // Netherlands
+    'PL': { pro: 41, premium: 58 }, // Poland
+    'NO': { pro: 41, premium: 58 }, // Norway
+    'DK': { pro: 41, premium: 58 }, // Denmark
+    // Default pricing for other countries
+    'US': { pro: 42, premium: 59 },
+    'GB': { pro: 42, premium: 59 },
+    'CA': { pro: 42, premium: 59 },
+    'AU': { pro: 42, premium: 59 },
+    'JP': { pro: 42, premium: 59 },
+    'AE': { pro: 42, premium: 59 },
+  };
+};
+
+// Get pricing for a specific country
+const getPricingForCountry = (countryCode: string | null | undefined) => {
+  const pricingMap = getCountryPricingMap();
+  // Default to Jordan pricing if country not found
+  return pricingMap[countryCode as keyof typeof pricingMap] || { pro: 42, premium: 59 };
 };
 
 export default function PricingPage() {
@@ -109,10 +117,21 @@ export default function PricingPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const [userSubscription, setUserSubscription] = useState<{ tier: string; status: string } | null>(null);
+  const [userCountry, setUserCountry] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   
-  const plans = getPlans(translations);
-  const countryPricing = getCountryPricing(translations);
+  // Get pricing for user's country
+  const countryPricing = getPricingForCountry(userCountry);
+  
+  // Update plans with country-specific pricing
+  const plans = getPlans(translations).map(plan => {
+    if (plan.id === 'pro') {
+      return { ...plan, price: countryPricing.pro };
+    } else if (plan.id === 'premium') {
+      return { ...plan, price: countryPricing.premium };
+    }
+    return plan;
+  });
 
   // Update background height to match content
   useEffect(() => {
@@ -134,17 +153,22 @@ export default function PricingPage() {
     };
   }, [loading, userSubscription]);
 
-  // Fetch user subscription
+  // Fetch user subscription and country
   useEffect(() => {
     if (session) {
-      fetch('/api/dashboard/overview', { credentials: 'include' })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data.subscription) {
+      Promise.all([
+        fetch('/api/dashboard/overview', { credentials: 'include' }).then(res => res.json()),
+        fetch('/api/profile', { credentials: 'include' }).then(res => res.json())
+      ])
+        .then(([overviewData, profileData]) => {
+          if (overviewData.success && overviewData.data.subscription) {
             setUserSubscription({
-              tier: data.data.subscription.tier,
-              status: data.data.subscription.status
+              tier: overviewData.data.subscription.tier,
+              status: overviewData.data.subscription.status
             });
+          }
+          if (profileData.country) {
+            setUserCountry(profileData.country);
           }
         })
         .catch(() => {

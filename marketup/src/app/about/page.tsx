@@ -512,7 +512,7 @@ export default function AboutPage() {
               
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <Link
-                  href="/studio"
+                  href="/onboarding"
                 className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-indigo-500/50 hover:scale-[1.05] transition-all duration-300 overflow-hidden text-lg"
                 >
                 <span className="relative z-10 flex items-center gap-3">

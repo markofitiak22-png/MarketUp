@@ -43,7 +43,7 @@ export default function FooterGate() {
               <Link href="/" className="inline-flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
                   <Image 
-                    src="/favicon-32x32.png" 
+                    src="/logo.jpeg" 
                     alt="MarketUp Logo" 
                     width={32}
                     height={32}

@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
             <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight mb-8">
               <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
                 <Image 
-                  src="/favicon-32x32.png" 
+                  src="/logo.jpeg" 
                   alt="MarketUp Logo" 
                   width={32}
                   height={32}
@@ -101,7 +101,7 @@ export default function ResetPasswordPage() {
           <Link href="/" className="lg:hidden group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight mb-8">
             <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
               <Image 
-                src="/favicon-32x32.png" 
+                src="/logo.jpeg" 
                 alt="MarketUp Logo" 
                 width={32}
                 height={32}

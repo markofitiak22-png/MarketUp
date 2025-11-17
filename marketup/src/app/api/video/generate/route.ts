@@ -11,7 +11,8 @@ import {
   getVideosThisMonth,
   calculateDurationFromText,
   getAllowedQuality,
-  areSubtitlesAllowed
+  areSubtitlesAllowed,
+  getAllowedEdits
 } from "@/lib/subscriptions";
 
 // In-memory storage for video generation status (in production, use Redis or database)
@@ -34,7 +35,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Support both old 'background' and new 'backgrounds' format
-    const { avatar, language, background, backgrounds, text, title, settings } = body;
+    const { avatar, language, background, backgrounds, text, title, settings, existingVideoId } = body;
+    
+    // Normalize existingVideoId - ensure it's either a valid string or undefined
+    const normalizedExistingVideoId = existingVideoId && typeof existingVideoId === 'string' && existingVideoId.trim() !== '' 
+      ? existingVideoId.trim() 
+      : undefined;
     
     // Get background(s) - prefer backgrounds array, fallback to single background
     const bgData = backgrounds && backgrounds.length > 0 ? backgrounds : (background ? [{ image: background }] : null);
@@ -120,8 +126,67 @@ export async function POST(request: NextRequest) {
       }, { status: 403 });
     }
 
-    // Generate unique video ID
-    const videoId = nanoid(12);
+    // Check if this is an edit (existing video ID provided)
+    let videoId: string;
+    let isEdit = false;
+    
+    // Only treat as edit if normalizedExistingVideoId is provided
+    if (normalizedExistingVideoId) {
+      // This is an edit - check if video exists and belongs to user
+      const existingVideo = await prisma.video.findFirst({
+        where: {
+          id: normalizedExistingVideoId,
+          userId: userId
+        }
+      });
+
+      if (!existingVideo) {
+        return NextResponse.json({ 
+          error: "Video not found",
+          message: "The video you're trying to edit doesn't exist or doesn't belong to you.",
+          success: false
+        }, { status: 404 });
+      }
+
+      // Check if video has been published
+      if (existingVideo.published) {
+        return NextResponse.json({ 
+          error: "Video already published",
+          message: "You cannot edit a video that has already been published or downloaded."
+        }, { status: 403 });
+      }
+
+      // Check edit limits
+      const allowedEdits = getAllowedEdits(tier);
+      const currentEditCount = existingVideo.editCount || 0;
+      
+      if (currentEditCount >= allowedEdits) {
+        const planName = !tier ? "Free" : tier === "STANDARD" ? "Pro" : tier === "PREMIUM" ? "Premium" : "Free";
+        return NextResponse.json({ 
+          error: "Edit limit reached",
+          message: `You have used all ${allowedEdits} edit${allowedEdits > 1 ? 's' : ''} allowed for your ${planName} plan.`,
+          plan: planName
+        }, { status: 403 });
+      }
+
+      videoId = normalizedExistingVideoId;
+      isEdit = true;
+
+      // Increment edit count
+      await prisma.video.update({
+        where: { id: videoId },
+        data: { 
+          editCount: { increment: 1 },
+          status: 'PENDING',
+          // Reset completedAt since we're regenerating
+          completedAt: null,
+          videoUrl: null
+        }
+      });
+    } else {
+      // This is a new video
+      videoId = nanoid(12);
+    }
     
     // Initialize generation status
     generationStatus.set(videoId, {
@@ -130,26 +195,48 @@ export async function POST(request: NextRequest) {
       createdAt: new Date()
     });
 
-    // Create video record in database (save calculated duration)
-    const video = await prisma.video.create({
-      data: {
-        id: videoId,
-        userId: userId,
-        title: title || `Video ${new Date().toLocaleDateString()}`,
-        status: 'PENDING',
-        settings: {
-          avatar: typeof avatar === 'object' ? avatar : { name: avatar },
-          language: typeof language === 'object' ? language : { name: language },
-          backgrounds: bgData,
-          background: bgData[0]?.image || '', // Keep old field for compatibility
-          text,
-          quality: finalQuality, // Use validated/allowed quality (may be downgraded)
-          format: settings?.format || 'mp4',
-          duration: duration, // Use calculated/validated duration
-          subtitles: subtitlesAllowed && (settings?.subtitles || false) // Only allow if plan supports it
+    // Create or update video record in database
+    if (isEdit) {
+      // Update existing video
+      await prisma.video.update({
+        where: { id: videoId },
+        data: {
+          status: 'PENDING',
+          settings: {
+            avatar: typeof avatar === 'object' ? avatar : { name: avatar },
+            language: typeof language === 'object' ? language : { name: language },
+            backgrounds: bgData,
+            background: bgData[0]?.image || '', // Keep old field for compatibility
+            text,
+            quality: finalQuality,
+            format: settings?.format || 'mp4',
+            duration: duration,
+            subtitles: subtitlesAllowed && (settings?.subtitles || false)
+          }
         }
-      }
-    });
+      });
+    } else {
+      // Create new video record
+      await prisma.video.create({
+        data: {
+          id: videoId,
+          userId: userId,
+          title: title || `Video ${new Date().toLocaleDateString()}`,
+          status: 'PENDING',
+          settings: {
+            avatar: typeof avatar === 'object' ? avatar : { name: avatar },
+            language: typeof language === 'object' ? language : { name: language },
+            backgrounds: bgData,
+            background: bgData[0]?.image || '', // Keep old field for compatibility
+            text,
+            quality: finalQuality, // Use validated/allowed quality (may be downgraded)
+            format: settings?.format || 'mp4',
+            duration: duration, // Use calculated/validated duration
+            subtitles: subtitlesAllowed && (settings?.subtitles || false) // Only allow if plan supports it
+          }
+        }
+      });
+    }
 
     // Start video generation process (simulate async processing)
     processVideoGeneration(videoId, userId);

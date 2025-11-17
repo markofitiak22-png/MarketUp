@@ -87,7 +87,7 @@ export default function Header() {
         <Link href="/" className="group flex items-center gap-3 text-[1.25rem] font-bold tracking-tight">
           <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
             <Image 
-              src="/favicon-32x32.png" 
+              src="/logo.jpeg" 
               alt="MarketUp Logo" 
               width={32}
               height={32}
@@ -125,7 +125,7 @@ export default function Header() {
             {isAuthenticated ? (
               <>
                 <a 
-                  href="/studio" 
+                  href="/onboarding" 
                   className="flex items-center gap-2 px-3 py-2 bg-[#121315] text-[#e6e7ea] text-sm font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,7 +194,7 @@ export default function Header() {
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg overflow-hidden logo-blue-glow">
                   <Image 
-                    src="/favicon-32x32.png" 
+                    src="/logo.jpeg" 
                     alt="MarketUp Logo" 
                     width={32}
                     height={32}
@@ -323,7 +323,7 @@ export default function Header() {
               {isAuthenticated && (
                 <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.08)] flex-shrink-0">
                   <a
-                    href="/studio"
+                    href="/onboarding"
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-[#121315] text-[#e6e7ea] text-lg font-semibold rounded-xl hover:bg-[#1a1b1e] transition-all duration-200"
                   >

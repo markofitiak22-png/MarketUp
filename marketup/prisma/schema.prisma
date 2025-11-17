@@ -2,494 +2,501 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 /// Referral status to track review and reward outcomes without exposing limits to users
 enum ReferralStatus {
-    PENDING
-    APPROVED
-    REJECTED
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 /// Video job processing status
 enum VideoJobStatus {
-    QUEUED
-    PROCESSING
-    COMPLETED
-    FAILED
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 /// Which provider handles avatar video generation; start with MOCK
 enum VideoProvider {
-    MOCK
+  MOCK
 }
 
 model User {
-    id           String   @id @default(cuid())
-    createdAt    DateTime @default(now())
-    email        String?  @unique
-    phone        String?
-    passwordHash String?
-    name         String?
-    locale       String?
-    country      String?
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  email        String?  @unique
+  phone        String?
+  passwordHash String?
+  name         String?
+  locale       String?
+  country      String?
 
-    /// Hashed, anonymized identifiers for anti-abuse checks
-    fingerprintHash String?
-    ipHash          String?
+  /// Hashed, anonymized identifiers for anti-abuse checks
+  fingerprintHash String?
+  ipHash          String?
 
-    referralCodes          ReferralCode[]
-    referralEvents         ReferralEvent[] @relation("UserReferralEvents")
-    referredEventsReceived ReferralEvent[] @relation("ReferredUserEvents")
-    videoJobs              VideoJob[]
-    videos                 Video[]
+  referralCodes          ReferralCode[]
+  referralEvents         ReferralEvent[] @relation("UserReferralEvents")
+  referredEventsReceived ReferralEvent[] @relation("ReferredUserEvents")
+  videoJobs              VideoJob[]
+  videos                 Video[]
 
-    accounts Account[]
-    sessions Session[]
+  accounts Account[]
+  sessions Session[]
 
-    subscriptions        Subscription[]
-    manualPayments       ManualPayment[]
-    contactMessages      ContactMessage[]
-    reviews              Review[]
-    syriatelTransactions SyriatelTransaction[]
+  subscriptions        Subscription[]
+  manualPayments       ManualPayment[]
+  contactMessages      ContactMessage[]
+  reviews              Review[]
+  syriatelTransactions SyriatelTransaction[]
 
-    @@index([fingerprintHash])
-    @@index([ipHash])
+  @@index([fingerprintHash])
+  @@index([ipHash])
 }
 
 model ManualPayment {
-    id          String   @id @default(cuid())
-    userId      String
-    user        User     @relation(fields: [userId], references: [id])
-    createdAt   DateTime @default(now())
-    status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
-    amountCents Int
-    currency    String   @default("USD")
-    note        String?
-    receiptUrl  String?
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  amountCents Int
+  currency    String   @default("USD")
+  note        String?
+  receiptUrl  String?
 
-    @@index([userId])
+  @@index([userId])
 }
 
 model ContactMessage {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    name      String?
-    email     String
-    message   String
-    userId    String?
-    user      User?    @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String?
+  email     String
+  message   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
 
-    // Ticket system fields
-    status   String @default("PENDING") // PENDING, IN_PROGRESS, RESOLVED, CLOSED
-    priority String @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
-    category String @default("GENERAL") // TECHNICAL, BILLING, FEATURE_REQUEST, BUG_REPORT, GENERAL
+  // Ticket system fields
+  status   String @default("PENDING") // PENDING, IN_PROGRESS, RESOLVED, CLOSED
+  priority String @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  category String @default("GENERAL") // TECHNICAL, BILLING, FEATURE_REQUEST, BUG_REPORT, GENERAL
 
-    @@index([userId])
-    @@index([status])
-    @@index([priority])
-    @@index([category])
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@index([category])
 }
 
 enum PlanTier {
-    BASIC
-    STANDARD
-    PREMIUM
+  BASIC
+  STANDARD
+  PREMIUM
 }
 
 enum SubscriptionStatus {
-    ACTIVE
-    CANCELED
-    EXPIRED
+  ACTIVE
+  CANCELED
+  EXPIRED
 }
 
 model Subscription {
-    id        String   @id @default(cuid())
-    userId    String
-    user      User     @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    tier               PlanTier
-    status             SubscriptionStatus @default(ACTIVE)
-    currentPeriodStart DateTime
-    currentPeriodEnd   DateTime
+  tier               PlanTier
+  status             SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
 
-    cancelAtPeriodEnd Boolean @default(false)
+  cancelAtPeriodEnd Boolean @default(false)
 
-    @@index([userId])
+  @@index([userId])
 }
 
 /// NextAuth adapter models
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @map("refresh_token")
-    access_token      String? @map("access_token")
-    expires_at        Int?    @map("expires_at")
-    token_type        String? @map("token_type")
-    scope             String?
-    id_token          String? @map("id_token")
-    session_state     String? @map("session_state")
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @map("refresh_token")
+  access_token      String? @map("access_token")
+  expires_at        Int?    @map("expires_at")
+  token_type        String? @map("token_type")
+  scope             String?
+  id_token          String? @map("id_token")
+  session_state     String? @map("session_state")
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
-    @@index([userId])
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    rememberMe   Boolean  @default(false)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  rememberMe   Boolean  @default(false)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId])
+  @@index([userId])
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model ReferralCode {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    code      String   @unique
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  code      String   @unique
 
-    /// Optional owner (null for marketer codes)
-    ownerId String?
-    owner   User?   @relation(fields: [ownerId], references: [id])
+  /// Optional owner (null for marketer codes)
+  ownerId String?
+  owner   User?   @relation(fields: [ownerId], references: [id])
 
-    /// Optional marketer link for admin-created codes
-    marketerId String?
-    marketer   Marketer? @relation(fields: [marketerId], references: [id])
+  /// Optional marketer link for admin-created codes
+  marketerId String?
+  marketer   Marketer? @relation(fields: [marketerId], references: [id])
 
-    /// Hidden caps enforced server-side (not returned to clients)
-    maxRewardsTotal Int? // total rewards cap per code
-    dailyCap        Int? // daily redemption cap
+  /// Hidden caps enforced server-side (not returned to clients)
+  maxRewardsTotal Int? // total rewards cap per code
+  dailyCap        Int? // daily redemption cap
 
-    events ReferralEvent[]
+  events ReferralEvent[]
 
-    @@index([ownerId])
-    @@index([marketerId])
+  @@index([ownerId])
+  @@index([marketerId])
 }
 
 model ReferralEvent {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
 
-    /// The referrer who owns the code
-    referrerId String
-    referrer   User   @relation("UserReferralEvents", fields: [referrerId], references: [id])
+  /// The referrer who owns the code
+  referrerId String
+  referrer   User   @relation("UserReferralEvents", fields: [referrerId], references: [id])
 
-    /// Optional user record for the referred account if/when it's created
-    referredUserId String?
-    referredUser   User?   @relation("ReferredUserEvents", fields: [referredUserId], references: [id])
+  /// Optional user record for the referred account if/when it's created
+  referredUserId String?
+  referredUser   User?   @relation("ReferredUserEvents", fields: [referredUserId], references: [id])
 
-    /// The code used
-    referralCodeId String
-    referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
+  /// The code used
+  referralCodeId String
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
 
-    /// Anti-abuse signals (hashed, never store raw PII)
-    referredFingerprintHash String?
-    referredIpHash          String?
-    userAgent               String?
+  /// Anti-abuse signals (hashed, never store raw PII)
+  referredFingerprintHash String?
+  referredIpHash          String?
+  userAgent               String?
 
-    status        ReferralStatus @default(PENDING)
-    rewardGranted Int            @default(0)
-    reviewReason  String?
+  status        ReferralStatus @default(PENDING)
+  rewardGranted Int            @default(0)
+  reviewReason  String?
 
-    /// Commission tracking for marketers
-    commissionPercentage  Float? // Commission percentage applied
-    commissionAmountCents Int? // Commission amount in cents
-    commissionPaid        Boolean @default(false) // Whether commission has been paid
+  /// Commission tracking for marketers
+  commissionPercentage  Float? // Commission percentage applied
+  commissionAmountCents Int? // Commission amount in cents
+  commissionPaid        Boolean @default(false) // Whether commission has been paid
 
-    @@index([referrerId])
-    @@index([referralCodeId])
-    @@index([referredFingerprintHash])
-    @@index([referredIpHash])
+  @@index([referrerId])
+  @@index([referralCodeId])
+  @@index([referredFingerprintHash])
+  @@index([referredIpHash])
 }
 
 /// Marketer codes created by admin for marketing team
 model Marketer {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    /// Marketer name (e.g., "Rami")
-    name String
+  /// Marketer name (e.g., "Rami")
+  name String
 
-    /// Unique code for this marketer
-    code String @unique
+  /// Unique code for this marketer
+  code String @unique
 
-    /// Base commission percentage (e.g., 6%)
-    baseCommissionPercentage Float @default(0)
+  /// Base commission percentage (e.g., 6%)
+  baseCommissionPercentage Float @default(0)
 
-    /// Tiered commission rules (JSON: [{ userCount: 5, percentage: 10 }, ...])
-    tieredCommissions Json? // Array of { userCount: number, percentage: number }
+  /// Tiered commission rules (JSON: [{ userCount: 5, percentage: 10 }, ...])
+  tieredCommissions Json? // Array of { userCount: number, percentage: number }
 
-    /// Whether this marketer is active
-    isActive Boolean @default(true)
+  /// Whether this marketer is active
+  isActive Boolean @default(true)
 
-    /// Referral codes linked to this marketer
-    referralCodes ReferralCode[]
+  /// Referral codes linked to this marketer
+  referralCodes ReferralCode[]
 
-    @@index([code])
-    @@index([isActive])
+  @@index([code])
+  @@index([isActive])
 }
 
 model VideoJob {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    userId String?
-    user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 
-    provider      VideoProvider @default(MOCK)
-    providerJobId String?
+  provider      VideoProvider @default(MOCK)
+  providerJobId String?
 
-    status   VideoJobStatus @default(QUEUED)
-    videoUrl String?
+  status   VideoJobStatus @default(QUEUED)
+  videoUrl String?
 
-    /// Video metadata
-    title        String?
-    description  String?
-    duration     Int? // duration in seconds
-    thumbnailUrl String?
-    fileSize     Int? // file size in bytes
-    resolution   String? // e.g., "1920x1080"
-    format       String? // e.g., "MP4"
-    quality      String? // e.g., "HD", "4K"
+  /// Video metadata
+  title        String?
+  description  String?
+  duration     Int? // duration in seconds
+  thumbnailUrl String?
+  fileSize     Int? // file size in bytes
+  resolution   String? // e.g., "1920x1080"
+  format       String? // e.g., "MP4"
+  quality      String? // e.g., "HD", "4K"
 
-    /// Analytics
-    views     Int @default(0)
-    downloads Int @default(0)
+  /// Analytics
+  views     Int @default(0)
+  downloads Int @default(0)
 
-    /// Inputs
-    script              String
-    backgroundImageUrls Json // 2-4 URLs
-    productImageUrls    Json // array of product/device/food URLs
-    contactAddress      String?
-    contactPhone        String?
-    logoImageUrl        String? // company logo overlay (subtle corner)
+  /// Inputs
+  script              String
+  backgroundImageUrls Json // 2-4 URLs
+  productImageUrls    Json // array of product/device/food URLs
+  contactAddress      String?
+  contactPhone        String?
+  logoImageUrl        String? // company logo overlay (subtle corner)
 
-    /// Optional publishing meta (for regional scheduling)
-    publishRegion      String?
-    publishAtTikTok    DateTime?
-    publishAtInstagram DateTime?
+  /// Optional publishing meta (for regional scheduling)
+  publishRegion      String?
+  publishAtTikTok    DateTime?
+  publishAtInstagram DateTime?
 
-    scheduledPosts ScheduledPost[]
+  scheduledPosts ScheduledPost[]
 
-    @@index([userId])
+  @@index([userId])
 }
 
 /// Scheduled posts for social media publishing
 model ScheduledPost {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    videoJobId String
-    videoJob   VideoJob @relation(fields: [videoJobId], references: [id])
+  videoJobId String
+  videoJob   VideoJob @relation(fields: [videoJobId], references: [id])
 
-    socialNetwork String // youtube, instagram, tiktok, facebook, twitter, linkedin
-    scheduledDate DateTime
-    status        String   @default("SCHEDULED") // SCHEDULED, PUBLISHED, FAILED, CANCELLED
-    customMessage String?
+  socialNetwork String // youtube, instagram, tiktok, facebook, twitter, linkedin
+  scheduledDate DateTime
+  status        String   @default("SCHEDULED") // SCHEDULED, PUBLISHED, FAILED, CANCELLED
+  customMessage String?
 
-    @@index([videoJobId])
-    @@index([socialNetwork])
-    @@index([scheduledDate])
+  @@index([videoJobId])
+  @@index([socialNetwork])
+  @@index([scheduledDate])
 }
 
 /// Generated videos
 model Video {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    userId String
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    title       String
-    status      String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
-    videoUrl    String?
-    completedAt DateTime?
+  title       String
+  status      String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  videoUrl    String?
+  completedAt DateTime?
 
-    /// Video generation settings
-    settings Json // avatar, language, background, text, quality, format
+  /// Video generation settings
+  settings Json // avatar, language, background, text, quality, format
 
-    @@index([userId])
-    @@index([status])
-    @@index([createdAt])
+  /// Video editing tracking
+  editCount Int     @default(0) // Number of edits made to this video
+  published Boolean @default(false) // Whether video has been published/downloaded
+
+  /// Export type tracking
+  exportType String? // 'download' or 'social_media' - tracks how video was exported
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 /// Review status for moderation
 enum ReviewStatus {
-    PENDING
-    APPROVED
-    REJECTED
-    HIDDEN
+  PENDING
+  APPROVED
+  REJECTED
+  HIDDEN
 }
 
 /// User reviews and ratings
 model Review {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    userId String
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    /// Rating from 1 to 5 stars
-    rating Int
+  /// Rating from 1 to 5 stars
+  rating Int
 
-    /// Review comment (optional but recommended)
-    comment String?
+  /// Review comment (optional but recommended)
+  comment String?
 
-    /// Review status for moderation
-    status ReviewStatus @default(PENDING)
+  /// Review status for moderation
+  status ReviewStatus @default(PENDING)
 
-    /// Anti-abuse fields (hashed, never store raw PII)
-    ipHash          String?
-    userAgent       String?
-    fingerprintHash String?
+  /// Anti-abuse fields (hashed, never store raw PII)
+  ipHash          String?
+  userAgent       String?
+  fingerprintHash String?
 
-    /// Admin moderation
-    moderatedAt    DateTime?
-    moderatedBy    String? // admin user ID who moderated this review
-    moderationNote String?
+  /// Admin moderation
+  moderatedAt    DateTime?
+  moderatedBy    String? // admin user ID who moderated this review
+  moderationNote String?
 
-    @@index([userId])
-    @@index([status])
-    @@index([rating])
-    @@index([createdAt])
-    @@index([ipHash])
-    @@index([fingerprintHash])
+  @@index([userId])
+  @@index([status])
+  @@index([rating])
+  @@index([createdAt])
+  @@index([ipHash])
+  @@index([fingerprintHash])
 }
 
 /// Voice previews cache - stores local file paths for avatar voice combinations
 model VoicePreview {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    /// HeyGen voice ID
-    voiceId String
+  /// HeyGen voice ID
+  voiceId String
 
-    /// HeyGen avatar ID
-    avatarId String
+  /// HeyGen avatar ID
+  avatarId String
 
-    /// Local file path (e.g., /voice-previews/preview_abc123.mp3)
-    previewUrl String
+  /// Local file path (e.g., /voice-previews/preview_abc123.mp3)
+  previewUrl String
 
-    /// Preview text used (for reference)
-    previewText String?
+  /// Preview text used (for reference)
+  previewText String?
 
-    @@unique([voiceId, avatarId])
-    @@index([voiceId])
-    @@index([avatarId])
+  @@unique([voiceId, avatarId])
+  @@index([voiceId])
+  @@index([avatarId])
 }
 
 /// Syriatel Payment API transaction status
 enum SyriatelTransactionStatus {
-    PENDING // Payment request sent, waiting for OTP confirmation
-    OTP_SENT // OTP sent to customer
-    OTP_RESENT // OTP resent to customer
-    CONFIRMED // Payment confirmed and completed
-    EXPIRED // Transaction expired (OTP or transaction expired)
-    FAILED // Payment failed
-    CANCELLED // Payment cancelled
+  PENDING // Payment request sent, waiting for OTP confirmation
+  OTP_SENT // OTP sent to customer
+  OTP_RESENT // OTP resent to customer
+  CONFIRMED // Payment confirmed and completed
+  EXPIRED // Transaction expired (OTP or transaction expired)
+  FAILED // Payment failed
+  CANCELLED // Payment cancelled
 }
 
 /// Syriatel Payment API tokens cache (15 minutes validity)
 model SyriatelToken {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    expiresAt DateTime // Token expires 15 minutes after creation
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  expiresAt DateTime // Token expires 15 minutes after creation
 
-    /// The actual token from Syriatel API
-    token String @unique
+  /// The actual token from Syriatel API
+  token String @unique
 
-    /// Merchant username used to generate this token
-    merchantUsername String
+  /// Merchant username used to generate this token
+  merchantUsername String
 
-    @@index([token])
-    @@index([expiresAt])
+  @@index([token])
+  @@index([expiresAt])
 }
 
 /// Syriatel Payment API transactions
 model SyriatelTransaction {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    /// User who initiated the payment
-    userId String?
-    user   User?   @relation(fields: [userId], references: [id])
+  /// User who initiated the payment
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 
-    /// Unique transaction ID (must be unique per payment)
-    transactionID String @unique
+  /// Unique transaction ID (must be unique per payment)
+  transactionID String @unique
 
-    /// Customer MSISDN (phone number)
-    customerMSISDN String
+  /// Customer MSISDN (phone number)
+  customerMSISDN String
 
-    /// Merchant MSISDN
-    merchantMSISDN String
+  /// Merchant MSISDN
+  merchantMSISDN String
 
-    /// Payment amount in SYP (Syrian Pounds)
-    amount Float
+  /// Payment amount in SYP (Syrian Pounds)
+  amount Float
 
-    /// Fee amount deducted by Syriatel (varies based on payment amount)
-    feeAmount Float?
+  /// Fee amount deducted by Syriatel (varies based on payment amount)
+  feeAmount Float?
 
-    /// Transaction status
-    status SyriatelTransactionStatus @default(PENDING)
+  /// Transaction status
+  status SyriatelTransactionStatus @default(PENDING)
 
-    /// OTP sent to customer
-    otp String?
+  /// OTP sent to customer
+  otp String?
 
-    /// Number of OTP attempts (max 3)
-    otpAttempts Int @default(0)
+  /// Number of OTP attempts (max 3)
+  otpAttempts Int @default(0)
 
-    /// OTP expires at (10 minutes from payment request)
-    otpExpiresAt DateTime?
+  /// OTP expires at (10 minutes from payment request)
+  otpExpiresAt DateTime?
 
-    /// Payment request timestamp
-    paymentRequestedAt DateTime?
+  /// Payment request timestamp
+  paymentRequestedAt DateTime?
 
-    /// Payment confirmed timestamp
-    paymentConfirmedAt DateTime?
+  /// Payment confirmed timestamp
+  paymentConfirmedAt DateTime?
 
-    /// Error code from Syriatel API (if any)
-    errorCode Int?
+  /// Error code from Syriatel API (if any)
+  errorCode Int?
 
-    /// Error description from Syriatel API
-    errorDesc String?
+  /// Error description from Syriatel API
+  errorDesc String?
 
-    /// Additional metadata
-    metadata Json?
+  /// Additional metadata
+  metadata Json?
 
-    @@index([userId])
-    @@index([transactionID])
-    @@index([customerMSISDN])
-    @@index([status])
-    @@index([createdAt])
+  @@index([userId])
+  @@index([transactionID])
+  @@index([customerMSISDN])
+  @@index([status])
+  @@index([createdAt])
 }

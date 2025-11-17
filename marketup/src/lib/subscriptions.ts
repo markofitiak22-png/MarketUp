@@ -7,7 +7,8 @@ export type Feature =
   | "video.logo"
   | "video.monthlyQuota"
   | "video.quality"
-  | "video.subtitles";
+  | "video.subtitles"
+  | "video.edits";
 
 export const planFeatures: Record<PlanTier, Record<Feature, number | boolean | string>> = {
   BASIC: {
@@ -17,6 +18,7 @@ export const planFeatures: Record<PlanTier, Record<Feature, number | boolean | s
     "video.monthlyQuota": 1,
     "video.quality": "standard", // Free Plan: Standard quality
     "video.subtitles": false, // Free Plan: No subtitles
+    "video.edits": 0, // Free Plan: 0 edits - only preview, no editing
   },
   STANDARD: {
     "video.backgrounds": 4,
@@ -25,6 +27,7 @@ export const planFeatures: Record<PlanTier, Record<Feature, number | boolean | s
     "video.monthlyQuota": 4,
     "video.quality": "hd", // Pro Plan: HD quality
     "video.subtitles": false, // Pro Plan: No subtitles (not mentioned)
+    "video.edits": 1, // Pro Plan: 1 edit allowed
   },
   PREMIUM: {
     "video.backgrounds": 6,
@@ -33,6 +36,7 @@ export const planFeatures: Record<PlanTier, Record<Feature, number | boolean | s
     "video.monthlyQuota": 7,
     "video.quality": "4k", // Premium Plan: HD/4K quality
     "video.subtitles": true, // Premium Plan: Subtitles included
+    "video.edits": 2, // Premium Plan: 2 edits allowed
   },
 };
 
@@ -112,6 +116,13 @@ export function areSubtitlesAllowed(tier: PlanTier | null): boolean {
   if (!tier) return false; // Free plan: no subtitles
   const subtitles = planFeatures[tier]["video.subtitles"];
   return typeof subtitles === "boolean" ? subtitles : false;
+}
+
+// Get allowed video edits for a plan
+export function getAllowedEdits(tier: PlanTier | null): number {
+  if (!tier) return 0; // Free plan: 0 edits
+  const edits = planFeatures[tier]["video.edits"];
+  return typeof edits === "number" ? edits : 0;
 }
 
 

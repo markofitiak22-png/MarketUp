@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getActiveSubscriptionForUser } from "@/lib/subscriptions";
 
 export async function GET(
   request: NextRequest,
@@ -40,41 +41,77 @@ export async function GET(
     }
 
     // Add watermark based on export type
-    // Call watermark API to process video
+    // ALWAYS add watermark for download (force it for testing)
     let finalVideoUrl = video.videoUrl;
     
+    console.log(`[Download] ==========================================`);
+    console.log(`[Download] 🚀 STARTING WATERMARK PROCESS`);
+    console.log(`[Download] Video ID: ${videoId}`);
+    console.log(`[Download] Export Type: ${exportType}`);
+    console.log(`[Download] Original URL: ${video.videoUrl}`);
+    console.log(`[Download] ==========================================`);
+    
     try {
-      console.log(`[Download] Processing watermark for video ${videoId}, exportType: ${exportType}`);
-      const watermarkResponse = await fetch(`${request.nextUrl.origin}/api/video/watermark`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': request.headers.get('cookie') || '',
-        },
-        body: JSON.stringify({
-          videoId: videoId,
-          exportType: exportType
-        })
-      });
+      // Get user's subscription
+      const subscription = await getActiveSubscriptionForUser(userId);
+      const tier = subscription?.tier || null;
+      console.log(`[Download] User tier: ${tier}`);
 
-      if (watermarkResponse.ok) {
-        const watermarkData = await watermarkResponse.json();
-        console.log(`[Download] Watermark response:`, watermarkData);
-        if (watermarkData.success && watermarkData.videoUrl) {
-          finalVideoUrl = watermarkData.videoUrl;
-          console.log(`[Download] Using watermarked video: ${finalVideoUrl}`);
-        } else {
-          console.warn(`[Download] Watermark API returned success but no videoUrl, using original`);
+      // FORCE watermark for ALL downloads (for testing)
+      let watermarkType: "none" | "corner" | "animated" | "full" = "full"; // FORCE FULL for testing
+      
+      if (exportType === "social_media") {
+        watermarkType = "none";
+        console.log(`[Download] Social media export - no watermark`);
+      } else {
+        // FORCE watermark for all downloads
+        watermarkType = "full";
+        console.log(`[Download] 🔥 FORCING FULL WATERMARK FOR ALL DOWNLOADS`);
+      }
+
+      // ALWAYS process watermark if not social_media
+      if (watermarkType !== "none") {
+        console.log(`[Download] ⚠️ WATERMARK NEEDED: ${watermarkType}`);
+        console.log(`[Download] Importing watermark module...`);
+        
+        const { addWatermarkToVideo } = await import("@/lib/watermark");
+        console.log(`[Download] ✅ Module imported`);
+        console.log(`[Download] Calling addWatermarkToVideo...`);
+        console.log(`[Download] Video URL: ${video.videoUrl}`);
+        console.log(`[Download] Video ID: ${videoId}`);
+        console.log(`[Download] Watermark Type: ${watermarkType}`);
+        
+        try {
+          finalVideoUrl = await addWatermarkToVideo(video.videoUrl, watermarkType, videoId);
+          console.log(`[Download] ✅✅✅ SUCCESS! Watermarked URL: ${finalVideoUrl}`);
+        } catch (watermarkError: any) {
+          console.error(`[Download] ❌❌❌ WATERMARK PROCESSING FAILED:`);
+          console.error(`[Download] Error:`, watermarkError);
+          console.error(`[Download] Error message:`, watermarkError?.message);
+          console.error(`[Download] Error stack:`, watermarkError?.stack);
+          throw watermarkError; // THROW ERROR INSTEAD OF SILENTLY FAILING
         }
       } else {
-        const errorData = await watermarkResponse.json().catch(() => ({}));
-        console.error(`[Download] Watermark API failed:`, watermarkResponse.status, errorData);
-        // Continue with original video if watermark fails
+        console.log(`[Download] No watermark needed (watermarkType: ${watermarkType})`);
       }
-    } catch (error) {
-      console.error(`[Download] Error calling watermark API:`, error);
-      // Continue with original video if watermark fails
+    } catch (error: any) {
+      console.error(`[Download] ❌❌❌ CRITICAL ERROR:`);
+      console.error(`[Download] Error:`, error);
+      console.error(`[Download] Error message:`, error?.message);
+      console.error(`[Download] Error stack:`, error?.stack);
+      // DON'T silently fail - return error
+      return NextResponse.json({ 
+        error: `Watermark processing failed: ${error?.message || 'Unknown error'}`,
+        success: false
+      }, { status: 500 });
     }
+    
+    console.log(`[Download] ==========================================`);
+    console.log(`[Download] FINAL RESPONSE:`);
+    console.log(`[Download] Original URL: ${video.videoUrl}`);
+    console.log(`[Download] Final URL: ${finalVideoUrl}`);
+    console.log(`[Download] Is watermarked: ${finalVideoUrl !== video.videoUrl}`);
+    console.log(`[Download] ==========================================`);
     
     return NextResponse.json({
       success: true,

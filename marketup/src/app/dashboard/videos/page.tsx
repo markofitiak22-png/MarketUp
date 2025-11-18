@@ -121,8 +121,29 @@ export default function VideosPage() {
             return;
           }
 
-          // Fetch the video file as blob
-          const response = await fetch(video.videoUrl);
+          // Use the download API which adds watermark based on subscription
+          console.log(`[Dashboard Videos] Downloading video ${videoId} with watermark`);
+          const downloadResponse = await fetch(`/api/video/download/${videoId}?exportType=download`, {
+            credentials: 'include'
+          });
+
+          if (!downloadResponse.ok) {
+            throw new Error('Failed to get download URL');
+          }
+
+          const downloadData = await downloadResponse.json();
+          
+          if (!downloadData.success || !downloadData.downloadUrl) {
+            throw new Error('Invalid download response');
+          }
+
+          // Fetch the watermarked video file as blob
+          const videoUrl = downloadData.downloadUrl.startsWith('http') 
+            ? downloadData.downloadUrl 
+            : `${window.location.origin}${downloadData.downloadUrl}`;
+          
+          console.log(`[Dashboard Videos] Fetching video from: ${videoUrl}`);
+          const response = await fetch(videoUrl);
           if (!response.ok) {
             throw new Error('Failed to fetch video');
           }
@@ -130,16 +151,10 @@ export default function VideosPage() {
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
           
-          // Determine file extension from content type or default to mp4
-          const contentType = response.headers.get('content-type') || 'video/mp4';
-          const extension = contentType.includes('webm') ? 'webm' : 
-                           contentType.includes('mov') ? 'mov' : 
-                           contentType.includes('avi') ? 'avi' : 'mp4';
-          
           // Create a temporary link and trigger download
           const link = document.createElement('a');
           link.href = url;
-          link.download = `${video.title || `video-${videoId}`}.${extension}`;
+          link.download = downloadData.filename || `${video.title || `video-${videoId}`}.mp4`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -147,8 +162,13 @@ export default function VideosPage() {
           // Clean up the object URL
           window.URL.revokeObjectURL(url);
 
-          // Optionally update download count (if you have an API for that)
-          // await fetch(`/api/dashboard/videos/${videoId}/download`, { method: 'POST' });
+          // Mark video as published
+          await fetch(`/api/video/publish/${videoId}`, { 
+            method: 'POST',
+            credentials: 'include'
+          });
+
+          console.log(`[Dashboard Videos] Video downloaded successfully`);
         } catch (error) {
           console.error('Error downloading video:', error);
           setNotification({ show: true, message: translations.videosDownloadError || 'Failed to download video', type: 'error' });

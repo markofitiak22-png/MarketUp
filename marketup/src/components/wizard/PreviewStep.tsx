@@ -100,13 +100,50 @@ export default function PreviewStep({ data, onUpdate, onPrev, onComplete }: Prev
         });
         
         if (type === "download") {
-          // Create download link
-          const link = document.createElement('a');
-          link.href = data.downloadUrl;
-          link.download = data.filename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          // Download the video file (which may have watermark)
+          try {
+            console.log(`[PreviewStep] Downloading video from: ${data.downloadUrl}`);
+            
+            // If it's a relative URL, make it absolute
+            const videoUrl = data.downloadUrl.startsWith('http') 
+              ? data.downloadUrl 
+              : `${window.location.origin}${data.downloadUrl}`;
+            
+            // Fetch the video file
+            const videoResponse = await fetch(videoUrl);
+            if (!videoResponse.ok) {
+              throw new Error(`Failed to fetch video: ${videoResponse.status}`);
+            }
+            
+            const blob = await videoResponse.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = data.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Clean up blob URL after a delay
+            setTimeout(() => {
+              window.URL.revokeObjectURL(blobUrl);
+            }, 100);
+            
+            console.log(`[PreviewStep] Video downloaded successfully`);
+          } catch (error) {
+            console.error('[PreviewStep] Error downloading video:', error);
+            // Fallback: try direct download
+            const link = document.createElement('a');
+            link.href = data.downloadUrl.startsWith('http') 
+              ? data.downloadUrl 
+              : `${window.location.origin}${data.downloadUrl}`;
+            link.download = data.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
         } else {
           // Social media export - show success message
           alert('Video exported successfully! Ready for social media publishing.');

@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import fsSync from "fs";
 import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
@@ -9,7 +10,6 @@ const systemFfmpegPath = '/opt/homebrew/bin/ffmpeg';
 
 // Try to use system FFmpeg first (more reliable)
 try {
-  const fsSync = require('fs');
   if (fsSync.existsSync(systemFfmpegPath)) {
     ffmpeg.setFfmpegPath(systemFfmpegPath);
     console.log(`[Watermark] ✅ Using system FFmpeg: ${systemFfmpegPath}`);
@@ -22,7 +22,7 @@ try {
     ffmpeg.setFfmpegPath('ffmpeg');
     console.log(`[Watermark] ✅ Using FFmpeg from PATH`);
   }
-} catch (e) {
+} catch {
   // Fallback to 'ffmpeg' command
   ffmpeg.setFfmpegPath('ffmpeg');
   console.log(`[Watermark] ✅ Using FFmpeg from PATH (fallback)`);
@@ -61,9 +61,10 @@ export async function addWatermarkToVideo(
           'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
         },
       });
-    } catch (fetchError: any) {
+    } catch (fetchError: unknown) {
+      const errorMessage = fetchError instanceof Error ? fetchError.message : 'Unknown error';
       console.error(`[Watermark] Fetch error:`, fetchError);
-      throw new Error(`Failed to fetch video: ${fetchError.message}`);
+      throw new Error(`Failed to fetch video: ${errorMessage}`);
     }
     
     if (!videoResponse.ok) {
@@ -89,7 +90,7 @@ export async function addWatermarkToVideo(
     const outputPath = path.join(publicVideosDir, outputFilename);
 
     await new Promise<void>((resolve, reject) => {
-      let command = ffmpeg(inputVideoPath);
+      const command = ffmpeg(inputVideoPath);
 
       // SIMPLEST POSSIBLE WATERMARK - BLACK text with white background for visibility
       // Use videoFilters (simpler than complexFilter)
